@@ -1,0 +1,16 @@
+description: DRP specialized for DECam
+instrument: lsst.obs.decam.DarkEnergyCamera
+imports:
+  - location: $PIPE_TASKS_DIR/pipelines/DRP.yaml
+    exclude:
+      - sourceTable
+      - objectTable
+      - isr
+  - location: $AP_PIPE/pipelines/RunIsrWithCrosstalk.yaml
+# This DRP pipeline uses an obs_decam specific ISR configuration that
+# requires crosstalk sources to be pre-generated via the
+# RunIsrForCrosstalkSources.yaml pipeline.  This applies overscan
+# correction and writes a new dataset that is then used as needed for
+# the inter-chip crosstalk solutions.  Unless a specific overscan
+# change is required, it may be best to generate these crosstalk
+# sources soon after ingest to allow them to be readily available.
