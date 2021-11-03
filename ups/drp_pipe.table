@@ -1,8 +1,18 @@
-# List EUPS dependencies of this package here.
-# - Any package whose API is used directly should be listed explicitly.
-# - Common third-party packages can be assumed to be recursively included by
-#   the "base" package.
-setupRequired(base)
+# obs_* packages are dependencies because configuration in them is needed
+# to fully expand the pipelines in this package.
+setupRequired(obs_lsst)
+setupRequired(obs_decam)
+setupRequired(obs_subaru)
+
+# These packages provide the tasks directly referenced by the pipelines
+# in this package.
+setupRequired(ip_isr)
+setupRequired(pipe_tasks)
+setupRequired(meas_base)
+setupRequired(jointcal)
+setupRequired(fgcmcal)
+setupRequired(pipe_drivers)
+setupRequired(faro)
 
 # The following is boilerplate for all packages.
 # See https://dmtn-001.lsst.io for details on LSST_LIBRARY_PATH.
