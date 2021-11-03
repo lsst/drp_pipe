@@ -1,5 +1,15 @@
 description: The DRP pipeline specialized for the DECam instrument (Merian Survey)
 instrument: lsst.obs.decam.DarkEnergyCamera
+imports:
+  location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+  exclude: 
+    - isr
+    - calibrate
+    - selectGoodSeeingVisits
+    - templateGen
+    - makeWarp
+    - assembleCoadd
+    - forcedPhotCcd
 tasks:
   overscan:
     class: lsst.ip.isr.IsrTask
@@ -29,21 +39,11 @@ tasks:
       connections.flat: flat
       doOverscan: true
       doCrosstalk: true
-  characterizeImage:
-    class: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
   calibrate:
     class: lsst.pipe.tasks.calibrate.CalibrateTask
     config:
     - photoCal.match.referenceSelection.magLimit.fluxField: i_flux
       photoCal.match.referenceSelection.magLimit.maximum: 22.0
-  writeSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
-  transformSourceTable:
-    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
-  consolidateSourceTable:
-    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
-  consolidateVisitSummary:
-    class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
@@ -71,78 +71,30 @@ tasks:
     - doSelectVisits: true
       doNImage: true
       assembleStaticSkyModel.doSelectVisits: true
-  detection:
-    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
-  mergeDetections:
-    class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
-  deblend:
-    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
-  measure:
-    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
-  mergeMeasurements:
-    class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
-  forcedPhotCoadd:
-    class: lsst.meas.base.forcedPhotCoadd.ForcedPhotCoaddTask
-  writeObjectTable:
-    class: lsst.pipe.tasks.postprocess.WriteObjectTableTask
-  transformObjectTable:
-    class: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
-  consolidateObjectTable:
-    class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
   forcedPhotCcd:
     class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
     config:
     - doApplyExternalPhotoCalib: false
       doApplyExternalSkyWcs: false
       doApplySkyCorr: false
-  getTemplate:
-    class: lsst.ip.diffim.getTemplate.GetMultiTractCoaddTemplateTask
-    config:
-    - connections.coaddExposures: goodSeeingCoadd
-  imageDifference:
-    class: lsst.pipe.tasks.imageDifference.ImageDifferenceFromTemplateTask
-    config:
-    - coaddName: goodSeeing
-      getTemplate.coaddName: goodSeeing
-      getTemplate.warpType: direct
-      connections.coaddName: goodSeeing
-      connections.coaddExposures: goodSeeingCoadd
-      connections.subtractedExposure: goodSeeingDiff_differenceExp
-  transformDiaSourceCat:
-    class: lsst.ap.association.TransformDiaSourceCatalogTask
-    config:
-    - doPackFlags: false
-      connections.coaddName: goodSeeing
-      connections.diaSourceSchema: goodSeeingDiff_diaSrc_schema
-      connections.diaSourceCat: goodSeeingDiff_diaSrc
-      connections.diffIm: goodSeeingDiff_differenceExp
-      connections.diaSourceTable: goodSeeingDiff_diaSrcTable
-  forcedPhotDiffim:
-    class: lsst.meas.base.ForcedPhotCcdTask
-    config:
-    - connections.measCat: forced_diff
-      connections.outputSchema: forced_diff_schema
-      connections.exposure: goodSeeingDiff_differenceExp
-  writeForcedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
-  makeVisitTable:
-    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
-  makeCcdVisitTable:
-    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
 subsets:
   processCcd:
     subset:
     - isr
     - characterizeImage
     - calibrate
-    description: 'An alias of ProcessCcd to use in higher-level pipelines.'
+    description: 'An alias of ProcessCcd to use in higher-level pipelines.
+      
+      '
   step0:
     subset:
     - overscan
     description: 'Tasks which should be run once, prior to initial data processing.
 
       This includes construction of crosstalk sources for ISR/interchip crosstalk
-      by running overscan correction on raw frames.'
+      by running overscan correction on raw frames.
+      
+      '
   step1:
     subset:
     - isr
@@ -155,7 +107,9 @@ subsets:
       These should never be run with ''tract'' or ''patch'' as part of the data ID
       expression if any later steps will also be run, because downstream steps require
       full visits and ''tract'' and ''patch'' constraints will always select partial
-      visits that overlap that region.'
+      visits that overlap that region.
+      
+      '
   step2:
     subset:
     - consolidateSourceTable
@@ -163,7 +117,9 @@ subsets:
     description: 'Per-visit tasks that can be run together, but only after ''step1''.
 
       These should never be run with ''tract'' or ''patch'' as part of the data ID
-      expression.'
+      expression.
+      
+      '
   step3:
     subset:
     - selectGoodSeeingVisits
@@ -184,7 +140,9 @@ subsets:
 
       These should be run with explicit ''tract'' constraints essentially all the
       time, because otherwise quanta will be created for jobs with only partial visit
-      coverage.'
+      coverage.
+      
+      '
   step7:
     subset:
     - makeVisitTable
@@ -194,5 +152,6 @@ subsets:
 
       This step has global aggregation tasks to run over all visits, detectors, tracts,
       etc.  This step should be run only with the instrument constraint in the data
-      query.'
-
+      query.
+      
+      '
