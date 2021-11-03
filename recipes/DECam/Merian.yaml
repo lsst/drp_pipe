@@ -1,4 +1,4 @@
-description: The DRP pipeline specialized for the DECam instrument
+description: The DRP pipeline specialized for the DECam instrument (Merian Survey)
 instrument: lsst.obs.decam.DarkEnergyCamera
 tasks:
   overscan:
