@@ -1,7 +1,7 @@
 description: DRP specialized for DECam
 instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
-  - location: $PIPE_TASKS_DIR/pipelines/DRP.yaml
+  - location: $DRP_PIPE_DIR/ingredients/DRP.yaml
     exclude:
       - sourceTable
       - objectTable

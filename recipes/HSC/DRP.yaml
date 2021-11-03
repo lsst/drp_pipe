@@ -1,7 +1,7 @@
 description: The DRP pipeline specialized for the HSC instrument
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  - $PIPE_TASKS_DIR/pipelines/DRP.yaml
+  - $DRP_PIPE_DIR/ingredients/DRP.yaml
   - $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
 tasks:
   skyCorr:

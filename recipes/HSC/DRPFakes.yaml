@@ -1,7 +1,7 @@
 description: The DRP Fakes pipeline specalised for HSC data
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  location: "${OBS_SUBARU_DIR}/pipelines/DRP.yaml"
+  location: "$DRP_PIPE_DIR/recipes/HSC/DRP.yaml"
   exclude:
     - skyCorr
     - jointcal
