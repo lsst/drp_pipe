@@ -3,6 +3,15 @@
 # - Common third-party packages can be assumed to be recursively included by
 #   the "base" package.
 setupRequired(base)
+setupRequired(obs_subaru)
+setupRequired(obs_lsst)
+setupRequired(obs_decam)
+setupRequired(obs_subaru)
+setupRequired(pipe_tasks)
+setupRequired(meas_algorithms)
+setupRequired(jointcal)
+setupRequried(fgcmcal)
+setupRequired(ctrl_bps)
 
 # The following is boilerplate for all packages.
 # See https://dmtn-001.lsst.io for details on LSST_LIBRARY_PATH.
