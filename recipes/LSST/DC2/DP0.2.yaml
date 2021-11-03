@@ -1,0 +1,3 @@
+description: DRP specialized for Data Preview 0.2
+imports:
+  - $DRP_PIPE_DIR/ingredients/LSST/DC2/DRP.yaml
