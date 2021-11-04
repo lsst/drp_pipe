@@ -1,82 +1,47 @@
-description: The DRP pipeline specialized for the DECam instrument (Merian Survey)
+description: The DRP pipeline specialized for the DECam instrument
 instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
   location: $DRP_PIPE_DIR/ingredients/DRP.yaml
-  exclude: 
-    - isr
-    - calibrate
-    - selectGoodSeeingVisits
-    - templateGen
-    - makeWarp
-    - assembleCoadd
-    - forcedPhotCcd
 tasks:
-  overscan:
+  isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask
     config:
-    - connections.ccdExposure: raw
-      connections.outputExposure: overscanRaw
-      doBias: false
+    - connections.outputExposure: overscanRaw
       doOverscan: true
       doAssembleCcd: false
+      doBias: false
       doVariance: false
       doLinearize: false
-      doCrosstalk: false
       doDefect: false
       doNanMasking: false
-      doInterpolate: false
-      doBrighterFatter: false
       doDark: false
       doFlat: false
-      doApplyGains: false
       doFringe: false
+      doInterpolate: false
   isr:
     class: lsst.ip.isr.IsrTask
     config:
-    - connections.ccdExposure: raw
-      connections.crosstalkSources: overscanRaw
-      connections.bias: bias
-      connections.flat: flat
-      doOverscan: true
+    - connections.crosstalkSources: overscanRaw
       doCrosstalk: true
   calibrate:
     class: lsst.pipe.tasks.calibrate.CalibrateTask
     config:
     - photoCal.match.referenceSelection.magLimit.fluxField: i_flux
       photoCal.match.referenceSelection.magLimit.maximum: 22.0
-  selectGoodSeeingVisits:
-    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
-    config:
-    - connections.goodVisits: goodSeeingVisits
-  templateGen:
-    class: lsst.pipe.tasks.assembleCoadd.CompareWarpAssembleCoaddTask
-    config:
-    - doSelectVisits: true
-      assembleStaticSkyModel.doSelectVisits: true
-      connections.selectedVisits: goodSeeingVisits
-      connections.outputCoaddName: goodSeeing
-      connections.coaddExposure: goodSeeingCoadd
   makeWarp:
     class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
     config:
     - doWriteEmptyWarps: true
-      doApplyExternalPhotoCalib: false
-      doApplyExternalSkyWcs: false
-      makePsfMatched: true
-    - python: "from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask; \n\
-        config.select.retarget(PsfWcsSelectImagesTask)\n"
+    - python: 'from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask;
+        config.select.retarget(PsfWcsSelectImagesTask)
+        
+        '
   assembleCoadd:
     class: lsst.pipe.tasks.assembleCoadd.CompareWarpAssembleCoaddTask
     config:
     - doSelectVisits: true
       doNImage: true
       assembleStaticSkyModel.doSelectVisits: true
-  forcedPhotCcd:
-    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
-    config:
-    - doApplyExternalPhotoCalib: false
-      doApplyExternalSkyWcs: false
-      doApplySkyCorr: false
 subsets:
   processCcd:
     subset:
@@ -88,11 +53,12 @@ subsets:
       '
   step0:
     subset:
-    - overscan
+    - isrForCrosstalkSources
     description: 'Tasks which should be run once, prior to initial data processing.
 
-      This includes construction of crosstalk sources for ISR/interchip crosstalk
-      by running overscan correction on raw frames.
+      This step generates crosstalk sources for ISR/inter-chip crosstalk by applying 
+      overscan correction on raw frames. A new dataset is written, which should be 
+      used as an input for further data processing.
       
       '
   step1:
@@ -149,7 +115,7 @@ subsets:
     - makeCcdVisitTable
     description: 'Tasks that should be run as the final step that require global inputs,
       and can be run after the ''step3'' subset.
-
+      
       This step has global aggregation tasks to run over all visits, detectors, tracts,
       etc.  This step should be run only with the instrument constraint in the data
       query.
