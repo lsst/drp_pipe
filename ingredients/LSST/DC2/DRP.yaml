@@ -1,8 +1,7 @@
-description: DRP specialized for LSSTImSim
+description: DRP specialized for ImSim-DC2 data
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
-  # Inherits directly from pipe_tasks to avoid redefining sourceTable subset
-  - location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+  - $DRP_PIPE_DIR/ingredients/DRP.yaml
   - $FARO_DIR/pipelines/metrics_pipeline.yaml
 tasks:
     isr:

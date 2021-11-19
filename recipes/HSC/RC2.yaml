@@ -1,4 +1,4 @@
-description: The DRP pipeline specialized for the HSC instrument
+description: The DRP pipeline specialized for the HSC RC2 dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - $DRP_PIPE_DIR/ingredients/DRP.yaml
@@ -7,20 +7,18 @@ tasks:
   skyCorr:
     class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask
   jointcal:
-    # The jointcal package depends on obs_subaru, not the other way around, so
-    # it's not great to have this here, but it's the least-bad temporary spot
-    # for this information (which is specific to both Gen3 and HSC) until we
-    # RFC-approve a better home for it.
+    # Running jointcal is something we want to do for all real-world
+    # instruments, so it doesn't belong in an HSC-specific pipeline, let alone
+    # an RC2-specific one.  We just haven't done the pipeline refactoring that
+    # would fix this, and it's not a huge loss because we haven't actually
+    # gotten jointcal running in production on anything other than HSC (it
+    # might just work, but we certainly can't claim it's supported).
     class: lsst.jointcal.JointcalTask
     config:
-      # Disable photometry because we don't need it (FGCM takes care of that)
-      # and it's broken in Gen3 (DM-29884).  Also disable color terms because
-      # jointcal warns if that's true but doPhotometry=False.  It would be
-      # better to disable this via config (DM-29885), but it's hard to make
-      # that compatible with the jointcal tests because jointcal depends on
-      # obs_subaru.
+      # Disable photometry because we don't need it (FGCM takes care of that).
+      # It would be better to disable this via config (DM-29885), but that's
+      # more refactoring we haven't yet done.
       doPhotometry: false
-      applyColorTerms: false
       python: |
         # These overrides were copied from the tests/config/config-gen3.yaml file
         # on 22 Sept 2021.  This is necessary for processing in containers to succeed
@@ -54,11 +52,12 @@ tasks:
                                                    'N921': 'phot_g_mean',
                                                   }
         config.astrometryRefObjLoader.anyFilterMapsToThis = None
-  # The FGCM configurations below are appropriate specifically for RC2; like
-  # the jointcal information above, this is the least-bad place for it, because
-  # Gen3 HSC is unlikely to mean anything other than RC2 until we have a new
-  # home for these that lets us separate generic HSC from RC2 (and ci_hsc has
-  # its own customization).
+  # The FGCM configurations below are appropriate specifically for RC2; this is
+  # not a bad place for it, because we don't have (and may never have)
+  # configuration for FGCM that works across arbitrary datasets; it depends too
+  # much on what filters are in play.  But it still might make sense to
+  # refactor the configurations below into separate (but still RC2-specific)
+  # config files.
   fgcmBuildStarsTable:
     class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
     config:

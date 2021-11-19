@@ -1,7 +1,7 @@
 description: >
   Base Pipeline that describes the Data Release Production process.
-  Never run this pipeline or any of its subsets directly; always use an
-  obs_* package pipeline that imports it instead.
+  Never run this pipeline or any of its subsets directly; always use those in
+  the 'pipelines' directory (or create a custom one) instead.
 
 tasks:
   isr: lsst.ip.isr.IsrTask
