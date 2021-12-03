@@ -8,3 +8,7 @@ doxygen.conf
 # Sphinx products
 _build
 py-api
+
+# Doc content built by SCons
+lsst.drp.pipe/pipelines
+lsst.drp.pipe/pipelines_index.rst

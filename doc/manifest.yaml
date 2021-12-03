@@ -9,4 +9,4 @@ modules:
 # Static content directories are usually named after the package.
 # Most packages do not need a static content directory (leave commented out).
 # statics:
-#   - "_static/drp_pipe"
+#  - "_static"
