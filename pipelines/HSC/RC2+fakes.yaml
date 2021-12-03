@@ -1,9 +1,9 @@
 description: The DRP Fakes pipeline specalised for the HSC RC2 dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  # In the long term, we should try to avoid importing anything from recipes;
+  # In the long term, we should try to avoid importing anything from pipelines;
   # better to refactor anything imported into ingredients.
-  location: "$DRP_PIPE_DIR/recipes/HSC/DRP.yaml"
+  location: "$DRP_PIPE_DIR/pipelines/HSC/RC2.yaml"
   exclude:
     - skyCorr
     - jointcal
