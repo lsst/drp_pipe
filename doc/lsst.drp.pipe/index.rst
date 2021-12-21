@@ -6,6 +6,8 @@
 lsst.drp.pipe
 #############
 
+.. include:: pipelines_index.rst
+
 .. Paragraph that describes what this Python module does and links to related modules and frameworks.
 
 .. .. _lsst.drp.pipe-using:

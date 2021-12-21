@@ -1,0 +1,21 @@
+from lsst.sconsUtils.state import env, targets
+from pathlib import Path
+from lsst.pipe.base.pipeline_doc_builder import PackagePipelinesDocBuilder
+
+target_root = Path(str(env.Dir("lsst.drp.pipe/pipelines")))
+artifacts = list(
+    PackagePipelinesDocBuilder.from_source(
+        Path(str(env.Dir("#pipelines"))),
+        rst_root=target_root,
+        pipeline_root=target_root,
+        dot_root=target_root,
+        graph_root=target_root,
+        graph_suffix=".svg",
+        rst_path=Path(str(env.File("lsst.drp.pipe/pipelines_index.rst"))),
+    ).scons_generate(env)
+)
+
+env.AlwaysBuild(artifacts)
+env.Clean("doc", artifacts)
+
+targets["doc"].extend(artifacts)
