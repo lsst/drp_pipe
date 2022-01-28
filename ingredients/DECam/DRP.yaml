@@ -44,11 +44,11 @@ tasks:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
       matchingKernelSize: 29
       doApplyExternalPhotoCalib: true
-      externalPhotoCalibName: "jointcal"
+      externalPhotoCalibName: jointcal
       doApplyExternalSkyWcs: true
       modelPsf.defaultFwhm: 7.7
-      warpAndPsfMatch.warp.warpingKernelName: "lanczos5"
-      coaddPsf.warpingKernelName: "lanczos5"
+      warpAndPsfMatch.warp.warpingKernelName: lanczos5
+      coaddPsf.warpingKernelName: lanczos5
       # When useGlobalExternalPhotoCalib is set to False, use per-tract photometric calibrations.
       # Global calibrations must be disabled if using jointcal.
       useGlobalExternalPhotoCalib: false
@@ -64,17 +64,17 @@ tasks:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
       matchingKernelSize: 29
       doApplyExternalPhotoCalib: true
-      externalPhotoCalibName: "jointcal"
+      externalPhotoCalibName: jointcal
       doApplyExternalSkyWcs: true
       # 200 rows (since patch width is typically < 10k pixels
       subregionSize: (10000, 200)
       doNImage: true
       # Saturation trails are usually oriented east-west, so along rows
       interpImage.transpose: true
-      coaddPsf.warpingKernelName: "lanczos5"
+      coaddPsf.warpingKernelName: lanczos5
       assembleStaticSkyModel.subregionSize: (10000, 200)
       assembleStaticSkyModel.doApplyExternalPhotoCalib: true
-      assembleStaticSkyModel.externalPhotoCalibName: "jointcal"
+      assembleStaticSkyModel.externalPhotoCalibName: jointcal
       assembleStaticSkyModel.doApplyExternalSkyWcs: true
       doFilterMorphological: true
       # When useGlobalExternalPhotoCalib is set to False, use per-tract
@@ -96,17 +96,17 @@ tasks:
       # DECam and HSC
       matchingKernelSize: 29
       doApplyExternalPhotoCalib: true
-      externalPhotoCalibName: "jointcal"
+      externalPhotoCalibName: jointcal
       doApplyExternalSkyWcs: true
       # 200 rows (since patch width is typically < 10k pixels
       subregionSize: (10000, 200)
       doNImage: true
       # Saturation trails are usually oriented east-west, so along rows
       interpImage.transpose: true
-      coaddPsf.warpingKernelName: "lanczos5"
+      coaddPsf.warpingKernelName: lanczos5
       assembleStaticSkyModel.subregionSize: (10000, 200)
       assembleStaticSkyModel.doApplyExternalPhotoCalib: true
-      assembleStaticSkyModel.externalPhotoCalibName: "jointcal"
+      assembleStaticSkyModel.externalPhotoCalibName: jointcal
       assembleStaticSkyModel.doApplyExternalSkyWcs: true
       doFilterMorphological: true
       # When useGlobalExternalPhotoCalib is set to False, use per-tract photometric calibrations.
