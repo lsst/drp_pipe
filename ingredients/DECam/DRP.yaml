@@ -1,0 +1,190 @@
+description: |
+  The DRP pipeline specialized for the DECam instrument.
+
+  This pipeline should only be run with reference to specific subsets or tasks
+  referenced below. Attempting to run the whole pipeline will lead to a
+  PrerequisiteInput error, owing to the requirement for crosstalk sources to be
+  pre-generated for DECam data processing runs.
+instrument: lsst.obs.decam.DarkEnergyCamera
+imports:
+  location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+tasks:
+  isrForCrosstalkSources:
+    class: lsst.ip.isr.IsrTask
+    config:
+      connections.outputExposure: overscanRaw
+      doOverscan: true
+      doAssembleCcd: false
+      doBias: false
+      doCrosstalk: false
+      doVariance: false
+      doLinearize: false
+      doDefect: false
+      doNanMasking: false
+      doDark: false
+      doFlat: false
+      doFringe: false
+      doInterpolate: false
+  isr:
+    class: lsst.ip.isr.IsrTask
+    config:
+      connections.crosstalkSources: overscanRaw
+      doCrosstalk: true
+  calibrate:
+    class: lsst.pipe.tasks.calibrate.CalibrateTask
+    config:
+      photoCal.match.referenceSelection.magLimit.fluxField: i_flux
+      photoCal.match.referenceSelection.magLimit.maximum: 22.0
+  jointcal:
+    class: lsst.jointcal.JointcalTask
+  makeWarp:
+    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
+    config:
+      connections.photoCalibName: jointcal
+      # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
+      matchingKernelSize: 29
+      doApplyExternalPhotoCalib: true
+      externalPhotoCalibName: jointcal
+      doApplyExternalSkyWcs: true
+      modelPsf.defaultFwhm: 7.7
+      warpAndPsfMatch.warp.warpingKernelName: lanczos5
+      coaddPsf.warpingKernelName: lanczos5
+      # When useGlobalExternalPhotoCalib is set to False, use per-tract photometric calibrations.
+      # Global calibrations must be disabled if using jointcal.
+      useGlobalExternalPhotoCalib: false
+      # Legacy DECam config to write out warps, even if they are empty
+      doWriteEmptyWarps: true
+      python: |
+        config.warpAndPsfMatch.psfMatch.kernel['AL'].alardSigGauss = [1.0, 2.0, 4.5]
+        from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
+        config.select.retarget(PsfWcsSelectImagesTask)
+  templateGen:
+    class: lsst.pipe.tasks.assembleCoadd.CompareWarpAssembleCoaddTask
+    config:
+      # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
+      matchingKernelSize: 29
+      doApplyExternalPhotoCalib: true
+      externalPhotoCalibName: jointcal
+      doApplyExternalSkyWcs: true
+      # 200 rows (since patch width is typically < 10k pixels
+      subregionSize: (10000, 200)
+      doNImage: true
+      # Saturation trails are usually oriented east-west, so along rows
+      interpImage.transpose: true
+      coaddPsf.warpingKernelName: lanczos5
+      assembleStaticSkyModel.subregionSize: (10000, 200)
+      assembleStaticSkyModel.doApplyExternalPhotoCalib: true
+      assembleStaticSkyModel.externalPhotoCalibName: jointcal
+      assembleStaticSkyModel.doApplyExternalSkyWcs: true
+      doFilterMorphological: true
+      # When useGlobalExternalPhotoCalib is set to False, use per-tract
+      # photometric calibrations.  Global calibrations must be disabled if
+      # using jointcal.
+      useGlobalExternalPhotoCalib: false
+      assembleStaticSkyModel.useGlobalExternalPhotoCalib: false
+      # transmission curves do not exist as-yet for DECam data
+      doAttachTransmissionCurve: false
+      python: |
+        config.removeMaskPlanes.append("CROSSTALK")
+        config.badMaskPlanes += ["SUSPECT"]
+        from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
+        config.select.retarget(PsfWcsSelectImagesTask)
+  assembleCoadd:
+    class: lsst.pipe.tasks.assembleCoadd.CompareWarpAssembleCoaddTask
+    config:
+      # These configs match obs_subaru, to facilitate 1:1 comparisons between
+      # DECam and HSC
+      matchingKernelSize: 29
+      doApplyExternalPhotoCalib: true
+      externalPhotoCalibName: jointcal
+      doApplyExternalSkyWcs: true
+      # 200 rows (since patch width is typically < 10k pixels
+      subregionSize: (10000, 200)
+      doNImage: true
+      # Saturation trails are usually oriented east-west, so along rows
+      interpImage.transpose: true
+      coaddPsf.warpingKernelName: lanczos5
+      assembleStaticSkyModel.subregionSize: (10000, 200)
+      assembleStaticSkyModel.doApplyExternalPhotoCalib: true
+      assembleStaticSkyModel.externalPhotoCalibName: jointcal
+      assembleStaticSkyModel.doApplyExternalSkyWcs: true
+      doFilterMorphological: true
+      # When useGlobalExternalPhotoCalib is set to False, use per-tract photometric calibrations.
+      # Global calibrations must be disabled if using jointcal.
+      useGlobalExternalPhotoCalib: false
+      assembleStaticSkyModel.useGlobalExternalPhotoCalib: false
+      # transmission curves do not exist as-yet for DECam data
+      doAttachTransmissionCurve: false
+      python: |
+        config.removeMaskPlanes.append("CROSSTALK")
+        config.badMaskPlanes += ["SUSPECT"]
+        from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
+        config.select.retarget(PsfWcsSelectImagesTask)
+subsets:
+  step0:
+    subset:
+      - isrForCrosstalkSources
+    description: |
+      Tasks which should be run once, prior to initial data processing.
+
+      This step generates crosstalk sources for ISR/inter-chip crosstalk by
+      applying overscan correction on raw frames. A new dataset is written,
+      which should be used as an input for further data processing.
+  step1:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - transformSourceTable
+      - writeSourceTable
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
+
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region.
+  step2:
+    subset:
+      - consolidateSourceTable
+      - consolidateVisitSummary
+    description: |
+      Per-visit tasks that can be run together, but only after 'step1'.
+
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression.
+  step3:
+    subset:
+      - selectGoodSeeingVisits
+      - jointcal
+      - makeWarp
+      - templateGen
+      - deblend
+      - detection
+      - writeObjectTable
+      - measure
+      - mergeMeasurements
+      - assembleCoadd
+      - forcedPhotCoadd
+      - transformObjectTable
+      - consolidateObjectTable
+      - mergeDetections
+    description: |
+      Tract-level tasks that can be run together, but only after the 'step1'
+      and 'step2' subsets.
+
+      These should be run with explicit 'tract' constraints essentially all the
+      time, because otherwise quanta will be created for jobs with only partial visit
+      coverage.
+  # Steps 4-6 are not currently implemented in this DECam DRP processing pipeline.
+  step7:
+    subset:
+      - makeVisitTable
+      - makeCcdVisitTable
+    description: |
+      Tasks that should be run as the final step that require global inputs,
+      and can be run after the 'step3' subset.
+
+      This step has global aggregation tasks to run over all visits, detectors, tracts,
+      etc.  This step should be run only with the instrument constraint in the data
+      query.

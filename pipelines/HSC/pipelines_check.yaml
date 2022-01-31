@@ -1,0 +1,9 @@
+description: >
+  A tiny subset of the DRP pipeline used by the pipelines_check CI package.
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  # In the long term, we should try to avoid importing anything from
+  # pipelines; better to refactor anything imported into ingredients.
+  location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml"
+  include:
+    - processCcd

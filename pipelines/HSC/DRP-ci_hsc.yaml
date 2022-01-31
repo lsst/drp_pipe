@@ -1,0 +1,45 @@
+description: The DRP pipeline specialized for the ci_hsc test dataset.
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  # In the long term, we should try to avoid importing anything from pipelines;
+  # better to refactor anything imported into ingredients.
+  location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml"
+  exclude:
+    # Don't run jointcal, fgcm, or (some of) faro, as there isn't enough data.
+    - fgcm
+    - jointcal
+    - faro_step3
+    - faro_step5
+tasks:
+  makeWarp:
+    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
+    config:
+      # Do expect jointcal's photoCalibs to be present even though we didn't
+      # run it, since that's what the testdata_ci_hsc repo is set up to have.
+      # That's not realistic overall, but it does let us test the code paths
+      # downstream of coaddition that we use most often.
+      connections.photoCalibName: "jointcal"
+      useGlobalExternalPhotoCalib: false
+  deblend:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    # Significantly limit the number of sources to deblend, which saves time
+    # in both deblending and measurement
+    config:
+      # Only run the deblender on a small subset of blended parents
+      multibandDeblend.useCiLimits: true
+      # Do not run the deblender on isolated sources
+      multibandDeblend.processSingles: false
+  calibrate:
+    class: lsst.pipe.tasks.calibrate.CalibrateTask
+    # Significantly limit the number of sources to deblend, which saves time
+    # in both deblending and measurement
+    config:
+      # Only run the deblender on a small subset of blended parents
+      deblend.useCiLimits: true
+  imageDifference:
+    class: lsst.pipe.tasks.imageDifference.ImageDifferenceFromTemplateTask
+    # Increase required area of usable template so that
+    # visit IN (903342, 904010) AND detector=100 raise NoWorkFound
+    # instead of bringing down ci_hsc.
+    config:
+      requiredTemplateFraction: 0.2
