@@ -110,6 +110,9 @@ subsets:
       - matchCatalogsTract
       - matchCatalogsPatch
       - matchCatalogsPatchMultiBand
+      - matchCatalogsTractMag17to21p5
+      - matchCatalogsTractStarsSNR5to80
+      - matchCatalogsTractGxsSNR5to80
       - PA1
       - PF1_design
       - AM1
