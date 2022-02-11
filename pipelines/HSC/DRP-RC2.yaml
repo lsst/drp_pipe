@@ -60,6 +60,8 @@ tasks:
         N921: 0.005
         y: 0.0025
       minExpPerNight: 3
+      deltaAperInnerRadiusArcsec: 2.04
+      deltaAperOuterRadiusArcsec: 2.89
       python: |
         from lsst.fgcmcal import Sedterm, Sedboundaryterm
         config.sedboundaryterms.data = {'gr': Sedboundaryterm(primary='g', secondary='r'),
