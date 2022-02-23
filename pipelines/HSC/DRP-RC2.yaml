@@ -6,6 +6,10 @@ imports:
 tasks:
   skyCorr:
     class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ["i", "r", "g", "z", "y", "N921"]
   jointcal:
     # Running jointcal is something we want to do for all real-world
     # instruments, so it doesn't belong in an HSC-specific pipeline, let alone
@@ -107,6 +111,7 @@ subsets:
       - consolidateSourceTable
       - consolidateVisitSummary
       - skyCorr
+      - isolatedStarAssociation
     description: >
       Set of tasks for complete single frame processing. Analogous to
       SingleFrameDriver.
@@ -209,6 +214,7 @@ subsets:
       functionality.  It may be removed in the future.
   step3:
     subset:
+      - isolatedStarAssociation
       - jointcal
       - makeWarp
       - assembleCoadd
