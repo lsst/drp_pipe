@@ -13,6 +13,7 @@ setupRequired(jointcal)
 setupRequired(fgcmcal)
 setupRequired(pipe_drivers)
 setupRequired(faro)
+setupRequired(analysis_drp)
 
 # The following is boilerplate for all packages.
 # See https://dmtn-001.lsst.io for details on LSST_LIBRARY_PATH.
