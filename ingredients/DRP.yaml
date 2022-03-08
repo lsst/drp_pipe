@@ -13,6 +13,7 @@ tasks:
   consolidateSourceTable: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
   isolatedStarAssociation: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+  finalizeCharacterization: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
   makeWarp:
@@ -170,6 +171,7 @@ subsets:
       - consolidateSourceTable
       - consolidateVisitSummary
       - isolatedStarAssociation
+      - finalizeCharacterization
       - makeCcdVisitTable
       - makeVisitTable
     description: >
