@@ -1,34 +1,6 @@
-description: The DRP+fakes pipeline specialized for the ci_hsc test dataset.
+description: |
+  The DRP pipeline with fake source injection specialized for the ci_hsc test
+  dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  # In the long term, we should try to avoid importing anything from pipelines;
-  # better to refactor anything imported into ingredients.
-  location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2+fakes.yaml"
-  exclude:
-    - faro_step2
-    - faro_step3
-    - faro_step5
-
-tasks:
-  singleFrameWithFakes:
-    class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
-    config:
-      insertFakes.doProcessAllDataIds: true
-      doApplyExternalTractSkyWcs: true
-      doApplyExternalTractPhotoCalib: true
-      doApplyExternalGlobalPhotoCalib: false
-      connections.photoCalibName: "jointcal"
-  makeWarp:
-    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
-    config:
-      connections.photoCalibName: "jointcal"
-      useGlobalExternalPhotoCalib: false
-      connections.coaddName: "fakes_deep"
-      connections.calexpType: "fakes_"
-  deblend:
-    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
-    config:
-      connections.inputCoaddName: "fakes_deep"
-      connections.outputCoaddName: "fakes_deep"
-      multibandDeblend.useCiLimits: true
-      multibandDeblend.processSingles: false
+  - "$DRP_PIPE_DIR/ingredients/HSC/DRP-Base-ci_hsc+fakes.yaml"

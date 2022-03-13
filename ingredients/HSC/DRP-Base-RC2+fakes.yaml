@@ -1,0 +1,142 @@
+description: |
+  The base tasks and subsets of the pipeline with fake-source injection,
+  specialized for the HSC RC2 dataset.
+
+  This "ingredients" pipeline should generally be the one modified when new
+  tasks are added/removed or configurations are changed, instead of its
+  counterpart in the "pipelines" directory (though ingredients/DRP-Base.yaml is
+  even better to modify, when appropriate).  The "pipelines" counterpart is
+  the one that should generally be run, however.
+
+  Analysis tasks should generally be defined in other files and imported into
+  the runnable pipeline in the "pipelines" directory.
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  location: "$DRP_PIPE_DIR/ingredients/HSC/DRP-Base-RC2.yaml"
+  exclude:
+    - skyCorr
+    - jointcal
+    - fgcm
+    - fgcmBuildStarsTable
+    - fgcmFitCycle
+    - fgcmOutputProducts
+    - isr
+    - characterizeImage
+    - calibrate
+    - selectGoodSeeingVisits
+    - templateGen
+    - imageDifference
+    - transformDiaSourceCat
+    - consolidateDiaSourceTable
+    - drpAssociation
+    - drpDiaCalculation
+    - forcedPhotDiffim
+    - forcedPhotCcdOnDiaObjects
+    - forcedPhotDiffOnDiaObjects
+    - transformForcedSourceTable
+    - consolidateForcedSourceTable
+    - getTemplate
+    - writeForcedSourceTable
+    - consolidateAssocDiaSourceTable
+    - consolidateFullDiaObjectTable
+    - writeForcedSourceOnDiaObjectTable
+    - transformForcedSourceOnDiaObjectTable
+    - consolidateForcedSourceOnDiaObjectTable
+    - TE1
+    - TE2
+    - wPerp
+tasks:
+  singleFrameWithFakes:
+    class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
+    config:
+      insertFakes.doProcessAllDataIds: true
+      connections.photoCalibName: "fgcm"
+      doApplyExternalGlobalPhotoCalib: true
+      doApplyExternalTractSkyWcs: true
+  writeSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+    config:
+      connections.catalogType: "fakes_"
+  transformSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.catalogType: "fakes_"
+  consolidateSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.catalogType: "fakes_"
+  consolidateVisitSummary:
+    class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
+    config:
+      connections.calexpType: "fakes_"
+  makeCcdVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+    config:
+      connections.calexpType: "fakes_"
+  makeVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+    config:
+      connections.calexpType: "fakes_"
+  assembleCoadd:
+    class: lsst.pipe.tasks.assembleCoadd.CompareWarpAssembleCoaddTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.outputCoaddName: "fakes_deep"
+  makeWarp:
+    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
+    config:
+      connections.photoCalibName: "fgcm"
+      useGlobalExternalPhotoCalib: true
+      connections.coaddName: "fakes_deep"
+      connections.calexpType: "fakes_"
+  detection:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.outputCoaddName: "fakes_deep"
+  mergeDetections:
+    class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.outputCoaddName: "fakes_deep"
+  deblend:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.outputCoaddName: "fakes_deep"
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.outputCoaddName: "fakes_deep"
+  mergeMeasurements:
+    class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.outputCoaddName: "fakes_deep"
+  writeObjectTable:
+    class: lsst.pipe.tasks.postprocess.WriteObjectTableTask
+    config:
+      connections.coaddName: "fakes_deep"
+  transformObjectTable:
+    class: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
+    config:
+      connections.coaddName: "fakes_deep"
+  forcedPhotCcd:
+    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+  forcedPhotCoadd:
+    class: lsst.meas.base.forcedPhotCoadd.ForcedPhotCoaddTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.outputCoaddName: "fakes_deep"
+  healSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
+    config:
+      connections.coaddName: "fakes_deep"
+      connections.calexpType: "fakes_"
+  consolidateHealSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
+    config:
+      connections.coaddName: "fakes_deep"

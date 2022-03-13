@@ -1,7 +1,18 @@
-description: DRP specialized for ImSim-DC2 data
+description: |
+  The base tasks and subsets of the DRP pipeline, specialized for the ImSim-DC2
+  dataset.
+
+  This "ingredients" pipeline should generally be the one modified when new
+  tasks are added/removed or configurations are changed, instead of its
+  counterpart in the "pipelines" directory (though ingredients/DRP-Base.yaml is
+  even better to modify, when appropriate).  The "pipelines" counterpart is the
+  one that should generally be run, however.
+
+  Analysis tasks should generally be defined in other files and imported into
+  the runnable pipeline in the "pipelines" directory.
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
-  - $DRP_PIPE_DIR/ingredients/DRP.yaml
+  - $DRP_PIPE_DIR/ingredients/DRP-Base.yaml
   - $FARO_DIR/pipelines/metrics_pipeline.yaml
 tasks:
   isr:

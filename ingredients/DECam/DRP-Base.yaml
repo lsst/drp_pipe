@@ -1,13 +1,23 @@
 description: |
-  The DRP pipeline specialized for the DECam instrument.
+  The base tasks and subsets of the DRP pipeline, specialized for the DECam
+  instrument.
 
   This pipeline should only be run with reference to specific subsets or tasks
   referenced below. Attempting to run the whole pipeline will lead to a
   PrerequisiteInput error, owing to the requirement for crosstalk sources to be
   pre-generated for DECam data processing runs.
+
+  This "ingredients" pipeline should generally be the one modified when new
+  tasks are added/removed or configurations are changed, instead of its
+  counterpart in the "pipelines" directory (though ingredients/DRP-Base.yaml is
+  even better to modify, when appropriate).  The "pipelines" counterpart is the
+  one that should generally be run, however.
+
+  Analysis tasks should generally be defined in other files and imported into
+  the runnable pipeline in the "pipelines" directory.
 instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
-  location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+  location: $DRP_PIPE_DIR/ingredients/DRP-Base.yaml
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask

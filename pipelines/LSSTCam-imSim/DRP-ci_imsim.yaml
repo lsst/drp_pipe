@@ -1,6 +1,6 @@
 description: DRP specialized for ci_imsim test package.
 imports:
-  - $DRP_PIPE_DIR/ingredients/LSSTCam-imSim/DRP.yaml
+  - $DRP_PIPE_DIR/ingredients/LSSTCam-imSim/DRP-Base.yaml
 tasks:
   deblend:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask

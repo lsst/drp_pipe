@@ -1,0 +1,43 @@
+description: |
+  The base tasks and subsets of the DRP pipeline with fake-source injection,
+  specialized for the ci_hsc test dataset.
+
+  This "ingredients" pipeline should generally be the one modified when new
+  tasks are added/removed or configurations are changed, instead of its
+  counterpart in the "pipelines" directory (though ingredients/DRP-Base.yaml is
+  even better to modify, when appropriate).  The "pipelines" counterpart is
+  the one that should generally be run, however.
+
+  Analysis tasks should generally be defined in other files and imported into
+  the runnable pipeline in the "pipelines" directory.
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  location: "$DRP_PIPE_DIR/ingredients/HSC/DRP-Base-RC2+fakes.yaml"
+  exclude:
+    - faro_step2
+    - faro_step3
+    - faro_step5
+
+tasks:
+  singleFrameWithFakes:
+    class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
+    config:
+      insertFakes.doProcessAllDataIds: true
+      doApplyExternalTractSkyWcs: true
+      doApplyExternalTractPhotoCalib: true
+      doApplyExternalGlobalPhotoCalib: false
+      connections.photoCalibName: "jointcal"
+  makeWarp:
+    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
+    config:
+      connections.photoCalibName: "jointcal"
+      useGlobalExternalPhotoCalib: false
+      connections.coaddName: "fakes_deep"
+      connections.calexpType: "fakes_"
+  deblend:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.outputCoaddName: "fakes_deep"
+      multibandDeblend.useCiLimits: true
+      multibandDeblend.processSingles: false
