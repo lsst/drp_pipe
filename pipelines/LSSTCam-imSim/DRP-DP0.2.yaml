@@ -1,3 +1,5 @@
 description: DRP specialized for Data Preview 0.2
 imports:
   - $DRP_PIPE_DIR/ingredients/LSSTCam-imSim/DRP.yaml
+  - $ANALYSIS_DRP_DIR/pipelines/LSSTCam-imSim/analysis_drp_plots.yaml
+

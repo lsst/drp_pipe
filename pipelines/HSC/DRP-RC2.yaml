@@ -3,6 +3,7 @@ instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - $DRP_PIPE_DIR/ingredients/DRP.yaml
   - $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
+  - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
 tasks:
   skyCorr:
     class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask
