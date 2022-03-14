@@ -2,3 +2,4 @@ description: The DRP pipeline specialized for the HSC RC2 dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - "$DRP_PIPE_DIR/ingredients/HSC/DRP-Base-RC2.yaml"
+  - "$DRP_PIPE_DIR/ingredients/HSC/DRP-GatherResourceStatistics-RC2.yaml"

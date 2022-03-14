@@ -12,6 +12,7 @@ config.log
 # Built by sconsUtils
 version.py
 bin/
+ingredients/*/DRP-GatherResourceStatistics*
 
 # Pytest
 tests/.tests

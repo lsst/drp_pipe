@@ -1,0 +1,41 @@
+from lsst.sconsUtils.state import env, targets
+from lsst.sconsUtils.utils import libraryLoaderEnvironment
+
+
+def createGatherResourceStatisticsPipelines():
+    # We could glob for these instead of making them explicit, but the
+    # human-maintained files in pipelines/ that need to import the pipelines
+    # we generate need to be modified manually anyway.
+    templates = [
+        "DECam/DRP-{}.yaml",
+        "HSC/DRP-{}-ci_hsc.yaml",
+        "HSC/DRP-{}-ci_hsc+fakes.yaml",
+        "HSC/DRP-{}-RC2.yaml",
+        "HSC/DRP-{}-RC2+fakes.yaml",
+        "LSSTCam-imSim/DRP-{}.yaml",
+    ]
+    return [
+        env.Command(
+            template.format("GatherResourceStatistics"),
+            template.format("Base"),
+            " ".join(
+                [
+                    libraryLoaderEnvironment(),
+                    "python",
+                    "-m",
+                    "lsst.drp.pipe.gatherResourceStatistics",
+                    "$SOURCE -o $TARGET",
+                ]
+            )
+        )
+        for template in templates
+    ]
+
+
+targets.setdefault("ingredients", []).extend(
+    createGatherResourceStatisticsPipelines()
+)
+
+# Unfortunate to always have to build these, but SCons doesn't know about
+# pipeline import dependencies, so it's the only safe thing we can do.
+env.AlwaysBuild(targets["ingredients"])

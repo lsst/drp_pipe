@@ -4,3 +4,4 @@ description: |
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - "$DRP_PIPE_DIR/ingredients/HSC/DRP-Base-RC2+fakes.yaml"
+  - "$DRP_PIPE_DIR/ingredients/HSC/DRP-GatherResourceStatistics-RC2+fakes.yaml"
