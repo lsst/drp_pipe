@@ -53,9 +53,11 @@ tasks:
             'u_cModelFluxErr', 'g_cModelFluxErr', 'r_cModelFluxErr',
             'i_cModelFluxErr', 'z_cModelFluxErr', 'y_cModelFluxErr',
         ]
-        config.match_tract_catalog.coords_ref_to_convert = {'ra': 'x', 'dec': 'y'}
+        config.match_tract_catalog.coord_format.coords_ref_to_convert = {'ra': 'x', 'dec': 'y'}
         # Might need adjusting for different survey depths
-        config.match_tract_catalog.mag_faintest_ref = 27.0;
+        config.match_tract_catalog.mag_faintest_ref = 27.0
+        config.match_tract_catalog.columns_ref_copy = ['id']
+        config.match_tract_catalog.columns_target_copy = ['objectId']
 subsets:
   step1:
     subset:
