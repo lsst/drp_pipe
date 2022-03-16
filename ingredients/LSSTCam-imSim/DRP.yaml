@@ -53,9 +53,27 @@ tasks:
             'u_cModelFluxErr', 'g_cModelFluxErr', 'r_cModelFluxErr',
             'i_cModelFluxErr', 'z_cModelFluxErr', 'y_cModelFluxErr',
         ]
-        config.match_tract_catalog.coords_ref_to_convert = {'ra': 'x', 'dec': 'y'}
+        config.match_tract_catalog.coord_format.coords_ref_to_convert = {'ra': 'x', 'dec': 'y'}
         # Might need adjusting for different survey depths
-        config.match_tract_catalog.mag_faintest_ref = 27.0;
+        config.match_tract_catalog.mag_faintest_ref = 27.0
+        config.match_tract_catalog.columns_ref_copy = ['id']
+        config.match_tract_catalog.columns_target_copy = ['objectId']
+  compareObjectToTruth:
+    class: lsst.pipe.tasks.diff_matched_tract_catalog.DiffMatchedTractCatalogTask
+    config:
+      columns_target_coord_err: ['xErr', 'yErr']
+      coord_format.coords_ref_to_convert: {'ra': 'x', 'dec': 'y'}
+
+      python: |
+        from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
+        columns_flux = {}
+        for band in 'ugrizy':
+            columns_flux[band] = MatchedCatalogFluxesConfig(
+                column_ref_flux=f'flux_{band}',
+                columns_target_flux=[f'{band}_cModelFlux',],
+                columns_target_flux_err=[f'{band}_cModelFluxErr',],
+            )
+        config.columns_flux = columns_flux
 subsets:
   step1:
     subset:
@@ -138,6 +156,7 @@ subsets:
       - psfPhotRepStar3
       - psfPhotRepStar4
       - matchObjectToTruth
+      - compareObjectToTruth
     description: >
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
