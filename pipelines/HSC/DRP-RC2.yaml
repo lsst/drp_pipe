@@ -86,6 +86,21 @@ tasks:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
       cycleNumber: 4
+  forcedPhotDiffim:
+    class: lsst.meas.base.ForcedPhotCcdTask
+    config:
+      doApplyExternalPhotoCalib: true
+      doApplyExternalSkyWcs: true
+  forcedPhotCcdOnDiaObjects:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      doApplyExternalPhotoCalib: true
+      doApplyExternalSkyWcs: true
+  forcedPhotDiffOnDiaObjects:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      doApplyExternalPhotoCalib: true
+      doApplyExternalSkyWcs: true
 subsets:
   fgcm:
     subset:

@@ -32,3 +32,9 @@ tasks:
       connections.outputCoaddName: "fakes_deep"
       multibandDeblend.useCiLimits: true
       multibandDeblend.processSingles: false
+  forcedPhotCcd:
+    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+    config:
+      connections.inputCoaddName: "fakes_deep"
+      connections.photoCalibName: "jointcal"
+      useGlobalExternalPhotoCalib: false
