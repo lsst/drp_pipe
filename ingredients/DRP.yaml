@@ -51,15 +51,13 @@ tasks:
       # convince contract checker that coaddExposure == goodSeeingCoadd
       connections.coaddExposure: goodSeeingCoadd
   getTemplate:
-    class: lsst.ip.diffim.getTemplate.GetMultiTractCoaddTemplateTask
+    class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
       connections.coaddExposures: goodSeeingCoadd
   imageDifference:
     class: lsst.pipe.tasks.imageDifference.ImageDifferenceFromTemplateTask
     config:
       coaddName: goodSeeing
-      getTemplate.coaddName: goodSeeing
-      getTemplate.warpType: direct
       connections.coaddName: goodSeeing
       # Setting template 'coaddName' is not sufficient to satisfy contract
       connections.coaddExposures: goodSeeingCoadd
