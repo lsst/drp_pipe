@@ -53,6 +53,7 @@ tasks:
   getTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
+      connections.coaddName: goodSeeing
       connections.coaddExposures: goodSeeingCoadd
   imageDifference:
     class: lsst.pipe.tasks.imageDifference.ImageDifferenceFromTemplateTask
