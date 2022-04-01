@@ -84,7 +84,6 @@ tasks:
   fgcmOutputProducts:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
-      doRefcatOutput: false
       cycleNumber: 4
   forcedPhotCcd:
     class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
