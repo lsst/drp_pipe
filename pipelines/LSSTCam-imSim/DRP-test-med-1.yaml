@@ -1,3 +1,4 @@
 description: DRP specialized for the ImSim-DC2 test-med-1 dataset
 imports:
   - $DRP_PIPE_DIR/ingredients/LSSTCam-imSim/DRP.yaml
+  - $ANALYSIS_DRP_DIR/pipelines/LSSTCam-imSim/analysis_drp_plots.yaml

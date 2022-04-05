@@ -10,6 +10,8 @@ imports:
     - jointcal
     - faro_step3
     - faro_step5
+    - plot_skyObject_sky_visit  # Exclude until plot is fixed
+    - plot_CircAp12_sub_PS_meas_calib_psf_used_sky_gals_visit  # Exclude until plot is fixed
 tasks:
   makeWarp:
     class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask

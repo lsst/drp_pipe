@@ -2,4 +2,5 @@ description: >
   The DRP pipeline specialized for the DECam instrument, developed against the
   Merian dataset.
 imports:
-  location: $DRP_PIPE_DIR/ingredients/DECam/DRP.yaml
+  - $DRP_PIPE_DIR/ingredients/DECam/DRP.yaml
+  - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
