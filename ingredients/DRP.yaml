@@ -256,3 +256,6 @@ contracts:
   - drpAssociation.connections.diaObjectTable == drpDiaCalculation.connections.diaObjectTable
   - forcedPhotDiffim.connections.refCat == forcedPhotCcd.connections.refCat
   - consolidateHealSparsePropertyMaps.property_maps == healSparsePropertyMaps.property_maps
+  - "'calib_psf_candidate' not in measure.propagateFlags.source_flags if makeWarp.doApplyFinalizedPsf else True"
+  - "'calib_psf_used' not in measure.propagateFlags.source_flags if makeWarp.doApplyFinalizedPsf else True"
+  - "'calib_psf_reserved' not in measure.propagateFlags.source_flags if makeWarp.doApplyFinalizedPsf else True"
