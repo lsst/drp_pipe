@@ -1,0 +1,14 @@
+description: DRP specialized for LATISS surveys
+instrument: lsst.obs.lsst.Latiss
+imports:
+  - location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+    include:
+      - processCcd
+      - writeSourceTable
+      - transformSourceTable
+
+subsets:
+  sourceTable:
+    subset:
+      - writeSourceTable
+      - transformSourceTable
