@@ -120,6 +120,11 @@ tasks:
         config.badMaskPlanes += ["SUSPECT"]
         from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
         config.select.retarget(PsfWcsSelectImagesTask)
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      python:
+        config.band_order += ["N708", "N540"]
 subsets:
   step0:
     subset:
@@ -148,6 +153,8 @@ subsets:
     subset:
       - consolidateSourceTable
       - consolidateVisitSummary
+      - isolatedStarAssociation
+      - finalizeCharacterization
     description: |
       Per-visit tasks that can be run together, but only after 'step1'.
 
