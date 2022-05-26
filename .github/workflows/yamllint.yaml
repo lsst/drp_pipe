@@ -7,18 +7,5 @@ on:
   pull_request:
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-
-      - name: Install
-        run: pip install yamllint
-
-      - name: Run linter
-        run: yamllint ingredients pipelines
+  call-workflow:
+    uses: lsst/rubin_workflows/.github/workflows/yamllint.yaml@main
