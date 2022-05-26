@@ -44,9 +44,25 @@ tasks:
       connections.photoCalibName: "fgcm"
       doApplyExternalGlobalPhotoCalib: true
       doApplyExternalTractSkyWcs: true
-  writeSourceTable:
+  writePreSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
     config:
+      connections.catalogType: "fakes_"
+      connections.outputCatalog: fakes_preSource
+  transformPreSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: fakes_preSource
+      connections.outputCatalog: fakes_preSourceTable
+  consolidatePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: fakes_preSourceTable
+      connections.outputCatalog: fakes_preSourceTable_visit
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      connections.outputCatalog: fakes_source
       connections.catalogType: "fakes_"
   transformSourceTable:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask

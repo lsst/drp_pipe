@@ -57,3 +57,9 @@ tasks:
     config:
       connections.photoCalibName: "jointcal"
       useGlobalExternalPhotoCalib: false
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      useGlobalExternalPhotoCalib: false
+      connections.photoCalibName: "jointcal"
+      connections.outputCatalog: source

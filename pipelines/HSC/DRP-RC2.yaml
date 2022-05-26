@@ -1,9 +1,11 @@
 description: The DRP pipeline specialized for the HSC RC2 dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  - $DRP_PIPE_DIR/ingredients/DRP.yaml
-  - $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
-  - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+  - location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+    exclude:
+      - writeSourceTable  # cannot reconfigure because different dimensions.
+  - location: $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
+  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
 tasks:
   skyCorr:
     class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask
@@ -11,12 +13,15 @@ tasks:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
       band_order: ["i", "r", "g", "z", "y", "N921"]
+      connections.source_table_visit: preSourceTable_visit
   jointcal:
     # Running jointcal is something we want to do for all real-world
     # instruments, so it doesn't belong in an HSC-specific pipeline, let alone
     # an RC2-specific one.  We just haven't done the pipeline refactoring that
     # would fix this.
     class: lsst.jointcal.JointcalTask
+    config:
+      connections.inputSourceTableVisit: preSourceTable_visit
   # The FGCM configurations below are appropriate specifically for RC2; this is
   # not a bad place for it, because we don't have (and may never have)
   # configuration for FGCM that works across arbitrary datasets; it depends too
@@ -31,6 +36,7 @@ tasks:
       primaryBands: ["i", "r", "g", "z", "y", "N921"]
       doReferenceMatches: true
       randomSeed: 23456
+      connections.sourceTable_visit: preSourceTable_visit
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
@@ -86,6 +92,24 @@ tasks:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
       cycleNumber: 4
+  writePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+    config:
+      connections.outputCatalog: preSource
+  transformPreSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: preSource
+      connections.outputCatalog: preSourceTable
+  consolidatePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: preSourceTable
+      connections.outputCatalog: preSourceTable_visit
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      connections.outputCatalog: source
 subsets:
   fgcm:
     subset:
@@ -99,9 +123,9 @@ subsets:
       - isr
       - characterizeImage
       - calibrate
-      - writeSourceTable
-      - transformSourceTable
-      - consolidateSourceTable
+      - writePreSourceTable
+      - transformPreSourceTable
+      - consolidatePreSourceTable
       - consolidateVisitSummary
       - skyCorr
       - isolatedStarAssociation
@@ -172,8 +196,8 @@ subsets:
       - isr
       - characterizeImage
       - calibrate
-      - writeSourceTable
-      - transformSourceTable
+      - writePreSourceTable
+      - transformPreSourceTable
     description: >
       Per-detector tasks that can be run together to start the DRP pipeline.
 
@@ -183,7 +207,7 @@ subsets:
       select partial visits that overlap that region.
   step2:
     subset:
-      - consolidateSourceTable
+      - consolidatePreSourceTable
       - consolidateVisitSummary
       - skyCorr
       - isolatedStarAssociation
@@ -317,13 +341,17 @@ subsets:
   step6:
     subset:
       - consolidateDiaSourceTable
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
     description: >
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets
 
       This step includes visit-level aggregation tasks. Running without tract
       or patch in the data query is recommended, otherwise the outputs of
-      consolidateDiaSourceTable will not contain complete visits.
+      consolidateDiaSourceTable, and consolidateSourceTable
+      will not contain complete visits.
 
       This subset is separate from step4 to signal to operators to pause to
       assess unexpected image differencing failures before these aggregation

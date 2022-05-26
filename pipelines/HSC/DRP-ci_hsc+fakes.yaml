@@ -38,3 +38,8 @@ tasks:
       connections.inputCoaddName: "fakes_deep"
       connections.photoCalibName: "jointcal"
       useGlobalExternalPhotoCalib: false
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      useGlobalExternalPhotoCalib: false
+      connections.photoCalibName: "jointcal"

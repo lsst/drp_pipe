@@ -7,7 +7,9 @@ description: |
   pre-generated for DECam data processing runs.
 instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
-  location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+  - location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+    exclude:
+      - writeSourceTable  # cannot reconfigure because different dimensions.
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask
@@ -35,8 +37,30 @@ tasks:
     config:
       photoCal.match.referenceSelection.magLimit.fluxField: i_flux
       photoCal.match.referenceSelection.magLimit.maximum: 22.0
+  writePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+    config:
+      connections.outputCatalog: preSource
+  transformPreSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: preSource
+      connections.outputCatalog: preSourceTable
+  consolidatePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: preSourceTable
+      connections.outputCatalog: preSourceTable_visit
   jointcal:
     class: lsst.jointcal.JointcalTask
+    config:
+      connections.inputSourceTableVisit: preSourceTable_visit
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      useGlobalExternalPhotoCalib: false
+      connections.photoCalibName: "jointcal"
+      connections.outputCatalog: source
   makeWarp:
     class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
     config:
@@ -140,8 +164,8 @@ subsets:
       - isr
       - characterizeImage
       - calibrate
-      - transformSourceTable
-      - writeSourceTable
+      - transformPreSourceTable
+      - writePreSourceTable
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
@@ -151,7 +175,7 @@ subsets:
       select partial visits that overlap that region.
   step2:
     subset:
-      - consolidateSourceTable
+      - consolidatePreSourceTable
       - consolidateVisitSummary
       - isolatedStarAssociation
       - finalizeCharacterization
