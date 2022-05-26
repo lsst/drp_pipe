@@ -98,19 +98,20 @@ subsets:
       - consolidateVisitSummary
       - isolatedStarAssociation
       - finalizeCharacterization
-      - nsrcMeasVisit
-      - TE3
-      - TE4
+      - makeCcdVisitTable
+      - makeVisitTable
     description: >
-      Per-visit tasks that can be run together, but only after the 'step1'.
+      Tasks that can be run together, but only after the 'step1'.
 
-      These may or may not be run with 'tract' or 'patch' as part of the data
-      ID expression.  Running with 'tract' (and 'patch') constraints will
-      select partial visits that overlap that region.  This specific pipeline
-      contains no tasks that require full visits.
+      This is a mix of visit-level, tract-level, and collection-level tasks
+      that must not be run with any data query constraints other than
+      instrument. For example, running with 'tract' (and 'patch') constraints
+      will select partial visits that overlap that region.
 
-      This subset is considered a workaround for missing middleware and task
-      functionality.  It may be removed in the future.
+      Visit-level tasks include consolidateSourceTable, consolidateVisitSummary,
+      finalizeCharacterization.
+      Tract-level tasks include: isolatedStarAssociation
+      Full collection-level tasks include: makeCcdVisitTable, makeVisitTable
   step3:
     subset:
       - makeWarp
@@ -127,38 +128,6 @@ subsets:
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
-      - matchCatalogsTract
-      - matchCatalogsPatch
-      - matchCatalogsPatchMultiBand
-      - matchCatalogsTractMag17to21p5
-      - matchCatalogsTractStarsSNR5to80
-      - matchCatalogsTractGxsSNR5to80
-      - PA1
-      - PF1_design
-      - AM1
-      - AM2
-      - AM3
-      - AD1_design
-      - AD2_design
-      - AD3_design
-      - AF1_design
-      - AF2_design
-      - AF3_design
-      - AB1
-      - modelPhotRepGal1
-      - modelPhotRepGal2
-      - modelPhotRepGal3
-      - modelPhotRepGal4
-      - modelPhotRepStar1
-      - modelPhotRepStar2
-      - modelPhotRepStar3
-      - modelPhotRepStar4
-      - psfPhotRepStar1
-      - psfPhotRepStar2
-      - psfPhotRepStar3
-      - psfPhotRepStar4
-      - matchObjectToTruth
-      - compareObjectToTruth
     description: >
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
@@ -203,11 +172,6 @@ subsets:
       - writeForcedSourceOnDiaObjectTable
       - transformForcedSourceOnDiaObjectTable
       - consolidateForcedSourceOnDiaObjectTable
-      - TE1
-      - TE2
-      - wPerp
-      - skyObjectMean
-      - skyObjectStd
     description: >
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets
@@ -235,8 +199,6 @@ subsets:
       expected inputs is missing.
   step7:
     subset:
-      - makeCcdVisitTable
-      - makeVisitTable
       - consolidateHealSparsePropertyMaps
     description: >
       Tasks that should be run as the final step that require global inputs,
@@ -245,3 +207,56 @@ subsets:
       This step has global aggregation tasks to run over all visits, detectors,
       tracts, etc.  This step should be run only with the instrument constraint
       in the data query.
+  faro_all:
+    subset:
+      # visit-level on single-frame products
+      - nsrcMeasVisit
+      - TE3
+      - TE4
+      # tract-level, matched-visit on single-frame products
+      - matchCatalogsTract
+      - matchCatalogsPatch
+      - matchCatalogsPatchMultiBand
+      - matchCatalogsTractMag17to21p5
+      - matchCatalogsTractStarsSNR5to80
+      - matchCatalogsTractGxsSNR5to80
+      - PA1
+      - PF1_design
+      - AM1
+      - AM2
+      - AM3
+      - AD1_design
+      - AD2_design
+      - AD3_design
+      - AF1_design
+      - AF2_design
+      - AF3_design
+      - AB1
+      - modelPhotRepGal1
+      - modelPhotRepGal2
+      - modelPhotRepGal3
+      - modelPhotRepGal4
+      - modelPhotRepStar1
+      - modelPhotRepStar2
+      - modelPhotRepStar3
+      - modelPhotRepStar4
+      - psfPhotRepStar1
+      - psfPhotRepStar2
+      - psfPhotRepStar3
+      - psfPhotRepStar4
+      # tract-level on coadd products
+      - matchObjectToTruth
+      - compareObjectToTruth
+      - TE1
+      - TE2
+      - wPerp
+      - skyObjectMean
+      - skyObjectStd
+    description: >
+      Set of tasks for calculation of metrics via faro.
+      These tasks are a mix of visit- and tract-level.
+
+      Tasks that require single-frame products use Calibrated Source Tables,
+      which are available after consolidateSourceTable (step2).
+      Tasks that require coadd products use Object Tables which are available
+      after consolidateObjectTable (step3).

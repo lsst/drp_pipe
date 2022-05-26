@@ -33,9 +33,7 @@ imports:
     - writeForcedSourceOnDiaObjectTable
     - transformForcedSourceOnDiaObjectTable
     - consolidateForcedSourceOnDiaObjectTable
-    - TE1
-    - TE2
-    - wPerp
+    - faro_all
 tasks:
   singleFrameWithFakes:
     class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask

@@ -4,11 +4,6 @@ imports:
   # In the long term, we should try to avoid importing anything from pipelines;
   # better to refactor anything imported into ingredients.
   location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2+fakes.yaml"
-  exclude:
-    - faro_step2
-    - faro_step3
-    - faro_step5
-
 tasks:
   singleFrameWithFakes:
     class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
