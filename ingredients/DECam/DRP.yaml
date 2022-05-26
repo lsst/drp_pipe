@@ -173,21 +173,56 @@ subsets:
       expression if any later steps will also be run, because downstream steps
       require full visits and 'tract' and 'patch' constraints will always
       select partial visits that overlap that region.
-  step2:
+  step2a:
     subset:
       - consolidatePreSourceTable
       - consolidateVisitSummary
-      - isolatedStarAssociation
-      - finalizeCharacterization
-    description: |
-      Per-visit tasks that can be run together, but only after 'step1'.
+    description: >
+      Visit-level tasks
+      Allowed data query constraints: visit
 
-      These should never be run with 'tract' or 'patch' as part of the data ID
-      expression.
+      Tasks aggregate all detectors for a given visit.
+  step2b:
+    subset:
+      - isolatedStarAssociation
+      - jointcal
+    description: >
+      Tract-level tasks
+      Allowed data query constraints: tract
+
+      Jointcal and isolatedStarAssociation both use PreSources, generated
+      by consolidatePreSourceTable, for all visits that overlap a tract.
+      jointcal produces solutions per-tract, per-visit
+      isolatedStarAssociation produces solutions per-tract.
+  step2c:
+    subset:
+      - makeCcdVisitTable
+      - makeVisitTable
+    description: >
+      Global-level tasks that must not be run with any data query constraints
+      Can be run anytime after subset step2a.
+
+      Allowed data query constraints: instrument
+
+      Tasks generate one data product per collection.
+      make[Ccd]VisitTable produces per-collection summary of the Visits
+      and CcdVisits.
+  step2d:
+    subset:
+      - finalizeCharacterization
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
+    description: >
+      Visit-level tasks.
+      Allowed data query constraints: visit
+
+      writeRecalibratedSourceTable, transformSourceTable run per-detector
+      consolidateSourceTable produces one data product per visit.
+      finalizeCharacterization will eventually model full focal plane PSFs.
   step3:
     subset:
       - selectGoodSeeingVisits
-      - jointcal
       - makeWarp
       - templateGen
       - deblend
@@ -207,15 +242,4 @@ subsets:
       These should be run with explicit 'tract' constraints essentially all the
       time, because otherwise quanta will be created for jobs with only partial visit
       coverage.
-  # Steps 4-6 are not currently implemented in this DECam DRP processing pipeline.
-  step7:
-    subset:
-      - makeVisitTable
-      - makeCcdVisitTable
-    description: |
-      Tasks that should be run as the final step that require global inputs,
-      and can be run after the 'step3' subset.
-
-      This step has global aggregation tasks to run over all visits, detectors, tracts,
-      etc.  This step should be run only with the instrument constraint in the data
-      query.
+  # Steps 4-7 are not currently implemented in this DECam DRP processing pipeline.
