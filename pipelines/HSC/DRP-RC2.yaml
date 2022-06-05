@@ -110,6 +110,10 @@ tasks:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
       connections.outputCatalog: source
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      connections.sourceTableHandles: preSourceTable_visit
 subsets:
   fgcm:
     subset:
