@@ -1,0 +1,100 @@
+description: The DRP pipeline specialized for large data release productions
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml"
+subsets:
+  step2a:
+    subset:
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+      - skyCorr
+    description: >
+      Visit-level tasks
+      Allowed data query constraints: visit
+
+      Tasks aggregate all detectors for a given visit and perform
+      full focal plane background estimation.
+  step2b:
+    subset:
+      - isolatedStarAssociation
+      - jointcal
+    description: >
+      Tract-level tasks
+      Allowed data query constraints: tract
+
+      Jointcal and isolatedStarAssociation both use PreSources, generated
+      by consolidatePreSourceTable, for all visits that overlap a tract.
+      jointcal produces solutions per-tract, per-visit
+      isolatedStarAssociation produces solutions per-tract.
+  step2c:
+    subset:
+      - fgcmBuildStarsTable
+      - fgcmFitCycle
+      - fgcmOutputProducts
+      - makeCcdVisitTable
+      - makeVisitTable
+    description: >
+      Global-level tasks that must not be run with any data query constraints
+      Can be run anytime after subset step2a.
+
+      Allowed data query constraints: instrument
+
+      Tasks generate one data product per collection.
+      FGCM performs better the more visits are included and
+      make[Ccd]VisitTable produces per-collection summary of the Visits
+      and CcdVisits.
+  step2d:
+    subset:
+      - finalizeCharacterization
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
+    description: >
+      Visit-level tasks.
+      Allowed data query constraints: visit
+
+      writeRecalibratedSourceTable, transformSourceTable run per-detector
+      consolidateSourceTable produces one data product per visit.
+      finalizeCharacterization will eventually model full focal plane PSFs.
+  step3:
+    subset:
+      - makeWarp
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - forcedPhotCoadd
+      - writeObjectTable
+      - transformObjectTable
+      - consolidateObjectTable
+      - healSparsePropertyMaps
+    description: >
+      tract-level tasks.  Allowed data query constraints: tract
+
+      Tasks that can be run together, but only after the 'step1', 'step2a',
+      'step2b', 'step2c', 'step2d' subsets.
+
+      If you do not include tract in the data query, you will get tracts with
+      partial coverage.
+  step4:
+    subset:
+      - forcedPhotCcd
+    description: >
+      Detector-level tasks
+      Allowed data query constraints: visit, detector
+
+      These detector-level tasks should not be run with 'tract' or 'patch' as
+      part of the data ID expression if all reference catalogs for seeding
+      forced photometry cover these detector-level quanta are desired.
+  step7:
+    subset:
+      - consolidateHealSparsePropertyMaps
+    description: >
+      Tasks that should be run as the final step that require global inputs,
+      and can be run after the 'step3' subset.
+
+      This step has global aggregation tasks to run over all visits, detectors,
+      tracts, etc.  This step should be run only with the instrument constraint
+      in the data query.
