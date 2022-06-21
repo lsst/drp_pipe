@@ -1,4 +1,4 @@
-description: >
+description: |
   Base Pipeline that describes the Data Release Production process.
 
   Never run this pipeline or any of its subsets directly; always use those in

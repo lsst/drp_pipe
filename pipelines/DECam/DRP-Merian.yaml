@@ -1,4 +1,4 @@
-description: >
+description: |
   The DRP pipeline specialized for the DECam instrument, developed against the
   Merian dataset.
 imports:

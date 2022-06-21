@@ -82,7 +82,7 @@ subsets:
       - calibrate
       - writeSourceTable
       - transformSourceTable
-    description: >
+    description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
       These may or may not be run with 'tract' or 'patch' as part of the data
@@ -100,7 +100,7 @@ subsets:
       - finalizeCharacterization
       - makeCcdVisitTable
       - makeVisitTable
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1'.
 
       This is a mix of visit-level, tract-level, and collection-level tasks
@@ -128,7 +128,7 @@ subsets:
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
 
@@ -152,7 +152,7 @@ subsets:
       - imageDifference
       - transformDiaSourceCat
       - writeForcedSourceTable
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1', 'step2' and
       'step3' subsets
 
@@ -172,7 +172,7 @@ subsets:
       - writeForcedSourceOnDiaObjectTable
       - transformForcedSourceOnDiaObjectTable
       - consolidateForcedSourceOnDiaObjectTable
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets
 
@@ -184,7 +184,7 @@ subsets:
   step6:
     subset:
       - consolidateDiaSourceTable
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets
 
@@ -200,7 +200,7 @@ subsets:
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
-    description: >
+    description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.
 
@@ -252,7 +252,7 @@ subsets:
       - wPerp
       - skyObjectMean
       - skyObjectStd
-    description: >
+    description: |
       Set of tasks for calculation of metrics via faro.
       These tasks are a mix of visit- and tract-level.
 

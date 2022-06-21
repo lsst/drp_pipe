@@ -8,7 +8,7 @@ subsets:
       - consolidatePreSourceTable
       - consolidateVisitSummary
       - skyCorr
-    description: >
+    description: |
       Visit-level tasks
       Allowed data query constraints: visit
 
@@ -18,7 +18,7 @@ subsets:
     subset:
       - isolatedStarAssociation
       - jointcal
-    description: >
+    description: |
       Tract-level tasks
       Allowed data query constraints: tract
 
@@ -33,7 +33,7 @@ subsets:
       - fgcmOutputProducts
       - makeCcdVisitTable
       - makeVisitTable
-    description: >
+    description: |
       Global-level tasks that must not be run with any data query constraints
       Can be run anytime after subset step2a.
 
@@ -49,7 +49,7 @@ subsets:
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
-    description: >
+    description: |
       Visit-level tasks.
       Allowed data query constraints: visit
 
@@ -70,7 +70,7 @@ subsets:
       - transformObjectTable
       - consolidateObjectTable
       - healSparsePropertyMaps
-    description: >
+    description: |
       tract-level tasks.  Allowed data query constraints: tract
 
       Tasks that can be run together, but only after the 'step1', 'step2a',
@@ -81,7 +81,7 @@ subsets:
   step4:
     subset:
       - forcedPhotCcd
-    description: >
+    description: |
       Detector-level tasks
       Allowed data query constraints: visit, detector
 
@@ -91,7 +91,7 @@ subsets:
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
-    description: >
+    description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.
 
