@@ -120,7 +120,7 @@ subsets:
       - fgcmBuildStarsTable
       - fgcmFitCycle
       - fgcmOutputProducts
-    description: >
+    description: |
       Subset that includes all FGCM tasks.
   singleFrame:
     subset:
@@ -133,12 +133,12 @@ subsets:
       - consolidateVisitSummary
       - skyCorr
       - isolatedStarAssociation
-    description: >
+    description: |
       Set of tasks for complete single frame processing. Analogous to
       SingleFrameDriver.
   multiVisit:
     subset: []
-    description: >
+    description: |
       The multiVisit subset defined in pipe_tasks' DRP.yaml is not safe to
       use on HSC for various reasons; use 'step1', 'step2', and 'step3' subsets
       instead.  It may be re-enabled in the future.
@@ -149,7 +149,7 @@ subsets:
       - calibrate
       - writePreSourceTable
       - transformPreSourceTable
-    description: >
+    description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
       These should never be run with 'tract' or 'patch' as part of the data ID
@@ -168,7 +168,7 @@ subsets:
       - fgcmOutputProducts
       - makeCcdVisitTable
       - makeVisitTable
-    description: >
+    description: |
       Global tasks: This is a mix of visit-level, tract-level, and
       collection-level tasks that must not be run with data query constraints
       other than instrument. This only works with small to medium jobs.
@@ -205,7 +205,7 @@ subsets:
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
 
@@ -225,7 +225,7 @@ subsets:
       - writeForcedSourceTable
       - writeRecalibratedSourceTable
       - transformSourceTable
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1', 'step2' and
       'step3' subsets
 
@@ -245,7 +245,7 @@ subsets:
       - writeForcedSourceOnDiaObjectTable
       - transformForcedSourceOnDiaObjectTable
       - consolidateForcedSourceOnDiaObjectTable
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets
 
@@ -258,7 +258,7 @@ subsets:
     subset:
       - consolidateDiaSourceTable
       - consolidateSourceTable
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4', 'step5' subsets
 
@@ -275,7 +275,7 @@ subsets:
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
-    description: >
+    description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.
 
@@ -325,7 +325,7 @@ subsets:
       - wPerp
       - skyObjectMean
       - skyObjectStd
-    description: >
+    description: |
       Set of tasks for calculation of metrics via faro.
       These tasks are a mix of visit- and tract-level and must be run globally
       for RC2.

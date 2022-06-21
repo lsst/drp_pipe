@@ -1,4 +1,4 @@
-description: >
+description: |
   A tiny subset of the DRP pipeline used by the pipelines_check CI package.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:

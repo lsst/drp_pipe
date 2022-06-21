@@ -177,7 +177,7 @@ subsets:
     subset:
       - consolidatePreSourceTable
       - consolidateVisitSummary
-    description: >
+    description: |
       Visit-level tasks
       Allowed data query constraints: visit
 
@@ -186,7 +186,7 @@ subsets:
     subset:
       - isolatedStarAssociation
       - jointcal
-    description: >
+    description: |
       Tract-level tasks
       Allowed data query constraints: tract
 
@@ -198,7 +198,7 @@ subsets:
     subset:
       - makeCcdVisitTable
       - makeVisitTable
-    description: >
+    description: |
       Global-level tasks that must not be run with any data query constraints
       Can be run anytime after subset step2a.
 
@@ -213,7 +213,7 @@ subsets:
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
-    description: >
+    description: |
       Visit-level tasks.
       Allowed data query constraints: visit
 
