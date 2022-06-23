@@ -1,0 +1,15 @@
+description: The DRP pipeline specialized for the HSC RC2 dataset with source injection.
+instrument: lsst.obs.subaru.HyperSuprimeCam
+tasks:
+  inject_visit:
+    class: lsst.source.injection.inject_visit.VisitInjectTask
+    config:
+      connections.photoCalibName: "fgcm"
+      doApplyExternalGlobalPhotoCalib: true
+      doApplyExternalTractSkyWcs: true
+  inject_coadd:
+    class: lsst.source.injection.inject_coadd.CoaddInjectTask
+    config:
+      connections.photoCalibName: "fgcm"
+      doApplyExternalGlobalPhotoCalib: true
+      doApplyExternalTractSkyWcs: true
