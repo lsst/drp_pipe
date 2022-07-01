@@ -147,6 +147,7 @@ tasks:
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
+      connections.source_table_visit: preSourceTable_visit
       python:
         config.band_order += ["N708", "N540"]
 subsets:
