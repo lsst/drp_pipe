@@ -1,0 +1,4 @@
+description: The tier 2 & 3 analysis_drp plots pipeline specialized for the HSC RC2 dataset.
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  - location: $ANALYSIS_DRP_DIR/pipelines/coaddQAPlots_tier2_3.yaml
