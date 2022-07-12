@@ -1,5 +1,6 @@
 description: |
-  Base Pipeline that describes the Data Release Production process.
+  Base Pipeline for Data Release Production process, with only simple
+  single-epoch calibration and characterizations.
 
   Never run this pipeline or any of its subsets directly; always use those in
   the 'pipelines' directory (or create a custom one) instead.

@@ -1,0 +1,86 @@
+description: The DRP pipeline specialized for Subaru's HyperSuprime-Cam
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  - $DRP_PIPE_DIR/ingredients/DRP-full.yaml
+  - $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
+  - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+tasks:
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ["i", "r", "z", "y", "g", "N921", "N816", "N1010", "N387", "N515"]
+subsets:
+  singleFrame:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+      - skyCorr
+      - isolatedStarAssociation
+    description: |
+      Set of tasks for complete single frame processing. Analogous to
+      SingleFrameDriver.
+  multiVisit:
+    subset: []
+    description: |
+      The multiVisit subset defined in pipe_tasks' DRP.yaml is not safe to
+      use on HSC for various reasons; use 'step1', 'step2', and 'step3' subsets
+      instead.  It may be re-enabled in the future.
+  step1:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
+
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region.
+  step5:
+    subset:
+      - drpAssociation
+      - drpDiaCalculation
+      - forcedPhotCcdOnDiaObjects
+      - forcedPhotDiffOnDiaObjects
+      - transformForcedSourceTable
+      - consolidateForcedSourceTable
+      - consolidateAssocDiaSourceTable
+      - consolidateFullDiaObjectTable
+      - writeForcedSourceOnDiaObjectTable
+      - transformForcedSourceOnDiaObjectTable
+      - consolidateForcedSourceOnDiaObjectTable
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2',
+      'step3', and 'step4' subsets
+
+      This step includes patch-level aggregation Tasks. These should be run
+      with explicit 'tract' constraints in the data query, otherwise quanta
+      will be created for jobs with only partial visit coverage.
+      'consolidateForcedSourceTable' is a tract-level task that aggregates
+      patches and should be rerun if any of the patches fail.
+  step6:
+    subset:
+      - consolidateDiaSourceTable
+      - consolidateSourceTable
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2',
+      'step3', and 'step4', 'step5' subsets
+
+      This step includes visit-level aggregation tasks. Running without tract
+      or patch in the data query is recommended, otherwise the outputs of
+      consolidateDiaSourceTable, and consolidateSourceTable
+      will not contain complete visits.
+
+      This subset is separate from step4 to signal to operators to pause to
+      assess unexpected image differencing failures before these aggregation
+      steps. Otherwise, if run in the same quantum graph, aggregated data
+      products (e.g. diaObjects) would not be created if one or more of the
+      expected inputs is missing.

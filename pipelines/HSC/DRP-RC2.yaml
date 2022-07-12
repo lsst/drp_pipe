@@ -1,33 +1,8 @@
 description: The DRP pipeline specialized for the HSC RC2 dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  - location: $DRP_PIPE_DIR/ingredients/DRP.yaml
-    exclude:
-      - writeSourceTable  # cannot reconfigure because different dimensions.
-  - location: $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
-  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+  - $DRP_PIPE_DIR/ingredients/HSC/DRP.yaml
 tasks:
-  skyCorr:
-    class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask
-  isolatedStarAssociation:
-    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
-    config:
-      band_order: ["i", "r", "g", "z", "y", "N921"]
-      connections.source_table_visit: preSourceTable_visit
-  jointcal:
-    # Running jointcal is something we want to do for all real-world
-    # instruments, so it doesn't belong in an HSC-specific pipeline, let alone
-    # an RC2-specific one.  We just haven't done the pipeline refactoring that
-    # would fix this.
-    class: lsst.jointcal.JointcalTask
-    config:
-      connections.inputSourceTableVisit: preSourceTable_visit
-  # The FGCM configurations below are appropriate specifically for RC2; this is
-  # not a bad place for it, because we don't have (and may never have)
-  # configuration for FGCM that works across arbitrary datasets; it depends too
-  # much on what filters are in play.  But it still might make sense to
-  # refactor the configurations below into separate (but still RC2-specific)
-  # config files.
   fgcmBuildStarsTable:
     class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
     config:
@@ -92,70 +67,7 @@ tasks:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
       cycleNumber: 4
-  writePreSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
-    config:
-      connections.outputCatalog: preSource
-  transformPreSourceTable:
-    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
-    config:
-      connections.inputCatalog: preSource
-      connections.outputCatalog: preSourceTable
-  consolidatePreSourceTable:
-    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
-    config:
-      connections.inputCatalogs: preSourceTable
-      connections.outputCatalog: preSourceTable_visit
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      connections.outputCatalog: source
-  measure:
-    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
-    config:
-      connections.sourceTableHandles: preSourceTable_visit
 subsets:
-  fgcm:
-    subset:
-      - fgcmBuildStarsTable
-      - fgcmFitCycle
-      - fgcmOutputProducts
-    description: |
-      Subset that includes all FGCM tasks.
-  singleFrame:
-    subset:
-      - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
-      - transformPreSourceTable
-      - consolidatePreSourceTable
-      - consolidateVisitSummary
-      - skyCorr
-      - isolatedStarAssociation
-    description: |
-      Set of tasks for complete single frame processing. Analogous to
-      SingleFrameDriver.
-  multiVisit:
-    subset: []
-    description: |
-      The multiVisit subset defined in pipe_tasks' DRP.yaml is not safe to
-      use on HSC for various reasons; use 'step1', 'step2', and 'step3' subsets
-      instead.  It may be re-enabled in the future.
-  step1:
-    subset:
-      - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
-      - transformPreSourceTable
-    description: |
-      Per-detector tasks that can be run together to start the DRP pipeline.
-
-      These should never be run with 'tract' or 'patch' as part of the data ID
-      expression if any later steps will also be run, because downstream steps
-      require full visits and 'tract' and 'patch' constraints will always
-      select partial visits that overlap that region.
   step2:
     subset:
       - consolidatePreSourceTable
@@ -232,46 +144,6 @@ subsets:
       These detector-level tasks should not be run with 'tract' or 'patch' as
       part of the data ID expression if all reference catalogs or diffIm
       templates that cover these detector-level quanta are desired.
-  step5:
-    subset:
-      - drpAssociation
-      - drpDiaCalculation
-      - forcedPhotCcdOnDiaObjects
-      - forcedPhotDiffOnDiaObjects
-      - transformForcedSourceTable
-      - consolidateForcedSourceTable
-      - consolidateAssocDiaSourceTable
-      - consolidateFullDiaObjectTable
-      - writeForcedSourceOnDiaObjectTable
-      - transformForcedSourceOnDiaObjectTable
-      - consolidateForcedSourceOnDiaObjectTable
-    description: |
-      Tasks that can be run together, but only after the 'step1', 'step2',
-      'step3', and 'step4' subsets
-
-      This step includes patch-level aggregation Tasks. These should be run
-      with explicit 'tract' constraints in the data query, otherwise quanta
-      will be created for jobs with only partial visit coverage.
-      'consolidateForcedSourceTable' is a tract-level task that aggregates
-      patches and should be rerun if any of the patches fail.
-  step6:
-    subset:
-      - consolidateDiaSourceTable
-      - consolidateSourceTable
-    description: |
-      Tasks that can be run together, but only after the 'step1', 'step2',
-      'step3', and 'step4', 'step5' subsets
-
-      This step includes visit-level aggregation tasks. Running without tract
-      or patch in the data query is recommended, otherwise the outputs of
-      consolidateDiaSourceTable, and consolidateSourceTable
-      will not contain complete visits.
-
-      This subset is separate from step4 to signal to operators to pause to
-      assess unexpected image differencing failures before these aggregation
-      steps. Otherwise, if run in the same quantum graph, aggregated data
-      products (e.g. diaObjects) would not be created if one or more of the
-      expected inputs is missing.
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
