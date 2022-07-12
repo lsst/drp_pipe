@@ -1,33 +1,8 @@
 description: The DRP pipeline specialized for the HSC RC2 dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  - location: $DRP_PIPE_DIR/ingredients/DRP.yaml
-    exclude:
-      - writeSourceTable  # cannot reconfigure because different dimensions.
-  - location: $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
-  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+  - $DRP_PIPE_DIR/ingredients/HSC/DRP.yaml
 tasks:
-  skyCorr:
-    class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask
-  isolatedStarAssociation:
-    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
-    config:
-      band_order: ["i", "r", "g", "z", "y", "N921"]
-      connections.source_table_visit: preSourceTable_visit
-  jointcal:
-    # Running jointcal is something we want to do for all real-world
-    # instruments, so it doesn't belong in an HSC-specific pipeline, let alone
-    # an RC2-specific one.  We just haven't done the pipeline refactoring that
-    # would fix this.
-    class: lsst.jointcal.JointcalTask
-    config:
-      connections.inputSourceTableVisit: preSourceTable_visit
-  # The FGCM configurations below are appropriate specifically for RC2; this is
-  # not a bad place for it, because we don't have (and may never have)
-  # configuration for FGCM that works across arbitrary datasets; it depends too
-  # much on what filters are in play.  But it still might make sense to
-  # refactor the configurations below into separate (but still RC2-specific)
-  # config files.
   fgcmBuildStarsTable:
     class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
     config:
@@ -40,7 +15,6 @@ tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
-      doMultipleCycles: true
       multipleCyclesFinalCycleNumber: 4
       randomSeed: 89234
       outfileBase: "fgcmFitCycleRC2"
@@ -92,56 +66,11 @@ tasks:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
       cycleNumber: 4
-  writePreSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
-      connections.outputCatalog: preSource
-  transformPreSourceTable:
-    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
-    config:
-      connections.inputCatalog: preSource
-      connections.outputCatalog: preSourceTable
-  consolidatePreSourceTable:
-    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
-    config:
-      connections.inputCatalogs: preSourceTable
-      connections.outputCatalog: preSourceTable_visit
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      connections.outputCatalog: source
-  measure:
-    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
-    config:
-      connections.sourceTableHandles: preSourceTable_visit
+      band_order: ['i', 'r', 'g', 'z', 'y', 'N921']
 subsets:
-  fgcm:
-    subset:
-      - fgcmBuildStarsTable
-      - fgcmFitCycle
-      - fgcmOutputProducts
-    description: |
-      Subset that includes all FGCM tasks.
-  singleFrame:
-    subset:
-      - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
-      - transformPreSourceTable
-      - consolidatePreSourceTable
-      - consolidateVisitSummary
-      - skyCorr
-      - isolatedStarAssociation
-    description: |
-      Set of tasks for complete single frame processing. Analogous to
-      SingleFrameDriver.
-  multiVisit:
-    subset: []
-    description: |
-      The multiVisit subset defined in pipe_tasks' DRP.yaml is not safe to
-      use on HSC for various reasons; use 'step1', 'step2', and 'step3' subsets
-      instead.  It may be re-enabled in the future.
   step1:
     subset:
       - isr
@@ -282,54 +211,3 @@ subsets:
       This step has global aggregation tasks to run over all visits, detectors,
       tracts, etc.  This step should be run only with the instrument constraint
       in the data query.
-  faro_all:
-    subset:
-      # visit-level on single-frame products
-      - nsrcMeasVisit
-      - TE3
-      - TE4
-      # tract-level, matched-visit on single-frame products
-      - matchCatalogsTract
-      - matchCatalogsPatch
-      - matchCatalogsPatchMultiBand
-      - matchCatalogsTractMag17to21p5
-      - matchCatalogsTractStarsSNR5to80
-      - matchCatalogsTractGxsSNR5to80
-      - PA1
-      - PF1_design
-      - AM1
-      - AM2
-      - AM3
-      - AD1_design
-      - AD2_design
-      - AD3_design
-      - AF1_design
-      - AF2_design
-      - AF3_design
-      - AB1
-      - modelPhotRepGal1
-      - modelPhotRepGal2
-      - modelPhotRepGal3
-      - modelPhotRepGal4
-      - modelPhotRepStar1
-      - modelPhotRepStar2
-      - modelPhotRepStar3
-      - modelPhotRepStar4
-      - psfPhotRepStar1
-      - psfPhotRepStar2
-      - psfPhotRepStar3
-      - psfPhotRepStar4
-      # tract-level on coadd products
-      - TE1
-      - TE2
-      - wPerp
-      - skyObjectMean
-      - skyObjectStd
-    description: |
-      Set of tasks for calculation of metrics via faro.
-      These tasks are a mix of visit- and tract-level and must be run globally
-      for RC2.
-      Tasks that require single-frame products use Calibrated Source Tables,
-      which are available after consolidateSourceTable (step6) is run.
-      Tasks that require coadd products use Object Tables which are available
-      after consolidateObjectTable (step3) is run.

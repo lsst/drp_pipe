@@ -1,9 +1,7 @@
 description: The DRP+fakes pipeline specialized for the ci_hsc test dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  # In the long term, we should try to avoid importing anything from pipelines;
-  # better to refactor anything imported into ingredients.
-  location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2+fakes.yaml"
+  location: "$DRP_PIPE_DIR/ingredients/HSC/DRP+fakes.yaml"
 tasks:
   singleFrameWithFakes:
     class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
@@ -38,3 +36,7 @@ tasks:
     config:
       useGlobalExternalPhotoCalib: false
       connections.photoCalibName: "jointcal"
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ['i', 'r']
