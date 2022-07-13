@@ -1,0 +1,7 @@
+description:
+  Pipeline snippet that adds jointcal with astrometric fitting enabled.
+tasks:
+  jointcal:
+    class: lsst.jointcal.JointcalTask
+    config:
+      connections.inputSourceTableVisit: preSourceTable_visit

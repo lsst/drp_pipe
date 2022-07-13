@@ -7,10 +7,8 @@ description: |
   pre-generated for DECam data processing runs.
 instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
-  - location: $DRP_PIPE_DIR/ingredients/DRP-full.yaml
-    exclude:
-      - skyCorr
-      - fgcm
+  - $DRP_PIPE_DIR/ingredients/DRP-recalibrated.yaml
+  - $DRP_PIPE_DIR/ingredients/add-jointcal.yaml
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask

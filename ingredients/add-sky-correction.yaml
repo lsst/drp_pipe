@@ -1,0 +1,5 @@
+description:
+  Pipeline snippet that enables full-visit background subtraction.
+tasks:
+  skyCorr:
+    class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask

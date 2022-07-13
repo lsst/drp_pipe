@@ -1,32 +1,23 @@
 description:
-  Base Pipeline for Data Release Production process, with full multi-epoch
-  calibration and characterizations.
+  Intermediate base Pipeline for Data Release Production process with two
+  versions (pre- and regular) of sourceTable datasets.
 
   Never run this pipeline or any of its subsets directly; always use those in
   the 'pipelines' directory (or create a custom one) instead.
+
+  For this to be useful, concrete pipelines must also include tasks that
+  actually provide new calibrations and reconfigure
+  `writeRecalibratedSourceTable` to use them.  Several of the `add-*.yaml`
+  ingredients pipelines can be used for this.
 imports:
   - location: $DRP_PIPE_DIR/ingredients/DRP-simplified.yaml
     exclude:
       - writeSourceTable  # cannot reconfigure because different dimensions.
 tasks:
-  skyCorr:
-    class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
       connections.source_table_visit: preSourceTable_visit
-  jointcal:
-    class: lsst.jointcal.JointcalTask
-    config:
-      connections.inputSourceTableVisit: preSourceTable_visit
-  fgcmBuildStarsTable:
-    class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
-    config:
-      connections.sourceTable_visit: preSourceTable_visit
-  fgcmFitCycle:
-    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
-  fgcmOutputProducts:
-    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
   writePreSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
     config:
@@ -55,13 +46,6 @@ subsets:
   # pipelines as way to include or exclude those tasks.  It does not (and
   # should not) contain "step" subsets aimed at splitting up a processing
   # campaign.
-  fgcm:
-    subset:
-      - fgcmBuildStarsTable
-      - fgcmFitCycle
-      - fgcmOutputProducts
-    description: |
-      Subset that includes all FGCM tasks.
   preSourceTable:
     subset:
       - writePreSourceTable

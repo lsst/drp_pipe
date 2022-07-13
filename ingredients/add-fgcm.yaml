@@ -1,0 +1,19 @@
+description:
+  Pipeline snippet that adds FGCM tasks and an "fgcm" subset to a DRP pipeline.
+tasks:
+  fgcmBuildStarsTable:
+    class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
+    config:
+      connections.sourceTable_visit: preSourceTable_visit
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+  fgcmOutputProducts:
+    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+subsets:
+  fgcm:
+    subset:
+      - fgcmBuildStarsTable
+      - fgcmFitCycle
+      - fgcmOutputProducts
+    description: |
+      Subset that includes all FGCM tasks.
