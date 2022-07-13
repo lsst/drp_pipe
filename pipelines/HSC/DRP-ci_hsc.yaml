@@ -60,3 +60,7 @@ tasks:
       useGlobalExternalPhotoCalib: false
       connections.photoCalibName: "jointcal"
       connections.outputCatalog: source
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ['i', 'r']

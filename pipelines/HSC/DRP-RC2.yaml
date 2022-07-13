@@ -67,7 +67,25 @@ tasks:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
       cycleNumber: 4
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ['i', 'r', 'g', 'z', 'y', 'N921']
 subsets:
+  step1:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
+
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region.
   step2:
     subset:
       - consolidatePreSourceTable
@@ -144,6 +162,46 @@ subsets:
       These detector-level tasks should not be run with 'tract' or 'patch' as
       part of the data ID expression if all reference catalogs or diffIm
       templates that cover these detector-level quanta are desired.
+  step5:
+    subset:
+      - drpAssociation
+      - drpDiaCalculation
+      - forcedPhotCcdOnDiaObjects
+      - forcedPhotDiffOnDiaObjects
+      - transformForcedSourceTable
+      - consolidateForcedSourceTable
+      - consolidateAssocDiaSourceTable
+      - consolidateFullDiaObjectTable
+      - writeForcedSourceOnDiaObjectTable
+      - transformForcedSourceOnDiaObjectTable
+      - consolidateForcedSourceOnDiaObjectTable
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2',
+      'step3', and 'step4' subsets
+
+      This step includes patch-level aggregation Tasks. These should be run
+      with explicit 'tract' constraints in the data query, otherwise quanta
+      will be created for jobs with only partial visit coverage.
+      'consolidateForcedSourceTable' is a tract-level task that aggregates
+      patches and should be rerun if any of the patches fail.
+  step6:
+    subset:
+      - consolidateDiaSourceTable
+      - consolidateSourceTable
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2',
+      'step3', and 'step4', 'step5' subsets
+
+      This step includes visit-level aggregation tasks. Running without tract
+      or patch in the data query is recommended, otherwise the outputs of
+      consolidateDiaSourceTable, and consolidateSourceTable
+      will not contain complete visits.
+
+      This subset is separate from step4 to signal to operators to pause to
+      assess unexpected image differencing failures before these aggregation
+      steps. Otherwise, if run in the same quantum graph, aggregated data
+      products (e.g. diaObjects) would not be created if one or more of the
+      expected inputs is missing.
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
@@ -154,54 +212,3 @@ subsets:
       This step has global aggregation tasks to run over all visits, detectors,
       tracts, etc.  This step should be run only with the instrument constraint
       in the data query.
-  faro_all:
-    subset:
-      # visit-level on single-frame products
-      - nsrcMeasVisit
-      - TE3
-      - TE4
-      # tract-level, matched-visit on single-frame products
-      - matchCatalogsTract
-      - matchCatalogsPatch
-      - matchCatalogsPatchMultiBand
-      - matchCatalogsTractMag17to21p5
-      - matchCatalogsTractStarsSNR5to80
-      - matchCatalogsTractGxsSNR5to80
-      - PA1
-      - PF1_design
-      - AM1
-      - AM2
-      - AM3
-      - AD1_design
-      - AD2_design
-      - AD3_design
-      - AF1_design
-      - AF2_design
-      - AF3_design
-      - AB1
-      - modelPhotRepGal1
-      - modelPhotRepGal2
-      - modelPhotRepGal3
-      - modelPhotRepGal4
-      - modelPhotRepStar1
-      - modelPhotRepStar2
-      - modelPhotRepStar3
-      - modelPhotRepStar4
-      - psfPhotRepStar1
-      - psfPhotRepStar2
-      - psfPhotRepStar3
-      - psfPhotRepStar4
-      # tract-level on coadd products
-      - TE1
-      - TE2
-      - wPerp
-      - skyObjectMean
-      - skyObjectStd
-    description: |
-      Set of tasks for calculation of metrics via faro.
-      These tasks are a mix of visit- and tract-level and must be run globally
-      for RC2.
-      Tasks that require single-frame products use Calibrated Source Tables,
-      which are available after consolidateSourceTable (step6) is run.
-      Tasks that require coadd products use Object Tables which are available
-      after consolidateObjectTable (step3) is run.

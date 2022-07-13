@@ -50,6 +50,11 @@ tasks:
     config:
       connections.sourceTableHandles: preSourceTable_visit
 subsets:
+  # This pipeline file only defines subsets that have a consistent or
+  # near-consistent definition as a set of tasks, for use by downstream
+  # pipelines as way to include or exclude those tasks.  It does not (and
+  # should not) contain "step" subsets aimed at splitting up a processing
+  # campaign.
   fgcm:
     subset:
       - fgcmBuildStarsTable
@@ -57,3 +62,17 @@ subsets:
       - fgcmOutputProducts
     description: |
       Subset that includes all FGCM tasks.
+  preSourceTable:
+    subset:
+      - writePreSourceTable
+      - transformPreSourceTable
+      - consolidatePreSourceTable
+    description: >
+      Set of tasks to generate parquet PreSource Tables, from single-visit
+      processing steps only.
+  sourceTable:
+    subset:
+      - writeRecalibratedSourceTable
+    description: >
+      Set of tasks to generate parquet Source Tables, using final
+      calibrations.
