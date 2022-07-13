@@ -2,6 +2,12 @@ description: The DRP pipeline specialized for large data release productions
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   location: "$DRP_PIPE_DIR/ingredients/HSC/DRP.yaml"
+tasks:
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      doMultipleCycles: true
+      useExposureReferenceOffset: true
 subsets:
   step2a:
     subset:
