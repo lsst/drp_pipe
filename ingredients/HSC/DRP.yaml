@@ -1,0 +1,67 @@
+description: The DRP pipeline specialized for Subaru's HyperSuprime-Cam
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  - $DRP_PIPE_DIR/ingredients/DRP-full.yaml
+  - $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
+  - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+tasks:
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ["i", "r", "z", "y", "g", "N921", "N816", "N1010", "N387", "N515"]
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      doMultipleCycles: true
+subsets:
+  faro_all:
+    subset:
+      # visit-level on single-frame products
+      - nsrcMeasVisit
+      - TE3
+      - TE4
+      # tract-level, matched-visit on single-frame products
+      - matchCatalogsTract
+      - matchCatalogsPatch
+      - matchCatalogsPatchMultiBand
+      - matchCatalogsTractMag17to21p5
+      - matchCatalogsTractStarsSNR5to80
+      - matchCatalogsTractGxsSNR5to80
+      - PA1
+      - PF1_design
+      - AM1
+      - AM2
+      - AM3
+      - AD1_design
+      - AD2_design
+      - AD3_design
+      - AF1_design
+      - AF2_design
+      - AF3_design
+      - AB1
+      - modelPhotRepGal1
+      - modelPhotRepGal2
+      - modelPhotRepGal3
+      - modelPhotRepGal4
+      - modelPhotRepStar1
+      - modelPhotRepStar2
+      - modelPhotRepStar3
+      - modelPhotRepStar4
+      - psfPhotRepStar1
+      - psfPhotRepStar2
+      - psfPhotRepStar3
+      - psfPhotRepStar4
+      # tract-level on coadd products
+      - TE1
+      - TE2
+      - wPerp
+      - skyObjectMean
+      - skyObjectStd
+    description: |
+      Set of tasks for calculation of metrics via faro.
+      These tasks are a mix of visit- and tract-level and must be run globally
+      for RC2.
+      Tasks that require single-frame products use Calibrated Source Tables,
+      which are available after consolidateSourceTable (step6) is run.
+      Tasks that require coadd products use Object Tables which are available
+      after consolidateObjectTable (step3) is run.

@@ -1,9 +1,7 @@
 description: The DRP pipeline specialized for the ci_hsc test dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  # In the long term, we should try to avoid importing anything from pipelines;
-  # better to refactor anything imported into ingredients.
-  location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml"
+  location: "$DRP_PIPE_DIR/ingredients/HSC/DRP.yaml"
   exclude:
     # Don't run jointcal, fgcm, or (some of) faro, as there isn't enough data.
     - fgcm
@@ -62,3 +60,7 @@ tasks:
       useGlobalExternalPhotoCalib: false
       connections.photoCalibName: "jointcal"
       connections.outputCatalog: source
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ['i', 'r']
