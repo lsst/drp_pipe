@@ -1,0 +1,49 @@
+# This BPS configuration snippet adds the requestMemory values for all DRP
+# and faro tasks as run in the DP0.2 production.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/resources/LSSTCam-imSim/DRP-DP0.2.yaml
+#
+# (with no outer indentation) to your BPS config file.
+#
+pipetask:
+  # DRP tasks
+  makeWarp:
+    requestMemory: 8192
+  assembleCoadd:
+    requestMemory: 16384
+  deblend:
+    requestMemory: 16384
+  measure:
+    requestMemory: 16384
+  mergeMeasurements:
+    requestMemory: 16384
+  forcedPhotCoadd:
+    requestMemory: 4096
+  writeObjectTable:
+    requestMemory: 16384
+  consolidateObjectTable:
+    requestMemory: 4096
+  consolidateForcedSourceTable:
+    requestMemory: 120000
+  consolidateForcedSourceOnDiaObjectTable:
+    requestMemory: 18000
+  # faro tasks
+  matchCatalogsPatch:
+    requestMemory: 4096
+  modelPhotRepGal4:
+    requestMemory: 4096
+  imageDifference:
+    requestMemory: 4096
+  matchCatalogsPatchMultiBand:
+    requestMemory: 120000
+  matchCatalogsTract:
+    requestMemory: 120000
+  wPerp:
+    requestMemory: 120000
+  TE1:
+    requestMemory: 46000
+  TE2:
+    requestMemory: 46000
