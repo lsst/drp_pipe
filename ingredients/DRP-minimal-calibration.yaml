@@ -7,7 +7,12 @@ description: |
 
 tasks:
   isr: lsst.ip.isr.IsrTask
-  characterizeImage: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
+  characterizeImage:
+    class: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
+    config:
+      - python: |
+          import lsst.meas.extensions.piff.piffPsfDeterminer
+          config.measurePsf.psfDeterminer = "piff"
   calibrate: lsst.pipe.tasks.calibrate.CalibrateTask
   writeSourceTable: lsst.pipe.tasks.postprocess.WriteSourceTableTask
   transformSourceTable: lsst.pipe.tasks.postprocess.TransformSourceTableTask
