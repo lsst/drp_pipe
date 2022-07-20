@@ -14,6 +14,7 @@ setupRequired(fgcmcal)
 setupRequired(pipe_drivers)
 setupRequired(faro)
 setupRequired(analysis_drp)
+setupRequired(analysis_tools)
 
 # The following is boilerplate for all packages.
 # See https://dmtn-001.lsst.io for details on LSST_LIBRARY_PATH.
