@@ -20,8 +20,8 @@ tasks:
     config:
       # Only run the deblender on a small subset of blended parents
       deblend.useCiLimits: true
-  imageDifference:
-    class: lsst.pipe.tasks.imageDifference.ImageDifferenceFromTemplateTask
+  subtractImages:
+    class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
     # Increase required area of usable template so we raise NoWorkFound
     # instead of bringing down execution.
     config:
