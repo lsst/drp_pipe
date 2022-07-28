@@ -11,7 +11,6 @@ setupRequired(pipe_tasks)
 setupRequired(meas_base)
 setupRequired(jointcal)
 setupRequired(fgcmcal)
-setupRequired(pipe_drivers)
 setupRequired(faro)
 setupRequired(analysis_drp)
 
