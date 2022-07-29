@@ -149,7 +149,8 @@ subsets:
       - forcedPhotCcd
       - forcedPhotDiffim
       - getTemplate
-      - imageDifference
+      - subtractImages
+      - detectAndMeasureDiaSources
       - transformDiaSourceCat
       - writeForcedSourceTable
       - writeRecalibratedSourceTable

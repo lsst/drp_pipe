@@ -61,14 +61,21 @@ tasks:
     config:
       connections.coaddName: goodSeeing
       connections.coaddExposures: goodSeeingCoadd
-  imageDifference:
-    class: lsst.pipe.tasks.imageDifference.ImageDifferenceFromTemplateTask
+      connections.template: goodSeeingDiff_templateExp
+  subtractImages:
+    class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
     config:
-      coaddName: goodSeeing
       connections.coaddName: goodSeeing
-      # Setting template 'coaddName' is not sufficient to satisfy contract
-      connections.coaddExposures: goodSeeingCoadd
-      connections.subtractedExposure: goodSeeingDiff_differenceExp
+      connections.template: goodSeeingDiff_templateExp
+      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.matchedTemplate: goodSeeingDiff_matchedExp
+  detectAndMeasureDiaSources:
+    class: lsst.ip.diffim.detectAndMeasure.DetectAndMeasureTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.matchedTemplate: goodSeeingDiff_matchedExp
+      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.subtractedMeasuredExposure: goodSeeingDiff_differenceExp
   transformDiaSourceCat:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
@@ -207,7 +214,8 @@ subsets:
       - selectGoodSeeingVisits
       - templateGen
       - getTemplate
-      - imageDifference
+      - subtractImages
+      - detectAndMeasureDiaSources
       - transformDiaSourceCat
       - consolidateDiaSourceTable
       - drpAssociation
@@ -221,8 +229,11 @@ subsets:
 contracts:
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
   - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures
-  - imageDifference.connections.subtractedExposure == transformDiaSourceCat.connections.diffIm
-  - imageDifference.connections.subtractedExposure == forcedPhotDiffim.connections.exposure
+  - getTemplate.connections.template == subtractImages.connections.template
+  - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSources.connections.matchedTemplate
+  - subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
+  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == transformDiaSourceCat.connections.diffIm
+  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotDiffim.connections.exposure
   - transformDiaSourceCat.connections.diaSourceTable == consolidateDiaSourceTable.connections.inputCatalogs
   - transformDiaSourceCat.connections.diaSourceTable == drpAssociation.connections.diaSourceTables
   - drpAssociation.connections.assocDiaSourceTable == drpDiaCalculation.connections.assocDiaSourceTable

@@ -14,7 +14,8 @@ imports:
     - calibrate
     - selectGoodSeeingVisits
     - templateGen
-    - imageDifference
+    - subtractImages
+    - detectAndMeasureDiaSources
     - transformDiaSourceCat
     - consolidateDiaSourceTable
     - drpAssociation
