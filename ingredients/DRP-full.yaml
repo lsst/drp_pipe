@@ -10,7 +10,7 @@ imports:
       - writeSourceTable  # cannot reconfigure because different dimensions.
 tasks:
   skyCorr:
-    class: lsst.pipe.drivers.skyCorrection.SkyCorrectionTask
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
