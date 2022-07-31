@@ -87,7 +87,7 @@ tasks:
       connections.inputCoaddName: "fakes_deep"
       connections.outputCoaddName: "fakes_deep"
   makeWarp:
-    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
+    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
       connections.photoCalibName: "fgcm"
       useGlobalExternalPhotoCalib: true

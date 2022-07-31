@@ -9,7 +9,7 @@ imports:
     - faro_all
 tasks:
   makeWarp:
-    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
+    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
       # Do expect jointcal's photoCalibs to be present even though we didn't
       # run it, since that's what the testdata_ci_hsc repo is set up to have.
