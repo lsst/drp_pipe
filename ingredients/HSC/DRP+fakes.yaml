@@ -33,6 +33,9 @@ imports:
     - transformForcedSourceOnDiaObjectTable
     - consolidateForcedSourceOnDiaObjectTable
     - faro_all
+    - analyzeObjectTableCore
+    - analyzeObjectTableExtended
+    - analyzeSourceTableCore
 tasks:
   singleFrameWithFakes:
     class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask

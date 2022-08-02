@@ -1,7 +1,10 @@
 description: The DRP pipeline specialized for the ci_hsc test dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  location: "$DRP_PIPE_DIR/ingredients/HSC/DRP.yaml"
+  location:
+    - $DRP_PIPE_DIR/ingredients/HSC/DRP.yaml
+    - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
+    - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
   exclude:
     # Don't run jointcal, fgcm, or (some of) faro, as there isn't enough data.
     - fgcm
@@ -61,3 +64,11 @@ tasks:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
       band_order: ['i', 'r']
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      bands: ['r', 'i',]
+  analyzeObjectTableExtended:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      bands: ['r', 'i',]

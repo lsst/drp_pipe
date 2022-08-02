@@ -4,6 +4,7 @@ imports:
   - $DRP_PIPE_DIR/ingredients/DRP-full.yaml
   - $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
   - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
 tasks:
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
