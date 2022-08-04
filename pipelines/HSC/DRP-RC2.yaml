@@ -65,7 +65,7 @@ tasks:
   fgcmOutputProducts:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
-      cycleNumber: 4
+      connections.cycleNumber: 4
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
