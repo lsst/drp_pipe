@@ -23,7 +23,7 @@ tasks:
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
   makeWarp:
-    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
+    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
       makePsfMatched: true
   assembleCoadd:

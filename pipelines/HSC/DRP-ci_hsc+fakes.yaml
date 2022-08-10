@@ -12,7 +12,7 @@ tasks:
       doApplyExternalGlobalPhotoCalib: false
       connections.photoCalibName: "jointcal"
   makeWarp:
-    class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
+    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
       connections.photoCalibName: "jointcal"
       useGlobalExternalPhotoCalib: false
