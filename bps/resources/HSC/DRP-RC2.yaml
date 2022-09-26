@@ -20,12 +20,65 @@ pipetask:
   fgcmOutputProducts:
     requestMemory: 8192
   assembleCoadd:
-    requestMemory: 8192
+    requestMemory: 24576
   jointcal:
     requestMemory: 21000
   deblend:
-    requestMemory: 8192
+    requestMemory: 16384
   makeWarp:
     requestMemory: 8192
+  measure:
+    requestMemory: 16384
+  mergeMeasurements:
+    requestMemory: 16384
+  forcedPhotCoadd:
+    requestMemory: 4096
   writeObjectTable:
-    requestMemory: 8192
+    requestMemory: 16384
+  consolidateObjectTable:
+    requestMemory: 35000
+  templateGen:
+    requestMemory: 5000
+  healSparsePropertyMaps:
+    requestMemory: 30000
+  getTemplate:
+    requestMemory: 5000
+  consolidateFullDiaObjectTable:
+    requestMemory: 10000
+  consolidateForcedSourceOnDiaObjectTable:
+    requestMemory: 490000
+    queue: "SLAC_Rubin_Merge"
+  transformForcedSourceOnDiaObjectTable:
+    requestMemory: 10000
+  consolidateAssocDiaSourceTable:
+    requestMemory: 5000
+  consolidateForcedSourceTable:
+    requestMemory: 200000
+
+  # faro tasks
+  matchCatalogsPatch:
+    requestMemory: 4096
+  matchCatalogsPatchMultiBand:
+    requestMemory: 120000
+  matchCatalogsTract:
+    requestMemory: 120000
+  TE1:
+    requestMemory: 46000
+  TE2:
+    requestMemory: 46000
+  wPerp:
+    requestMemory: 120000
+  matchCatalogsTractMag17to21p5:
+    requestMemory: 200000
+  matchCatalogsTractStarsSNR5to80:
+    requestMemory: 200000
+  matchCatalogsTractGxsSNR5to80:
+    requestMemory: 200000
+  modelPhotRepGal1:
+    requestMemory: 5000
+  modelPhotRepGal2:
+    requestMemory: 5000
+  modelPhotRepGal3:
+    requestMemory: 5000
+  modelPhotRepGal4:
+    requestMemory: 5000
