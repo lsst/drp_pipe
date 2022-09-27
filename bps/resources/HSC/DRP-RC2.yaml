@@ -47,7 +47,6 @@ pipetask:
     requestMemory: 10000
   consolidateForcedSourceOnDiaObjectTable:
     requestMemory: 490000
-    queue: "SLAC_Rubin_Merge"
   transformForcedSourceOnDiaObjectTable:
     requestMemory: 10000
   consolidateAssocDiaSourceTable:
