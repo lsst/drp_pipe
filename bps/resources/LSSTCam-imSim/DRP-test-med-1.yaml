@@ -1,0 +1,42 @@
+# This BPS configuration snippet adds updated requestMemory values for all DRP
+# and faro tasks known to frequently exceed the default in regular ImSim-DC2
+# test-med-1 processing.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/resources/LSSTCam-imSim/DRP-test-med-1.yaml
+#
+# (with no outer indentation) to your BPS config file.
+#
+pipetask:
+  # DRP tasks
+  makeWarp:
+    requestMemory: 8192
+  assembleCoadd:
+    requestMemory: 16384
+  deblend:
+    requestMemory: 16384
+  mergeMeasurements:
+    requestMemory: 16384
+  forcedPhotCoadd:
+    requestMemory: 4096
+  writeObjectTable:
+    requestMemory: 16384
+  diffimDRP:
+    requestMemory: 8192
+  # faro tasks
+  matchCatalogsPatch:
+    requestMemory: 4096
+  matchCatalogsPatchMultiBand:
+    requestMemory: 8196
+  modelPhotRepGal4:
+    requestMemory: 4096
+  matchCatalogsTract:
+    requestMemory: 32000
+  wPerp:
+    requestMemory: 32000
+  TE1:
+    requestMemory: 16384
+  TE2:
+    requestMemory: 16384
