@@ -113,46 +113,6 @@ subsets:
       These detector-level tasks should not be run with 'tract' or 'patch' as
       part of the data ID expression if all reference catalogs for seeding
       forced photometry cover these detector-level quanta are desired.
-  step5:
-    subset:
-      - drpAssociation
-      - drpDiaCalculation
-      - forcedPhotCcdOnDiaObjects
-      - forcedPhotDiffOnDiaObjects
-      - transformForcedSourceTable
-      - consolidateForcedSourceTable
-      - consolidateAssocDiaSourceTable
-      - consolidateFullDiaObjectTable
-      - writeForcedSourceOnDiaObjectTable
-      - transformForcedSourceOnDiaObjectTable
-      - consolidateForcedSourceOnDiaObjectTable
-    description: |
-      Tasks that can be run together, but only after the 'step1', 'step2',
-      'step3', and 'step4' subsets
-
-      This step includes patch-level aggregation Tasks. These should be run
-      with explicit 'tract' constraints in the data query, otherwise quanta
-      will be created for jobs with only partial visit coverage.
-      'consolidateForcedSourceTable' is a tract-level task that aggregates
-      patches and should be rerun if any of the patches fail.
-  step6:
-    subset:
-      - consolidateDiaSourceTable
-      - consolidateSourceTable
-    description: |
-      Tasks that can be run together, but only after the 'step1', 'step2',
-      'step3', and 'step4', 'step5' subsets
-
-      This step includes visit-level aggregation tasks. Running without tract
-      or patch in the data query is recommended, otherwise the outputs of
-      consolidateDiaSourceTable, and consolidateSourceTable
-      will not contain complete visits.
-
-      This subset is separate from step4 to signal to operators to pause to
-      assess unexpected image differencing failures before these aggregation
-      steps. Otherwise, if run in the same quantum graph, aggregated data
-      products (e.g. diaObjects) would not be created if one or more of the
-      expected inputs is missing.
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
