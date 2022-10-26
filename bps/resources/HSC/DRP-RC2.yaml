@@ -56,7 +56,7 @@ pipetask:
 
   # faro tasks
   matchCatalogsPatch:
-    requestMemory: 4096
+    requestMemory: 8192
   matchCatalogsPatchMultiBand:
     requestMemory: 120000
   matchCatalogsTract:
