@@ -4,8 +4,5 @@ imports:
 tasks:
   inject_visit:
     class: lsst.source.injection.inject_visit.VisitInjectTask
-    config:
-      doApplyExternalGlobalPhotoCalib: false
-      doApplyExternalTractSkyWcs: false
   inject_coadd:
     class: lsst.source.injection.inject_coadd.CoaddInjectTask

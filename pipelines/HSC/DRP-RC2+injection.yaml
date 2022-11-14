@@ -5,10 +5,10 @@ tasks:
   inject_visit:
     class: lsst.source.injection.inject_visit.VisitInjectTask
     config:
-      connections.photoCalibName: "fgcm"
-      doApplyExternalGlobalPhotoCalib: true
-      doApplyExternalTractSkyWcs: true
+      connections.photo_calib_name: "fgcm"
+      external_photo_calib_type: "global"
+      external_wcs_type: "tract"
   inject_coadd:
     class: lsst.source.injection.inject_coadd.CoaddInjectTask
     config:
-      connections.photoCalibName: "fgcm"
+      connections.photo_calib_name: "fgcm"
