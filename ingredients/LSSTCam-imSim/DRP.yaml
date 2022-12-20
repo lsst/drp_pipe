@@ -98,6 +98,7 @@ subsets:
       - finalizeCharacterization
       - makeCcdVisitTable
       - makeVisitTable
+      - updateVisitSummary
     description: |
       Tasks that can be run together, but only after the 'step1'.
 
@@ -107,7 +108,7 @@ subsets:
       will select partial visits that overlap that region.
 
       Visit-level tasks include consolidateSourceTable, consolidateVisitSummary,
-      finalizeCharacterization.
+      finalizeCharacterization, updateVisitSummary.
       Tract-level tasks include: isolatedStarAssociation
       Full collection-level tasks include: makeCcdVisitTable, makeVisitTable
   step3:

@@ -8,17 +8,17 @@ imports:
     - jointcal
     - faro_all
 tasks:
-  makeWarp:
-    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
+  # Do expect jointcal's photoCalibs to be present even though we didn't
+  # run it, since that's what the testdata_ci_hsc repo is set up to have.
+  # That's not realistic overall, but it does let us test the code paths
+  # downstream of coaddition that we use most often.
+  # See also forcedPhotCcd, forcedPhotCcdOnDiaObjects, forcedPhotDiffim,
+  # forcedPhotDiffOnDiaObjects.
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
-      # Do expect jointcal's photoCalibs to be present even though we didn't
-      # run it, since that's what the testdata_ci_hsc repo is set up to have.
-      # That's not realistic overall, but it does let us test the code paths
-      # downstream of coaddition that we use most often.
-      # See also forcedPhotCcd, forcedPhotCcdOnDiaObjects, forcedPhotDiffim,
-      # forcedPhotDiffOnDiaObjects.
+      photo_calib_provider: "tract"
       connections.photoCalibName: "jointcal"
-      useGlobalExternalPhotoCalib: false
   deblend:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     # Significantly limit the number of sources to deblend, which saves time
@@ -41,21 +41,9 @@ tasks:
     # instead of bringing down execution.
     config:
       requiredTemplateFraction: 0.2
-  forcedPhotCcd:
-    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
-    config:
-      connections.photoCalibName: "jointcal"
-      useGlobalExternalPhotoCalib: false
-  forcedPhotDiffim:
-    class: lsst.meas.base.ForcedPhotCcdTask
-    config:
-      connections.photoCalibName: "jointcal"
-      useGlobalExternalPhotoCalib: false
   writeRecalibratedSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
-      useGlobalExternalPhotoCalib: false
-      connections.photoCalibName: "jointcal"
       connections.outputCatalog: source
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask

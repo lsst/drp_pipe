@@ -93,6 +93,7 @@ COMMON_OUTPUTS = {
     "deepCoadd_ref",
     "deepCoadd_scarletModelData",
     "finalized_src_table",
+    "finalVisitSummary",
     "icExp",
     "icExpBackground",
     "icSrc",
@@ -198,8 +199,8 @@ class PipelineTestCase(unittest.TestCase):
                 "#step1",
                 "#step2a",
                 "#step2b",
-                "#step2c",
                 "#step2d",
+                "#step2e",
                 "#step3",
             ],
             [
@@ -282,6 +283,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step2b",
                 "#step2c",
                 "#step2d",
+                "#step2e",
                 "#step3",
                 "#step4",
                 "#step7",
@@ -324,7 +326,17 @@ class PipelineTestCase(unittest.TestCase):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "HSC", "DRP-RC2.yaml"),
-            [f"#step{N}" for N in range(1, 8)],
+            [
+                "#step1",
+                "#step2a",
+                "#step2b",
+                "#step2cde",
+                "#step3",
+                "#step4",
+                "#step5",
+                "#step6",
+                "#step7",
+            ],
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
                 ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
