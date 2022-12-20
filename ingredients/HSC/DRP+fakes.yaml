@@ -73,6 +73,10 @@ tasks:
     class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
     config:
       connections.calexpType: "fakes_"
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      connections.calexpType: "fakes_"
   makeCcdVisitTable:
     class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
     config:

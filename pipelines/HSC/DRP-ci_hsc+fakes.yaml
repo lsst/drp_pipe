@@ -11,6 +11,11 @@ tasks:
       doApplyExternalTractPhotoCalib: true
       doApplyExternalGlobalPhotoCalib: false
       connections.photoCalibName: "jointcal"
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      photo_calib_provider: "tract"
+      connections.photoCalibName: "jointcal"
   makeWarp:
     class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:

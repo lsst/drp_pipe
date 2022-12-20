@@ -45,6 +45,12 @@ tasks:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
       connections.outputCatalog: source
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      wcs_provider: "tract"
+      photo_calib_provider: "global"
+      background_provider: "replacement"
   measure:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
