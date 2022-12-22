@@ -112,7 +112,8 @@ COMMON_OUTPUTS = {
 
 # HSC common outputs, in addition to COMMON_OUTPUTS
 HSC_OUTPUTS = {
-    "calexp_camera",
+    "calexp_skyCorr_visit_mosaic",
+    "calexpBackground_skyCorr_visit_mosaic",
     "forced_src",
     "preSource",
     "preSourceTable",
