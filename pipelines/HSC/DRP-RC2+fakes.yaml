@@ -47,9 +47,8 @@ tasks:
     class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
     config:
       insertFakes.doProcessAllDataIds: true
-      connections.photoCalibName: "fgcm"
       doApplyExternalGlobalPhotoCalib: true
-      doApplyExternalTractSkyWcs: true
+      doApplyExternalGlobalSkyWcs: true
   writePreSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
     config:

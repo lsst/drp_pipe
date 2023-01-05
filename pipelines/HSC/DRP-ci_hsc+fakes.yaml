@@ -5,14 +5,6 @@ imports:
   # better to refactor anything imported into ingredients.
   location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2+fakes.yaml"
 tasks:
-  singleFrameWithFakes:
-    class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
-    config:
-      insertFakes.doProcessAllDataIds: true
-      doApplyExternalTractSkyWcs: true
-      doApplyExternalTractPhotoCalib: true
-      doApplyExternalGlobalPhotoCalib: false
-      connections.photoCalibName: "jointcal"
   makeWarp:
     class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
     config:
