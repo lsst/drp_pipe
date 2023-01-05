@@ -3,14 +3,6 @@ instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   location: "$DRP_PIPE_DIR/ingredients/HSC/DRP+fakes.yaml"
 tasks:
-  singleFrameWithFakes:
-    class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
-    config:
-      insertFakes.doProcessAllDataIds: true
-      doApplyExternalTractSkyWcs: true
-      doApplyExternalTractPhotoCalib: true
-      doApplyExternalGlobalPhotoCalib: false
-      connections.photoCalibName: "jointcal"
   makeWarp:
     class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
