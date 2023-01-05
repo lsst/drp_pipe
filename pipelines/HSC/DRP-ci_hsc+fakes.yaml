@@ -13,16 +13,9 @@ tasks:
       doApplyExternalTractPhotoCalib: true
       doApplyExternalGlobalPhotoCalib: false
       connections.photoCalibName: "jointcal"
-  updateVisitSummary:
-    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
-    config:
-      photo_calib_provider: "tract"
-      connections.photoCalibName: "jointcal"
   makeWarp:
     class: lsst.pipe.tasks.makeCoaddTempExp.MakeWarpTask
     config:
-      connections.photoCalibName: "jointcal"
-      useGlobalExternalPhotoCalib: false
       connections.coaddName: "fakes_deep"
       connections.calexpType: "fakes_"
   deblend:
@@ -36,10 +29,3 @@ tasks:
     class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
     config:
       connections.inputCoaddName: "fakes_deep"
-      connections.photoCalibName: "jointcal"
-      useGlobalExternalPhotoCalib: false
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      useGlobalExternalPhotoCalib: false
-      connections.photoCalibName: "jointcal"
