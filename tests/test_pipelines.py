@@ -404,19 +404,6 @@ class PipelineTestCase(unittest.TestCase):
         )
         tester.run(butler, self)
 
-    def test_lsstcam_imsim_drp_dp02(self):
-        butler = self.makeButler(writeable=True)
-        tester = PipelineStepTester(
-            os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-DP0.2.yaml"),
-            [f"#step{N}" for N in range(1, 8)],
-            [
-                ("cal_ref_cat_2_2", {"htm7"}, "Catalog", False),
-            ],
-            expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
-            expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
-        )
-        tester.run(butler, self)
-
     def test_lsstcam_imsim_drp_test_med_1(self):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
