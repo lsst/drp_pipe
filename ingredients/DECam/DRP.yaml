@@ -38,26 +38,20 @@ tasks:
     config:
       photoCal.match.referenceSelection.magLimit.fluxField: i_flux
       photoCal.match.referenceSelection.magLimit.maximum: 22.0
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
-      useGlobalExternalPhotoCalib: false
+      photo_calib_provider: "tract"
+      background_provider: "input_summary"
       connections.photoCalibName: "jointcal"
   makeWarp:
     class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
-      connections.photoCalibName: jointcal
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
       matchingKernelSize: 29
-      doApplyExternalPhotoCalib: true
-      externalPhotoCalibName: jointcal
-      doApplyExternalSkyWcs: true
       modelPsf.defaultFwhm: 7.7
       warpAndPsfMatch.warp.warpingKernelName: lanczos5
       coaddPsf.warpingKernelName: lanczos5
-      # When useGlobalExternalPhotoCalib is set to False, use per-tract photometric calibrations.
-      # Global calibrations must be disabled if using jointcal.
-      useGlobalExternalPhotoCalib: false
       # Legacy DECam config to write out warps, even if they are empty
       doWriteEmptyWarps: true
       python: |
@@ -69,9 +63,6 @@ tasks:
     config:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
       matchingKernelSize: 29
-      doApplyExternalPhotoCalib: true
-      externalPhotoCalibName: jointcal
-      doApplyExternalSkyWcs: true
       # 200 rows (since patch width is typically < 10k pixels
       subregionSize: (10000, 200)
       doNImage: true
@@ -79,15 +70,7 @@ tasks:
       interpImage.transpose: true
       coaddPsf.warpingKernelName: lanczos5
       assembleStaticSkyModel.subregionSize: (10000, 200)
-      assembleStaticSkyModel.doApplyExternalPhotoCalib: true
-      assembleStaticSkyModel.externalPhotoCalibName: jointcal
-      assembleStaticSkyModel.doApplyExternalSkyWcs: true
       doFilterMorphological: true
-      # When useGlobalExternalPhotoCalib is set to False, use per-tract
-      # photometric calibrations.  Global calibrations must be disabled if
-      # using jointcal.
-      useGlobalExternalPhotoCalib: false
-      assembleStaticSkyModel.useGlobalExternalPhotoCalib: false
       # transmission curves do not exist as-yet for DECam data
       doAttachTransmissionCurve: false
       python: |
@@ -101,9 +84,6 @@ tasks:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between
       # DECam and HSC
       matchingKernelSize: 29
-      doApplyExternalPhotoCalib: true
-      externalPhotoCalibName: jointcal
-      doApplyExternalSkyWcs: true
       # 200 rows (since patch width is typically < 10k pixels
       subregionSize: (10000, 200)
       doNImage: true
@@ -111,14 +91,7 @@ tasks:
       interpImage.transpose: true
       coaddPsf.warpingKernelName: lanczos5
       assembleStaticSkyModel.subregionSize: (10000, 200)
-      assembleStaticSkyModel.doApplyExternalPhotoCalib: true
-      assembleStaticSkyModel.externalPhotoCalibName: jointcal
-      assembleStaticSkyModel.doApplyExternalSkyWcs: true
       doFilterMorphological: true
-      # When useGlobalExternalPhotoCalib is set to False, use per-tract photometric calibrations.
-      # Global calibrations must be disabled if using jointcal.
-      useGlobalExternalPhotoCalib: false
-      assembleStaticSkyModel.useGlobalExternalPhotoCalib: false
       # transmission curves do not exist as-yet for DECam data
       doAttachTransmissionCurve: false
       python: |
@@ -177,25 +150,13 @@ subsets:
       by consolidatePreSourceTable, for all visits that overlap a tract.
       jointcal produces solutions per-tract, per-visit
       isolatedStarAssociation produces solutions per-tract.
-  step2c:
-    subset:
-      - makeCcdVisitTable
-      - makeVisitTable
-    description: |
-      Global-level tasks that must not be run with any data query constraints
-      Can be run anytime after subset step2a.
-
-      Allowed data query constraints: instrument
-
-      Tasks generate one data product per collection.
-      make[Ccd]VisitTable produces per-collection summary of the Visits
-      and CcdVisits.
   step2d:
     subset:
       - finalizeCharacterization
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
+      - updateVisitSummary
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
@@ -203,6 +164,19 @@ subsets:
       writeRecalibratedSourceTable, transformSourceTable run per-detector
       consolidateSourceTable produces one data product per visit.
       finalizeCharacterization will eventually model full focal plane PSFs.
+  step2e:
+    subset:
+      - makeCcdVisitTable
+      - makeVisitTable
+    description: |
+      Global-level tasks that must not be run with any data query constraints
+      Can be run anytime after subset step2d.
+
+      Allowed data query constraints: instrument
+
+      Tasks generate one data product per collection.
+      make[Ccd]VisitTable produces per-collection summary of the Visits
+      and CcdVisits.
   step3:
     subset:
       - selectGoodSeeingVisits
