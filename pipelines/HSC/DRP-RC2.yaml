@@ -106,6 +106,12 @@ tasks:
     config:
       connections.inputCatalogs: preSourceTable
       connections.outputCatalog: preSourceTable_visit
+  updateVisitSummary:
+    class: lsst.pipe.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      wcs_provider: "tract"
+      photo_calib_provider: "global"
+      background_provider: "replacement"
   writeRecalibratedSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
@@ -156,41 +162,59 @@ subsets:
       expression if any later steps will also be run, because downstream steps
       require full visits and 'tract' and 'patch' constraints will always
       select partial visits that overlap that region.
-  step2:
+  step2a:
     subset:
       - consolidatePreSourceTable
       - consolidateVisitSummary
       - skyCorr
       - isolatedStarAssociation
+    description: |
+      Global tasks: This is a mix of visit-level and tract-level tasks that
+      must not be run with data query constraints other than instrument. This
+      only works with small to medium jobs.  Use DRP-Prod for large production
+      subsets.
+
+      skyCorr requires full visits, and 'tract' and 'patch'
+      constraints will always select partial visits that overlap that region.
+
+      Visit-level: consolidatePreSourceTable, consolidateVisitSummary,
+      skyCorr
+      Tract-level: isolatedStarAssociation
+  step2b:
+    subset:
+      - jointcal
+    description: |
+      Per-tract steps that must be run after step2a.
+
+      These should be run with explicit 'tract' constraints essentially all the
+      time, because otherwise quanta will be created for jobs with only partial
+      visit coverage.
+
+      This subset is considered a workaround for missing middleware and task
+      functionality.  It may be removed in the future.
+  step2cde:
+    subset:
       - finalizeCharacterization
       - fgcmBuildStarsTable
       - fgcmFitCycle
       - fgcmOutputProducts
+      - updateVisitSummary
       - makeCcdVisitTable
       - makeVisitTable
     description: |
-      Global tasks: This is a mix of visit-level, tract-level, and
-      collection-level tasks that must not be run with data query constraints
-      other than instrument. This only works with small to medium jobs.
-      Use DRP-Prod for large production subsets.
+      Per-visit and per-collection tasks that can be run together after step2b
+      with no data query constraints other than instrument.
 
-      skyCorr and FGCM require full visits and 'tract' and 'patch'
-      constraints will always select partial visits that overlap that region.
+      FGCM requires full visits and 'tract' and 'patch' constraints will
+      always select partial visits that overlap that region.
 
       This includes FGCM because it's configured here to run in "global" mode,
-      which means one should not use 'tract' expression to constrain it, and if
-      one _did_ run it with a tract constraint (which would be a common
+      which means one should not use a 'tract' expression to constrain it, and
+      if one _did_ run it with a tract constraint (which would be a common
       occurrence if it was included in any later step), it would be fed the
       wrong (partial-visit) inputs to its 'background' connection.
-
-      Visit-level: consolidatePreSourceTable, consolidateVisitSummary,
-      skyCorr, finalizeCharacterization.
-      Tract-level: isolatedStarAssociation
-      Full collection-level: fgcmBuildStarsTable, fgcmFitCycle,
-      fgcmOutputProducts, makeCcdVisitTable, makeVisitTable
   step3:
     subset:
-      - jointcal
       - makeWarp
       - assembleCoadd
       - detection

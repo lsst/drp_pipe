@@ -14,6 +14,7 @@ tasks:
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
   isolatedStarAssociation: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
   finalizeCharacterization: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+  updateVisitSummary: lsst.pipe.tasks.update_visit_summary.UpdateVisitSummaryTask
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
   makeWarp:

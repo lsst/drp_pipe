@@ -33,15 +33,22 @@ imports:
     - writeForcedSourceOnDiaObjectTable
     - transformForcedSourceOnDiaObjectTable
     - consolidateForcedSourceOnDiaObjectTable
+    - consolidateVisitSummary
+    - isolatedStarAssociation
+    - finalizeCharacterization
+    - updateVisitSummary
+    - makeCcdVisitTable
+    - makeVisitTable
+    - healSparsePropertyMaps
+    - consolidateHealSparsePropertyMaps
     - faro_all
 tasks:
   singleFrameWithFakes:
     class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
     config:
       insertFakes.doProcessAllDataIds: true
-      connections.photoCalibName: "fgcm"
       doApplyExternalGlobalPhotoCalib: true
-      doApplyExternalTractSkyWcs: true
+      doApplyExternalGlobalSkyWcs: true
   writePreSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
     config:
@@ -70,18 +77,6 @@ tasks:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
     config:
       connections.catalogType: "fakes_"
-  consolidateVisitSummary:
-    class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
-    config:
-      connections.calexpType: "fakes_"
-  makeCcdVisitTable:
-    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
-    config:
-      connections.calexpType: "fakes_"
-  makeVisitTable:
-    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
-    config:
-      connections.calexpType: "fakes_"
   assembleCoadd:
     class: lsst.pipe.tasks.assembleCoadd.CompareWarpAssembleCoaddTask
     config:
@@ -136,12 +131,3 @@ tasks:
     config:
       connections.inputCoaddName: "fakes_deep"
       connections.outputCoaddName: "fakes_deep"
-  healSparsePropertyMaps:
-    class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
-    config:
-      connections.coaddName: "fakes_deep"
-      connections.calexpType: "fakes_"
-  consolidateHealSparsePropertyMaps:
-    class: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
-    config:
-      connections.coaddName: "fakes_deep"
