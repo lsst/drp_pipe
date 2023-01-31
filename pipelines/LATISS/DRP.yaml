@@ -3,13 +3,93 @@ instrument: lsst.obs.lsst.Latiss
 imports:
   - location: $DRP_PIPE_DIR/ingredients/DRP-minimal-calibration.yaml
     include:
-      - processCcd
+      - isr
+      - characterizeImage
+      - calibrate
       - writeSourceTable
       - transformSourceTable
       - consolidateSourceTable
+      - consolidateVisitSummary
+      - isolatedStarAssociation
+      - finalizeCharacterization
+      - updateVisitSummary
+      - makeCcdVisitTable
+      - makeVisitTable
+      - makeWarp
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - writeObjectTable
+      - transformObjectTable
+      - consolidateObjectTable
+      - forcedPhotCoadd
 
 subsets:
-  sourceTable:
+  step1:
     subset:
+      - isr
+      - characterizeImage
+      - calibrate
       - writeSourceTable
       - transformSourceTable
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region (also noting that while
+      this may be moot for a single-detector camera, we would still like to
+      follow best practices envisioned for the full LSST survey).
+
+  step2:
+    subset:
+      - consolidateSourceTable
+      - consolidateVisitSummary
+      - isolatedStarAssociation
+      - finalizeCharacterization
+      - updateVisitSummary
+      - makeCcdVisitTable
+      - makeVisitTable
+    description: |
+      This is a mix of visit-level and tract-level tasks that must not be run
+      with data query constraints other than instrument.  These are tasks that
+      can be run together, but only after the 'step1' subset.
+
+      Visit-level: consolidateSourceTable, consolidateVisitSummary,
+                   finalizeCharacterization, updateVisitSummary,
+                   makeCcdVisitTable, makVisitTable
+      Tract-level: isolatedStarAssociation
+
+  step3a:
+    subset:
+      - makeWarp
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - forcedPhotCoadd
+      - writeObjectTable
+      - transformObjectTable
+    description: |
+      Tract-level coaddition tasks.  Allowed data query constraints: tract
+      Tasks that can be run together, but only after the 'step1' and 'step2'
+      subsets.  If you do not include tract in the data query, you will get
+      tracts with only partial coverage.
+
+      This subset is considered a workaround for missing middleware and task
+      functionality.  It may be removed in the future.
+
+  step3b:
+    subset:
+      - consolidateObjectTable
+    description: |
+      Tract-level tasks.  Allowed data query constraints: tract
+      Tasks that can be run together, but only after the 'step1', 'step2', and
+      'step3a' subsets (seperation into step3a and step3b is necessary for now
+      as otherwise failues in upstream tasks will cause these to fail.  This is
+      hoped to be a temporary limitation).
