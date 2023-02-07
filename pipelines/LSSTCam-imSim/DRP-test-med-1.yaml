@@ -1,6 +1,5 @@
 description: DRP specialized for the ImSim-DC2 test-med-1 dataset
+instrument: lsst.obs.lsst.LsstCamImSim
 imports:
   - $DRP_PIPE_DIR/ingredients/LSSTCam-imSim/DRP.yaml
   - $ANALYSIS_DRP_DIR/pipelines/LSSTCam-imSim/analysis_drp_plots.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml

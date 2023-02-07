@@ -69,6 +69,7 @@ HSC_INPUTS = {
 LSSTCAM_IMSIM_INPUTS = {
     "bfk",
     "cal_ref_cat_2_2",
+    "truth_summary",
 }
 
 # a selection of mostly common outputs
@@ -396,7 +397,7 @@ class PipelineTestCase(unittest.TestCase):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-ci_imsim.yaml"),
-            [f"#step{N}" for N in range(1, 8)],
+            [f"#step{N}" for N in range(1, 9)],
             [
                 ("cal_ref_cat_2_2", {"htm7"}, "Catalog", False),
             ],
@@ -409,7 +410,7 @@ class PipelineTestCase(unittest.TestCase):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-test-med-1.yaml"),
-            [f"#step{N}" for N in range(1, 8)],
+            [f"#step{N}" for N in range(1, 9)],
             [
                 ("cal_ref_cat_2_2", {"htm7"}, "Catalog", False),
             ],
