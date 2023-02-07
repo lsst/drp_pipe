@@ -15,10 +15,8 @@ tasks:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
       connections.source_table_visit: preSourceTable_visit
-  jointcal:
-    class: lsst.jointcal.JointcalTask
-    config:
-      connections.inputSourceTableVisit: preSourceTable_visit
+  gbdesAstrometricFit:
+    class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
   fgcmBuildStarsTable:
     class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
     config:

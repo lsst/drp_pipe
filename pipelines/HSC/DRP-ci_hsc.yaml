@@ -3,8 +3,10 @@ instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - location: $DRP_PIPE_DIR/ingredients/HSC/DRP.yaml
     exclude:
+      # Don't run fgcm, gbdesAstrometricFit, or (some of) faro, as
+      # there isn't enough data.
       - fgcm
-      - jointcal
+      - gbdesAstrometricFit
       - faro_all
       # Some of these plots fail with ci_hsc data
       - analyzeObjectTableCore
