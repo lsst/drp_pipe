@@ -312,6 +312,8 @@ subsets:
       and no data query
   nightlyStep2d:
     subset:
+      - makeVisitTable
+      - makeCcdVisitTable
       - finalizeCharacterization
       - updateVisitSummary
       - writeRecalibratedSourceTable

@@ -393,6 +393,50 @@ class PipelineTestCase(unittest.TestCase):
         )
         tester.run(butler, self)
 
+    def test_hsc_drp_rc2_subset(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "HSC", "DRP-RC2_subset.yaml"),
+            [
+                "#nightlyStep1",
+                "#nightlyStep2a",
+                "#nightlyStep2b",
+                "#nightlyStep2c",
+                "#nightlyStep2d",
+                "#nightlyStep3",
+                "#nightlyStep4",
+                "#nightlyStep5",
+            ],
+            [
+                ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
+                ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
+            ],
+            expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
+            expected_outputs=COMMON_OUTPUTS
+            | HSC_OUTPUTS
+            | {
+                "fgcmAtmosphereParameters4",
+                "fgcmFitParameters0",
+                "fgcmFitParameters1",
+                "fgcmFitParameters2",
+                "fgcmFitParameters3",
+                "fgcmFitParameters4",
+                "fgcmFlaggedStars0",
+                "fgcmFlaggedStars1",
+                "fgcmFlaggedStars2",
+                "fgcmFlaggedStars3",
+                "fgcmFlaggedStars4",
+                "fgcmReferenceStars",
+                "fgcmStandardStars4",
+                "fgcmStarIds",
+                "fgcmStarIndices",
+                "fgcmStarObservations",
+                "fgcmZeropoints4",
+                "transmission_atmosphere_fgcm",
+            },
+        )
+        tester.run(butler, self)
+
     def test_lsstcam_imsim_drp_ci_imsim(self):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
