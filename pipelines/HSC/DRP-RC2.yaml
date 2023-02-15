@@ -93,9 +93,13 @@ subsets:
       - isolatedStarAssociation
     description: |
       Global tasks: This is a mix of visit-level and tract-level tasks that
-      must not be run with data query constraints other than instrument. This
-      only works with small to medium jobs.  Use DRP-Prod for large production
-      subsets.
+      must be run with a skymap data query constraint only (an instrument
+      constraint is fine, but generally unneccessary).  For example, running
+      with 'tract' (and 'patch') constraints will select partial visits that
+      overlap that region.  A skymap constraint is necessary to prevent
+      isolatedStarAssociation from producing results for all skymaps in the
+      data repository. This only works with small to medium jobs.  Use DRP-Prod
+      for large production subsets.
 
       skyCorr requires full visits, and 'tract' and 'patch'
       constraints will always select partial visits that overlap that region.
