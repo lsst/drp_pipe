@@ -2,7 +2,8 @@ description: The DRP pipeline specialized for large data release productions
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - location: "$DRP_PIPE_DIR/ingredients/HSC/DRP.yaml"
-    exclude: faro_all
+    exclude:
+      - faro_all
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
@@ -135,3 +136,17 @@ subsets:
       This step has global aggregation tasks to run over all visits, detectors,
       tracts, etc.  This step should be run only with the instrument constraint
       in the data query.
+  step8:
+    subset:
+      - analyzeObjectTableCore
+      - analyzeObjectTableSurveyCore
+      - catalogMatchTract
+      - refCatObjectTract
+    description: |
+      Core (most important), coadd-level plots/metrics from analysis_tools.
+
+      Must be run after 'step3' (writeObjectTable). Cannot be run with any
+      dataquery constraints if analyzeObjectTableSurveyCore is included.
+
+      Can be run together with analysis_drp subsets, e.g. pipeline.yaml
+      (hash/pound sign)step8,analysis_coadd_plots,imsim_analysis_coadd_plots
