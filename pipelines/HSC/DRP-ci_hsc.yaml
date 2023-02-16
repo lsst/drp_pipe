@@ -9,6 +9,7 @@ imports:
       # Some of these plots fail with ci_hsc data
       - analyzeObjectTableCore
       - refCatObjectTract
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 tasks:
   # Do expect jointcal's photoCalibs to be present even though we didn't
   # run it, since that's what the testdata_ci_hsc repo is set up to have.
