@@ -295,12 +295,12 @@ subsets:
   nightlyStep2b:
     subset:
       - isolatedStarAssociation
-      - jointcal
+      - gbdesAstrometricFit
     description: >
       Per-tract tasks.
-      jointcal should be run with explicit 'tract' constraints essentially all the
-      time, because otherwise quanta will be created for jobs with only partial
-      visit coverage.
+      gbdesAstrometricFit should be run with explicit 'tract' constraints
+      essentially all the time, because otherwise quanta will be created for
+      jobs with only partial visit coverage.
       isolatedStarAssociation can be run with or without 'tract' constraints.
   nightlyStep2c:
     subset:
