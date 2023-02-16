@@ -1,0 +1,406 @@
+description: The DRP pipeline specialized for rc2_subset processing in jenkins and tutorials
+imports:
+  - $DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml
+tasks:
+  detection_tutorial:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      detection.thresholdValue: 250
+  PA1:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: PA1
+      measure.brightSnrMin: 100.0
+      measure.nMinPhotRepeat: 20
+      python: |
+        from lsst.faro.measurement import PA1Task
+        config.measure.retarget(PA1Task)
+  PF1_design:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: PF1_design_gri
+      measure.threshPA2: 15.0
+      measure.brightSnrMin: 100.0
+      measure.nMinPhotRepeat: 20
+      python: |
+        from lsst.faro.measurement import PF1Task
+        config.measure.retarget(PF1Task)
+  modelPhotRepGal1:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: modelPhotRepGal1
+      measure.index: 1
+      measure.selectExtended: true
+      measure.selectSnrMin: 5
+      measure.selectSnrMax: 10
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractGxsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  modelPhotRepGal2:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: modelPhotRepGal2
+      measure.index: 2
+      measure.selectExtended: true
+      measure.selectSnrMin: 10
+      measure.selectSnrMax: 20
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractGxsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  modelPhotRepGal3:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: modelPhotRepGal3
+      measure.index: 3
+      measure.selectExtended: true
+      measure.selectSnrMin: 20
+      measure.selectSnrMax: 40
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractGxsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  modelPhotRepGal4:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: modelPhotRepGal4
+      measure.index: 4
+      measure.selectExtended: true
+      measure.selectSnrMin: 40
+      measure.selectSnrMax: 80
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractGxsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  modelPhotRepStar1:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: modelPhotRepStar1
+      measure.index: 1
+      measure.selectExtended: false
+      measure.selectSnrMin: 5
+      measure.selectSnrMax: 10
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  modelPhotRepStar2:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: modelPhotRepStar2
+      measure.index: 2
+      measure.selectExtended: false
+      measure.selectSnrMin: 10
+      measure.selectSnrMax: 20
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  modelPhotRepStar3:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: modelPhotRepStar3
+      measure.index: 3
+      measure.selectExtended: false
+      measure.selectSnrMin: 20
+      measure.selectSnrMax: 40
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  modelPhotRepStar4:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: modelPhotRepStar4
+      measure.index: 4
+      measure.selectExtended: false
+      measure.selectSnrMin: 40
+      measure.selectSnrMax: 80
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  psfPhotRepStar1:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: psfPhotRepStar1
+      measure.index: 1
+      measure.selectExtended: false
+      measure.selectSnrMin: 5
+      measure.selectSnrMax: 10
+      measure.magName: "slot_PsfFlux_mag"
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  psfPhotRepStar2:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: psfPhotRepStar2
+      measure.index: 2
+      measure.selectExtended: false
+      measure.selectSnrMin: 10
+      measure.selectSnrMax: 20
+      measure.magName: "slot_PsfFlux_mag"
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  psfPhotRepStar3:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: psfPhotRepStar3
+      measure.index: 3
+      measure.selectExtended: false
+      measure.selectSnrMin: 20
+      measure.selectSnrMax: 40
+      measure.magName: "slot_PsfFlux_mag"
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+  psfPhotRepStar4:
+    class: lsst.faro.measurement.TractMatchedMeasurementTask
+    config:
+      connections.package: validate_drp
+      connections.metric: psfPhotRepStar4
+      measure.index: 4
+      measure.selectExtended: false
+      measure.selectSnrMin: 40
+      measure.selectSnrMax: 80
+      measure.magName: "slot_PsfFlux_mag"
+      measure.nMinPhotRepeat: 20
+      python: |
+        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
+        from lsst.faro.measurement import ModelPhotRepTask
+        config.measure.retarget(ModelPhotRepTask)
+subsets:
+  fgcm:
+    subset:
+      - fgcmBuildStarsTable
+      - fgcmFitCycle
+      - fgcmOutputProducts
+    description: >
+      Subset that includes all FGCM tasks.
+  simpleSingleFrame:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+    description: >
+       A simplified single frame pipeline to make the quantum graph more readable.
+  multiVisit:
+    subset: []
+    description: |
+      The multiVisit subset defined in pipe_tasks' DRP.yaml is not safe to
+      use on HSC for various reasons; use 'step1', 'step2', and 'step3' subsets
+      instead.  It may be re-enabled in the future.
+  singleFrame:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+      - skyCorr
+      - isolatedStarAssociation
+    description: >
+      Set of tasks for complete single frame processing. Because this includes
+      skyCorr, it requires multiple detectors per visit. Although they duplicate
+      tasks from the main "stepN" subsets from drp_pipe's DRP-RC2.yaml, we
+      include the subsets singleFrame, source_calibration, coadd_measurement, and
+      forced_objects within this pipeline so that users following the "getting
+      started" tutorial on pipelines.lsst.io understand the basic steps that are
+      contained within each subset.
+  source_calibration:
+    subset:
+      - finalizeCharacterization
+      - updateVisitSummary
+      - makeCcdVisitTable
+      - makeVisitTable
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
+  coadd_measurement:
+    subset:
+      - detection_tutorial
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+  forced_objects:
+    subset:
+      - forcedPhotCcd
+      - forcedPhotCoadd
+      - transformObjectTable
+      - writeObjectTable
+      - consolidateObjectTable
+  nightlyStep1:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
+    description: >
+      Per-detector tasks that can be run together to start the DRP pipeline.
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region.
+  nightlyStep2a:
+    subset:
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+      - skyCorr
+    description: >
+      Per-visit tasks that can be run together, but only after the 'step1'.
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression. skyCorr and FGCM require full visits and 'tract' and 'patch'
+      constraints will always select partial visits that overlap that region.
+      This includes FGCM because it's configured here to run in "global" mode,
+      which means one should not use 'tract' expression to constrain it, and if
+      one _did_ run it with a tract constraint (which would be a common
+      occurrence if it was included in any later step), it would be fed the
+      wrong (partial-visit) inputs to its 'background' connection.
+      This subset is considered a workaround for missing middleware and task
+      functionality.  It may be removed in the future.
+  nightlyStep2b:
+    subset:
+      - isolatedStarAssociation
+      - jointcal
+    description: >
+      Per-tract tasks.
+      jointcal should be run with explicit 'tract' constraints essentially all the
+      time, because otherwise quanta will be created for jobs with only partial
+      visit coverage.
+      isolatedStarAssociation can be run with or without 'tract' constraints.
+  nightlyStep2c:
+    subset:
+      - fgcmBuildStarsTable
+      - fgcmFitCycle
+      - fgcmOutputProducts
+    description: >
+      FGCM tasks that must be run with no pipetask multiprocessing
+      and no data query
+  nightlyStep2d:
+    subset:
+      - makeVisitTable
+      - makeCcdVisitTable
+      - finalizeCharacterization
+      - updateVisitSummary
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
+      - nsrcMeasVisit
+      - TE3
+      - TE4
+    description: >
+      Per-visit tasks. These should never be run with tract constraints
+  nightlyStep3:
+    subset:
+      - makeWarp
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - forcedPhotCoadd
+      - transformObjectTable
+      - writeObjectTable
+      - consolidateObjectTable
+      - healSparsePropertyMaps
+      - matchCatalogsTract
+      - matchCatalogsPatch
+      - matchCatalogsPatchMultiBand
+      - matchCatalogsTractMag17to21p5
+      - matchCatalogsTractStarsSNR5to80
+      - matchCatalogsTractGxsSNR5to80
+      - PA1
+      - PF1_design
+      - AM1
+      - AM2
+      - AM3
+      - AD1_design
+      - AD2_design
+      - AD3_design
+      - AF1_design
+      - AF2_design
+      - AF3_design
+      - AB1
+      - modelPhotRepGal1
+      - modelPhotRepGal2
+      - modelPhotRepGal3
+      - modelPhotRepGal4
+      - modelPhotRepStar1
+      - modelPhotRepStar2
+      - modelPhotRepStar3
+      - modelPhotRepStar4
+      - psfPhotRepStar1
+      - psfPhotRepStar2
+      - psfPhotRepStar3
+      - psfPhotRepStar4
+    description: >
+      Tasks that can be run together, but only after the 'step1' and 'step2'
+      subsets.
+      These should be run with explicit 'tract' constraints essentially all the
+      time, because otherwise quanta will be created for jobs with only partial
+      visit coverage.
+      It is expected that many forcedPhotCcd quanta will "normally" fail when
+      running this subset, but this isn't a problem right now because there
+      are no tasks downstream of it.  If other tasks regularly fail or we add
+      tasks downstream of forcedPhotCcd, these subsets or the tasks will need
+      additional changes.
+      This subset is considered a workaround for missing middleware and task
+      functionality.  It may be removed in the future.
+  nightlyStep4:
+    subset:
+      - forcedPhotCcd
+    description: >
+      Tasks that can be run together, but only after the 'step1', 'step2'
+      and 'step3' subsets
+      These detector-level tasks should not be run with
+      'tract' or 'patch' as part of the data ID expression if all
+      reference catalogs or diffIm templates that cover these
+      detector-level quanta are desired.
+  nightlyStep5:
+    subset:
+      - TE1
+      - TE2
+      - wPerp
+      - skyObjectMean
+      - skyObjectStd
+    description: >
+        Tasks that can be run together, but only after the 'step1', 'step2',
+        'step3', and 'step4' subsets
+        This step includes patch-level aggregation Tasks. These should be
+        run with explicit 'tract' constraints in the data query, otherwise
+        quanta will be created for jobs with only partial visit coverage.
