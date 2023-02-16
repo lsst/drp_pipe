@@ -40,6 +40,10 @@ imports:
     - makeVisitTable
     - healSparsePropertyMaps
     - consolidateHealSparsePropertyMaps
+    - analyzeObjectTableCore
+    - analyzeObjectTableSurveyCore
+    - catalogMatchTract
+    - refCatObjectTract
     - faro_all
 tasks:
   singleFrameWithFakes:
