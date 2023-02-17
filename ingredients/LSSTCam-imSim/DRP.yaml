@@ -103,9 +103,12 @@ subsets:
       Tasks that can be run together, but only after the 'step1'.
 
       This is a mix of visit-level, tract-level, and collection-level tasks
-      that must not be run with any data query constraints other than
-      instrument. For example, running with 'tract' (and 'patch') constraints
-      will select partial visits that overlap that region.
+      that must be run with a skymap data query constraint only (an instrument
+      constraint is fine, but generally unneccessary).  For example, running
+      with 'tract' (and 'patch') constraints will select partial visits that
+      overlap that region.  A skymap constraint is necessary to prevent
+      isolatedStarAssociation from producing results for all skymaps in the
+      data repository.
 
       Visit-level tasks include consolidateSourceTable, consolidateVisitSummary,
       finalizeCharacterization, updateVisitSummary.
