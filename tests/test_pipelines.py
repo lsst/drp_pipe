@@ -186,9 +186,9 @@ class PipelineTestCase(unittest.TestCase):
             os.path.join(PIPELINES_DIR, "DECam", "DRP-Merian.yaml"),
             ["#step0"],
             [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
+                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs={
                 "camera",
@@ -208,9 +208,9 @@ class PipelineTestCase(unittest.TestCase):
                 "#step3",
             ],
             [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
+                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs=COMMON_INPUTS
             | {
@@ -240,9 +240,9 @@ class PipelineTestCase(unittest.TestCase):
             os.path.join(PIPELINES_DIR, "HSC", "DRP-ci_hsc.yaml"),
             [""],
             [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
+                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs=COMMON_INPUTS
             | HSC_INPUTS
@@ -296,9 +296,9 @@ class PipelineTestCase(unittest.TestCase):
                 "#step7",
             ],
             [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
+                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
@@ -345,9 +345,9 @@ class PipelineTestCase(unittest.TestCase):
                 "#step7",
             ],
             [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
+                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
@@ -413,9 +413,9 @@ class PipelineTestCase(unittest.TestCase):
                 "#nightlyStep5",
             ],
             [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
+                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
@@ -448,7 +448,7 @@ class PipelineTestCase(unittest.TestCase):
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-ci_imsim.yaml"),
             [f"#step{N}" for N in range(1, 9)],
             [
-                ("cal_ref_cat_2_2", {"htm7"}, "Catalog", False),
+                ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
             expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
@@ -461,7 +461,7 @@ class PipelineTestCase(unittest.TestCase):
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-test-med-1.yaml"),
             [f"#step{N}" for N in range(1, 9)],
             [
-                ("cal_ref_cat_2_2", {"htm7"}, "Catalog", False),
+                ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
             expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
