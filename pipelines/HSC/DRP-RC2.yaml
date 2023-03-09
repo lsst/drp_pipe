@@ -109,7 +109,7 @@ subsets:
       Tract-level: isolatedStarAssociation
   step2b:
     subset:
-      - jointcal
+      - gbdesAstrometricFit
     description: |
       Per-tract steps that must be run after step2a.
 

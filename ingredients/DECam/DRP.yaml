@@ -11,6 +11,7 @@ imports:
     exclude:
       - skyCorr
       - fgcm
+      - gbdesAstrometricFit
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask
@@ -44,6 +45,7 @@ tasks:
       photo_calib_provider: "tract"
       background_provider: "input_summary"
       connections.photoCalibName: "jointcal"
+      connections.skyWcsName: "jointcal"
   makeWarp:
     class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
@@ -52,6 +54,7 @@ tasks:
       modelPsf.defaultFwhm: 7.7
       warpAndPsfMatch.warp.warpingKernelName: lanczos5
       coaddPsf.warpingKernelName: lanczos5
+      connections.skyWcsName: jointcal
       # Legacy DECam config to write out warps, even if they are empty
       doWriteEmptyWarps: true
       python: |
@@ -105,6 +108,15 @@ tasks:
       connections.source_table_visit: preSourceTable_visit
       python:
         config.band_order += ["N708", "N540"]
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      connections.outputCatalog: source
+      connections.skyWcsName: jointcal
+  jointcal:
+    class: lsst.jointcal.JointcalTask
+    config:
+      connections.inputSourceTableVisit: preSourceTable_visit
 subsets:
   step0:
     subset:

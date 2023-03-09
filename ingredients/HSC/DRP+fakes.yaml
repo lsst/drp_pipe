@@ -5,6 +5,7 @@ imports:
   exclude:
     - skyCorr
     - jointcal
+    - gbdesAstrometricFit
     - fgcm
     - fgcmBuildStarsTable
     - fgcmFitCycle
