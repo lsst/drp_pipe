@@ -7,7 +7,7 @@ imports:
     - jointcal
     - gbdesAstrometricFit
     - fgcm
-    - fgcmBuildStarsTable
+    - fgcmBuildFromIsolatedStars
     - fgcmFitCycle
     - fgcmOutputProducts
     - isr

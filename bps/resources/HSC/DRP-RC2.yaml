@@ -13,7 +13,7 @@ pipetask:
   # DRP tasks
   skyCorr:
     requestMemory: 15500
-  fgcmBuildStarsTable:
+  fgcmBuildFromIsolatedStars:
     requestMemory: 8192
   fgcmFitCycle:
     requestMemory: 24576

@@ -17,10 +17,8 @@ tasks:
       connections.source_table_visit: preSourceTable_visit
   gbdesAstrometricFit:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
-  fgcmBuildStarsTable:
-    class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
-    config:
-      connections.sourceTable_visit: preSourceTable_visit
+  fgcmBuildFromIsolatedStars:
+    class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
   fgcmOutputProducts:
@@ -61,7 +59,7 @@ subsets:
   # campaign.
   fgcm:
     subset:
-      - fgcmBuildStarsTable
+      - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
     description: |

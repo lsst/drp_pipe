@@ -202,7 +202,7 @@ tasks:
 subsets:
   fgcm:
     subset:
-      - fgcmBuildStarsTable
+      - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
     description: >
@@ -304,7 +304,7 @@ subsets:
       isolatedStarAssociation can be run with or without 'tract' constraints.
   nightlyStep2c:
     subset:
-      - fgcmBuildStarsTable
+      - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
     description: >
