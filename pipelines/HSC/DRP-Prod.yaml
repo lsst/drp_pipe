@@ -55,7 +55,7 @@ subsets:
       isolatedStarAssociation produces solutions per-tract.
   step2c:
     subset:
-      - fgcmBuildStarsTable
+      - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
     description: |

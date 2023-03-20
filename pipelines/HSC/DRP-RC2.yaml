@@ -3,15 +3,14 @@ instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - $DRP_PIPE_DIR/ingredients/HSC/DRP.yaml
 tasks:
-  fgcmBuildStarsTable:
-    class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
+  fgcmBuildFromIsolatedStars:
+    class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
     config:
       minPerBand: 1
       densityCutMaxPerPixel: 1500
       primaryBands: ["i", "r", "g", "z", "y", "N921"]
       doReferenceMatches: true
       randomSeed: 23456
-      connections.sourceTable_visit: preSourceTable_visit
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
@@ -122,7 +121,7 @@ subsets:
   step2cde:
     subset:
       - finalizeCharacterization
-      - fgcmBuildStarsTable
+      - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
       - updateVisitSummary
