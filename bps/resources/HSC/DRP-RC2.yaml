@@ -6,7 +6,7 @@
 #
 #   includeConfigs:
 #     - ${DRP_PIPE_DIR}/bps/resources/HSC/DRP-RC2.yaml
-#
+# 
 # (with no outer indentation) to your BPS config file.
 #
 pipetask:
