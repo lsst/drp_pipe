@@ -53,6 +53,10 @@ pipetask:
     requestMemory: 5000
   consolidateForcedSourceTable:
     requestMemory: 200000
+  makeVisitTable:
+    requestMemory: 5400
+  makeCcdVisitTable:
+    requestMemory: 5400
 
   # faro tasks
   matchCatalogsPatch:
