@@ -2,9 +2,11 @@ description: DRP specialized for ImSim-DC2 data
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
   - $DRP_PIPE_DIR/ingredients/DRP-minimal-calibration.yaml
+  - $FARO_DIR/pipelines/metrics_pipeline.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - $FARO_DIR/pipelines/metrics_pipeline.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
@@ -74,6 +76,15 @@ tasks:
                 columns_target_flux_err=[f'{band}_cModelFluxErr',],
             )
         config.columns_flux = columns_flux
+  catalogMatchTract:
+    class: lsst.analysis.tools.tasks.catalogMatch.CatalogMatchTask
+    config:
+      connections.refCatalog: "cal_ref_cat_2_2"
+      anyFilterMapsToThis: "lsst_g_smeared"
+  refCatObjectTract:
+    class: lsst.analysis.tools.tasks.refCatObjectAnalysis.RefCatObjectAnalysisTask
+    config:
+      connections.refCatalog: "cal_ref_cat_2_2"
 subsets:
   step1:
     subset:
@@ -221,6 +232,7 @@ subsets:
       - catalogMatchTract
       - refCatObjectTract
       - diff_matched_analysis
+      - validateObjectTableCore
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 
