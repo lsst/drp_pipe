@@ -239,6 +239,7 @@ subsets:
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
       - refCatObjectTract
+      - validateObjectTableCore
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 
