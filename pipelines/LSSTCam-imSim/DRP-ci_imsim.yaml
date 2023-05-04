@@ -29,3 +29,14 @@ tasks:
     # instead of bringing down execution.
     config:
       requiredTemplateFraction: 0.2
+subsets:
+  analysis_tools:
+    subset:
+      - analyzeObjectTableCore
+      - analyzeObjectTableSurveyCore
+      - analyzeObjectTableExtended
+      - analyzeSourceTableCore
+      - catalogMatchTract
+      - diff_matched_analysis
+      - refCatObjectTract
+      - validateObjectTableCore
