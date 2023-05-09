@@ -20,16 +20,10 @@ pipetask:
   fgcmOutputProducts:
     requestMemory: 8192
   assembleCoadd:
-    requestMemory: 24576
+    requestMemory: 8192
   jointcal:
     requestMemory: 21000
   deblend:
-    requestMemory: 16384
-  makeWarp:
-    requestMemory: 8192
-  measure:
-    requestMemory: 16384
-  mergeMeasurements:
     requestMemory: 16384
   forcedPhotCoadd:
     requestMemory: 4096
@@ -42,21 +36,21 @@ pipetask:
   healSparsePropertyMaps:
     requestMemory: 30000
   getTemplate:
-    requestMemory: 5000
+    requestMemory: 5400
   consolidateFullDiaObjectTable:
-    requestMemory: 10000
+    requestMemory: 12000
   consolidateForcedSourceOnDiaObjectTable:
     requestMemory: 490000
   transformForcedSourceOnDiaObjectTable:
     requestMemory: 10000
   consolidateAssocDiaSourceTable:
-    requestMemory: 5000
+    requestMemory: 5400
   consolidateForcedSourceTable:
     requestMemory: 200000
   makeVisitTable:
-    requestMemory: 5400
+    requestMemory: 10000
   makeCcdVisitTable:
-    requestMemory: 5400
+    requestMemory: 10000
 
   # faro tasks
   matchCatalogsPatch:
