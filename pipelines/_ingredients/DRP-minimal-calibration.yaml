@@ -37,7 +37,7 @@ tasks:
   transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
   consolidateObjectTable: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
   forcedPhotCcd: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
-  forcedPhotCoadd: lsst.meas.base.forcedPhotCoadd.ForcedPhotCoaddTask
+  forcedPhotCoadd: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:

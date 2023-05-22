@@ -43,6 +43,13 @@ You can find Jira issues for this module under the `drp_pipe <https://jira.lsstc
 
 .. .. _lsst.drp.pipe-pyapi:
 
+Tasks
+-----
+
+.. lsst-tasks::
+   :root: lsst.drp.pipe
+   :toctree: tasks
+
 Python API reference
 ====================
 
