@@ -2,6 +2,6 @@ description: |
   A tiny subset of the DRP pipeline used by the pipelines_check CI package.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  location: "$DRP_PIPE_DIR/ingredients/HSC/DRP.yaml"
+  location: "$DRP_PIPE_DIR/pipelines/_ingredients/HSC/DRP.yaml"
   include:
     - processCcd
