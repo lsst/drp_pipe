@@ -1,8 +1,84 @@
 description: The DRP pipeline specialized for large data release productions
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  location: "$DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml"
+  - location: $DRP_PIPE_DIR/ingredients/DRP.yaml
+    exclude:
+      - writeSourceTable  # cannot reconfigure because different dimensions.
+  - location: $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
+  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+tasks:
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ["i", "r", "z", "y", "g", "N921", "N816", "N1010", "N387", "N515"]
+      connections.source_table_visit: preSourceTable_visit
+  jointcal:
+    # Running jointcal is something we want to do for all real-world
+    # instruments, so it doesn't belong in an HSC-specific pipeline, let alone
+    # an RC2-specific one.  We just haven't done the pipeline refactoring that
+    # would fix this.
+    class: lsst.jointcal.JointcalTask
+    config:
+      connections.inputSourceTableVisit: preSourceTable_visit
+  fgcmBuildStarsTable:
+    class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
+    config:
+      connections.sourceTable_visit: preSourceTable_visit
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      useExposureReferenceOffset: true
+      doMultipleCycles: true
+      multipleCyclesFinalCycleNumber: 6
+  fgcmOutputProducts:
+    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+    config:
+      connections.cycleNumber: 6
+  writePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+    config:
+      connections.outputCatalog: preSource
+  transformPreSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: preSource
+      connections.outputCatalog: preSourceTable
+  consolidatePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: preSourceTable
+      connections.outputCatalog: preSourceTable_visit
+  updateVisitSummary:
+    class: lsst.pipe.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      wcs_provider: "tract"
+      photo_calib_provider: "global"
+      background_provider: "replacement"
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      connections.outputCatalog: source
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      connections.sourceTableHandles: preSourceTable_visit
 subsets:
+  step1:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
+
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region.
   step2a:
     subset:
       - consolidatePreSourceTable
