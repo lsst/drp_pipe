@@ -1,7 +1,7 @@
 description: DRP specialized for ImSim-DC2 data
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
-  - $DRP_PIPE_DIR/ingredients/DRP-minimal-calibration.yaml
+  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-minimal-calibration.yaml
   - $FARO_DIR/pipelines/metrics_pipeline.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml

@@ -1,7 +1,7 @@
 description: The DRP pipeline specialized for the HSC RC2 dataset.
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  - $DRP_PIPE_DIR/ingredients/HSC/DRP.yaml
+  - $DRP_PIPE_DIR/pipelines/_ingredients/HSC/DRP.yaml
 tasks:
   fgcmBuildFromIsolatedStars:
     class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask

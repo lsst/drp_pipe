@@ -1,7 +1,7 @@
 description: DRP specialized for ci_imsim test package.
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
-  - $DRP_PIPE_DIR/ingredients/LSSTCam-imSim/DRP.yaml
+  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
   - $ANALYSIS_DRP_DIR/pipelines/LSSTCam-imSim/analysis_drp_plots.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
