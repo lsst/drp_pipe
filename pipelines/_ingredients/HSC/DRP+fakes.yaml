@@ -132,7 +132,7 @@ tasks:
       connections.inputCoaddName: "fakes_deep"
       connections.exposure: "fakes_calexp"
   forcedPhotCoadd:
-    class: lsst.meas.base.forcedPhotCoadd.ForcedPhotCoaddTask
+    class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
     config:
       connections.inputCoaddName: "fakes_deep"
       connections.outputCoaddName: "fakes_deep"
