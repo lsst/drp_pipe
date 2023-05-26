@@ -8,7 +8,6 @@ setupRequired(obs_subaru)
 # in this package.
 setupRequired(ip_isr)
 setupRequired(ip_diffim)
-setupRequired(meas_base)
 setupRequired(pipe_tasks)
 setupRequired(meas_base)
 setupRequired(jointcal)
