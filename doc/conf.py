@@ -7,7 +7,6 @@ https://developer.lsst.io/stack/building-single-package-docs.html
 
 from documenteer.conf.pipelinespkg import *
 
-
 project = "drp_pipe"
 html_theme_options["logotext"] = project
 html_title = project

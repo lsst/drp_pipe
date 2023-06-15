@@ -45,7 +45,9 @@ imports:
     - analyzeObjectTableSurveyCore
     - catalogMatchTract
     - refCatObjectTract
-    - faro_all
+    - faro_visit
+    - faro_matched
+    - faro_tract
 tasks:
   singleFrameWithFakes:
     class: lsst.pipe.tasks.processCcdWithFakes.ProcessCcdWithFakesTask
