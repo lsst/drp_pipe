@@ -17,13 +17,17 @@ tasks:
     config:
       doMultipleCycles: true
 subsets:
-  faro_all:
+  faro_visit:
     subset:
-      # visit-level on single-frame products
       - nsrcMeasVisit
       - TE3
       - TE4
-      # tract-level, matched-visit on single-frame products
+    description: |
+      Set of visit-level faro metrics. These tasks run on single-frame products and
+      require Calibrated Source Tables, which are available after
+      consolidateSourceTable (step6) is run.
+  faro_matched:
+    subset:
       - matchCatalogsTract
       - matchCatalogsPatch
       - matchCatalogsPatchMultiBand
@@ -54,17 +58,17 @@ subsets:
       - psfPhotRepStar2
       - psfPhotRepStar3
       - psfPhotRepStar4
-      # tract-level on coadd products
+    description: |
+      Set of tract-level, matched-visit faro metrics. These tasks run on single-frame
+      products and require Calibrated Source Tables, which are available after
+      consolidateSourceTable (step6) is run.
+  faro_tract:
+    subset:
       - TE1
       - TE2
       - wPerp
       - skyObjectMean
       - skyObjectStd
     description: |
-      Set of tasks for calculation of metrics via faro.
-      These tasks are a mix of visit- and tract-level and must be run globally
-      for RC2.
-      Tasks that require single-frame products use Calibrated Source Tables,
-      which are available after consolidateSourceTable (step6) is run.
-      Tasks that require coadd products use Object Tables which are available
-      after consolidateObjectTable (step3) is run.
+      Set of tract-level faro metrics to be run on coadd products. These use Object
+      Tables which are available after consolidateObjectTable (step3) is run.

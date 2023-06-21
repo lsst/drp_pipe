@@ -7,7 +7,9 @@ imports:
       # there isn't enough data.
       - fgcm
       - gbdesAstrometricFit
-      - faro_all
+      - faro_visit
+      - faro_matched
+      - faro_tract
       # Some of these plots fail with ci_hsc data
       # - analyzeObjectTableCore
       # - refCatObjectTract
