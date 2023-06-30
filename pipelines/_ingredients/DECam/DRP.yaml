@@ -54,7 +54,6 @@ tasks:
       modelPsf.defaultFwhm: 7.7
       warpAndPsfMatch.warp.warpingKernelName: lanczos5
       coaddPsf.warpingKernelName: lanczos5
-      connections.skyWcsName: jointcal
       # Legacy DECam config to write out warps, even if they are empty
       doWriteEmptyWarps: true
       python: |
@@ -112,7 +111,6 @@ tasks:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
       connections.outputCatalog: source
-      connections.skyWcsName: jointcal
   jointcal:
     class: lsst.jointcal.JointcalTask
     config:
