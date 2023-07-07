@@ -46,7 +46,7 @@ cluster:
     dimensions: tract,patch
 
   diffim:
-    pipetasks: getTemplate,imageDifference,transformDiaSourceCat
+    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,transformDiaSourceCat
     dimensions: visit,detector
 
   association:
