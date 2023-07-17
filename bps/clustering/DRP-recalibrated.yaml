@@ -1,6 +1,6 @@
 # This is a prescription for quantum clustering with BPS, suitable for any
-# concrete pipeline based on the "DRP-recalibrated" pipeline.  It also includes
-# clustering for analysis_drp plots.
+# concrete pipeline based on the "DRP-recalibrated" pipeline.
+# It also includes clustering for analysis_drp plots.
 #
 # Use it by adding:
 #
@@ -46,7 +46,7 @@ cluster:
     dimensions: tract,patch
 
   diffim:
-    pipetasks: getTemplate,imageDifference,transformDiaSourceCat
+    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,transformDiaSourceCat
     dimensions: visit,detector
 
   association:
@@ -54,5 +54,9 @@ cluster:
     dimensions: tract,patch
 
   forced_phot:
-    pipetasks: forcedPhotCcd,forcedPhotDiffim,writeForcedSourceTable,forcedPhotDiffOnDiaObjects,forcedPhotCcdOnDiaObjects,writeForcedSourceOnDiaObjectTable
+    pipetasks: forcedPhotCcd, forcedPhotDiffim, writeForcedSourceTable
+    dimensions: visit,detector,tract
+
+  forced_phot_dia:
+    pipetasks: forcedPhotDiffOnDiaObjects, forcedPhotCcdOnDiaObjects, writeForcedSourceOnDiaObjectTable
     dimensions: visit,detector,tract
