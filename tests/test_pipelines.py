@@ -55,6 +55,7 @@ HSC_INPUTS = {
     "brighterFatterKernel",
     "defects",
     "gaia_dr2_20200414",
+    "gaia_dr3_20230707",
     "linearizer",
     "ps1_pv3_3pi_20170110",
     "sky",
@@ -187,6 +188,7 @@ class PipelineTestCase(unittest.TestCase):
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
                 ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
             ],
             expected_inputs={
                 "camera",
@@ -208,11 +210,13 @@ class PipelineTestCase(unittest.TestCase):
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
                 ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
             ],
             expected_inputs=COMMON_INPUTS
             | {
                 "defects",
                 "gaia_dr2_20200414",
+                "gaia_dr3_20230707",
                 "linearizer",
                 "overscanRaw",
                 "ps1_pv3_3pi_20170110",
@@ -238,6 +242,7 @@ class PipelineTestCase(unittest.TestCase):
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
                 ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
             ],
             expected_inputs=COMMON_INPUTS
             | HSC_INPUTS
@@ -293,6 +298,7 @@ class PipelineTestCase(unittest.TestCase):
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
                 ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
             ],
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
@@ -341,6 +347,7 @@ class PipelineTestCase(unittest.TestCase):
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
                 ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
             ],
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
@@ -408,6 +415,7 @@ class PipelineTestCase(unittest.TestCase):
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "Catalog", False),
                 ("gaia_dr2_20200414", {"htm7"}, "Catalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "Catalog", False),
             ],
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
