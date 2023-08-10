@@ -240,6 +240,7 @@ subsets:
       - catalogMatchTract
       - refCatObjectTract
       - validateObjectTableCore
+      - analyzeMatchedVisitCore
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 
