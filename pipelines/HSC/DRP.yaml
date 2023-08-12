@@ -1,0 +1,198 @@
+description: |
+  The DRP pipeline for large DRP pipelines.
+
+instrument: lsst.obs.subaru.HyperSuprimeCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+    exclude:
+      - writeSourceTable  # cannot reconfigure because different dimensions.
+  - location: $FARO_DIR/pipelines/metrics_pipeline_jointcal_fgcm.yaml
+  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+tasks:
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order: ["i", "r", "z", "y", "g", "N921", "N816", "N1010", "N387", "N515"]
+      connections.source_table_visit: preSourceTable_visit
+  jointcal:
+    # Running jointcal is something we want to do for all real-world
+    # instruments, so it doesn't belong in an HSC-specific pipeline, let alone
+    # an RC2-specific one.  We just haven't done the pipeline refactoring that
+    # would fix this.
+    class: lsst.jointcal.JointcalTask
+    config:
+      connections.inputSourceTableVisit: preSourceTable_visit
+  fgcmBuildStarsTable:
+    class: lsst.fgcmcal.fgcmBuildStarsTable.FgcmBuildStarsTableTask
+    config:
+      connections.sourceTable_visit: preSourceTable_visit
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      useExposureReferenceOffset: true
+      doMultipleCycles: true
+      multipleCyclesFinalCycleNumber: 6
+  fgcmOutputProducts:
+    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+    config:
+      cycleNumber: 6
+  writePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+    config:
+      connections.outputCatalog: preSource
+  transformPreSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: preSource
+      connections.outputCatalog: preSourceTable
+  consolidatePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: preSourceTable
+      connections.outputCatalog: preSourceTable_visit
+  updateVisitSummary:
+    class: lsst.pipe.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      wcs_provider: "tract"
+      photo_calib_provider: "global"
+      background_provider: "replacement"
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      connections.outputCatalog: source
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      connections.sourceTableHandles: preSourceTable_visit
+  makePreliminaryCcdVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+    config:
+      connections.visitSummaryRefs: visitSummary
+      connections.outputCatalog: preCcdVisitTable
+  makePreliminaryVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+    config:
+      connections.visitSummaries: visitSummary
+      connections.outputCatalog: preVisitTable
+subsets:
+  step1:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+      - skyCorr
+    description: |
+      Visit-level tasks
+      Allowed data query constraints: visit
+  step1summary:
+    subset:
+      - makePreliminaryCcdVisitTable
+      - makePreliminaryVisitTable
+    description: |
+      Global-level tasks that must not be run with any data query constraints
+      Can be run anytime after step1 or during step1 processing
+      for rolling analysis.
+
+      Allowed data query constraints: instrument
+
+      Tasks generate one data product per collection.
+  step2b:
+    subset:
+      - isolatedStarAssociation
+      - jointcal
+    description: |
+      Tract-level tasks
+      Allowed data query constraints: tract
+
+      Jointcal and isolatedStarAssociation both use PreSources, generated
+      by consolidatePreSourceTable, for all visits that overlap a tract.
+      jointcal produces solutions per-tract, per-visit
+      isolatedStarAssociation produces solutions per-tract.
+  step2c:
+    subset:
+      - fgcmBuildStarsTable
+      - fgcmFitCycle
+      - fgcmOutputProducts
+    description: |
+      Global-level tasks that must not be run with any data query constraints
+      Can be run anytime after subset step2a.
+
+      Allowed data query constraints: instrument
+
+      Tasks generate one data product per collection.
+      FGCM performs better the more visits are included.
+  step2d:
+    subset:
+      - finalizeCharacterization
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
+      - updateVisitSummary
+    description: |
+      Visit-level tasks.
+      Allowed data query constraints: visit
+
+      writeRecalibratedSourceTable, transformSourceTable run per-detector
+      consolidateSourceTable produces one data product per visit.
+      finalizeCharacterization will eventually model full focal plane PSFs.
+  step2e:
+    subset:
+      - makeCcdVisitTable
+      - makeVisitTable
+    description: |
+      Global-level tasks that must not be run with any data query constraints
+      Can be run anytime after subset step2d.
+
+      Allowed data query constraints: instrument
+
+      Tasks generate one data product per collection.
+      make[Ccd]VisitTable produces per-collection summary of the Visits
+      and CcdVisits.
+  step3:
+    subset:
+      - makeWarp
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - forcedPhotCoadd
+      - writeObjectTable
+      - transformObjectTable
+      - consolidateObjectTable
+      - healSparsePropertyMaps
+    description: |
+      tract-level tasks.  Allowed data query constraints: tract
+
+      Tasks that can be run together, but only after the 'step1', 'step2a',
+      'step2b', 'step2c', 'step2d' subsets.
+
+      If you do not include tract in the data query, you will get tracts with
+      partial coverage.
+  step4:
+    subset:
+      - forcedPhotCcd
+    description: |
+      Detector-level tasks
+      Allowed data query constraints: visit, detector
+
+      These detector-level tasks should not be run with 'tract' or 'patch' as
+      part of the data ID expression if all reference catalogs for seeding
+      forced photometry cover these detector-level quanta are desired.
+  step7:
+    subset:
+      - consolidateHealSparsePropertyMaps
+    description: |
+      Tasks that should be run as the final step that require global inputs,
+      and can be run after the 'step3' subset.
+
+      This step has global aggregation tasks to run over all visits, detectors,
+      tracts, etc.  This step should be run only with the instrument constraint
+      in the data query.
