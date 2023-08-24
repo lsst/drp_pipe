@@ -400,10 +400,11 @@ subsets:
       - skyObjectStd
     description: >
       Tasks that can be run together, but only after the 'step1', 'step2',
-      'step3', and 'step4' subsets
+      'step3', and 'step4' subsets.
       This step includes patch-level aggregation Tasks. These should be
-      run with explicit 'tract' constraints in the data query, otherwise
-      quanta will be created for jobs with only partial visit coverage.
+      run with explicit 'tract' and 'band' constraints in the data query, or
+      quanta will be created for jobs with only partial visit coverage and
+      for bands with no columns in the object table.
   nightlyStep8:
     subset:
       - validateObjectTableCore

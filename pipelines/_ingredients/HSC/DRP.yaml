@@ -72,3 +72,8 @@ subsets:
     description: |
       Set of tract-level faro metrics to be run on coadd products. These use Object
       Tables which are available after consolidateObjectTable (step3) is run.
+
+      These must have a band constraint in their data query to avoid generating
+      quanta for bands that do not have columns in the object table, since
+      using an object table dataset as input does not provide information to
+      the middleware about which tasks went into making the object table.
