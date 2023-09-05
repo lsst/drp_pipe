@@ -40,3 +40,4 @@ subsets:
       - diff_matched_analysis
       - refCatObjectTract
       - validateObjectTableCore
+      - analyzeMatchedVisitCore
