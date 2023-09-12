@@ -45,6 +45,13 @@ tasks:
     config:
       connections.cycleNumber: 6
 
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      wcs_provider: "input_summary"
+      photo_calib_provider: "global"
+      background_provider: "input_summary"
+
 subsets:
   step1:
     subset:
