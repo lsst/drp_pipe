@@ -19,6 +19,7 @@ imports:
       - makeCcdVisitTable
       - makeVisitTable
       - transformSourceTable
+      - consolidateSourceTable
       - writeRecalibratedSourceTable
       - makeWarp
       - assembleCoadd
@@ -98,19 +99,6 @@ subsets:
       which means one should not use a 'tract' expression to constrain it, and
       if one _did_ run it with a tract constraint (which would be a common
       occurrence if it was included in any later step).
-
-  step2:
-    subset:
-      - consolidateSourceTable
-    description: |
-      This is a mix of visit-level and tract-level tasks that must not be run
-      with data query constraints other than instrument.  These are tasks that
-      can be run together, but only after the 'step1' subset.
-
-      Visit-level: consolidateSourceTable, consolidateVisitSummary,
-                   finalizeCharacterization, updateVisitSummary,
-                   makeCcdVisitTable, makVisitTable
-      Tract-level: isolatedStarAssociation
 
   step3a:
     subset:
