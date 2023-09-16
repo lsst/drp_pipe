@@ -69,7 +69,7 @@ tasks:
       python: |
         from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
         columns_flux = {}
-        for band in 'ugrizy':
+        for band in ("u", "g", "r", "i", "z", "y"):
             columns_flux[band] = MatchedCatalogFluxesConfig(
                 column_ref_flux=f'flux_{band}',
                 columns_target_flux=[f'{band}_cModelFlux',],
