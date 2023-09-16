@@ -35,31 +35,24 @@ tasks:
         # Target settings are likely common to all object tables
         from lsst.pipe.tasks.match_tract_catalog_probabilistic import MatchTractCatalogProbabilisticTask
         config.match_tract_catalog.retarget(MatchTractCatalogProbabilisticTask)
-        config.match_tract_catalog.columns_ref_flux = [
-            'flux_u', 'flux_g', 'flux_r',
-            'flux_i', 'flux_z', 'flux_y',
+        bands_match = ("u", "g", "r", "i", "z", "y")
+        # Bands to match aperture fluxes on as a fallback if cModel failed
+        bands_fallback = ("r", "i")
+        fluxes_ref = [f"flux_{band}" for bands in (bands_match, bands_fallback) for band in bands]
+        config.match_tract_catalog.columns_ref_flux = fluxes_ref
+        config.match_tract_catalog.columns_ref_meas = ["ra", "dec"] + fluxes_ref
+        fluxes_meas = [f"{band}_cModelFlux" for band in bands_match] + [
+            f"{band}_ap12Flux" for band in bands_fallback
         ]
-        config.match_tract_catalog.columns_ref_meas = [
-            'ra', 'dec',
-            'flux_u', 'flux_g', 'flux_r',
-            'flux_i', 'flux_z', 'flux_y',
-        ]
-        config.match_tract_catalog.columns_target_meas = [
-            'x', 'y',
-            'u_cModelFlux', 'g_cModelFlux', 'r_cModelFlux',
-            'i_cModelFlux', 'z_cModelFlux', 'y_cModelFlux',
-        ]
-        config.match_tract_catalog.columns_target_err = [
-            'xErr', 'yErr',
-            'u_cModelFluxErr', 'g_cModelFluxErr', 'r_cModelFluxErr',
-            'i_cModelFluxErr', 'z_cModelFluxErr', 'y_cModelFluxErr',
-        ]
-        config.match_tract_catalog.coord_format.coords_ref_to_convert = {'ra': 'x', 'dec': 'y'}
+        columns_meas = ["x", "y"] + fluxes_meas
+        config.match_tract_catalog.columns_target_meas = columns_meas
+        config.match_tract_catalog.columns_target_err = [f"{col}Err" for col in columns_meas]
+        config.match_tract_catalog.coord_format.coords_ref_to_convert = {"ra": "x", "dec": "y"}
         # Might need adjusting for different survey depths
         config.match_tract_catalog.mag_faintest_ref = 27.0
-        config.match_tract_catalog.columns_ref_copy = ['id', 'truth_type']
-        config.match_tract_catalog.columns_ref_select_true = ['is_unique_truth_entry']
-        config.match_tract_catalog.columns_target_copy = ['objectId']
+        config.match_tract_catalog.columns_ref_copy = ["id", "truth_type"]
+        config.match_tract_catalog.columns_ref_select_true = ["is_unique_truth_entry"]
+        config.match_tract_catalog.columns_target_copy = ["objectId"]
   compareObjectToTruth:
     class: lsst.pipe.tasks.diff_matched_tract_catalog.DiffMatchedTractCatalogTask
     config:
