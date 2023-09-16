@@ -69,13 +69,18 @@ tasks:
       python: |
         from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
         columns_flux = {}
+        fluxes_meas_psf = []
         for band in ("u", "g", "r", "i", "z", "y"):
             columns_flux[band] = MatchedCatalogFluxesConfig(
                 column_ref_flux=f'flux_{band}',
                 columns_target_flux=[f'{band}_cModelFlux',],
                 columns_target_flux_err=[f'{band}_cModelFluxErr',],
             )
+            fluxes_meas_psf.append(f"{band}_psfFlux")
         config.columns_flux = columns_flux
+        config.columns_target_copy = ["patch"] + fluxes_meas_psf + [
+          f"{col}Err" for col in fluxes_meas_psf
+        ]
   catalogMatchTract:
     class: lsst.analysis.tools.tasks.catalogMatch.CatalogMatchTask
     config:
