@@ -234,6 +234,7 @@ subsets:
       - refCatObjectTract
       - diff_matched_analysis
       - validateObjectTableCore
+      - analyzeMatchedVisitCore
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 

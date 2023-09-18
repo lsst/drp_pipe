@@ -69,3 +69,4 @@ subsets:
       - catalogMatchTract
       - refCatObjectTract
       - validateObjectTableCore
+      - analyzeMatchedVisitCore
