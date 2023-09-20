@@ -61,7 +61,7 @@ tasks:
         from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
         config.select.retarget(PsfWcsSelectImagesTask)
   templateGen:
-    class: lsst.pipe.tasks.assembleCoadd.CompareWarpAssembleCoaddTask
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
       matchingKernelSize: 29
@@ -81,7 +81,7 @@ tasks:
         from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
         config.select.retarget(PsfWcsSelectImagesTask)
   assembleCoadd:
-    class: lsst.pipe.tasks.assembleCoadd.CompareWarpAssembleCoaddTask
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between
       # DECam and HSC
