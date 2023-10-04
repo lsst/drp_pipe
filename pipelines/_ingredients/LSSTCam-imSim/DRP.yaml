@@ -7,6 +7,19 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
+parameters:
+  filterMap: {
+    "u": "lsst_u_smeared",
+    "g": "lsst_g_smeared",
+    "r": "lsst_r_smeared",
+    "i": "lsst_i_smeared",
+    "z": "lsst_z_smeared",
+    "y": "lsst_y_smeared",
+  }
+  # Bands to match aperture fluxes on as a fallback if cModel failed
+  # default is for highest S/N bands to avoid giving equal weight
+  # to aperture fluxes vs CModel (which should be better for galaxies)
+  bands_match_fallback: ["r", "i"]
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
@@ -19,15 +32,15 @@ tasks:
     config:
       connections.astromRefCat: "cal_ref_cat_2_2"
       connections.photoRefCat: "cal_ref_cat_2_2"
-      python: >
-        config.astromRefObjLoader.filterMap = {band: 'lsst_%s_smeared' % (band) for band in 'ugrizy'};
-        config.photoRefObjLoader.filterMap = {band: 'lsst_%s_smeared' % (band) for band in 'ugrizy'};
+      python: |
+        config.astromRefObjLoader.filterMap = parameters.filterMap
+        config.photoRefObjLoader.filterMap = parameters.filterMap
   measure:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
       connections.refCat: "cal_ref_cat_2_2"
-      python: >
-        config.match.refObjLoader.filterMap = {band: 'lsst_%s_smeared' % (band) for band in 'ugrizy'};
+      python: |
+        config.match.refObjLoader.filterMap = parameters.filterMap
   matchObjectToTruth:
     class: lsst.pipe.tasks.match_tract_catalog.MatchTractCatalogTask
     config:
@@ -35,47 +48,45 @@ tasks:
         # Target settings are likely common to all object tables
         from lsst.pipe.tasks.match_tract_catalog_probabilistic import MatchTractCatalogProbabilisticTask
         config.match_tract_catalog.retarget(MatchTractCatalogProbabilisticTask)
-        config.match_tract_catalog.columns_ref_flux = [
-            'flux_u', 'flux_g', 'flux_r',
-            'flux_i', 'flux_z', 'flux_y',
+        bands_match = parameters.filterMap.keys()
+        fluxes_ref = [
+          f"flux_{band}" for bands in (bands_match, parameters.bands_match_fallback) for band in bands
         ]
-        config.match_tract_catalog.columns_ref_meas = [
-            'ra', 'dec',
-            'flux_u', 'flux_g', 'flux_r',
-            'flux_i', 'flux_z', 'flux_y',
+        config.match_tract_catalog.columns_ref_flux = fluxes_ref
+        config.match_tract_catalog.columns_ref_meas = ["ra", "dec"] + fluxes_ref
+        fluxes_meas = [f"{band}_cModelFlux" for band in bands_match] + [
+            f"{band}_ap12Flux" for band in parameters.bands_match_fallback
         ]
-        config.match_tract_catalog.columns_target_meas = [
-            'x', 'y',
-            'u_cModelFlux', 'g_cModelFlux', 'r_cModelFlux',
-            'i_cModelFlux', 'z_cModelFlux', 'y_cModelFlux',
-        ]
-        config.match_tract_catalog.columns_target_err = [
-            'xErr', 'yErr',
-            'u_cModelFluxErr', 'g_cModelFluxErr', 'r_cModelFluxErr',
-            'i_cModelFluxErr', 'z_cModelFluxErr', 'y_cModelFluxErr',
-        ]
-        config.match_tract_catalog.coord_format.coords_ref_to_convert = {'ra': 'x', 'dec': 'y'}
+        columns_meas = ["x", "y"] + fluxes_meas
+        config.match_tract_catalog.columns_target_meas = columns_meas
+        config.match_tract_catalog.columns_target_err = [f"{col}Err" for col in columns_meas]
+        config.match_tract_catalog.coord_format.coords_ref_to_convert = {"ra": "x", "dec": "y"}
         # Might need adjusting for different survey depths
         config.match_tract_catalog.mag_faintest_ref = 27.0
-        config.match_tract_catalog.columns_ref_copy = ['id', 'truth_type']
-        config.match_tract_catalog.columns_ref_select_true = ['is_unique_truth_entry']
-        config.match_tract_catalog.columns_target_copy = ['objectId']
+        config.match_tract_catalog.columns_ref_copy = ["id", "truth_type"]
+        config.match_tract_catalog.columns_ref_select_true = ["is_unique_truth_entry"]
+        config.match_tract_catalog.columns_target_copy = ["objectId"]
   compareObjectToTruth:
     class: lsst.pipe.tasks.diff_matched_tract_catalog.DiffMatchedTractCatalogTask
     config:
-      columns_target_coord_err: ['xErr', 'yErr']
-      coord_format.coords_ref_to_convert: {'ra': 'x', 'dec': 'y'}
+      columns_target_coord_err: ["xErr", "yErr"]
+      coord_format.coords_ref_to_convert: {"ra": "x", "dec": "y"}
 
       python: |
         from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
         columns_flux = {}
-        for band in 'ugrizy':
+        fluxes_meas_psf = []
+        for band in parameters.filterMap:
             columns_flux[band] = MatchedCatalogFluxesConfig(
-                column_ref_flux=f'flux_{band}',
-                columns_target_flux=[f'{band}_cModelFlux',],
-                columns_target_flux_err=[f'{band}_cModelFluxErr',],
+                column_ref_flux=f"flux_{band}",
+                columns_target_flux=[f"{band}_cModelFlux",],
+                columns_target_flux_err=[f"{band}_cModelFluxErr",],
             )
+            fluxes_meas_psf.append(f"{band}_psfFlux")
         config.columns_flux = columns_flux
+        config.columns_target_copy = ["patch"] + fluxes_meas_psf + [
+          f"{col}Err" for col in fluxes_meas_psf
+        ]
   catalogMatchTract:
     class: lsst.analysis.tools.tasks.catalogMatch.CatalogMatchTask
     config:
