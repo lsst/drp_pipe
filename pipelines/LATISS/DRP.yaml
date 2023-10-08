@@ -2,36 +2,23 @@ description: DRP specialized for LATISS surveys
 instrument: lsst.obs.lsst.Latiss
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+    exclude:
+      - analyzeObjectTableCore
+  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
     include:
-      - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
-      - transformPreSourceTable
-      - consolidatePreSourceTable
-      - consolidateVisitSummary
-      - isolatedStarAssociation
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
-      - finalizeCharacterization
-      - updateVisitSummary
-      - makeCcdVisitTable
-      - makeVisitTable
-      - transformSourceTable
-      - consolidateSourceTable
-      - writeRecalibratedSourceTable
-      - makeWarp
-      - assembleCoadd
-      - detection
-      - mergeDetections
-      - deblend
-      - measure
-      - mergeMeasurements
-      - writeObjectTable
-      - transformObjectTable
-      - consolidateObjectTable
-      - forcedPhotCoadd
+      - plot_ri_gr_psf
+      - plot_ri_gr_cmodel
+      - plot_wFit_PSF
+      - plot_xFit_PSF
+  # The following are from analysis_drp
+  # TODO: remove once they have all been ported to analysis_tools (DM-39081)
+  - location: $ANALYSIS_DRP_DIR/pipelines/coaddQAPlots_tier2_3.yaml
+    include:
+      - plot_ri_gr_contour_psf
+      - plot_ri_gr_contour_cmodel
 
 tasks:
   fgcmFitCycle:
@@ -51,6 +38,27 @@ tasks:
       wcs_provider: "input_summary"
       photo_calib_provider: "global"
       background_provider: "input_summary"
+
+  # Importing and defining analyzeObjectTableCore here to omit plots that
+  # require z and/or y band data.
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      connections.outputName: objectTableCore
+      atools.shapeSizeFractionalDiff: ShapeSizeFractionalDiff
+      atools.e1Diff: E1Diff
+      atools.e2Diff: E2Diff
+      atools.skyFluxStatisticMetric: SkyFluxStatisticMetric
+      atools.skyFluxStatisticMetric.applyContext: CoaddContext
+      atools.wPerpPSFP: WPerpPSF
+      atools.wPerpCModel: WPerpCModel
+      atools.xPerpPSFP: XPerpPSF
+      atools.xPerpCModel: XPerpCModel
+      atools.skyObjectSky: SkyObjectSkyPlot
+      atools.skyObjectFlux: SkyObjectHistPlot
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
 
 subsets:
   step1:
@@ -134,9 +142,32 @@ subsets:
     description: |
       Tract-level tasks.  Allowed data query constraints: tract
       Tasks that can be run together, but only after the 'step1', 'step2', and
-      'step3a' subsets (seperation into step3a and step3b is necessary for now
-      as otherwise failues in upstream tasks will cause these to fail.  This is
-      hoped to be a temporary limitation).
+      'step3a' subsets (separation into step3a and step3b is necessary for now
+      as otherwise failures in upstream tasks will cause these to fail.  This
+      is hoped to be a temporary limitation).
+
+  step3c:
+    subset:
+      - healSparsePropertyMaps
+      - analyzeObjectTableCore
+      - analyzeObjectTableSurveyCore
+      - catalogMatchTract
+      - refCatObjectTract
+      - validateObjectTableCore
+      - analyzeMatchedVisitCore
+      # The following are from analysis_drp
+      # TODO: remove once they have all been ported to analysis_tools (DM-39081)
+      - plot_ri_gr_psf
+      - plot_ri_gr_cmodel
+      - plot_wFit_PSF
+      - plot_xFit_PSF
+    description: |
+      Healsparse maps and "core" (most important), coadd-level plots/metrics from
+      analysis_tools (plus a few from analysis_drp to be deprecated once replicated
+      in analysis_tools).
+
+      Must be run after 'step3b'. Cannot be run with any dataquery constraints
+      if analyzeObjectTableSurveyCore is included.
 
   step4:
     subset:
