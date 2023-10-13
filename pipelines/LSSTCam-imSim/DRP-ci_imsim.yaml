@@ -23,12 +23,6 @@ tasks:
     config:
       # Only run the deblender on a small subset of blended parents
       deblend.useCiLimits: true
-  subtractImages:
-    class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
-    # Increase required area of usable template so we raise NoWorkFound
-    # instead of bringing down execution.
-    config:
-      requiredTemplateFraction: 0.2
 subsets:
   analysis_tools:
     subset:
