@@ -27,7 +27,7 @@ import tempfile
 import unittest
 from typing import Any
 
-from lsst.daf.butler import Butler, ButlerConfig, Registry, RegistryConfig
+from lsst.daf.butler import Butler, Config
 from lsst.daf.butler.tests import DatastoreMock
 from lsst.daf.butler.tests.utils import makeTestTempDir, removeTestTempDir
 from lsst.pipe.base.tests.pipelineStepTester import PipelineStepTester
@@ -165,18 +165,13 @@ class PipelineTestCase(unittest.TestCase):
 
     def makeButler(self, **kwargs: Any) -> Butler:
         """Return new Butler instance on each call."""
-        config = ButlerConfig()
+        config = Config()
 
         # make separate temporary directory for registry of this instance
         tmpdir = tempfile.mkdtemp(dir=self.root)
         config["registry", "db"] = f"sqlite:///{tmpdir}/gen3.sqlite3"
-        config["root"] = self.root
-
-        # have to make a registry first
-        registryConfig = RegistryConfig(config.get("registry"))
-        Registry.createFromConfig(registryConfig)
-
-        butler = Butler(config, **kwargs)
+        config = Butler.makeRepo(self.root, config)
+        butler = Butler.from_config(config, **kwargs)
         DatastoreMock.apply(butler)
         return butler
 
