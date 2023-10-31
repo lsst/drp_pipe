@@ -61,6 +61,7 @@ tasks:
   subtractImages:
     class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
     config:
+      allowKernelSourceDetection: true
       connections.coaddName: goodSeeing
       connections.template: goodSeeingDiff_templateExp
       connections.difference: goodSeeingDiff_differenceTempExp
