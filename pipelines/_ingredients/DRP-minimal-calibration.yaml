@@ -23,7 +23,7 @@ tasks:
     config:
       makePsfMatched: true
   assembleCoadd:
-    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    class: lsst.drp.tasks.compare_warp.CompareWarpAssembleCoaddTask
     config:
       doInputMap: true
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
@@ -43,7 +43,7 @@ tasks:
     config:
       connections.goodVisits: goodSeeingVisits
   templateGen:
-    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    class: lsst.drp.tasks.compare_warp.CompareWarpAssembleCoaddTask
     config:
       doSelectVisits: true
       assembleStaticSkyModel.doSelectVisits: true
