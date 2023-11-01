@@ -118,6 +118,7 @@ subsets:
   step3a:
     subset:
       - makeWarp
+      - selectDeepCoaddVisits
       - assembleCoadd
       - detection
       - mergeDetections

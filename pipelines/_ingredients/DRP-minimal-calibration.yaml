@@ -22,10 +22,21 @@ tasks:
     class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
       makePsfMatched: true
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      connections.goodVisits: deepCoaddVisits
+      # Maximum sensible default psf fwhm in arcseconds to use for a coadd
+      maxPsfFwhm: 2.0
+      # By default for deep coadds, use all input visits better than maxPsfFwhm
+      nVisitsMax: -1
   assembleCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
       doInputMap: true
+      doSelectVisits: true
+      assembleStaticSkyModel.doSelectVisits: true
+      connections.selectedVisits: deepCoaddVisits
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   detection: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask

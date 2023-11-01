@@ -197,6 +197,7 @@ subsets:
   step3:
     subset:
       - selectGoodSeeingVisits
+      - selectDeepCoaddVisits
       - makeWarp
       - templateGen
       - deblend

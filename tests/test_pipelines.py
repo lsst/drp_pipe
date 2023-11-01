@@ -78,6 +78,7 @@ COMMON_OUTPUTS = {
     "calexp",
     "calexpBackground",
     "ccdVisitTable",
+    "deepCoaddVisits",
     "deepCoadd",
     "deepCoadd_calexp",
     "deepCoadd_calexp_background",
