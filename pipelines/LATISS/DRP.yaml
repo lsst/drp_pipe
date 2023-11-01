@@ -39,6 +39,13 @@ tasks:
       photo_calib_provider: "global"
       background_provider: "input_summary"
 
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      # This is the maximum seeing that can be used with the default 71 pixel
+      # psf kernel size.
+      maxPsfFwhm: 1.9
+
   # Importing and defining analyzeObjectTableCore here to omit plots that
   # require z and/or y band data.
   analyzeObjectTableCore:
