@@ -327,6 +327,7 @@ subsets:
   nightlyStep3:
     subset:
       - makeWarp
+      - selectDeepCoaddVisits
       - assembleCoadd
       - detection
       - mergeDetections
