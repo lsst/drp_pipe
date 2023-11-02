@@ -94,7 +94,7 @@ subsets:
       must be run with a skymap data query constraint only (an instrument
       constraint is fine, but generally unnecessary). For example, running
       with 'tract' (and 'patch') constraints will select partial visits that
-      overlap that region.  A skymap constraint is necessary to prevent
+      overlap that region. A skymap constraint is necessary to prevent
       isolatedStarAssociation from producing results for all skymaps in the
       data repository.
 
@@ -111,8 +111,9 @@ subsets:
       - makeCcdVisitTable
       - makeVisitTable
     description: |
-      Per-visit and per-collection tasks that can be run together after step2a
-      with no data query constraints other than instrument.
+      Per-visit and per-collection tasks that can be run together after step2a.
+      This step should be run with an instrument and skymap data query
+      constraint only.
 
       FGCM requires full visits and 'tract' and 'patch' constraints will
       always select partial visits that overlap that region.
@@ -136,22 +137,25 @@ subsets:
       - writeObjectTable
       - transformObjectTable
     description: |
-      Tract-level coaddition tasks.  Allowed data query constraints: tract
+      Tract-level coaddition tasks.
+      Allowed data query constraints: instrument, skymap, tract.
       Tasks that can be run together, but only after the 'step1' and 'step2'
-      subsets.  If you do not include tract in the data query, you will get
-      tracts with only partial coverage.
+      subsets. A skymap constraint must always be provided. If you do not
+      include tract in the data query, you will get tracts with only partial
+      coverage.
 
       This subset is considered a workaround for missing middleware and task
-      functionality.  It may be removed in the future.
+      functionality. It may be removed in the future.
 
   step3b:
     subset:
       - consolidateObjectTable
     description: |
-      Tract-level tasks.  Allowed data query constraints: tract
+      Tract-level tasks.
+      Allowed data query constraints: skymap, tract.
       Tasks that can be run together, but only after the 'step1', 'step2', and
       'step3a' subsets (separation into step3a and step3b is necessary for now
-      as otherwise failures in upstream tasks will cause these to fail.  This
+      as otherwise failures in upstream tasks will cause these to fail. This
       is hoped to be a temporary limitation).
 
   step3c:
@@ -170,12 +174,13 @@ subsets:
       - plot_wFit_PSF
       - plot_xFit_PSF
     description: |
-      Healsparse maps and "core" (most important), coadd-level plots/metrics from
-      analysis_tools (plus a few from analysis_drp to be deprecated once replicated
-      in analysis_tools).
+      Healsparse maps and "core" (most important), coadd-level plots/metrics
+      from analysis_tools (plus a few from analysis_drp to be deprecated once
+      replicated in analysis_tools).
 
-      Must be run after 'step3b'. Cannot be run with any dataquery constraints
-      if analyzeObjectTableSurveyCore is included.
+      Needs to be run after 'step3b'. Must be be run with only instrument and
+      skymap dataquery constraints if analyzeObjectTableSurveyCore is included,
+      and optionally with these if analyzeObjectTableSurveyCore is excluded.
 
   step4:
     subset:
@@ -186,6 +191,7 @@ subsets:
       Tasks that be run together, but only after the 'step1', 'step2', and
       'step3' subsets.
 
+      A skymap data query constraint is always required for this step.
       These detector-level tasks should not be run with 'tract' or 'patch' as
       part of the data ID expression if all reference catalogs are desired,
       and to ensure that consolidateSourceTable contains complete visits.
