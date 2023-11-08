@@ -26,49 +26,10 @@ subsets:
       Set of visit-level faro metrics. These tasks run on single-frame products and
       require Calibrated Source Tables, which are available after
       consolidateSourceTable (step6) is run.
-  faro_matched:
-    subset:
-      - matchCatalogsTract
-      - matchCatalogsPatch
-      - matchCatalogsPatchMultiBand
-      - matchCatalogsTractMag17to21p5
-      - matchCatalogsTractStarsSNR5to80
-      - matchCatalogsTractGxsSNR5to80
-      - PA1
-      - PF1_design
-      - AM1
-      - AM2
-      - AM3
-      - AD1_design
-      - AD2_design
-      - AD3_design
-      - AF1_design
-      - AF2_design
-      - AF3_design
-      - AB1
-      - modelPhotRepGal1
-      - modelPhotRepGal2
-      - modelPhotRepGal3
-      - modelPhotRepGal4
-      - modelPhotRepStar1
-      - modelPhotRepStar2
-      - modelPhotRepStar3
-      - modelPhotRepStar4
-      - psfPhotRepStar1
-      - psfPhotRepStar2
-      - psfPhotRepStar3
-      - psfPhotRepStar4
-    description: |
-      Set of tract-level, matched-visit faro metrics. These tasks run on single-frame
-      products and require Calibrated Source Tables, which are available after
-      consolidateSourceTable (step6) is run.
   faro_tract:
     subset:
-      - TE1
-      - TE2
-      - wPerp
-      - skyObjectMean
-      - skyObjectStd
+      - TE1  # query out to Arun
+      - TE2  # query out to Arun
     description: |
       Set of tract-level faro metrics to be run on coadd products. These use Object
       Tables which are available after consolidateObjectTable (step3) is run.
