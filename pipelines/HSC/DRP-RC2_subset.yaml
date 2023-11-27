@@ -205,14 +205,14 @@ subsets:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
-    description: >
+    description: |
       Subset that includes all FGCM tasks.
   simpleSingleFrame:
     subset:
       - isr
       - characterizeImage
       - calibrate
-    description: >
+    description: |
        A simplified single frame pipeline to make the quantum graph more readable.
   multiVisit:
     subset: []
@@ -231,7 +231,7 @@ subsets:
       - consolidateVisitSummary
       - skyCorr
       - isolatedStarAssociation
-    description: >
+    description: |
       Set of tasks for complete single frame processing. Because this includes
       skyCorr, it requires multiple detectors per visit. Although they duplicate
       tasks from the main "stepN" subsets from drp_pipe's DRP-RC2.yaml, we
@@ -269,7 +269,7 @@ subsets:
       - calibrate
       - writePreSourceTable
       - transformPreSourceTable
-    description: >
+    description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
       These should never be run with 'tract' or 'patch' as part of the data ID
       expression if any later steps will also be run, because downstream steps
@@ -280,7 +280,7 @@ subsets:
       - consolidatePreSourceTable
       - consolidateVisitSummary
       - skyCorr
-    description: >
+    description: |
       Per-visit tasks that can be run together, but only after the 'step1'.
       These should never be run with 'tract' or 'patch' as part of the data ID
       expression. skyCorr and FGCM require full visits and 'tract' and 'patch'
@@ -296,7 +296,7 @@ subsets:
     subset:
       - isolatedStarAssociation
       - gbdesAstrometricFit
-    description: >
+    description: |
       Per-tract tasks.
       gbdesAstrometricFit should be run with explicit 'tract' constraints
       essentially all the time, because otherwise quanta will be created for
@@ -307,7 +307,7 @@ subsets:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
-    description: >
+    description: |
       FGCM tasks that must be run with no pipetask multiprocessing
       and no data query
   nightlyStep2d:
@@ -322,7 +322,7 @@ subsets:
       - nsrcMeasVisit
       - TE3
       - TE4
-    description: >
+    description: |
       Per-visit tasks. These should never be run with tract constraints
   nightlyStep3:
     subset:
@@ -369,7 +369,7 @@ subsets:
       - psfPhotRepStar2
       - psfPhotRepStar3
       - psfPhotRepStar4
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
       These should be run with explicit 'tract' constraints essentially all the
@@ -385,7 +385,7 @@ subsets:
   nightlyStep4:
     subset:
       - forcedPhotCcd
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1', 'step2'
       and 'step3' subsets
       These detector-level tasks should not be run with
@@ -399,7 +399,7 @@ subsets:
       - wPerp
       - skyObjectMean
       - skyObjectStd
-    description: >
+    description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets.
       This step includes patch-level aggregation Tasks. These should be
@@ -414,7 +414,7 @@ subsets:
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
       - analyzeMatchedVisitCore
-    description: >
+    description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 
       Must be run after 'step3' (writeObjectTable). Cannot be run with any
