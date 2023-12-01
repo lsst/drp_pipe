@@ -91,11 +91,19 @@ tasks:
     class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchTask
     config:
       connections.refCatalog: "cal_ref_cat_2_2"
+  photometricCatalogMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchTask
+    config:
+      connections.refCatalog: cal_ref_cat_2_2
+      connections.matchedCatalog: objectTable_tract_cal_ref_cat_2_2_photoMatch
   refCatObjectTract:
     class: lsst.analysis.tools.tasks.refCatObjectAnalysis.RefCatObjectAnalysisTask
     config:
-      connections.outputName: "objectTable_tract_cal_ref_cat_2_2_match"
       connections.refCatalog: "cal_ref_cat_2_2"
+  photometricRefCatObjectTract:
+    class: lsst.analysis.tools.tasks.refCatObjectPhotometricAnalysis.RefCatObjectPhotometricAnalysisTask
+    config:
+      connections.data: objectTable_tract_cal_ref_cat_2_2_photoMatch
 subsets:
   step1:
     subset:

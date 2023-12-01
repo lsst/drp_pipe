@@ -23,6 +23,24 @@ tasks:
     config:
       # Only run the deblender on a small subset of blended parents
       deblend.useCiLimits: true
+  catalogMatchVisit:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+    config:
+      connections.refCat: cal_ref_cat_2_2
+      connections.refCatalog: cal_ref_cat_2_2
+  photometricMatchVisit:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
+    config:
+      connections.refCatalog: cal_ref_cat_2_2
+      connections.matchedCatalog: sourceTable_visit_cal_ref_cat_2_2_photoMatch
+  astrometricRefCatSourceVisit:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      connections.data: sourceTable_visit_cal_ref_cat_2_2_match
+  photometricRefCatSourceVisit:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      connections.data: sourceTable_visit_cal_ref_cat_2_2_photoMatch
 subsets:
   analysis_tools:
     subset:
