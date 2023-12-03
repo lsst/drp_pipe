@@ -3,18 +3,17 @@ instrument: lsst.obs.lsst.Latiss
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
     exclude:
       - analyzeObjectTableCore
+  # The following are from analysis_drp
+  # TODO: remove once they have all been ported to analysis_tools (DM-39081)
   - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
     include:
       - plot_ri_gr_psf
       - plot_ri_gr_cmodel
       - plot_wFit_PSF
       - plot_xFit_PSF
-  # The following are from analysis_drp
-  # TODO: remove once they have all been ported to analysis_tools (DM-39081)
   - location: $ANALYSIS_DRP_DIR/pipelines/coaddQAPlots_tier2_3.yaml
     include:
       - plot_ri_gr_contour_psf
@@ -46,8 +45,8 @@ tasks:
       # psf kernel size.
       maxPsfFwhm: 1.9
 
-  # Importing and defining analyzeObjectTableCore here to omit plots that
-  # require z and/or y band data.
+  # Defining analyzeObjectTableCore here to omit plots that require z and/or
+  # y band data.
   analyzeObjectTableCore:
     class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
     config:
@@ -66,6 +65,35 @@ tasks:
       python: |
         from lsst.analysis.tools.atools import *
         from lsst.analysis.tools.contexts import *
+
+  # Defining analyzematchedVisitCore here to change the nBins config and omit
+  # plots currently not relevant for LATISS imaging.
+  analyzeMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      connections.outputName: matchedVisitCore
+      atools.stellarPhotometricRepeatability: StellarPhotometricRepeatability
+      atools.stellarPhotometricResiduals: StellarPhotometricResidualsFocalPlane
+      atools.stellarPhotometricResiduals.produce.plot.nBins: 80
+      atools.stellarAstrometricResidualsRA: StellarAstrometricResidualsRAFocalPlanePlot
+      atools.stellarAstrometricResidualsRA.produce.nBins: 80
+      atools.stellarAstrometricResidualsDec: StellarAstrometricResidualsDecFocalPlanePlot
+      atools.stellarAstrometricResidualsDec.produce.nBins: 80
+      atools.stellarAstrometricResidualStdDevRA: StellarAstrometricResidualStdDevRAFocalPlanePlot
+      atools.stellarAstrometricResidualStdDevRA.produce.nBins: 80
+      atools.stellarAstrometricResidualStdDevDec: StellarAstrometricResidualStdDevDecFocalPlanePlot
+      atools.stellarAstrometricResidualStdDevDec.produce.nBins: 80
+      # The following are the AMX metrics: median relative astrometric measurement
+      # error on N arc minute scales from single visit images shall be less than
+      # this value, where N = 5, 20, 200 arcmin for X = 1, 2, 3, respectivley.
+      # Given the current distribution of visits/field, one X = 1 is included for
+      # now (the others just pollute the repo with empty plots). The others can/should
+      # be added if the observing strategy changes to warrant it.
+      atools.stellarAstrometricRepeatability1: AstrometricRelativeRepeatability
+      atools.stellarAstrometricRepeatability1.xValue: 1
+      atools.stellarAstrometricRepeatability1.process.calculateActions.rms.annulus: 5
+      python: |
+        from lsst.analysis.tools.atools import *
 
 subsets:
   step1:
