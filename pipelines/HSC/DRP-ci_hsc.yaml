@@ -64,3 +64,6 @@ subsets:
       - refCatObjectTract
       - validateObjectTableCore
       - analyzeMatchedVisitCore
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
