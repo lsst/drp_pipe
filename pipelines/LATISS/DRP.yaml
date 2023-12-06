@@ -249,7 +249,7 @@ subsets:
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets.
 
-      This step includes patch-level aggregation Tasks. 
+      This step includes patch-level aggregation Tasks.
       'consolidateForcedSourceTable' is a tract-level task that aggregates
       patches and should be rerun if any of the patches fail.
 
