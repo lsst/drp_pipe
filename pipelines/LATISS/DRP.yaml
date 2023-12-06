@@ -135,10 +135,7 @@ subsets:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
-      - transformSourceTable
-      - consolidateSourceTable
       - updateVisitSummary
-      - writeRecalibratedSourceTable
       - makeCcdVisitTable
       - makeVisitTable
     description: |
@@ -167,6 +164,8 @@ subsets:
       - forcedPhotCoadd
       - writeObjectTable
       - transformObjectTable
+      - selectGoodSeeingVisits
+      - templateGen
     description: |
       Tract-level coaddition tasks.
       Allowed data query constraints: instrument, skymap, tract.
@@ -181,8 +180,6 @@ subsets:
   step3b:
     subset:
       - consolidateObjectTable
-      - selectGoodSeeingVisits
-      - templateGen
     description: |
       Tract-level tasks.
       Allowed data query constraints: skymap, tract.
@@ -224,6 +221,8 @@ subsets:
       - detectAndMeasureDiaSources
       - transformDiaSourceCat
       - writeForcedSourceTable
+      - writeRecalibratedSourceTable
+      - transformSourceTable
     description: |
       Tasks that be run together, but only after the 'step1', 'step2', and
       'step3' subsets.
@@ -250,15 +249,14 @@ subsets:
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets.
 
-      This step includes patch-level aggregation Tasks. These should be run
-      with explicit 'tract' constraints in the data query, otherwise quanta
-      will be created for jobs with only partial visit coverage.
+      This step includes patch-level aggregation Tasks. 
       'consolidateForcedSourceTable' is a tract-level task that aggregates
       patches and should be rerun if any of the patches fail.
 
   step6:
     subset:
       - consolidateDiaSourceTable
+      - consolidateSourceTable
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', 'step4', and 'step5' subsets.
