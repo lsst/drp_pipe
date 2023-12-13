@@ -135,6 +135,9 @@ subsets:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
       - updateVisitSummary
       - makeCcdVisitTable
       - makeVisitTable
@@ -221,8 +224,6 @@ subsets:
       - detectAndMeasureDiaSources
       - transformDiaSourceCat
       - writeForcedSourceTable
-      - writeRecalibratedSourceTable
-      - transformSourceTable
     description: |
       Tasks that be run together, but only after the 'step1', 'step2', and
       'step3' subsets.
@@ -256,7 +257,6 @@ subsets:
   step6:
     subset:
       - consolidateDiaSourceTable
-      - consolidateSourceTable
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', 'step4', and 'step5' subsets.
