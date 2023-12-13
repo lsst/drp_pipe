@@ -11,6 +11,16 @@
 #
 pipetask:
   # DRP tasks
+  deblend:
+    requestMemory: 14000
+  forcedPhotCoadd:
+    requestMemory: 10000
+  measure:
+    requestMemory: 10000
+  detection:
+    requestMemory: 8000
+  transformObjectTable:
+    requestMemory: 16384
   writeObjectTable:
     requestMemory: 16384
   healSparsePropertyMaps:
@@ -29,14 +39,21 @@ pipetask:
   wPerp:
     requestMemory: 32000
   TE1:
-    requestMemory: 16384
+    requestMemory: 50000
   TE2:
-    requestMemory: 16384
+    requestMemory: 50000
   matchCatalogsTractMag17to21p5:
-    requestMemory: 24000
+    requestMemory: 66000
   matchCatalogsTractStarsSNR5to80:
-    requestMemory: 24000
-  matchCatalogsTractGxsSNR5to80:
     requestMemory: 32000
+  matchCatalogsTractGxsSNR5to80:
+    requestMemory: 66000
   consolidateForcedSourceTable:
     requestMemory: 64000
+  consolidateForcedSourceOnDiaObjectTable:
+    requestMemory: 120000
+  # step8 tasks
+  analyzeObjectTableCore:
+    requestMemory: 8192
+  analyzeMatchedVisitCore:
+    requestMemory: 8192

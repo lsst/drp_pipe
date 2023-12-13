@@ -11,6 +11,11 @@
 #
 pipetask:
   # DRP tasks
+  measure:
+    requestMemory: 10000
+  transformObjectTable:
+    requestMemory: 16384
+
   skyCorr:
     requestMemory: 15500
   fgcmBuildFromIsolatedStars:
@@ -26,7 +31,7 @@ pipetask:
   deblend:
     requestMemory: 16384
   forcedPhotCoadd:
-    requestMemory: 4096
+    requestMemory: 10000
   writeObjectTable:
     requestMemory: 16384
   consolidateObjectTable:
@@ -40,7 +45,7 @@ pipetask:
   consolidateFullDiaObjectTable:
     requestMemory: 12000
   consolidateForcedSourceOnDiaObjectTable:
-    requestMemory: 490000
+    requestMemory: 120000
   transformForcedSourceOnDiaObjectTable:
     requestMemory: 10000
   consolidateAssocDiaSourceTable:
@@ -51,6 +56,14 @@ pipetask:
     requestMemory: 10000
   makeCcdVisitTable:
     requestMemory: 10000
+  detection:
+    requestMemory: 8000
+
+  # step8 tasks
+  analyzeObjectTableCore:
+    requestMemory: 8192
+  analyzeMatchedVisitCore:
+    requestMemory: 8192
 
   # faro tasks
   matchCatalogsPatch:
