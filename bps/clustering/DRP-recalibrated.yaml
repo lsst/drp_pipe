@@ -12,7 +12,7 @@
 clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
 cluster:
   visit_detector:
-    pipetasks: isr,inject_exposure,characterizeImage,calibrate,inject_visit,writePreSourceTable,transformPreSourceTable
+    pipetasks: isr,inject_exposure,characterizeImage,calibrate,inject_visit,writePreSourceTable,transformPreSourceTable,writeSourceTable,transformSourceTable
     dimensions: visit,detector
     equalDimensions: visit:exposure
 
