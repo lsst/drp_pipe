@@ -1,0 +1,26 @@
+#
+# For DC2 campaigns, the visit_detector (step1) clustering is modified since
+# astrometric and photometric calibration are skipped in DC2
+# this file swaps out two pipetasks: writePreSourceTable and
+# transformPreSourceTable and replaces them with
+# writeSourceTable and transformSourceTable
+# for step1 clustering.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam-imSim/DRP-DC2-clustering.yaml
+#
+# (with no outer indentation) to your BPS config file.
+#
+imports:
+  - location: "$DRP_PIPE_DIR/bps/clustering/DRP-recalibrated.yaml"
+    exclude:
+      - visit_detector
+      - sourceTable
+
+cluster:
+  visit_detector:
+    pipetasks: isr,inject_exposure,characterizeImage,calibrate,inject_visit,writeSourceTable,transformSourceTable
+    dimensions: visit,detector
+    equalDimensions: visit:exposure
