@@ -245,8 +245,11 @@ subsets:
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 
-      Must be run after 'step3' (writeObjectTable). Cannot be run with any
-      dataquery constraints if analyzeObjectTableSurveyCore is included.
+      Must be run after 'step3' (writeObjectTable). If the task
+      analyzeObjectTableSurveyCore is included, should be run with either no
+      data query constraints or with a tract constraint that *exactly* matches
+      that from 'step3'. Running with only a subset of tracts from step3 will
+      result in incomplete survey-level outputs.
 
-      Can be run together with analysis_drp subsets, e.g. pipeline.yaml
-      (hash/pound sign)step8,analysis_coadd_plots,imsim_analysis_coadd_plots
+      Can be run together with other analysis_drp/analysis_tools subsets, e.g.
+      'pipeline.yaml#step8,analysis_coadd_plots,imsim_analysis_coadd_plots'
