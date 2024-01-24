@@ -31,7 +31,7 @@ pipetask:
   deblend:
     requestMemory: 16384
   forcedPhotCoadd:
-    requestMemory: 33000
+    requestMemory: 10000
   writeObjectTable:
     requestMemory: 16384
   consolidateObjectTable:
