@@ -8,5 +8,5 @@
 #     - ${DRP_PIPE_DIR}/bps/clustering/HSC/DRP-RC2-clustering.yaml
 #
 # (with no outer indentation) to your BPS config file.
-imports:
-  - $DRP_PIPE_DIR/bps/clustering/DRP-recalibrated.yaml
+includeConfigs:
+  - ${DRP_PIPE_DIR}/bps/clustering/DRP-recalibrated.yaml

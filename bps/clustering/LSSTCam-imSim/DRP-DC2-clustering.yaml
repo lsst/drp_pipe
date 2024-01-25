@@ -1,10 +1,5 @@
-#
-# For DC2 campaigns, the visit_detector (step1) clustering is modified since
-# astrometric and photometric calibration are skipped in DC2
-# this file swaps out two pipetasks: writePreSourceTable and
-# transformPreSourceTable and replaces them with
-# writeSourceTable and transformSourceTable
-# for step1 clustering.
+# This is a prescription for quantum clustering with BPS with DC2
+# It also includes clustering for analysis_drp plots.
 #
 # Use it by adding:
 #
@@ -12,15 +7,50 @@
 #     - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam-imSim/DRP-DC2-clustering.yaml
 #
 # (with no outer indentation) to your BPS config file.
-#
-imports:
-  - location: "$DRP_PIPE_DIR/bps/clustering/DRP-recalibrated.yaml"
-    exclude:
-      - visit_detector
-      - sourceTable
 
+clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
 cluster:
   visit_detector:
     pipetasks: isr,inject_exposure,characterizeImage,calibrate,inject_visit,writeSourceTable,transformSourceTable
     dimensions: visit,detector
     equalDimensions: visit:exposure
+
+  visit_plots:
+    pipetasks: plot_CircAp12_sub_PS_meas_sky_stars_visit,plot_CircAp12_sub_PS_meas_sky_gals_visit,plot_CircAp12_sub_PS_meas_calib_psf_used_sky_stars_visit,plot_CircAp12_sub_PS_meas_calib_psf_used_sky_gals_visit,plot_CircAp12_sub_PS_calib_psf_used_sky_unknown_visit,plot_PSFluxSN_meas_sky_all_visit,plot_CircAp12_sub_PS_meas_calib_psf_used_scatter_visit,plot_CircAp12_sub_PS_all_scatter_visit,plot_CircAp25_sub_PS_all_scatter_visit,plot_CircAp12_sub_PS_gals_scatter_visit,plot_CircAp25_sub_PS_gals_scatter_visit,plot_CircAp12_sub_PS_meas_scatter_visit,plot_CircAp25_sub_PS_meas_scatter_visit,plot_skyObject_sky_visit,plot_astromRefCat_sky_visit_dRA,plot_astromRefCat_sky_visit_dDec,plot_astromRefCat_scatter_visit_dRA,plot_astromRefCat_scatter_visit_dDec
+    dimensions: visit
+
+  visit_plots_ellip:
+    pipetasks: plot_e1_scatter_visit,plot_e1_sky_visit,plot_e2_scatter_visit,plot_e2_sky_visit,plot_shapeSize_scatter_visit,plot_shapeSize_sky_visit,plot_e1PSF_scatter_visit,plot_e1PSF_sky_visit,plot_e2PSF_sky_visit,plot_e2PSF_scatter_visit,plot_ellipResids_quiver_visit,plot_shapeSizePSF_scatter_visit,plot_shapeSizePSF_sky_visit,plot_shapeSizeDiff_scatter_visit,plot_shapeSizeFractionalDiff_scatter_visit,plot_E1Diff_scatter_visit,plot_E2Diff_scatter_visit,plot_E1Diff_sky_visit,plot_E2Diff_sky_visit,plot_ShapeDiff_sky_visit,plot_RhoStatistics_visit
+    dimensions: skymap,visit
+
+  coadd_plots:
+    pipetasks: plot_CircAp12_sub_PSF_meas_sky_stars,plot_CircAp12_sub_PSF_meas_sky_gals,plot_CircAp12_sub_PSF_meas_calib_psf_used_sky_stars,plot_CircAp12_sub_PSF_meas_calib_psf_used_sky_gals,plot_CircAp12_sub_PSF_meas_calib_psf_used_sky_unknown,plot_PSFluxSN_meas_sky_all,plot_Kron_sub_PSFmag_meas_sky_galaxies,plot_Kron_sub_PSFmag_meas_sky_stars,plot_CModel_sub_PSFmag_meas_sky_galaxies,plot_CModel_sub_PSFmag_meas_sky_stars,plot_CircAp12_sub_PSF_meas_calib_psf_used_stars_scatter,plot_CircAp12_sub_PSF_meas_stars_scatter,plot_CircAp12_sub_PSF_meas_calib_psf_used_gals_scatter,plot_CircAp12_sub_PSF_meas_gals_scatter,plot_ri_gr_cmodel,plot_ri_gr_psf,plot_astromRefCat_sky_tract_dRA,plot_astromRefCat_sky_tract_dDec,plot_astromRefCat_scatter_tract_dRA,plot_astromRefCat_scatter_tract_dDec
+    dimensions: skymap,tract
+
+  coadd_plots_ellip:
+    pipetasks: plot_E1Diff_scatter,plot_E2Diff_scatter,plot_shapeSizeFractionalDiff_scatter,plot_E1Diff_sky,plot_E2Diff_sky,plot_shapeSizeFractionalDiff_sky,plot_E1Diff_magDiff_scatter,plot_E2Diff_magDiff_scatter,plot_shapeSizeFractionalDiff_magDiff_scatter,plot_shapeSizeDiff_scatter,plot_shapeSizeDiff_magDiff_scatter,plot_shapeSizeDiff_sky,plot_ellipResids_quiver,plot_e1_scatter,plot_e2_scatter,plot_shapeSize_scatter,plot_e1PSF_scatter,plot_e2PSF_scatter,plot_shapeSizePSF_scatter,plot_RhoStatistics
+    dimensions: skymap,tract
+
+  coadd:
+    pipetasks: assembleCoadd,inject_coadd,templateGen,detection
+    dimensions: tract,patch,band
+
+  objectTable:
+    pipetasks: writeObjectTable,transformObjectTable
+    dimensions: tract,patch
+
+  diffim:
+    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,transformDiaSourceCat
+    dimensions: visit,detector
+
+  association:
+    pipetasks: drpAssociation,drpDiaCalculation
+    dimensions: tract,patch
+
+  forced_phot:
+    pipetasks: forcedPhotCcd, forcedPhotDiffim, writeForcedSourceTable
+    dimensions: visit,detector,tract
+
+  forced_phot_dia:
+    pipetasks: forcedPhotDiffOnDiaObjects, forcedPhotCcdOnDiaObjects, writeForcedSourceOnDiaObjectTable
+    dimensions: visit,detector,tract
