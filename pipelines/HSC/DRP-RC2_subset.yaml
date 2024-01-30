@@ -414,6 +414,9 @@ subsets:
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
       - analyzeMatchedVisitCore
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 
