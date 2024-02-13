@@ -5,11 +5,10 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 parameters:
-  # TODO: Check this:
   filterMap: {
-    "g": "g",
-    "r": "r",
-    "i": "i",
+    "g": "lsst_g",
+    "r": "lsst_r",
+    "i": "lsst_i",
   }
 tasks:
   selectGoodSeeingVisits:
@@ -34,6 +33,8 @@ tasks:
       # TODO: Match the ISR configs to sims (placeholder for example)
       doDefect: false
       doBrighterFatter: false
+      doCrosstalk: false
+      doFringe: false
   calibrate:
     class: lsst.pipe.tasks.calibrate.CalibrateTask
     config:
