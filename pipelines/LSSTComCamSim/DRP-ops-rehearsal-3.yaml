@@ -15,23 +15,22 @@ tasks:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
       connections.goodVisits: goodSeeingVisits
-      qMax: 0.33  # is the default
-      nVisitsMin: 12 # 6 is really too small until we check the geometry
-      # TODO: Choose X days in the beginning to use for templates
-      # First 4 days for now
+      nVisitsMin: 12
+      # TODO: Check nImages that 4 days is sufficient at pixel level
       minMJD: 60390.00
       maxMJD: 60394.00
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
-      wcs_provider: "tract"
+      # TODO: Evaluate GBDES and skyCorr after initial DRP
+      wcs_provider: "input_summary"
       photo_calib_provider: "input_summary"
       background_provider: "input_summary"
   isr:
     class: lsst.ip.isr.IsrTask
     config:
-      # TODO: Match the ISR configs to sims (placeholder for example)
       doDefect: false
+      # TODO: Evaluate doBrighterFatter after initial DRP
       doBrighterFatter: false
       doCrosstalk: false
       doFringe: false
@@ -98,11 +97,10 @@ subsets:
       Tasks aggregate all detectors for a given visit and perform
       full focal plane background estimation.
 
-      Initial pipeline without SkyCorr.
+      TODO: Evaluate SkyCorr after intial DRP
   step2b:
     subset:
       - isolatedStarAssociation
-      - gbdesAstrometricFit
     description: |
       Tract-level tasks
       Allowed data query constraints: tract
@@ -112,6 +110,7 @@ subsets:
       tract.
       gbdesAstrometricFit produces solutions per-tract, per-visit
       isolatedStarAssociation produces solutions per-tract.
+      TODO: Evaluate GBDES after first DRP
   # no step2c for FGCM for now
   step2d:
     subset:
@@ -158,7 +157,7 @@ subsets:
       - selectGoodSeeingVisits
       - templateGen
     description: |
-      Tasks that can be run together, but only after the 'step1' and 'step2'
+      Tasks that can be run together, but only after the 'step1' and 'step2d'
       subsets.
 
       These should be run with explicit 'tract' constraints essentially all the
@@ -177,7 +176,7 @@ subsets:
       - transformDiaSourceCat
       - writeForcedSourceTable
     description: |
-      Tasks that can be run together, but only after the 'step1', 'step2' and
+      Tasks that can be run together, but only after the 'step1', 'step2d' and
       'step3' subsets
 
       These detector-level tasks should not be run with 'tract' or 'patch' as
