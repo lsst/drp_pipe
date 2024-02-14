@@ -1,4 +1,4 @@
-description: DRP Pipelinesfor Simulated ComCam
+description: DRP Pipeline for Simulated ComCam Ops Rehearsal 3
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
