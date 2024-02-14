@@ -58,6 +58,7 @@ tasks:
     config:
       doSelectVisits: true
       assembleStaticSkyModel.doSelectVisits: true
+      doNImage: true
       connections.selectedVisits: goodSeeingVisits
       connections.outputCoaddName: goodSeeing
       # Setting template 'outputCoaddName' to goodSeeing is not sufficient to
