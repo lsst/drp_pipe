@@ -28,24 +28,6 @@ tasks:
       wcs_provider: "input_summary"
       photo_calib_provider: "input_summary"
       background_provider: "input_summary"
-  isr:
-    class: lsst.ip.isr.IsrTask
-    config:
-      doDefect: false
-      # TODO: Evaluate doBrighterFatter after initial DRP
-      doBrighterFatter: false
-      doCrosstalk: false
-      doFringe: false
-  calibrate:
-    class: lsst.pipe.tasks.calibrate.CalibrateTask
-    config:
-      connections.astromRefCat: uw_stars_20240130
-      connections.photoRefCat: uw_stars_20240130
-      astromRefObjLoader.anyFilterMapsToThis: None
-      photoRefObjLoader.anyFilterMapsToThis: None
-      python: |
-        config.astromRefObjLoader.filterMap = parameters.filterMap
-        config.photoRefObjLoader.filterMap = parameters.filterMap
   gbdesAstrometricFit:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
     config:
