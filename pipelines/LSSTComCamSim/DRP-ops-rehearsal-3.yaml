@@ -12,9 +12,11 @@ tasks:
     config:
       connections.goodVisits: goodSeeingVisits
       nVisitsMin: 12
-      # TODO: Check nImages that 4 days is sufficient at pixel level
-      minMJD: 60390.00
-      maxMJD: 60394.00
+      # TODO: Add minMJD and maxMJD overrides back in.
+      # Intention is to use the 4 days before the ops rehearsal for
+      # templates. As of 2-22-24 those were not simulated yet.
+      # We have the 3 days covering approx 60401.9-60404.5.
+      # For the first DRP precursor iteration, use visits for all 3 days.
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
