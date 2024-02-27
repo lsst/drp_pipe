@@ -2,10 +2,12 @@ description: DRP Pipeline for Simulated ComCam Ops Rehearsal 3
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
 tasks:
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
@@ -109,6 +111,7 @@ subsets:
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
+      # analysis_tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
@@ -152,6 +155,7 @@ subsets:
       - consolidateFullDiaObjectTable
       - writeForcedSourceOnDiaObjectTable
       - transformForcedSourceOnDiaObjectTable
+      - analyzeDiaSourceTableTract
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets
