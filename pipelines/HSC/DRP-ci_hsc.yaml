@@ -10,9 +10,7 @@ imports:
       - faro_visit
       - faro_matched
       - faro_tract
-      # Some of these plots fail with ci_hsc data
-      # - analyzeObjectTableCore
-      # - refCatObjectTract
+  # We generally don't want all visit-level plots for non-CI runs
   - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 
 tasks:
