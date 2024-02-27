@@ -408,15 +408,16 @@ subsets:
       for bands with no columns in the object table.
   nightlyStep8:
     subset:
-      - validateObjectTableCore
+      - analyzeMatchedVisitCore
       - analyzeObjectTableCore
-      - refCatObjectTract
+      - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
-      - analyzeMatchedVisitCore
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
+      - refCatObjectTract
+      - validateObjectTableCore
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 

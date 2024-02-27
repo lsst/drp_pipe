@@ -3,8 +3,8 @@ instrument: lsst.obs.lsst.LsstComCamSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 tasks:
   selectGoodSeeingVisits:
@@ -109,10 +109,12 @@ subsets:
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
-      - catalogMatchTract
-      - refCatObjectTract
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectTableExtended
+      - catalogMatchTract
+      - refCatObjectTract
+      - validateObjectTableCore
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2d'
       subsets.

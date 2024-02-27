@@ -6,6 +6,7 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
 parameters:
   filterMap: {
@@ -247,13 +248,15 @@ subsets:
       in the data query.
   step8:
     subset:
+      - analyzeMatchedVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
-      - refCatObjectTract
       - diff_matched_analysis
+      - refCatObjectTract
       - validateObjectTableCore
-      - analyzeMatchedVisitCore
+
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 

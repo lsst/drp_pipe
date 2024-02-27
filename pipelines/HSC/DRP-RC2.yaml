@@ -236,15 +236,16 @@ subsets:
       in the data query.
   step8:
     subset:
+      - analyzeMatchedVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
-      - refCatObjectTract
-      - validateObjectTableCore
-      - analyzeMatchedVisitCore
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
+      - refCatObjectTract
+      - validateObjectTableCore
     description: |
       Core (most important), coadd-level plots/metrics from analysis_tools.
 
