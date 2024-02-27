@@ -3,7 +3,6 @@ instrument: lsst.obs.lsst.LsstCamImSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
   - $ANALYSIS_DRP_DIR/pipelines/LSSTCam-imSim/analysis_drp_plots.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 
 tasks:
@@ -44,12 +43,12 @@ tasks:
 subsets:
   analysis_tools:
     subset:
+      - analyzeMatchedVisitCore
       - analyzeObjectTableCore
-      - analyzeObjectTableSurveyCore
       - analyzeObjectTableExtended
+      - analyzeObjectTableSurveyCore
       - analyzeSourceTableCore
       - catalogMatchTract
       - diff_matched_analysis
       - refCatObjectTract
       - validateObjectTableCore
-      - analyzeMatchedVisitCore
