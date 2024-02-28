@@ -116,6 +116,8 @@ subsets:
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
       - catalogMatchTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
       - refCatObjectTract
       - validateObjectTableCore
     description: |
