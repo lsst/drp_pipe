@@ -26,6 +26,13 @@ tasks:
       wcs_provider: "input_summary"
       photo_calib_provider: "input_summary"
       background_provider: "input_summary"
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      python: |
+        # no z-band in comCamSim
+        del config.atools.yPerpPSF
+        del config.atools.yPerpCModel
 subsets:
   step1:
     subset:
