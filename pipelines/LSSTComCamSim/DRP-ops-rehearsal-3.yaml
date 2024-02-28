@@ -125,6 +125,7 @@ subsets:
       - catalogMatchTract
       - photometricCatalogMatch
       - photometricRefCatObjectTract
+      - plotPropertyMapTract
       - refCatObjectTract
       - validateObjectTableCore
     description: |
