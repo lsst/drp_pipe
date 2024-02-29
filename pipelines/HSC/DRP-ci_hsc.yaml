@@ -10,11 +10,8 @@ imports:
       - faro_visit
       - faro_matched
       - faro_tract
-      # Some of these plots fail with ci_hsc data
-      # - analyzeObjectTableCore
-      # - refCatObjectTract
+  # We generally don't want all visit-level plots for non-CI runs
   - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
 
 tasks:
   # Do expect jointcal's photoCalibs to be present even though we didn't
@@ -56,14 +53,14 @@ tasks:
 subsets:
   analysis_tools:
     subset:
+      - analyzeMatchedVisitCore
       - analyzeObjectTableCore
-      - analyzeObjectTableSurveyCore
       - analyzeObjectTableExtended
+      - analyzeObjectTableSurveyCore
       - analyzeSourceTableCore
       - catalogMatchTract
-      - refCatObjectTract
-      - validateObjectTableCore
-      - analyzeMatchedVisitCore
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
+      - refCatObjectTract
+      - validateObjectTableCore

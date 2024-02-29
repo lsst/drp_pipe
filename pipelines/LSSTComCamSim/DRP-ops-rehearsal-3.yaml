@@ -2,9 +2,11 @@ description: DRP Pipeline for Simulated ComCam Ops Rehearsal 3
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 tasks:
   selectGoodSeeingVisits:
@@ -24,6 +26,13 @@ tasks:
       wcs_provider: "input_summary"
       photo_calib_provider: "input_summary"
       background_provider: "input_summary"
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      python: |
+        # no z-band in comCamSim
+        del config.atools.yPerpPSF
+        del config.atools.yPerpCModel
 subsets:
   step1:
     subset:
@@ -109,10 +118,16 @@ subsets:
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
-      - catalogMatchTract
-      - refCatObjectTract
+      # analysis_tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectTableExtended
+      - catalogMatchTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
+      - refCatObjectTract
+      - validateObjectTableCore
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2d'
       subsets.
@@ -150,6 +165,7 @@ subsets:
       - consolidateFullDiaObjectTable
       - writeForcedSourceOnDiaObjectTable
       - transformForcedSourceOnDiaObjectTable
+      - analyzeDiaSourceTableTract
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets

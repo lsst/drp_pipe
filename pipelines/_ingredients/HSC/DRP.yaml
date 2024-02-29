@@ -6,6 +6,7 @@ imports:
   - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
 tasks:
   isolatedStarAssociation:
