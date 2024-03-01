@@ -13,12 +13,12 @@ tasks:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
       doMultipleCycles: true
-      multipleCyclesFinalCycleNumber: 5
+      multipleCyclesFinalCycleNumber: 4
 
   fgcmOutputProducts:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
-      connections.cycleNumber: 5
+      connections.cycleNumber: 4
 
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
