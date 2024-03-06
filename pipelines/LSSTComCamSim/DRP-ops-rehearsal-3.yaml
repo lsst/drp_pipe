@@ -14,11 +14,10 @@ tasks:
     config:
       connections.goodVisits: goodSeeingVisits
       nVisitsMin: 12
-      # TODO: Add minMJD and maxMJD overrides back in.
-      # Intention is to use the 4 days before the ops rehearsal for
-      # templates. As of 2-22-24 those were not simulated yet.
-      # We have the 3 days covering approx 60401.9-60404.5.
-      # For the first DRP precursor iteration, use visits for all 3 days.
+      # For simulation 2 there are 60 visits per region
+      # between 60399.362 and 60402.419.
+      minMJD: 60399.362
+      maxMJD: 60402.419
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
