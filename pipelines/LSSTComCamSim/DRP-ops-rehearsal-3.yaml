@@ -9,6 +9,17 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 tasks:
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      doMultipleCycles: true
+      multipleCyclesFinalCycleNumber: 4
+
+  fgcmOutputProducts:
+    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+    config:
+      connections.cycleNumber: 4
+
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
@@ -23,7 +34,7 @@ tasks:
     config:
       # TODO: Evaluate GBDES, SkyCorr, FGCM after initial DRP
       wcs_provider: "input_summary"
-      photo_calib_provider: "input_summary"
+      photo_calib_provider: "global"
       background_provider: "input_summary"
   analyzeObjectTableCore:
     class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
@@ -72,7 +83,11 @@ subsets:
       gbdesAstrometricFit produces solutions per-tract, per-visit
       isolatedStarAssociation produces solutions per-tract.
       TODO: Evaluate GBDES after first DRP
-  # TODO: No step2c for FGCM for now. Evaluate after first iteration
+  step2c:
+    subset:
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
   step2d:
     subset:
       - finalizeCharacterization
