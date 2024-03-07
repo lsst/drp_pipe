@@ -33,7 +33,7 @@ tasks:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
       # TODO: Evaluate GBDES, SkyCorr, FGCM after initial DRP
-      wcs_provider: "input_summary"
+      wcs_provider: "tract"
       photo_calib_provider: "global"
       background_provider: "input_summary"
   analyzeObjectTableCore:
@@ -73,6 +73,7 @@ subsets:
   step2b:
     subset:
       - isolatedStarAssociation
+      - gbdesAstrometricFit
     description: |
       Tract-level tasks
       Allowed data query constraints: tract
