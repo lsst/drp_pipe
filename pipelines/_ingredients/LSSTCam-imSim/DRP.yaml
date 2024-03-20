@@ -6,7 +6,6 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
     exclude:
       - analyzeMatchedPreVisitCore  # imSim does not have preSourceTable_visit catalogs
@@ -255,7 +254,6 @@ subsets:
     subset:
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
-      - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
       - diff_matched_analysis

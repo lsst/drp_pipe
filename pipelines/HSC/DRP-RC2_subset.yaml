@@ -413,7 +413,6 @@ subsets:
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
-      - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
       - photometricCatalogMatch
