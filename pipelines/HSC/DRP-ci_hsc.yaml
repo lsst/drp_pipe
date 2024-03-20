@@ -52,6 +52,7 @@ subsets:
   analysis_tools:
     subset:
       - analyzeMatchedVisitCore
+      - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
