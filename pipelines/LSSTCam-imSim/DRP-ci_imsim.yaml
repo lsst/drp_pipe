@@ -4,7 +4,6 @@ imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
   - $ANALYSIS_DRP_DIR/pipelines/LSSTCam-imSim/analysis_drp_plots.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 
 tasks:
   deblend:
@@ -53,3 +52,5 @@ subsets:
       - diff_matched_analysis
       - refCatObjectTract
       - validateObjectTableCore
+      - catalogMatchVisit
+      - astrometricRefCatSourceVisit
