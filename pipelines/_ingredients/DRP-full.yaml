@@ -51,6 +51,16 @@ tasks:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
       connections.sourceTableHandles: preSourceTable_visit
+  makePreliminaryCcdVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+    config:
+      connections.visitSummaryRefs: visitSummary
+      connections.outputCatalog: preCcdVisitTable
+  makePreliminaryVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+    config:
+      connections.visitSummaries: visitSummary
+      connections.outputCatalog: preVisitTable
 subsets:
   # This pipeline file only defines subsets that have a consistent or
   # near-consistent definition as a set of tasks, for use by downstream

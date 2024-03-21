@@ -1,48 +1,8 @@
 description: DRP Pipeline for Simulated ComCam Ops Rehearsal 3
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
-tasks:
-  fgcmFitCycle:
-    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
-    config:
-      doMultipleCycles: true
-      multipleCyclesFinalCycleNumber: 4
+  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
 
-  fgcmOutputProducts:
-    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
-    config:
-      connections.cycleNumber: 4
-
-  selectGoodSeeingVisits:
-    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
-    config:
-      connections.goodVisits: goodSeeingVisits
-      nVisitsMin: 12
-      # For simulation 2 there are 60 visits per region
-      # between 60399.362 and 60402.419.
-      minMJD: 60399.362
-      maxMJD: 60402.419
-  updateVisitSummary:
-    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
-    config:
-      # TODO: Evaluate GBDES, SkyCorr, FGCM after initial DRP
-      wcs_provider: "tract"
-      photo_calib_provider: "global"
-      background_provider: "input_summary"
-  analyzeObjectTableCore:
-    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
-    config:
-      python: |
-        # no z-band in comCamSim
-        del config.atools.yPerpPSF
-        del config.atools.yPerpCModel
 subsets:
   step1:
     subset:
@@ -60,6 +20,7 @@ subsets:
       select partial visits that overlap that region.
   step2a:
     subset:
+      - analyzeMatchedPreVisitCore
       - consolidatePreSourceTable
       - consolidateVisitSummary
     description: |

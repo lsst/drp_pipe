@@ -1,0 +1,84 @@
+description: |
+  DRP-flavored pipeline to support validation
+  during commissioning, and will help inform
+  what changes to make the following night. Detector and Visit
+  level tasks can be run in real time by e.g. Rapid Analysis.
+  The rest of the pipeline is expected to be run as part of the
+  10am processing.
+instrument: lsst.obs.lsst.LsstComCamSim
+imports:
+  - $DRP_PIPE_DIR/pipelines/LSSTComCamSim/DRP-ops-rehearsal-3.yaml
+tasks:
+  analyzePreSourceTableCore:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      connections.data: preSourceTable_visit
+      connections.inputName: preSourceTable_visit
+      connections.outputName: preSourceTableCore
+subsets:
+  # These 3 steps can be run in real time by Rapid Analysis Framework at USDF
+  step1:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
+    description: |
+      Detector level tasks. TO DO: requests include synthetic source injection,
+      subtractImages, detectAndMeasureDiaSources.
+  step2a:
+    subset:
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+      - analyzePreSourceTableCore
+      - catalogMatchPreVisit
+      - astrometricRefCatPreSourceVisit
+      # TO DO: Add photometricMatchPreVisit, photometricRefCatPreSourceVisit
+    description: Visit-level tasks
+  nightlyRollup:
+    subset:
+      - makePreliminaryCcdVisitTable
+      - makePreliminaryVisitTable
+      - preliminaryVisitCoverageAnalysis
+    description: |
+      Global tasks that can be run at end of night or multiple times during
+      the night, to get a summary of observations taken.
+  # The following N steps should be run once at the end of the night
+  # Steps 2b,2c,2d,2e,4,5,6,7 are currently the same as DRP.
+  # This step3 here does not make templates. To run step4,step5,step6 you must
+  # provide a collection with templates as input, ideally the same one that
+  # was used for prompt processing.
+  # A complete pipeline without DIA is #step2b,step2c,step2d,step2e,step3,step7
+  step3:
+    subset:
+      - makeWarp
+      - selectDeepCoaddVisits
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - forcedPhotCoadd
+      - transformObjectTable
+      - writeObjectTable
+      - consolidateObjectTable
+      - healSparsePropertyMaps
+      # analysis_tools tasks
+      - analyzeMatchedVisitCore
+      - analyzeObjectTableCore
+      - analyzeObjectTableExtended
+      - catalogMatchTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
+      - refCatObjectTract
+      - validateObjectTableCore
+    description: |
+      This overrides the default DRP pipeline by not making nightly templates.
+      We may want to make daily templates in the future.
+
+      Patch and Tract-level tasks that make coadds and object tables that
+      can be run together, but only after the 'step1' and 'step2d'
+      subsets.
