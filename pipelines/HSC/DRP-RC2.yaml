@@ -239,6 +239,7 @@ subsets:
   step8:
     subset:
       - analyzeMatchedVisitCore
+      - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore

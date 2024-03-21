@@ -411,6 +411,7 @@ subsets:
   nightlyStep8:
     subset:
       - analyzeMatchedVisitCore
+      - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
