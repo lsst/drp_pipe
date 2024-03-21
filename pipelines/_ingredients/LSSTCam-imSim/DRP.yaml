@@ -7,7 +7,9 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
+    exclude:
+      - analyzeMatchedPreVisitCore  # imSim does not have preSourceTable_visit catalogs
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 parameters:
   filterMap: {
