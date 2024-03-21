@@ -322,6 +322,8 @@ subsets:
       - nsrcMeasVisit
       - TE3
       - TE4
+      - catalogMatchVisit
+      - astrometricRefCatSourceVisit
     description: |
       Per-visit tasks. These should never be run with tract constraints
   nightlyStep3:

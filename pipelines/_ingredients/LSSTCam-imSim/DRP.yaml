@@ -8,6 +8,7 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 parameters:
   filterMap: {
     "u": "lsst_u_smeared",
@@ -223,6 +224,8 @@ subsets:
   step6:
     subset:
       - consolidateDiaSourceTable
+      - catalogMatchVisit
+      - astrometricRefCatSourceVisit
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets
