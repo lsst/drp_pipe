@@ -10,6 +10,8 @@ imports:
       - faro_visit
       - faro_matched
       - faro_tract
+  # Extended-level plots should still be tested in CI
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
 
 tasks:
   # Do expect jointcal's photoCalibs to be present even though we didn't

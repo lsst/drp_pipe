@@ -97,7 +97,6 @@ subsets:
       # analysis_tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
-      - analyzeObjectTableExtended
       - catalogMatchTract
       - photometricCatalogMatch
       - photometricRefCatObjectTract
