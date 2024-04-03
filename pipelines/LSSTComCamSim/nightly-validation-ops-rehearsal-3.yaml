@@ -74,12 +74,11 @@ subsets:
       - writeObjectTable
       - consolidateObjectTable
       - healSparsePropertyMaps
+      # analysis tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
-      - photometricRefCatObjectTract
       - plotPropertyMapTract
-      - refCatObjectTract
       - validateObjectTableCore
     description: |
       This overrides the default DRP pipeline by not making nightly templates.
@@ -92,6 +91,8 @@ subsets:
     subset:
       - catalogMatchTract
       - photometricCatalogMatch
+      - refCatObjectTract
+      - photometricRefCatObjectTract
     description: |
       This overrides the default DRP pipeline by not making nightly templates.
       We may want to make daily templates in the future.
