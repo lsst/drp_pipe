@@ -58,7 +58,7 @@ subsets:
   # This step3 here does not make templates. To run step4,step5,step6 you must
   # provide a collection with templates as input, ideally the same one that
   # was used for prompt processing.
-  # A complete pipeline without DIA is #step2b,step2c,step2d,step2e,step3,step7
+  # A complete pipeline without DIA is #step2b,step2c,step2d,step2e,step3,step3QA,step7
   step3:
     subset:
       - makeWarp
@@ -74,16 +74,24 @@ subsets:
       - writeObjectTable
       - consolidateObjectTable
       - healSparsePropertyMaps
-      # analysis_tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
-      - catalogMatchTract
-      - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
       - refCatObjectTract
       - validateObjectTableCore
+    description: |
+      This overrides the default DRP pipeline by not making nightly templates.
+      We may want to make daily templates in the future.
+
+      Patch and Tract-level tasks that make coadds and object tables that
+      can be run together, but only after the 'step1' and 'step2d'
+      subsets.
+  step3QA:
+    subset:
+      - catalogMatchTract
+      - photometricCatalogMatch
     description: |
       This overrides the default DRP pipeline by not making nightly templates.
       We may want to make daily templates in the future.
