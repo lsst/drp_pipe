@@ -67,3 +67,4 @@ subsets:
       - validateObjectTableCore
       - catalogMatchVisit
       - astrometricRefCatSourceVisit
+      - sourceObjectMatch

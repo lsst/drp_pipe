@@ -387,10 +387,11 @@ subsets:
   nightlyStep4:
     subset:
       - forcedPhotCcd
+      - sourceObjectMatch
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2'
       and 'step3' subsets
-      These detector-level tasks should not be run with
+      These detector and visit-level tasks should not be run with
       'tract' or 'patch' as part of the data ID expression if all
       reference catalogs or diffIm templates that cover these
       detector-level quanta are desired.
