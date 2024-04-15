@@ -24,7 +24,6 @@ tasks:
       python: |
           config.measurement.plugins.names = ['base_CircularApertureFlux',
                                               'base_PsfFlux',
-                                              'base_NaiveCentroid',
                                               'base_CompensatedGaussianFlux',
                                               'base_LocalBackground',
                                               'base_SdssCentroid',
