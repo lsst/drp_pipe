@@ -60,10 +60,9 @@ tasks:
         fluxes_meas = [f"{band}_cModelFlux" for band in bands_match] + [
             f"{band}_ap12Flux" for band in parameters.bands_match_fallback
         ]
-        columns_meas = ["x", "y"] + fluxes_meas
+        columns_meas = ["coord_ra", "coord_dec"] + fluxes_meas
         config.match_tract_catalog.columns_target_meas = columns_meas
         config.match_tract_catalog.columns_target_err = [f"{col}Err" for col in columns_meas]
-        config.match_tract_catalog.coord_format.coords_ref_to_convert = {"ra": "x", "dec": "y"}
         # Might need adjusting for different survey depths
         config.match_tract_catalog.mag_faintest_ref = 27.0
         config.match_tract_catalog.columns_ref_copy = ["id", "truth_type"]
@@ -72,8 +71,10 @@ tasks:
   compareObjectToTruth:
     class: lsst.pipe.tasks.diff_matched_tract_catalog.DiffMatchedTractCatalogTask
     config:
-      columns_target_coord_err: ["xErr", "yErr"]
+      columns_target_coord_err: ["coord_raErr", "coord_decErr"]
       coord_format.coords_ref_to_convert: {"ra": "x", "dec": "y"}
+      # Convert ref ra/dec to x/y but do not measure distances from x/y
+      coord_format.return_converted_coords: false
 
       python: |
         from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
@@ -89,7 +90,7 @@ tasks:
         config.columns_flux = columns_flux
         config.columns_target_copy = ["patch"] + fluxes_meas_psf + [
           f"{col}Err" for col in fluxes_meas_psf
-        ]
+        ] + ["x", "y", "xErr", "yErr"]
   catalogMatchTract:
     class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchTask
     config:
