@@ -50,6 +50,31 @@ tasks:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
       band_order: ['i', 'r']
+  matchedVisitCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "matchedVisitCore_metricsTable"
+      connections.outputName: "matchedVisitCore_wholeSky"
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.xLimits: [295.0, 345.0]
+      atools.wholeSkyMetric.yLimits: [-7.5, 7.5]
+      atools.wholeSkyMetric.bands: ["r", "i"]
+      atools.wholeSkyMetric.plotKeys: []
+      atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
+  objectTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.xLimits: [295.0, 345.0]
+      atools.wholeSkyMetric.yLimits: [-7.5, 7.5]
+      atools.wholeSkyMetric.bands: ["r", "i"]
+      atools.wholeSkyMetric.plotKeys: parameters.objectTableCorePlotKeys
+      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
+
 subsets:
   analysis_tools:
     subset:
@@ -60,6 +85,10 @@ subsets:
       - analyzeObjectTableSurveyCore
       - analyzeSourceTableCore
       - catalogMatchTract
+      - makeMetricTableMatchedVisitCore
+      - makeMetricTableObjectTableCore
+      - matchedVisitCoreWholeSkyPlot
+      - objectTableCoreWholeSkyPlot
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
