@@ -51,21 +51,24 @@ tasks:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
       do_use_sky_corr: false
-  makeWarp:
-    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
+  makeDirectWarp:
+    class: lsst.pipe.tasks.make_direct_warp.MakeDirectWarpTask
     config:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
-      matchingKernelSize: 29
-      modelPsf.defaultFwhm: 7.7
-      warpAndPsfMatch.warp.warpingKernelName: lanczos5
+      warper.warpingKernelName: lanczos5
       coaddPsf.warpingKernelName: lanczos5
-      # Legacy DECam config to write out warps, even if they are empty
-      doWriteEmptyWarps: true
+      doSelectPreWarp: true
       python: |
-        config.warpAndPsfMatch.psfMatch.kernel['AL'].kernelSize = 29
-        config.warpAndPsfMatch.psfMatch.kernel['AL'].alardSigGauss = [1.0, 2.0, 4.5]
         from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
         config.select.retarget(PsfWcsSelectImagesTask)
+  makePsfMatchedWarp:
+    class: lsst.pipe.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
+    config:
+      # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
+      modelPsf.defaultFwhm: 7.7
+      python: |
+        config.psfMatch.kernel['AL'].kernelSize = 29
+        config.psfMatch.kernel['AL'].alardSigGauss = [1.0, 2.0, 4.5]
   templateGen:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
@@ -201,7 +204,8 @@ subsets:
     subset:
       - selectGoodSeeingVisits
       - selectDeepCoaddVisits
-      - makeWarp
+      - makeDirectWarp
+      - makePsfMatchedWarp
       - templateGen
       - deblend
       - detection
