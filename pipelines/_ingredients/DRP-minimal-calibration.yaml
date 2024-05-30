@@ -18,10 +18,8 @@ tasks:
   updateVisitSummary: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
-  makeWarp:
-    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
-    config:
-      makePsfMatched: true
+  makeDirectWarp: lsst.pipe.tasks.make_direct_warp.MakeDirectWarpTask
+  makePsfMatchedWarp: lsst.pipe.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
@@ -188,7 +186,8 @@ subsets:
       subset.
   coaddition:
     subset:
-      - makeWarp
+      - makeDirectWarp
+      - makePsfMatchedWarp
       - assembleCoadd
       - healSparsePropertyMaps
     description: >
@@ -248,8 +247,7 @@ contracts:
   - drpAssociation.connections.diaObjectTable == drpDiaCalculation.connections.diaObjectTable
   - forcedPhotDiffim.connections.refCat == forcedPhotCcd.connections.refCat
   - consolidateHealSparsePropertyMaps.property_maps == healSparsePropertyMaps.property_maps
-  - "'calib_psf_candidate' not in measure.propagateFlags.source_flags if makeWarp.useVisitSummaryPsf else True"
-  - "'calib_psf_used' not in measure.propagateFlags.source_flags if makeWarp.useVisitSummaryPsf else True"
-  - "'calib_psf_reserved' not in measure.propagateFlags.source_flags if makeWarp.useVisitSummaryPsf else True"
-  - "makeWarp.warpAndPsfMatch.warp.cacheSize == assembleCoadd.coaddPsf.cacheSize"
-  - "makeWarp.matchingKernelSize == assembleCoadd.matchingKernelSize"  # TODO: Remove this in DM-44688.
+  - "'calib_psf_candidate' not in measure.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "'calib_psf_used' not in measure.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "'calib_psf_reserved' not in measure.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "makeDirectWarp.warper.cacheSize == assembleCoadd.coaddPsf.cacheSize"
