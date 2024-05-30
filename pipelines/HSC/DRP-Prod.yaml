@@ -101,7 +101,8 @@ subsets:
   step3:
     subset:
       # per patch tasks
-      - makeWarp
+      - makeDirectWarp
+      - makePsfMatchedWarp
       - selectDeepCoaddVisits
       - assembleCoadd
       - detection
