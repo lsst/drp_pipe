@@ -184,7 +184,8 @@ subsets:
   step3:
     subset:
       # Per-patch tasks
-      - makeWarp
+      - makeDirectWarp
+      - makePsfMatchedWarp
       - selectDeepCoaddVisits
       - assembleCoadd
       - detection
