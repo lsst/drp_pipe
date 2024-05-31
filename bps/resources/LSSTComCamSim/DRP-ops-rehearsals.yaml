@@ -1,0 +1,88 @@
+# This BPS configuration snippet adds requestMemory values for all DRP
+# and tasks for which the 99th percentile in memory usage exceeds 2GB from
+# the Cumulative DRP produced for Ops Rehearsal 3
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/resources/LSSTComCamSim/DRP-ops-rehearsals.yaml
+#
+# (with no outer indentation) to your BPS config file.
+#
+# NOTE: These numbers are from a campaign was run with clustering,
+# which means that the values are per cluster NOT per task.
+# Interpret these with caution, until we have a
+# a run done without clustering to pull from.
+pipetask:
+  analyzeMatchedVisitCore:
+    requestMemory: 184409
+  analyzeObjectTableCore:
+    requestMemory: 3353
+  analyzePreSourceTableCore:
+    requestMemory: 22321
+  assembleCoadd:
+    requestMemory: 32156
+  astrometricRefCatPreSourceVisit:
+    requestMemory: 21512
+  calibrate:
+    requestMemory: 7053
+  catalogMatchPreVisit:
+    requestMemory: 21512
+  characterizeImage:
+    requestMemory: 7053
+  consolidateAssocDiaSourceTable:
+    requestMemory: 2711
+  consolidateObjectTable:
+    requestMemory: 12953
+  consolidatePreSourceTable:
+    requestMemory: 21614
+  consolidateVisitSummary:
+    requestMemory: 21614
+  deblend:
+    requestMemory: 3763
+  detectAndMeasureDiaSources:
+    requestMemory: 9250
+  detection:
+    requestMemory: 31868
+  fgcmBuildFromIsolatedStars:
+    requestMemory: 4059
+  fgcmFitCycle:
+    requestMemory: 7867
+  finalizeCharacterization:
+    requestMemory: 7956
+  forcedPhotCcd:
+    requestMemory: 2310
+  forcedPhotDiffim:
+    requestMemory: 2310
+  gbdesAstrometricFit:
+    requestMemory: 3907
+  getTemplate:
+    requestMemory: 9167
+  healSparsePropertyMaps:
+    requestMemory: 32008
+  isolatedStarAssociation:
+    requestMemory: 5330
+  isr:
+    requestMemory: 7053
+  makeCcdVisitTable:
+    requestMemory: 21778
+  makeVisitTable:
+    requestMemory: 21637
+  plotPropertyMapTract:
+    requestMemory: 3682
+  selectDeepCoaddVisits:
+    requestMemory: 3291
+  subtractImages:
+    requestMemory: 9250
+  transformDiaSourceCat:
+    requestMemory: 9250
+  transformObjectTable:
+    requestMemory: 2448
+  transformPreSourceTable:
+    requestMemory: 7053
+  writeForcedSourceTable:
+    requestMemory: 2317
+  writeObjectTable:
+    requestMemory: 2448
+  writePreSourceTable:
+    requestMemory: 7053
