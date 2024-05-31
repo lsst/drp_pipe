@@ -19,7 +19,7 @@ tasks:
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
   makeDirectWarp: lsst.pipe.tasks.make_direct_warp.MakeDirectWarpTask
-  makePsfMatched: lsst.pipe.tasks.make_psf_matched_warp.MakePsfMatchedWarp
+  makePsfMatchedWarp: lsst.pipe.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
@@ -187,7 +187,7 @@ subsets:
   coaddition:
     subset:
       - makeDirectWarp
-      - makePsfMatched
+      - makePsfMatchedWarp
       - assembleCoadd
       - healSparsePropertyMaps
     description: >

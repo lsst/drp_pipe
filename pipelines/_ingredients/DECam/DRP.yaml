@@ -202,7 +202,8 @@ subsets:
     subset:
       - selectGoodSeeingVisits
       - selectDeepCoaddVisits
-      - makeWarp
+      - makeDirectWarp
+      - makePsfMatchedWarp
       - templateGen
       - deblend
       - detection
