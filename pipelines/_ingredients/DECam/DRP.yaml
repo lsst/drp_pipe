@@ -57,7 +57,7 @@ tasks:
         from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
         config.select.retarget(PsfWcsSelectImagesTask)
   makePsfMatchedWarp:
-    class: lsst.pipe.tasks.make_psf_matched_warp.MakePsfMatchedWarp
+    class: lsst.pipe.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
     config:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
       matchingKernelSize: 29
