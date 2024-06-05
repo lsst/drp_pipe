@@ -57,6 +57,7 @@ tasks:
       # Legacy DECam config to write out warps, even if they are empty
       doWriteEmptyWarps: true
       python: |
+        config.warpAndPsfMatch.psfMatch.kernel['AL'].kernelSize = 29
         config.warpAndPsfMatch.psfMatch.kernel['AL'].alardSigGauss = [1.0, 2.0, 4.5]
         from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
         config.select.retarget(PsfWcsSelectImagesTask)
