@@ -85,7 +85,7 @@ tasks:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:
       # Only run metrics for analyzing the preSources:
-      connections.data: preSourceTable_visit_uw_stars_20240228_match
+      connections.data: preSourceTable_visit_uw_stars_20240524_match
       atools.astromDiffMetrics: TargetRefCatDeltaMetrics
       atools.astromDiffMetrics.applyContext: VisitContext
       python: |
@@ -96,15 +96,15 @@ tasks:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
     config:
       extraColumns: ["x", "y", "ap09Flux", "ap09FluxErr"]
-      connections.refCatalog: uw_stars_20240228
+      connections.refCatalog: uw_stars_20240524
       connections.catalog: preSourceTable_visit
       connections.targetCatalog: preSourceTable_visit
-      connections.matchedCatalog: preSourceTable_visit_uw_stars_20240228_photoMatch
+      connections.matchedCatalog: preSourceTable_visit_uw_stars_20240524_photoMatch
   photometricRefCatPreSourceVisit:
     class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
     config:
       # Only run metrics for analyzing the preSources:
-      connections.data: preSourceTable_visit_uw_stars_20240228_photoMatch
+      connections.data: preSourceTable_visit_uw_stars_20240524_photoMatch
       python: from lsst.analysis.tools.atools import *
   preliminaryVisitCoverageAnalysis:
     class: lsst.analysis.tools.tasks.CcdVisitTableAnalysisTask
