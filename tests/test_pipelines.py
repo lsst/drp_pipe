@@ -87,8 +87,6 @@ COMMON_OUTPUTS = {
     "deepCoadd_forced_src",
     "deepCoadd_inputMap",
     "deepCoadd_meas",
-    "deepCoadd_measMatch",
-    "deepCoadd_measMatchFull",
     "deepCoadd_mergeDet",
     "deepCoadd_nImage",
     "deepCoadd_obj",
@@ -118,6 +116,8 @@ COMMON_OUTPUTS = {
 HSC_OUTPUTS = {
     "calexp_skyCorr_visit_mosaic",
     "calexpBackground_skyCorr_visit_mosaic",
+    "deepCoadd_measMatch",
+    "deepCoadd_measMatchFull",
     "forced_src",
     "preSource",
     "preSourceTable",
@@ -128,6 +128,8 @@ HSC_OUTPUTS = {
 
 # LSSTCam-imSim common outputs, in addition to COMMON_OUTPUTS
 LSSTCAM_IMSIM_OUTPUTS = {
+    "deepCoadd_measMatch",
+    "deepCoadd_measMatchFull",
     "diaObjectTable_tract",
     "diaSourceTable",
     "diaSourceTable_tract",
@@ -219,6 +221,8 @@ class PipelineTestCase(unittest.TestCase):
             },
             expected_outputs=COMMON_OUTPUTS
             | {
+                "deepCoadd_measMatch",
+                "deepCoadd_measMatchFull",
                 "goodSeeingCoadd",
                 "goodSeeingCoadd_nImage",
                 "goodSeeingVisits",
