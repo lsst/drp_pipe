@@ -17,7 +17,6 @@ tasks:
     config:
       doApCorr: false
       doDeblend: false
-      doMaskStreaks: false
   calibrate:
     class: lsst.pipe.tasks.calibrate.CalibrateTask
     config:
