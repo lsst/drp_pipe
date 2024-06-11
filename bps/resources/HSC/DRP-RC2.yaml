@@ -41,7 +41,13 @@ pipetask:
   healSparsePropertyMaps:
     requestMemory: 30000
   getTemplate:
-    requestMemory: 5400
+    requestMemory: 8000
+  subtractImages:
+    requestMemory: 8000
+  detectAndMeasureDiaSources:
+    requestMemory: 8000
+  transformDiaSourceCat:
+    requestMemory: 8000
   consolidateFullDiaObjectTable:
     requestMemory: 12000
   consolidateForcedSourceOnDiaObjectTable:
@@ -59,11 +65,15 @@ pipetask:
   detection:
     requestMemory: 8000
 
-  # step8 tasks
+  # step8 tasks - sasquatch
   analyzeObjectTableCore:
-    requestMemory: 8192
+    requestMemory: 16000
   analyzeMatchedVisitCore:
     requestMemory: 8192
+  analyzeMatchedPreVisitCore:
+    requestMemory: 8192
+  diff_matched_analysis:
+    requestMemory: 32000
 
   # faro tasks
   matchCatalogsPatch:
@@ -76,6 +86,12 @@ pipetask:
     requestMemory: 46000
   TE2:
     requestMemory: 46000
+  TE3:
+    requestMemory: 16000
+  TE4:
+    requestMemory: 16000
+  nsrcMeasVisit:
+    requestMemory: 16000
   wPerp:
     requestMemory: 120000
   matchCatalogsTractMag17to21p5:

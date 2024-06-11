@@ -27,6 +27,14 @@ pipetask:
     requestMemory: 8192
   consolidateObjectTable:
     requestMemory: 16384
+  getTemplate:
+    requestMemory: 8000
+  subtractImages:
+    requestMemory: 8000
+  detectAndMeasureDiaSources:
+    requestMemory: 8000
+  transformDiaSourceCat:
+    requestMemory: 8000
   # faro tasks
   matchCatalogsPatch:
     requestMemory: 4096
@@ -42,6 +50,12 @@ pipetask:
     requestMemory: 50000
   TE2:
     requestMemory: 50000
+  TE3:
+    requestMemory: 16000
+  TE4:
+    requestMemory: 16000
+  nsrcMeasVisit:
+    requestMemory: 16000
   matchCatalogsTractMag17to21p5:
     requestMemory: 66000
   matchCatalogsTractStarsSNR5to80:
@@ -54,6 +68,10 @@ pipetask:
     requestMemory: 120000
   # step8 tasks
   analyzeObjectTableCore:
-    requestMemory: 8192
+    requestMemory: 16000
   analyzeMatchedVisitCore:
     requestMemory: 8192
+  analyzeMatchedPreVisitCore:
+    requestMemory: 8192
+  diff_matched_analysis:
+    requestMemory: 32000
