@@ -66,6 +66,15 @@ HSC_INPUTS = {
     "yBackground",
 }
 
+# LATISS common inputs, in addition to COMMON_INPUTS
+LATISS_INPUTS = {
+    "atlas_refcat2_20220201",
+    "defects",
+    "gaia_dr3_20230707",
+    "sky",
+    "transmission_atmosphere_fgcm",
+}
+
 # LSSTCam-imSim common inputs, in addition to COMMON_INPUTS
 LSSTCAM_IMSIM_INPUTS = {
     "bfk",
@@ -87,8 +96,6 @@ COMMON_OUTPUTS = {
     "deepCoadd_forced_src",
     "deepCoadd_inputMap",
     "deepCoadd_meas",
-    "deepCoadd_measMatch",
-    "deepCoadd_measMatchFull",
     "deepCoadd_mergeDet",
     "deepCoadd_nImage",
     "deepCoadd_obj",
@@ -118,6 +125,8 @@ COMMON_OUTPUTS = {
 HSC_OUTPUTS = {
     "calexp_skyCorr_visit_mosaic",
     "calexpBackground_skyCorr_visit_mosaic",
+    "deepCoadd_measMatch",
+    "deepCoadd_measMatchFull",
     "forced_src",
     "preSource",
     "preSourceTable",
@@ -126,8 +135,52 @@ HSC_OUTPUTS = {
     "srcMatchFull",
 }
 
+# LATISS common outputs, in addition to COMMON_OUTPUTS
+LATISS_OUTPUTS = {
+    "diaObjectTable_tract",
+    "diaSourceTable",
+    "diaSourceTable_tract",
+    "fgcm_Cycle0_FitParameters",
+    "fgcm_Cycle1_FitParameters",
+    "fgcm_Cycle2_FitParameters",
+    "fgcm_Cycle3_FitParameters",
+    "fgcm_Cycle4_FitParameters",
+    "fgcm_Cycle0_FlaggedStars",
+    "fgcm_Cycle1_FlaggedStars",
+    "fgcm_Cycle2_FlaggedStars",
+    "fgcm_Cycle3_FlaggedStars",
+    "fgcm_Cycle4_FlaggedStars",
+    "fgcm_reference_stars",
+    "fgcm_star_ids",
+    "fgcm_star_observations",
+    "forcedSourceOnDiaObjectTable",
+    "forcedSourceOnDiaObjectTable_tract",
+    "forcedSourceTable",
+    "forcedSourceTable_tract",
+    "forced_diff",
+    "forced_diff_diaObject",
+    "forced_src_diaObject",
+    "goodSeeingCoadd",
+    "goodSeeingCoadd_nImage",
+    "goodSeeingDiff_assocDiaSrcTable",
+    "goodSeeingDiff_diaObjTable",
+    "goodSeeingDiff_diaSrc",
+    "goodSeeingDiff_diaSrcTable",
+    "goodSeeingDiff_differenceExp",
+    "goodSeeingDiff_differenceTempExp",
+    "goodSeeingDiff_fullDiaObjTable",
+    "goodSeeingDiff_matchedExp",
+    "goodSeeingDiff_templateExp",
+    "goodSeeingVisits",
+    "mergedForcedSource",
+    "mergedForcedSourceOnDiaObject",
+    "transmission_atmosphere_fgcm",
+}
+
 # LSSTCam-imSim common outputs, in addition to COMMON_OUTPUTS
 LSSTCAM_IMSIM_OUTPUTS = {
+    "deepCoadd_measMatch",
+    "deepCoadd_measMatchFull",
     "diaObjectTable_tract",
     "diaSourceTable",
     "diaSourceTable_tract",
@@ -219,6 +272,8 @@ class PipelineTestCase(unittest.TestCase):
             },
             expected_outputs=COMMON_OUTPUTS
             | {
+                "deepCoadd_measMatch",
+                "deepCoadd_measMatchFull",
                 "goodSeeingCoadd",
                 "goodSeeingCoadd_nImage",
                 "goodSeeingVisits",
@@ -435,6 +490,32 @@ class PipelineTestCase(unittest.TestCase):
                 "fgcm_Cycle4_Zeropoints",
                 "transmission_atmosphere_fgcm",
             },
+        )
+        tester.run(butler, self)
+
+    def test_latiss_drp(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LATISS", "DRP.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#step2bcde",
+                "#step3a",
+                "#step3b",
+                "#step3c",
+                "#step4",
+                "#step5",
+                "#step6",
+            ],
+            [
+                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
+                ("atlas_refcat2_20220201", {"htm7"}, "SimpleCatalog", False),
+            ],
+            expected_inputs=COMMON_INPUTS | LATISS_INPUTS | {"fgcmLookUpTable"},
+            expected_outputs=COMMON_OUTPUTS | LATISS_OUTPUTS,
         )
         tester.run(butler, self)
 
