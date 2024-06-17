@@ -4,14 +4,41 @@ description: |
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+    exclude:
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
+      - transformPreSourceTable
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
     config:
       # Turn off slow steps in ISR
       doBrighterFatter: false
-  # TO DO: Replace with calibrateImage in a way that we can use the
-  # preSources downstream.
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+      python: |
+        config.star_measurement.plugins["base_CircularApertureFlux"].radii = [3.0, 6.0, 9.0, 12.0, 17.0, 25.0, 35.0, 50.0, 70.0]
+        config.star_measurement.plugins.names |=  ['base_LocalBackground']
+  transformInitialStars:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      fromAstropy: true
+      connections.inputCatalog: initial_stars_detector
+      connections.outputCatalog: preSourceTable
+      python: >
+        config.functorFile = os.path.join('$PIPE_TASKS_DIR', 'schemas', 'PreSource.yaml')
+  consolidateVisitSummary:
+      class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
+      config:
+        calexp: initial_pvi
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      connections.outputCatalog: source
+      connections.catalog: initial_stars_detector
+      fromAstropy: True
   characterizeImage:
     class: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
     config:
@@ -48,15 +75,14 @@ subsets:
   step1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      # TO DO: configure and add writePreSourceTable, transformPreSourceTable
+      - calibrateImage
+      - transformInitialStars
     description: |
       Per-detector tasks that can be run together
   step2a:
     subset:
       - consolidateVisitSummary
-      # TO DO: configure and add consolidatePreSourceTable
+      - consolidatePreSourceTable
   nightlyRollup:
     # can be run at end of night or on a timer
     # Need to either clobber OR use a chained collection of timestamped runs

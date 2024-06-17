@@ -1,7 +1,7 @@
 description: DRP Pipeline for Simulated ComCam Ops Rehearsals
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-calibrateImage.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
