@@ -69,6 +69,43 @@ tasks:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
       band_order: ['i', 'r', 'g', 'z', 'y', 'N921']
+  matchedVisitCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "matchedVisitCore_metricsTable"
+      connections.outputName: "matchedVisitCore_wholeSky"
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.xLimits: [145.0, 340.0]
+      atools.wholeSkyMetric.yLimits: [-5.0, 10.0]
+      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      atools.wholeSkyMetric.plotKeys: []
+      atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
+  objectTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.xLimits: [145.0, 340.0]
+      atools.wholeSkyMetric.yLimits: [-5.0, 10.0]
+      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      atools.wholeSkyMetric.plotKeys: parameters.objectTableCorePlotKeys
+      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
+  objectTableCoreRefCatMatchWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "objectTable_tract_gaia_dr3_20230707_match_metricsTable"
+      connections.outputName: "objectTableCoreRefCatMatch_wholeSky"
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.xLimits: [145.0, 340.0]
+      atools.wholeSkyMetric.yLimits: [-5.0, 10.0]
+      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      atools.wholeSkyMetric.plotKeys: []
+      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreRefCatMatchKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
 subsets:
   step1:
     subset:
@@ -244,6 +281,12 @@ subsets:
       - analyzeObjectTableCore
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
+      - makeMetricTableMatchedVisitCore
+      - makeMetricTableObjectTableCore
+      - makeMetricTableObjectTableCoreRefCatMatch
+      - matchedVisitCoreWholeSkyPlot
+      - objectTableCoreWholeSkyPlot
+      - objectTableCoreRefCatMatchWholeSkyPlot
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract

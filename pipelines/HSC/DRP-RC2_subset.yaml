@@ -27,6 +27,19 @@ tasks:
       python: |
         from lsst.faro.measurement import PF1Task
         config.measure.retarget(PF1Task)
+  matchedVisitCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "matchedVisitCore_metricsTable"
+      connections.outputName: "matchedVisitCore_wholeSky"
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.xLimits: [125.0, 175.0]
+      atools.wholeSkyMetric.yLimits: [-5.0, 10.0]
+      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      atools.wholeSkyMetric.plotKeys: []
+      atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
   modelPhotRepGal1:
     class: lsst.faro.measurement.TractMatchedMeasurementTask
     config:
@@ -139,6 +152,30 @@ tasks:
         config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
         from lsst.faro.measurement import ModelPhotRepTask
         config.measure.retarget(ModelPhotRepTask)
+  objectTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.xLimits: [125.0, 175.0]
+      atools.wholeSkyMetric.yLimits: [-5.0, 10.0]
+      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      atools.wholeSkyMetric.plotKeys: parameters.objectTableCorePlotKeys
+      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
+  objectTableCoreRefCatMatchWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "objectTable_tract_gaia_dr3_20230707_match_metricsTable"
+      connections.outputName: "objectTableCoreRefCatMatch_wholeSky"
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.xLimits: [125.0, 175.0]
+      atools.wholeSkyMetric.yLimits: [-5.0, 10.0]
+      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      atools.wholeSkyMetric.plotKeys: []
+      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreRefCatMatchKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
   psfPhotRepStar1:
     class: lsst.faro.measurement.TractMatchedMeasurementTask
     config:
@@ -416,6 +453,12 @@ subsets:
       - analyzeObjectTableCore
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
+      - makeMetricTableMatchedVisitCore
+      - makeMetricTableObjectTableCore
+      - makeMetricTableObjectTableCoreRefCatMatch
+      - matchedVisitCoreWholeSkyPlot
+      - objectTableCoreWholeSkyPlot
+      - objectTableCoreRefCatMatchWholeSkyPlot
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
