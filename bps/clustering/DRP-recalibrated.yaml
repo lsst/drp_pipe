@@ -36,8 +36,8 @@ cluster:
     pipetasks: assembleCoadd,inject_coadd,templateGen,detection
     dimensions: tract,patch,band
 
-  sourceTable:
-    pipetasks: writeRecalibratedSourceTable,transformSourceTable
+  finalizeSourceTable:
+    pipetasks: finalizeCharacterization,updateVisitSummary,writeRecalibratedSourceTable,transformSourceTable,consolidateSourceTable
     dimensions: visit
     equalDimensions: visit:exposure
 
