@@ -125,6 +125,7 @@ subsets:
       - calibrate
       - writeSourceTable
       - transformSourceTable
+      - analyzeAmpOffsetMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
@@ -144,6 +145,8 @@ subsets:
       - makeCcdVisitTable
       - makeVisitTable
       - updateVisitSummary
+      - catalogMatchVisit
+      - astrometricRefCatSourceVisit
     description: |
       Tasks that can be run together, but only after the 'step1'.
 
@@ -173,12 +176,20 @@ subsets:
       - forcedPhotCoadd
       - transformObjectTable
       - writeObjectTable
-      - consolidateObjectTable
-      - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
+      # Per-tract Tasks
+      - consolidateObjectTable
+      - healSparsePropertyMaps
       - matchObjectToTruth
       - compareObjectToTruth
+      - analyzeMatchedVisitCore
+      - analyzeObjectTableCore
+      - catalogMatchTract
+      - diff_matched_analysis
+      - refCatObjectTract
+      - validateObjectTableCore
+
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
@@ -236,8 +247,6 @@ subsets:
   step6:
     subset:
       - consolidateDiaSourceTable
-      - catalogMatchVisit
-      - astrometricRefCatSourceVisit
       - sourceObjectMatch
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
@@ -255,6 +264,7 @@ subsets:
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
+      - analyzeObjectTableSurveyCore
     description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.

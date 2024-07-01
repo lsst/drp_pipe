@@ -64,8 +64,6 @@ pipetask:
     requestMemory: 10000
   detection:
     requestMemory: 16384
-
-  # step8 tasks - sasquatch
   analyzeObjectTableCore:
     requestMemory: 16000
   analyzeMatchedVisitCore:
