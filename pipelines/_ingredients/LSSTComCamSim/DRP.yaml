@@ -86,7 +86,7 @@ tasks:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:
       # Only run metrics for analyzing the preSources:
-      connections.data: preSourceTable_visit_uw_stars_20240524_match
+      connections.data: preSourceTable_visit_uw_stars_20240524_match_astrom
       atools.astromDiffMetrics: TargetRefCatDeltaMetrics
       atools.astromDiffMetrics.applyContext: VisitContext
       python: |
