@@ -69,7 +69,7 @@ pipetask:
   analyzeObjectTableCore:
     requestMemory: 16000
   analyzeMatchedVisitCore:
-    requestMemory: 32000
+    requestMemory: 120000
   analyzeMatchedPreVisitCore:
     requestMemory: 8192
   diff_matched_analysis:
