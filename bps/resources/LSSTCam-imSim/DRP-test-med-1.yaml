@@ -65,12 +65,12 @@ pipetask:
   consolidateForcedSourceTable:
     requestMemory: 64000
   consolidateForcedSourceOnDiaObjectTable:
-    requestMemory: 120000
+    requestMemory: 160000
   # step8 tasks
   analyzeObjectTableCore:
     requestMemory: 16000
   analyzeMatchedVisitCore:
-    requestMemory: 8192
+    requestMemory: 64000
   analyzeMatchedPreVisitCore:
     requestMemory: 8192
   diff_matched_analysis:
