@@ -51,7 +51,7 @@ pipetask:
   consolidateFullDiaObjectTable:
     requestMemory: 12000
   consolidateForcedSourceOnDiaObjectTable:
-    requestMemory: 120000
+    requestMemory: 320000
   transformForcedSourceOnDiaObjectTable:
     requestMemory: 10000
   consolidateAssocDiaSourceTable:
@@ -69,7 +69,7 @@ pipetask:
   analyzeObjectTableCore:
     requestMemory: 16000
   analyzeMatchedVisitCore:
-    requestMemory: 8192
+    requestMemory: 32000
   analyzeMatchedPreVisitCore:
     requestMemory: 8192
   diff_matched_analysis:
