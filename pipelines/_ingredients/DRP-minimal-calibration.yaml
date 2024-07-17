@@ -251,3 +251,5 @@ contracts:
   - "'calib_psf_used' not in measure.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
   - "'calib_psf_reserved' not in measure.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
   - "makeDirectWarp.warper.cacheSize == assembleCoadd.coaddPsf.cacheSize"
+  - "makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellX"
+  - "makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellY"
