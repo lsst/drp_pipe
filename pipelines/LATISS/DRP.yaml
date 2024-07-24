@@ -52,9 +52,9 @@ tasks:
     class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
     config:
       connections.outputName: objectTableCore
-      atools.shapeSizeFractionalDiff: ShapeSizeFractionalDiff
-      atools.e1Diff: E1Diff
-      atools.e2Diff: E2Diff
+      atools.shapeSizeFractionalDiff: ShapeSizeFractionalDiffScatter
+      atools.e1Diff: E1DiffScatter
+      atools.e2Diff: E2DiffScatter
       atools.skyFluxStatisticMetric: SkyFluxStatisticMetric
       atools.skyFluxStatisticMetric.applyContext: CoaddContext
       atools.wPerpPSFP: WPerpPSF
