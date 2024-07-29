@@ -44,6 +44,7 @@ tasks:
 subsets:
   analysis_tools:
     subset:
+      - analyzeAmpOffsetMetadata
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
