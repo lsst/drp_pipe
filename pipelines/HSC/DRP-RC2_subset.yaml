@@ -444,6 +444,7 @@ subsets:
       for bands with no columns in the object table.
   nightlyStep8:
     subset:
+      - analyzeAmpOffsetMetadata
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore

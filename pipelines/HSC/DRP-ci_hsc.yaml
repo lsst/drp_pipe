@@ -78,6 +78,7 @@ tasks:
 subsets:
   analysis_tools:
     subset:
+      - analyzeAmpOffsetMetadata
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
