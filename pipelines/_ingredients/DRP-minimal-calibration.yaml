@@ -7,9 +7,7 @@ description: |
 
 tasks:
   isr: lsst.ip.isr.IsrTask
-  characterizeImage: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
-  calibrate: lsst.pipe.tasks.calibrate.CalibrateTask
-  writeSourceTable: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+  calibrateImage: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
   transformSourceTable: lsst.pipe.tasks.postprocess.TransformSourceTableTask
   consolidateSourceTable: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
@@ -173,14 +171,12 @@ subsets:
   processCcd:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
+      - calibrateImage
     description: >
       Set of tasks to run when doing single frame processing, without any
       conversions to Parquet/DataFrames or visit-level summaries.
   sourceTable:
     subset:
-      - writeSourceTable
       - transformSourceTable
       - consolidateSourceTable
     description: >
