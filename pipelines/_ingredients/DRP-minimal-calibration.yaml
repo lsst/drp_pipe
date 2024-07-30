@@ -10,9 +10,37 @@ imports:
 
 tasks:
   isr: lsst.ip.isr.IsrTask
-  characterizeImage: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
-  calibrate: lsst.pipe.tasks.calibrate.CalibrateTask
-  writeSourceTable: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+
+      # In DRP not calibrating the pixels (or the backgrounds) until we have
+      # our final photometric calibration makes everything downstream much
+      # simpler.
+      do_calibrate_pixels: false
+
+      # TODO[DM-47320]: for now we rename outputs to look like those of the
+      # tasks calibrateImage replaces; we'll change the input connection
+      # defaults downstream later and then remove these overrides.
+      connections.initial_stars_schema: src_schema
+      connections.stars_footprints: src
+      connections.stars: source
+      connections.exposure: calexp
+      connections.background: calexpBackground
+
+      python: |
+        # TODO[DM-47320]: make output catalog as similar to the old 'src' as
+        # possible; we'll try to go back to calibrateImage defaults with a
+        # smaller catalog after it's integrated.
+        config.star_detection.includeThresholdMultiplier = 1.0
+        config.star_selector["science"].doUnresolved = False
+        config.star_selector["science"].doSignalToNoise = False
+
+        # fgcmcal needs an inner and outer aperture
+        config.star_measurement.plugins["base_CircularApertureFlux"].radii = [12.0, 17.0]
+        config.star_measurement.plugins["base_CompensatedTophatFlux"].apertures = [12, 17]
+        config.star_measurement.plugins.names |= ["base_LocalBackground"]
+
   transformSourceTable: lsst.pipe.tasks.postprocess.TransformSourceTableTask
   consolidateSourceTable: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
@@ -201,14 +229,12 @@ subsets:
   processCcd:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
+      - calibrateImage
     description: >
       Set of tasks to run when doing single frame processing, without any
       conversions to Parquet/DataFrames or visit-level summaries.
   sourceTable:
     subset:
-      - writeSourceTable
       - transformSourceTable
       - consolidateSourceTable
     description: >

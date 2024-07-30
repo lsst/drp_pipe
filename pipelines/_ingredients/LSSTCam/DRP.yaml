@@ -9,6 +9,7 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/pviMetrics.yaml  # TODO[DM-47632] merge this into visitQualityCore
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
@@ -131,6 +132,7 @@ tasks:
     class: lsst.analysis.tools.tasks.CcdVisitTableAnalysisTask
     config:
       connections.data: preCcdVisitTable
+      connections.calibrateConfig: calibrateImage_config  # all it needs is config.astrometry.
       atools.raDecCoveragePlot: RaDecMultiVisitCoveragePlot
       atools.raDecCoveragePlot.produce.plot.showExtremeOutliers: false
       atools.focalPlaneCoveragePlot: FocalPlaneMultiVisitCoveragePlot
