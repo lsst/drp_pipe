@@ -15,8 +15,8 @@ tasks:
       connections.data: preSourceTable_visit
       connections.inputName: preSourceTable_visit
       connections.outputName: preSourceTableCore
-  calibrate:
-    class: lsst.pipe.tasks.calibrate.CalibrateTask
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
       python: |
         from lsst.analysis.tools.tasks import CalexpSummaryAnalysisTask
@@ -36,9 +36,7 @@ subsets:
   step1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
+      - calibrateImage
       - transformPreSourceTable
     description: |
       Detector level tasks. TO DO: requests include synthetic source injection,

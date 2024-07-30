@@ -7,9 +7,14 @@ description: |
 
 tasks:
   isr: lsst.ip.isr.IsrTask
-  characterizeImage: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
-  calibrate: lsst.pipe.tasks.calibrate.CalibrateTask
-  writeSourceTable: lsst.pipe.tasks.postprocess.WriteSourceTableTask
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+      python: |
+        # fgcmcal needs an inner and outer aperture
+        config.star_measurement.plugins["base_CircularApertureFlux"].radii = [12.0, 17.0]
+        config.star_measurement.plugins["base_CompensatedTophatFlux"].apertures = [12, 17]
+        config.star_measurement.plugins.names |= ["base_LocalBackground"]
   transformSourceTable: lsst.pipe.tasks.postprocess.TransformSourceTableTask
   consolidateSourceTable: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
@@ -174,14 +179,12 @@ subsets:
   processCcd:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
+      - calibrateImage
     description: >
       Set of tasks to run when doing single frame processing, without any
       conversions to Parquet/DataFrames or visit-level summaries.
   sourceTable:
     subset:
-      - writeSourceTable
       - transformSourceTable
       - consolidateSourceTable
     description: >
