@@ -114,8 +114,6 @@ LSSTCOMCAMSIM_INPUTS = {
 
 # a selection of mostly common outputs
 COMMON_OUTPUTS = {
-    "calexp",
-    "calexpBackground",
     "ccdVisitTable",
     "compare_warp_artifact_mask",
     "deepCoaddVisits",
@@ -135,17 +133,20 @@ COMMON_OUTPUTS = {
     "deepCoadd_scarletModelData",
     "finalized_src_table",
     "finalVisitSummary",
-    "icExp",
-    "icExpBackground",
-    "icSrc",
+    "initial_astrometry_match_detector",
+    "initial_photometry_match_detector",
+    "initial_psf_stars_footprints_detector",
+    "initial_psf_stars_detector",
+    "initial_pvi",
+    "initial_pvi_background",
+    "initial_stars_footprints_detector",
+    "initial_stars_detector",
+    "isolated_star_cat",
+    "isolated_star_sources",
     "objectTable",
     "objectTable_tract",
     "postISRCCD",
-    "source",
-    "sourceTable",
     "sourceTable_visit",
-    "src",
-    "srcMatch",
     "visitSummary",
     "visitTable",
 }
@@ -157,16 +158,9 @@ HSC_OUTPUTS = {
     "deepCoadd_measMatch",
     "deepCoadd_measMatchFull",
     "forced_src",
-    "preSource",
     "preSourceTable",
     "preSourceTable_visit",
     "skyCorr",
-    "srcMatchFull",
-    # DM-43077 move 2 presource associations and friends to COMMON_OUTPUTS
-    "isolated_star_presource_associations",
-    "isolated_star_presources",
-    "isolated_star_source_associations",
-    "isolated_star_sources",
 }
 
 # LATISS common outputs, in addition to COMMON_OUTPUTS
@@ -332,10 +326,8 @@ class PipelineTestCase(unittest.TestCase):
                 "goodSeeingCoadd",
                 "goodSeeingCoadd_nImage",
                 "goodSeeingVisits",
-                "preSource",
                 "preSourceTable",
                 "preSourceTable_visit",
-                "srcMatchFull",
             },
         )
         tester.run(butler, self)

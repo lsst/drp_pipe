@@ -26,8 +26,7 @@ subsets:
   simpleSingleFrame:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
+      - calibrateImage
     description: |
        A simplified single frame pipeline to make the quantum graph more readable.
   multiVisit:
@@ -39,9 +38,7 @@ subsets:
   singleFrame:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
+      - calibrateImage
       - transformPreSourceTable
       - consolidatePreSourceTable
       - consolidateVisitSummary
@@ -81,9 +78,7 @@ subsets:
   nightlyStep1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
+      - calibrateImage
       - transformPreSourceTable
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.

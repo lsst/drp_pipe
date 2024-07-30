@@ -5,14 +5,13 @@ description: |
   level tasks can be run in real time by e.g. Rapid Analysis.
   The rest of the pipeline is expected to be run as part of the
   10am processing.
-instrument: lsst.obs.lsst.LsstComCam
+instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCam/DRP.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
     exclude:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
-      - gbdesAstrometricFit
 tasks:
   analyzePreSourceTableCore:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
@@ -20,6 +19,22 @@ tasks:
       connections.data: preSourceTable_visit
       connections.inputName: preSourceTable_visit
       connections.outputName: preSourceTableCore
+  calibrate:
+    class: lsst.pipe.tasks.calibrate.CalibrateTask
+    config:
+      python: |
+        from lsst.analysis.tools.tasks import CalexpSummaryAnalysisTask
+        config.createSummaryMetrics.retarget(CalexpSummaryAnalysisTask)
+        from lsst.analysis.tools.atools import CalexpSummaryMetrics
+        config.createSummaryMetrics.atools.calexpSummaryMetrics = CalexpSummaryMetrics
+      doCreateSummaryMetrics: true
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      # No global calibration during nightly validation
+      wcs_provider: "input_summary"
+      photo_calib_provider: "input_summary"
+      background_provider: "input_summary"
 subsets:
   # These 3 steps can be run in real time by Rapid Analysis Framework at USDF
   step1:
@@ -27,8 +42,6 @@ subsets:
       - isr
       - calibrateImage
       - transformPreSourceTable
-      - calexpSummary
-      - analyzeCalibrateMetadata
     description: |
       Detector level tasks. TO DO: requests include synthetic source injection,
       subtractImages, detectAndMeasureDiaSources.
@@ -68,7 +81,6 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
-      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
@@ -89,7 +101,7 @@ subsets:
       Tasks generate one data product per collection.
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
-  step3a:
+  step3:
     subset:
       - makeWarp
       - selectDeepCoaddVisits
@@ -102,15 +114,9 @@ subsets:
       - forcedPhotCoadd
       - transformObjectTable
       - writeObjectTable
-    description: |
-      Patch-level tasks that can be run together after the 'step2d'
-      subsets.
-  step3b:
-    subset:
-      - healSparsePropertyMaps
       - consolidateObjectTable
+      - healSparsePropertyMaps
       # analysis_tools tasks
-      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
@@ -121,7 +127,11 @@ subsets:
       - refCatObjectTract
       - validateObjectTableCore
     description: |
-      Tract-level tasks that can be run together after the 'step3a'
+      This overrides the default DRP pipeline by not making nightly templates.
+      We may want to make daily templates in the future.
+
+      Patch and Tract-level tasks that make coadds and object tables that
+      can be run together, but only after the 'step1' and 'step2d'
       subsets.
   step7:
     subset:

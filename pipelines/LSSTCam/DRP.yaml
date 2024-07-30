@@ -1,7 +1,11 @@
-description: DRP Pipeline for Simulated ComCam
-instrument: lsst.obs.lsst.LsstComCamSim
+description: DRP Pipeline for LSSTCam
+instrument: lsst.obs.lsst.LsstCam
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
+    exclude:
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
 
 subsets:
   step1:
@@ -18,6 +22,7 @@ subsets:
       select partial visits that overlap that region.
   step2a:
     subset:
+      - analyzeMatchedPreVisitCore
       - consolidatePreSourceTable
       - consolidateVisitSummary
     description: |
@@ -31,7 +36,6 @@ subsets:
   step2b:
     subset:
       - isolatedStarAssociation
-      - analyzeMatchedPreVisitCore
       - gbdesAstrometricFit
     description: |
       Tract-level tasks
@@ -43,11 +47,6 @@ subsets:
       gbdesAstrometricFit produces solutions per-tract, per-visit
       isolatedStarAssociation produces solutions per-tract.
       TODO: Evaluate GBDES after first DRP
-  step2c:
-    subset:
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
   step2d:
     subset:
       - finalizeCharacterization
@@ -55,7 +54,6 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
-      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
@@ -94,8 +92,6 @@ subsets:
       - selectGoodSeeingVisits
       - templateGen
       # analysis_tools tasks
-      - analyzeAmpOffsetMetadata
-      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract
@@ -104,6 +100,7 @@ subsets:
       - plotPropertyMapTract
       - refCatObjectTract
       - validateObjectTableCore
+      - objectEpochTable
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2d'
       subsets.
@@ -152,6 +149,7 @@ subsets:
   step6:
     subset:
       - consolidateDiaSourceTable
+      - sourceObjectMatch
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
       'step3', and 'step4' subsets
