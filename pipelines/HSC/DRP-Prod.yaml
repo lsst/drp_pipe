@@ -142,6 +142,7 @@ subsets:
       in the data query.
   step8:
     subset:
+      - analyzeAmpOffsetMetadata
       - analyzeObjectTableCore
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
