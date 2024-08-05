@@ -64,6 +64,24 @@ tasks:
       atools.wholeSkyMetric.bands: ["r", "i"]
       python: |
         from lsst.analysis.tools.atools import *
+  analyzeMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      # gbdesAstrometricFit is not run on ci_hsc, so there is no proper motion
+      # and parallax catalog available to use here.
+      applyAstrometricCorrections: false
+  analyzeMatchedVisitExtended:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      # gbdesAstrometricFit is not run on ci_hsc, so there is no proper motion
+      # and parallax catalog available to use here.
+      applyAstrometricCorrections: false
+  sourceObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+      # gbdesAstrometricFit is not run on ci_hsc, so there is no proper motion
+      # and parallax catalog available to use here.
+      applyAstrometricCorrections: false
 
 subsets:
   analysis_tools:
