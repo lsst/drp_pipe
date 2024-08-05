@@ -9,6 +9,13 @@ imports:
     exclude:
       - writeSourceTable  # cannot reconfigure because different dimensions.
 tasks:
+  isr:
+    class: lsst.ip.isr.IsrTask
+    config:
+      # Although we don't have to apply the amp offset corrections, we do want
+      # to compute them for analyzeAmpOffsetMetadata to report on as metrics.
+      doAmpOffset: true
+      ampOffset.doApplyAmpOffset: false
   skyCorr:
     class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
   isolatedStarAssociation:

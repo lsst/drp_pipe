@@ -31,6 +31,10 @@ tasks:
       connections.newBFKernel: bfk
       doDefect: false
       doBrighterFatter: true
+      # Although we don't have to apply the amp offset corrections, we do want
+      # to compute them for analyzeAmpOffsetMetadata to report on as metrics.
+      doAmpOffset: true
+      ampOffset.doApplyAmpOffset: false
   calibrate:
     class: lsst.pipe.tasks.calibrate.CalibrateTask
     config:
