@@ -95,6 +95,7 @@ subsets:
       - selectGoodSeeingVisits
       - templateGen
       # analysis_tools tasks
+      - analyzeAmpOffsetMetadata
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract

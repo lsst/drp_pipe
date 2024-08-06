@@ -6,6 +6,7 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
     exclude:
       - analyzeMatchedPreVisitCore  # imSim does not have preSourceTable_visit catalogs
@@ -30,6 +31,10 @@ tasks:
       connections.newBFKernel: bfk
       doDefect: false
       doBrighterFatter: true
+      # Although we don't have to apply the amp offset corrections, we do want
+      # to compute them for analyzeAmpOffsetMetadata to report on as metrics.
+      doAmpOffset: true
+      ampOffset.doApplyAmpOffset: false
   calibrate:
     class: lsst.pipe.tasks.calibrate.CalibrateTask
     config:
@@ -258,6 +263,7 @@ subsets:
       in the data query.
   step8:
     subset:
+      - analyzeAmpOffsetMetadata
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableSurveyCore
