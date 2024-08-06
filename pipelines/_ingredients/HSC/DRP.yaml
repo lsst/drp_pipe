@@ -11,6 +11,11 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
 tasks:
+  isr:
+    class: lsst.ip.isr.IsrTask
+    config:
+      doAmpOffset: true
+      ampOffset.doApplyAmpOffset: true
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
