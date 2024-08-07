@@ -59,13 +59,6 @@ tasks:
       atools.stellarAstrometricRepeatability3.process.calculateActions.rms.threshAD: 30
       python: |
         from lsst.analysis.tools.atools import *
-  analyzeObjectTableCore:
-    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
-    config:
-      python: |
-        # no z-band in comCamSim
-        del config.atools.yPerpPSF
-        del config.atools.yPerpCModel
   analyzePreSourceTableCore:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
     config:
