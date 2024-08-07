@@ -1,0 +1,134 @@
+description: DRP Pipeline for LSSTCam
+instrument: lsst.obs.lsst.LsstCam
+imports:
+  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+tasks:
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      doMultipleCycles: true
+      multipleCyclesFinalCycleNumber: 4
+  fgcmOutputProducts:
+    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+    config:
+      connections.cycleNumber: 4
+  selectGoodSeeingVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    config:
+      connections.goodVisits: goodSeeingVisits
+      nVisitsMin: 12
+      minMJD: 60399.362  # these need updating
+      maxMJD: 60402.419  # these need updating
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      # TODO: Evaluate GBDES, SkyCorr, FGCM after initial DRP
+      wcs_provider: "tract"
+      photo_calib_provider: "global"
+      background_provider: "input_summary"
+  analyzeMatchedPreVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      connections.sourceCatalogs: preSourceTable_visit
+      connections.outputName: matchedPreVisitCore
+      # The rest should be the same as configs in matchedVisitQualityCore.yaml
+      atools.stellarPhotometricRepeatability: StellarPhotometricRepeatability
+      atools.stellarPhotometricResiduals: StellarPhotometricResidualsFocalPlane
+      atools.stellarAstrometricResidualsRA: StellarAstrometricResidualsRAFocalPlanePlot
+      atools.stellarAstrometricResidualsDec: StellarAstrometricResidualsDecFocalPlanePlot
+      atools.stellarAstrometricResidualStdDevRA: StellarAstrometricResidualStdDevRAFocalPlanePlot
+      atools.stellarAstrometricResidualStdDevDec: StellarAstrometricResidualStdDevDecFocalPlanePlot
+      atools.stellarAstrometricRepeatability1: AstrometricRelativeRepeatability
+      atools.stellarAstrometricRepeatability1.xValue: 1
+      atools.stellarAstrometricRepeatability1.process.calculateActions.rms.annulus: 5
+      atools.stellarAstrometricRepeatability2: AstrometricRelativeRepeatability
+      atools.stellarAstrometricRepeatability2.xValue: 2
+      atools.stellarAstrometricRepeatability2.process.calculateActions.rms.annulus: 20
+      atools.stellarAstrometricRepeatability3: AstrometricRelativeRepeatability
+      atools.stellarAstrometricRepeatability3.xValue: 3
+      atools.stellarAstrometricRepeatability3.process.calculateActions.rms.annulus: 200
+      atools.stellarAstrometricRepeatability3.process.calculateActions.rms.threshAD: 30
+      python: |
+        from lsst.analysis.tools.atools import *
+  analyzePreSourceTableCore:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      connections.outputName: preSourceTableCore
+      atools.skyFluxVisitStatisticMetric: SkyFluxStatisticMetric
+      atools.skyFluxVisitStatisticMetric.applyContext: VisitContext
+      atools.skySourceSky: SkySourceSkyPlot
+      atools.skySourceFlux: SkySourceHistPlot
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+  catalogMatchPreVisit:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+    config:
+      connections.catalog: "preSourceTable_visit"
+      connections.targetCatalog: "preSourceTable_visit"
+  astrometricRefCatPreSourceVisit:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      # Only run metrics for analyzing the preSources:
+      connections.data: preSourceTable_visit_gaia_dr3_20230707_match_astrom
+      atools.astromDiffMetrics: TargetRefCatDeltaMetrics
+      atools.astromDiffMetrics.applyContext: VisitContext
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+  matchedVisitCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "matchedVisitCore_metricsTable"
+      connections.outputName: "matchedVisitCore_wholeSky"
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.plotKeys: []
+      atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
+  objectTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.plotKeys: [
+        "wPerpPSFP_wPerp_psfFlux_median",
+        "wPerpPSFP_wPerp_psfFlux_sigmaMAD",
+        "skippedDeblenderMetrics_numSkippedPeaks",
+        "skippedDeblenderMetrics_numSkippedBlends",
+        "skippedDeblenderMetrics_numBlendParentTooBig",
+        "skippedDeblenderMetrics_numBlendTooManyPeaks",
+        "skippedDeblenderMetrics_numBlendTooManyMasked",
+      ]
+      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *
+  # These don't actually work now:
+  photometricMatchPreVisit:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
+    config:
+      extraColumns: ["x", "y", "ap09Flux", "ap09FluxErr"]
+      connections.refCatalog: gaia_dr3_20230707
+      connections.catalog: preSourceTable_visit
+      connections.targetCatalog: preSourceTable_visit
+      connections.matchedCatalog: preSourceTable_visit_gaia_dr3_20230707_photoMatch
+  photometricRefCatPreSourceVisit:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      # Only run metrics for analyzing the preSources:
+      connections.data: preSourceTable_visit_gaia_dr3_20230707_photoMatch
+      python: from lsst.analysis.tools.atools import *
+  preliminaryVisitCoverageAnalysis:
+    class: lsst.analysis.tools.tasks.CcdVisitTableAnalysisTask
+    config:
+      connections.data: preCcdVisitTable
+      atools.raDecCoveragePlot: RaDecMultiVisitCoveragePlot
+      atools.raDecCoveragePlot.produce.plot.showExtremeOutliers: false
+      atools.focalPlaneCoveragePlot: FocalPlaneMultiVisitCoveragePlot
+      python: from lsst.analysis.tools.atools import *
