@@ -91,9 +91,6 @@ tasks:
       connections.inputName: "matchedVisitCore_metricsTable"
       connections.outputName: "matchedVisitCore_wholeSky"
       atools.wholeSkyMetric: WholeSkyPlotTool
-      atools.wholeSkyMetric.xLimits: [120.0, 305.0]
-      atools.wholeSkyMetric.yLimits: [-55.0, 10.0]
-      atools.wholeSkyMetric.bands: ["g", "r", "i"]
       atools.wholeSkyMetric.plotKeys: []
       atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
       python: |
@@ -102,9 +99,6 @@ tasks:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
       atools.wholeSkyMetric: WholeSkyPlotTool
-      atools.wholeSkyMetric.xLimits: [120.0, 305.0]
-      atools.wholeSkyMetric.yLimits: [-55.0, 10.0]
-      atools.wholeSkyMetric.bands: ["g", "r", "i"]
       atools.wholeSkyMetric.plotKeys: [
         "wPerpPSFP_wPerp_psfFlux_median",
         "wPerpPSFP_wPerp_psfFlux_sigmaMAD",
