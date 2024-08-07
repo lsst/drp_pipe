@@ -1,4 +1,4 @@
-description: DRP Pipeline for Simulated ComCam Ops Rehearsals
+description: DRP Pipeline for ComCam
 instrument: lsst.obs.lsst.LsstComCam
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
@@ -24,10 +24,8 @@ tasks:
     config:
       connections.goodVisits: goodSeeingVisits
       nVisitsMin: 12
-      # For simulation 2 there are 60 visits per region
-      # between 60399.362 and 60402.419.
-      minMJD: 60399.362
-      maxMJD: 60402.419
+      minMJD: 60399.362  # these need updating
+      maxMJD: 60402.419  # these need updating
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
