@@ -42,6 +42,10 @@ tasks:
       connections.refCat: "cal_ref_cat_2_2"
       python: |
         config.match.refObjLoader.filterMap = parameters.filterMap
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: false
   matchObjectToTruth:
     class: lsst.pipe.tasks.match_tract_catalog.MatchTractCatalogTask
     config:
@@ -137,6 +141,7 @@ subsets:
       - makeCcdVisitTable
       - makeVisitTable
       - updateVisitSummary
+      - reprocessVisitImage
       - catalogMatchVisit
       - astrometricRefCatSourceVisit
       - reprocessVisitImage

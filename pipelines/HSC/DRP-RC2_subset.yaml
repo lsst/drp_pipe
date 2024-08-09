@@ -58,7 +58,7 @@ subsets:
       - updateVisitSummary
       - makeCcdVisitTable
       - makeVisitTable
-      - writeRecalibratedSourceTable
+      - reprocessVisitImage
       - transformSourceTable
       - consolidateSourceTable
   coadd_measurement:
@@ -127,7 +127,7 @@ subsets:
       - makeCcdVisitTable
       - finalizeCharacterization
       - updateVisitSummary
-      - writeRecalibratedSourceTable
+      - reprocessVisitImage
       - transformSourceTable
       - consolidateSourceTable
       - catalogMatchVisit
