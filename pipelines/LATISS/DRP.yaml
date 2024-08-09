@@ -39,6 +39,11 @@ tasks:
       photo_calib_provider: "global"
       background_provider: "input_summary"
 
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: false
+
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
@@ -145,7 +150,7 @@ subsets:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
-      - writeRecalibratedSourceTable
+      - reprocessVisitImage
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary

@@ -51,15 +51,15 @@ subsets:
   step2d:
     subset:
       - finalizeCharacterization
-      - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
+      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
 
-      writeRecalibratedSourceTable, transformSourceTable run per-detector
+      reprocessVisitImage, transformSourceTable run per-detector
       consolidateSourceTable produces one data product per visit.
       finalizeCharacterization will eventually model full focal plane PSFs.
   step2e:
