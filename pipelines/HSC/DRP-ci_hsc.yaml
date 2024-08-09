@@ -74,6 +74,18 @@ tasks:
       atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
       python: |
         from lsst.analysis.tools.atools import *
+  analyzeMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyProperMotions: false
+  analyzeMatchedVisitExtended:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyProperMotions: false
+  sourceObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+      applyProperMotions: false
 
 subsets:
   analysis_tools:
