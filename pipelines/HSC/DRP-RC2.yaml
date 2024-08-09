@@ -137,7 +137,7 @@ subsets:
       - fgcmFitCycle
       - fgcmOutputProducts
       - updateVisitSummary
-      - writeRecalibratedSourceTable
+      - reprocessVisitImage
       - transformSourceTable
       - consolidateSourceTable
       - catalogMatchVisit

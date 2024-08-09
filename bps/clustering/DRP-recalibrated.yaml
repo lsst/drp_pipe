@@ -37,7 +37,7 @@ cluster:
     dimensions: tract,patch,band
 
   finalizeSourceTable:
-    pipetasks: finalizeCharacterization,updateVisitSummary,writeRecalibratedSourceTable,transformSourceTable,consolidateSourceTable
+    pipetasks: finalizeCharacterization,updateVisitSummary,reprocessVisitImage,transformSourceTable,consolidateSourceTable
     dimensions: visit
     equalDimensions: visit:exposure
 
