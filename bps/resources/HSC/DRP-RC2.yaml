@@ -25,7 +25,7 @@ pipetask:
   fgcmOutputProducts:
     requestMemory: 8192
   assembleCoadd:
-    requestMemory: 8192
+    requestMemory: 16384
   jointcal:
     requestMemory: 21000
   deblend:
@@ -63,7 +63,7 @@ pipetask:
   makeCcdVisitTable:
     requestMemory: 10000
   detection:
-    requestMemory: 8000
+    requestMemory: 16384
 
   # step8 tasks - sasquatch
   analyzeObjectTableCore:

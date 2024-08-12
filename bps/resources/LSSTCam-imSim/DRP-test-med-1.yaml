@@ -18,7 +18,9 @@ pipetask:
   measure:
     requestMemory: 10000
   detection:
-    requestMemory: 8000
+    requestMemory: 16384
+  assembleCoadd:
+    requestMemory: 16384
   transformObjectTable:
     requestMemory: 16384
   writeObjectTable:
