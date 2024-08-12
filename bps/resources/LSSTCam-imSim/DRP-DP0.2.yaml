@@ -14,6 +14,8 @@ pipetask:
     requestMemory: 8192
   assembleCoadd:
     requestMemory: 16384
+  detection:
+    requestMemory: 16384
   deblend:
     requestMemory: 16384
   measure:
