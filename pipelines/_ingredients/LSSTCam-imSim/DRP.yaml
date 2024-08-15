@@ -161,7 +161,8 @@ subsets:
       Full collection-level tasks include: makeCcdVisitTable, makeVisitTable
   step3:
     subset:
-      - makeWarp
+      - makeDirectWarp
+      - makePsfMatchedWarp
       - selectDeepCoaddVisits
       - assembleCoadd
       - detection

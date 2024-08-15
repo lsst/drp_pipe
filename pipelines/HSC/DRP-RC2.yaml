@@ -178,7 +178,8 @@ subsets:
       wrong (partial-visit) inputs to its 'background' connection.
   step3:
     subset:
-      - makeWarp
+      - makeDirectWarp
+      - makePsfMatchedWarp
       - selectDeepCoaddVisits
       - assembleCoadd
       - detection
