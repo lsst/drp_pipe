@@ -24,8 +24,6 @@ tasks:
     config:
       connections.goodVisits: goodSeeingVisits
       nVisitsMin: 12
-      minMJD: 60399.362  # these need updating
-      maxMJD: 60402.419  # these need updating
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
