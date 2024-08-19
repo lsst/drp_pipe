@@ -1,5 +1,5 @@
-description: DRP Pipeline for ComCam
-instrument: lsst.obs.lsst.LsstComCam
+description: DRP Pipeline for LSSTCam
+instrument: lsst.obs.lsst.LsstCam
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
