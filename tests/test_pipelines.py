@@ -87,6 +87,7 @@ COMMON_OUTPUTS = {
     "calexp",
     "calexpBackground",
     "ccdVisitTable",
+    "compare_warp_artifact_mask",
     "deepCoaddVisits",
     "deepCoadd",
     "deepCoadd_calexp",
