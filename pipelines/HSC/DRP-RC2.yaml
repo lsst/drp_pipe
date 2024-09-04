@@ -92,14 +92,7 @@ tasks:
   objectTableCoreRefCatMatchWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      connections.inputName: "objectTable_tract_gaia_dr3_20230707_match_metricsTable"
-      connections.outputName: "objectTableCoreRefCatMatch_wholeSky"
-      atools.wholeSkyMetric: WholeSkyPlotTool
       atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
-      atools.wholeSkyMetric.plotKeys: []
-      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreRefCatMatchKeysWithBand
-      python: |
-        from lsst.analysis.tools.atools import *
 subsets:
   step1:
     subset:
