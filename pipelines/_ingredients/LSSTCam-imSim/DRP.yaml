@@ -125,6 +125,7 @@ subsets:
       - calibrate
       - writeSourceTable
       - transformSourceTable
+      - analyzeAmpOffsetMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
@@ -144,6 +145,8 @@ subsets:
       - makeCcdVisitTable
       - makeVisitTable
       - updateVisitSummary
+      - catalogMatchVisit
+      - astrometricRefCatSourceVisit
     description: |
       Tasks that can be run together, but only after the 'step1'.
 
@@ -161,6 +164,7 @@ subsets:
       Full collection-level tasks include: makeCcdVisitTable, makeVisitTable
   step3:
     subset:
+      # Per-patch Tasks
       - makeDirectWarp
       - makePsfMatchedWarp
       - selectDeepCoaddVisits
@@ -173,12 +177,20 @@ subsets:
       - forcedPhotCoadd
       - transformObjectTable
       - writeObjectTable
-      - consolidateObjectTable
-      - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
+      # Per-tract Tasks
+      - consolidateObjectTable
+      - healSparsePropertyMaps
       - matchObjectToTruth
       - compareObjectToTruth
+      - analyzeMatchedVisitCore
+      - analyzeObjectTableCore
+      - catalogMatchTract
+      - diff_matched_analysis
+      - refCatObjectTract
+      - validateObjectTableCore
+
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
@@ -236,8 +248,6 @@ subsets:
   step6:
     subset:
       - consolidateDiaSourceTable
-      - catalogMatchVisit
-      - astrometricRefCatSourceVisit
       - sourceObjectMatch
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
@@ -255,6 +265,7 @@ subsets:
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
+      - analyzeObjectTableSurveyCore
     description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.
@@ -262,28 +273,6 @@ subsets:
       This step has global aggregation tasks to run over all visits, detectors,
       tracts, etc.  This step should be run only with the instrument constraint
       in the data query.
-  step8:
-    subset:
-      - analyzeAmpOffsetMetadata
-      - analyzeMatchedVisitCore
-      - analyzeObjectTableCore
-      - analyzeObjectTableSurveyCore
-      - catalogMatchTract
-      - diff_matched_analysis
-      - refCatObjectTract
-      - validateObjectTableCore
-
-    description: |
-      Core (most important), coadd-level plots/metrics from analysis_tools.
-
-      Must be run after 'step3' (writeObjectTable). Cannot be run with any
-      dataquery constraints if analyzeObjectTableSurveyCore is included.
-
-      Can be run together with analysis_drp subsets, e.g. pipeline.yaml
-      (hash/pound sign)step8,analysis_coadd_plots,imsim_analysis_coadd_plots
-
-      Includes extended-level diff_matched_analysis metrics, which are
-      considered core for DC2 as they can't be run on other datasets yet.
   faro_visit:
     subset:
       - nsrcMeasVisit

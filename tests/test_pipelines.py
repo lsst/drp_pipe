@@ -524,7 +524,7 @@ class PipelineTestCase(unittest.TestCase):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-ci_imsim.yaml"),
-            [f"#step{N}" for N in range(1, 9)],
+            [f"#step{N}" for N in range(1, 8)],
             [
                 ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
             ],
@@ -537,7 +537,7 @@ class PipelineTestCase(unittest.TestCase):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-test-med-1.yaml"),
-            [f"#step{N}" for N in range(1, 9)],
+            [f"#step{N}" for N in range(1, 8)],
             [
                 ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
             ],

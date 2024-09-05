@@ -72,34 +72,15 @@ tasks:
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      connections.inputName: "matchedVisitCore_metricsTable"
-      connections.outputName: "matchedVisitCore_wholeSky"
-      atools.wholeSkyMetric: WholeSkyPlotTool
       atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
-      atools.wholeSkyMetric.plotKeys: []
-      atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
-      python: |
-        from lsst.analysis.tools.atools import *
   objectTableCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric: WholeSkyPlotTool
       atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
-      atools.wholeSkyMetric.plotKeys: parameters.objectTableCorePlotKeys
-      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
-      python: |
-        from lsst.analysis.tools.atools import *
   objectTableCoreRefCatMatchWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      connections.inputName: "objectTable_tract_gaia_dr3_20230707_match_metricsTable"
-      connections.outputName: "objectTableCoreRefCatMatch_wholeSky"
-      atools.wholeSkyMetric: WholeSkyPlotTool
       atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
-      atools.wholeSkyMetric.plotKeys: []
-      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreRefCatMatchKeysWithBand
-      python: |
-        from lsst.analysis.tools.atools import *
 subsets:
   step1:
     subset:
@@ -108,6 +89,7 @@ subsets:
       - calibrate
       - writePreSourceTable
       - transformPreSourceTable
+      - analyzeAmpOffsetMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
@@ -156,11 +138,17 @@ subsets:
       - fgcmFitCycle
       - fgcmOutputProducts
       - updateVisitSummary
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
+      - catalogMatchVisit
+      - astrometricRefCatSourceVisit
       - makeCcdVisitTable
       - makeVisitTable
     description: |
-      Per-visit and per-collection tasks that can be run together after step2b
-      with no data query constraints other than instrument.
+      Per-detector, Per-visit, and per-collection tasks that can be run
+      together after step2b with no data query constraints other than
+      instrument.
 
       FGCM requires full visits and 'tract' and 'patch' constraints will
       always select partial visits that overlap that region.
@@ -172,6 +160,7 @@ subsets:
       wrong (partial-visit) inputs to its 'background' connection.
   step3:
     subset:
+      # per-patch Tasks
       - makeDirectWarp
       - makePsfMatchedWarp
       - selectDeepCoaddVisits
@@ -184,10 +173,20 @@ subsets:
       - forcedPhotCoadd
       - transformObjectTable
       - writeObjectTable
-      - consolidateObjectTable
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
+      # per-tract Tasks
+      - consolidateObjectTable
+      - analyzeMatchedVisitCore
+      - analyzeMatchedPreVisitCore
+      - analyzeObjectTableCore
+      - catalogMatchTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
+      - refCatObjectTract
+      - validateObjectTableCore
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
@@ -207,8 +206,6 @@ subsets:
       - detectAndMeasureDiaSources
       - transformDiaSourceCat
       - writeForcedSourceTable
-      - writeRecalibratedSourceTable
-      - transformSourceTable
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2' and
       'step3' subsets
@@ -241,9 +238,6 @@ subsets:
   step6:
     subset:
       - consolidateDiaSourceTable
-      - consolidateSourceTable
-      - catalogMatchVisit
-      - astrometricRefCatSourceVisit
       - sourceObjectMatch
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2',
@@ -262,6 +256,13 @@ subsets:
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
+      - matchedVisitCoreWholeSkyPlot
+      - objectTableCoreWholeSkyPlot
+      - makeMetricTableMatchedVisitCore
+      - makeMetricTableObjectTableCore
+      - makeMetricTableObjectTableCoreRefCatMatch
+      - objectTableCoreRefCatMatchWholeSkyPlot
+      - analyzeObjectTableSurveyCore
     description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.
@@ -269,33 +270,3 @@ subsets:
       This step has global aggregation tasks to run over all visits, detectors,
       tracts, etc.  This step should be run only with the instrument constraint
       in the data query.
-  step8:
-    subset:
-      - analyzeAmpOffsetMetadata
-      - analyzeMatchedVisitCore
-      - analyzeMatchedPreVisitCore
-      - analyzeObjectTableCore
-      - analyzeObjectTableSurveyCore
-      - catalogMatchTract
-      - makeMetricTableMatchedVisitCore
-      - makeMetricTableObjectTableCore
-      - makeMetricTableObjectTableCoreRefCatMatch
-      - matchedVisitCoreWholeSkyPlot
-      - objectTableCoreWholeSkyPlot
-      - objectTableCoreRefCatMatchWholeSkyPlot
-      - photometricCatalogMatch
-      - photometricRefCatObjectTract
-      - plotPropertyMapTract
-      - refCatObjectTract
-      - validateObjectTableCore
-    description: |
-      Core (most important), coadd-level plots/metrics from analysis_tools.
-
-      Must be run after 'step3' (writeObjectTable). If the task
-      analyzeObjectTableSurveyCore is included, should be run with either no
-      data query constraints or with a tract constraint that *exactly* matches
-      that from 'step3'. Running with only a subset of tracts from step3 will
-      result in incomplete survey-level outputs.
-
-      Can be run together with other analysis_drp/analysis_tools subsets, e.g.
-      'pipeline.yaml#step8,analysis_coadd_plots,imsim_analysis_coadd_plots'
