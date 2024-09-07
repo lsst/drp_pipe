@@ -1,14 +1,17 @@
-description: DRP Pipeline for LSSTComCam
-instrument: lsst.obs.lsst.LsstComCam
+description: DRP Pipeline for LSSTCam
+instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCam/DRP.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
+    exclude:
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
+
 subsets:
   step1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
+      - calibrateImage
       - transformPreSourceTable
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
@@ -19,6 +22,7 @@ subsets:
       select partial visits that overlap that region.
   step2a:
     subset:
+      - analyzeMatchedPreVisitCore
       - consolidatePreSourceTable
       - consolidateVisitSummary
     description: |
@@ -31,8 +35,8 @@ subsets:
       TODO: Evaluate SkyCorr after intial DRP
   step2b:
     subset:
-      - analyzeMatchedPreVisitCore
       - isolatedStarAssociation
+      - gbdesAstrometricFit
     description: |
       Tract-level tasks
       Allowed data query constraints: tract
@@ -43,27 +47,18 @@ subsets:
       gbdesAstrometricFit produces solutions per-tract, per-visit
       isolatedStarAssociation produces solutions per-tract.
       TODO: Evaluate GBDES after first DRP
-  step2c:
-    subset:
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
-    description: |
-      This subset is the FGCM run that runs in "global" mode, which means
-      that one should only use an `instrument` and a `skymap` connection
-      (the latter of which links with the correct isolated star tables).
   step2d:
     subset:
       - finalizeCharacterization
-      - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
+      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
 
-      writeRecalibratedSourceTable, transformSourceTable run per-detector
+      transformSourceTable runs per-detector
       consolidateSourceTable produces one data product per visit.
       finalizeCharacterization will eventually model full focal plane PSFs.
   step2e:
@@ -79,7 +74,7 @@ subsets:
       Tasks generate one data product per collection.
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
-  step3a:
+  step3:
     subset:
       - makeDirectWarp
       - makePsfMatchedWarp
@@ -93,15 +88,10 @@ subsets:
       - forcedPhotCoadd
       - transformObjectTable
       - writeObjectTable
+      - consolidateObjectTable
+      - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
-    description: |
-      Patch-level tasks that can be run together after the 'step2d'
-      subsets.
-  step3b:
-    subset:
-      - healSparsePropertyMaps
-      - consolidateObjectTable
       # analysis_tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
@@ -113,17 +103,22 @@ subsets:
       - validateObjectTableCore
       - objectEpochTable
     description: |
-      Tract-level tasks that can be run together after the 'step3a'
+      Tasks that can be run together, but only after the 'step1' and 'step2d'
       subsets.
+
+      These should be run with explicit 'tract' constraints essentially all the
+      time, because otherwise quanta will be created for jobs with only partial
+      visit coverage.
+
+      This subset is considered a workaround for missing middleware and task
+      functionality.  It may be removed in the future.
   step4:
     subset:
-      - reprocessVisitImage
       - forcedPhotCcd
       - forcedPhotDiffim
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
-      - rbClassify
       - transformDiaSourceCat
       - writeForcedSourceTable
     description: |
