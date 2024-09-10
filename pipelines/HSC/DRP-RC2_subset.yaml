@@ -380,6 +380,7 @@ subsets:
       - psfPhotRepStar2
       - psfPhotRepStar3
       - psfPhotRepStar4
+      - objectEpochTable
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
