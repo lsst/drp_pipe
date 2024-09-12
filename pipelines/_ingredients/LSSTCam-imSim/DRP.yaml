@@ -40,12 +40,37 @@ tasks:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
       connections.refCat: "cal_ref_cat_2_2"
+      connections.sourceTableHandles: preSourceTable_visit
       python: |
         config.match.refObjLoader.filterMap = parameters.filterMap
+  # PreSource tasks are defined here so that the output of calibrateImage can
+  # be passed on to isolatedStarAssocation.
+  transformPreSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: initial_stars_detector
+      connections.outputCatalog: preSourceTable
+      python: |
+        import os.path
+        config.functorFile = os.path.join("$PIPE_TASKS_DIR", "schemas", "initial_stars_detector_standardized.yaml")
+  consolidatePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: preSourceTable
+      connections.outputCatalog: preSourceTable_visit
+  # Use the above preSource tables.
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      connections.source_table_visit: preSourceTable_visit
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
+      # Sky correction isn't run on imsim: there's no large background to fit!
       do_use_sky_corr: false
+      # Significantly limit the number of sources to deblend, which saves time
+      # in both deblending and measurement.
+      deblend.useCiLimits: true
   matchObjectToTruth:
     class: lsst.pipe.tasks.match_tract_catalog.MatchTractCatalogTask
     config:
@@ -120,7 +145,7 @@ subsets:
     subset:
       - isr
       - calibrateImage
-      - transformSourceTable
+      - transformPreSourceTable
       - analyzeAmpOffsetMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
@@ -134,17 +159,13 @@ subsets:
       failures before continuing on to step2.
   step2:
     subset:
-      - consolidateSourceTable
-      - consolidateVisitSummary
+      - consolidatePreSourceTable
       - isolatedStarAssociation
       - finalizeCharacterization
       - makeCcdVisitTable
       - makeVisitTable
       - updateVisitSummary
-      - reprocessVisitImage
-      - catalogMatchVisit
-      - astrometricRefCatSourceVisit
-      - reprocessVisitImage
+      - consolidateVisitSummary
     description: |
       Tasks that can be run together, but only after the 'step1'.
 
@@ -181,7 +202,6 @@ subsets:
       - healSparsePropertyMaps
       - matchObjectToTruth
       - compareObjectToTruth
-      - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract
       - diff_matched_analysis
@@ -213,6 +233,12 @@ subsets:
       - detectAndMeasureDiaSources
       - transformDiaSourceCat
       - writeForcedSourceTable
+      - reprocessVisitImage
+      - transformSourceTable
+      - consolidateSourceTable
+      - catalogMatchVisit
+      - analyzeMatchedVisitCore
+      - astrometricRefCatSourceVisit
     description: |
       Tasks that can be run together, but only after the 'step1', 'step2' and
       'step3' subsets
