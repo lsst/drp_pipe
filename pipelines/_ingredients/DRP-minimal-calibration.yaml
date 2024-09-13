@@ -33,7 +33,7 @@ tasks:
     config:
       doInputMap: true
       doSelectVisits: true
-      doWriteArtifactMasks: true
+      doWriteArtifactMasks: false
       assembleStaticSkyModel.doSelectVisits: true
       connections.selectedVisits: deepCoaddVisits
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
