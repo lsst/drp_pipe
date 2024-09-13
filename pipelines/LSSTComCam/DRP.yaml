@@ -1,7 +1,11 @@
 description: DRP Pipeline for LSSTComCam
 instrument: lsst.obs.lsst.LsstComCam
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCam/DRP.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCam/DRP.yaml
+    exclude:
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
 
 subsets:
   step1:
@@ -45,11 +49,6 @@ subsets:
       gbdesAstrometricFit produces solutions per-tract, per-visit
       isolatedStarAssociation produces solutions per-tract.
       TODO: Evaluate GBDES after first DRP
-  step2c:
-    subset:
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
   step2d:
     subset:
       - finalizeCharacterization
