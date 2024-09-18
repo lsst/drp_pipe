@@ -76,6 +76,7 @@ tasks:
     config:
       # Only run metrics for analyzing the preSources:
       connections.data: preSourceTable_visit_gaia_dr3_20230707_match_astrom
+      connections.outputName: preSourceTable_visit_gaia_dr3_20230707_match_astrom
       atools.astromDiffMetrics: TargetRefCatDeltaMetrics
       atools.astromDiffMetrics.applyContext: VisitContext
       python: |
