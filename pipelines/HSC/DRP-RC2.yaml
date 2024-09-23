@@ -141,6 +141,7 @@ subsets:
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
+      - analyzeSourceTableCore
       - catalogMatchVisit
       - astrometricRefCatSourceVisit
       - makeCcdVisitTable
