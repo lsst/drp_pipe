@@ -1,6 +1,12 @@
 description: |
   The DRP pipeline specialized for the DECam instrument, developed against the
   Merian dataset.
+
+  Prior to running subsets or tasks in this pipeline, the DECam prerequisite
+  task isrForCrosstalkSources must be run. More information on that task can be
+  found in the isrForCrosstalkSources.yaml pipeline file.
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/DECam/DRP.yaml
-  - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DECam/DRP.yaml
+    exclude:
+      - isrForCrosstalkSources
+  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
