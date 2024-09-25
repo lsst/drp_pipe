@@ -81,6 +81,7 @@ tasks:
       coord_format.coords_ref_to_convert: {"ra": "x", "dec": "y"}
       # Convert ref ra/dec to x/y but do not measure distances from x/y
       coord_format.return_converted_coords: false
+      include_unmatched: true
 
       python: |
         from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
