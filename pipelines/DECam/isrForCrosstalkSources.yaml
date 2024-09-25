@@ -1,0 +1,37 @@
+description: |
+  The DECam prerequisite task isrForCrosstalkSources.
+
+  The isrForCrosstalkSources task generates crosstalk sources for
+  ISR/inter-chip crosstalk by applying overscan correction on raw frames. A new
+  dataset is written, which should be used as an input for further DECam data
+  processing.
+
+  This task is intended to be run once, prior to initial data processing.
+instrument: lsst.obs.decam.DarkEnergyCamera
+tasks:
+  isrForCrosstalkSources:
+    class: lsst.ip.isr.IsrTask
+    config:
+      connections.outputExposure: overscanRaw
+      doOverscan: true
+      doAssembleCcd: false
+      doBias: false
+      doCrosstalk: false
+      doVariance: false
+      doLinearize: false
+      doDefect: false
+      doNanMasking: false
+      doDark: false
+      doFlat: false
+      doFringe: false
+      doInterpolate: false
+subsets:
+  step0:
+    subset:
+      - isrForCrosstalkSources
+    description: |
+      Tasks which should be run once, prior to initial data processing.
+
+      This step generates crosstalk sources for ISR/inter-chip crosstalk by
+      applying overscan correction on raw frames. A new dataset is written,
+      which should be used as an input for further data processing.

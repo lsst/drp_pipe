@@ -230,10 +230,10 @@ class PipelineTestCase(unittest.TestCase):
         DatastoreMock.apply(butler)
         return butler
 
-    def test_decam_drp_merian(self):
+    def test_decam_isrForCrosstalkSources(self):
         butler = self.makeButler(writeable=True)
-        tester0 = PipelineStepTester(
-            os.path.join(PIPELINES_DIR, "DECam", "DRP-Merian.yaml"),
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "DECam", "isrForCrosstalkSources.yaml"),
             ["#step0"],
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
@@ -246,7 +246,10 @@ class PipelineTestCase(unittest.TestCase):
             },
             expected_outputs={"overscanRaw"},
         )
-        tester0.run(butler, self)
+        tester.run(butler, self)
+
+    def test_decam_drp_merian(self):
+        butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "DECam", "DRP-Merian.yaml"),
             [
