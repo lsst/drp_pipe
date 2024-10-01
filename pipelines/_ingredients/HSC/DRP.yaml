@@ -9,6 +9,7 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/calexpMetrics.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
 tasks:
   isr:

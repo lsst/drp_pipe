@@ -90,6 +90,7 @@ subsets:
       - writePreSourceTable
       - transformPreSourceTable
       - analyzeAmpOffsetMetadata
+      - analyzeCalibrateMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
