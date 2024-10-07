@@ -101,8 +101,7 @@ subsets:
       and CcdVisits.
   step3:
     subset:
-      - makeDirectWarp
-      - makePsfMatchedWarp
+      - makeWarp
       - selectDeepCoaddVisits
       - assembleCoadd
       - detection
