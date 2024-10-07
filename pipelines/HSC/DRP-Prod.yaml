@@ -100,9 +100,8 @@ subsets:
       and CcdVisits.
   step3:
     subset:
-      # per-patch tasks
-      - makeDirectWarp
-      - makePsfMatchedWarp
+      # per patch tasks
+      - makeWarp
       - selectDeepCoaddVisits
       - assembleCoadd
       - detection
