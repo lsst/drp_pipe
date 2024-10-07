@@ -22,6 +22,8 @@ imports:
       - plot_ri_gr_contour_cmodel
 
 tasks:
+  isr: lsst.ip.isr.IsrTaskLSST
+
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
