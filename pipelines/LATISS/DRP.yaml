@@ -168,8 +168,7 @@ subsets:
 
   step3a:
     subset:
-      - makeDirectWarp
-      - makePsfMatchedWarp
+      - makeWarp
       - selectDeepCoaddVisits
       - assembleCoadd
       - detection

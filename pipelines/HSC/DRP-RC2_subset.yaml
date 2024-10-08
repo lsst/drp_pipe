@@ -336,8 +336,7 @@ subsets:
       Per-visit tasks. These should never be run with tract constraints
   nightlyStep3:
     subset:
-      - makeDirectWarp
-      - makePsfMatchedWarp
+      - makeWarp
       - selectDeepCoaddVisits
       - assembleCoadd
       - detection
