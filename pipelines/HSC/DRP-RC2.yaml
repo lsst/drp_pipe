@@ -68,7 +68,7 @@ tasks:
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
-      band_order: ['i', 'r', 'g', 'z', 'y', 'N921']
+      band_order: ["i", "r", "g", "z", "y", "N921"]
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
@@ -88,7 +88,6 @@ subsets:
       - calibrateImage
       - transformPreSourceTable
       - analyzeAmpOffsetMetadata
-      - analyzeCalibrateMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
