@@ -213,6 +213,7 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - validateObjectTableCore
+      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeAmpOffsetMetadata
       # The following are from analysis_drp

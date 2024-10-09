@@ -13,8 +13,23 @@ tasks:
   transformSourceTable: lsst.pipe.tasks.postprocess.TransformSourceTableTask
   consolidateSourceTable: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
-  isolatedStarAssociation: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
-  finalizeCharacterization: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      # TODO DM-43077: Remove all three connections overrides.
+      # DM-43077 introduces presources to the imSim pipelines
+      # presource are the default catalog to match on
+      connections.source_table_visit: sourceTable_visit
+      connections.isolated_star_sources: isolated_star_sources
+      connections.isolated_star_cat: isolated_star_source_associations
+  finalizeCharacterization:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+    config:
+      # TODO DM-43077: Remove both connections overrides.
+      # DM-43077 introduces presources to the imSim pipelines
+      # presources are the default catalog to match on
+      connections.isolated_star_cats: isolated_star_source_associations
+      connections.isolated_star_sources: isolated_star_sources
   updateVisitSummary: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask

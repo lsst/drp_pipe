@@ -65,10 +65,6 @@ tasks:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
       connections.cycleNumber: 4
-  isolatedStarAssociation:
-    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
-    config:
-      band_order: ['i', 'r', 'g', 'z', 'y', 'N921']
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
@@ -179,6 +175,7 @@ subsets:
       # per-tract Tasks
       - consolidateObjectTable
       - analyzeMatchedVisitCore
+      - isolatedStarSourceAssociation
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract

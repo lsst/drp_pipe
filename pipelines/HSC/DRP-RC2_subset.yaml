@@ -380,6 +380,7 @@ subsets:
       - psfPhotRepStar3
       - psfPhotRepStar4
       - objectEpochTable
+      - isolatedStarSourceAssociation
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.

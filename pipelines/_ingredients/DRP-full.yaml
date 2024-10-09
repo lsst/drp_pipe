@@ -19,9 +19,29 @@ tasks:
   skyCorr:
     class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
   isolatedStarAssociation:
+    # for global calibration and PSF estimates on preSources
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
+      # TODO DM-43077: delete these three overrides.
+      # preSource is task default. DM-43077 will remove the overrides to use
+      # sourceTable catalogs in DRP-minimal-calibration, and eliminate the
+      # need for these:
       connections.source_table_visit: preSourceTable_visit
+      connections.isolated_star_sources: isolated_star_presources
+      connections.isolated_star_cat: isolated_star_presource_associations
+  isolatedStarSourceAssociation:
+    # for final repeatability metrics on final source table
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      connections.source_table_visit: sourceTable_visit
+      connections.isolated_star_sources: isolated_star_sources
+      connections.isolated_star_cat: isolated_star_source_associations
+  finalizeCharacterization:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+    config:
+      # TODO DM-43077: delete these two overrides. preSource is task default
+      connections.isolated_star_cats: isolated_star_presource_associations
+      connections.isolated_star_sources: isolated_star_presources
   gbdesAstrometricFit:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
   fgcmBuildFromIsolatedStars:

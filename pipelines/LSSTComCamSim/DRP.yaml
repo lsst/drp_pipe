@@ -96,6 +96,7 @@ subsets:
       - templateGen
       # analysis_tools tasks
       - analyzeAmpOffsetMetadata
+      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract

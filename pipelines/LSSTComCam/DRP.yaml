@@ -24,7 +24,6 @@ subsets:
       select partial visits that overlap that region.
   step2a:
     subset:
-      - analyzeMatchedPreVisitCore
       - consolidatePreSourceTable
       - consolidateVisitSummary
     description: |
@@ -37,6 +36,7 @@ subsets:
       TODO: Evaluate SkyCorr after intial DRP
   step2b:
     subset:
+      - analyzeMatchedPreVisitCore
       - isolatedStarAssociation
       - gbdesAstrometricFit
     description: |
@@ -94,6 +94,7 @@ subsets:
       - selectGoodSeeingVisits
       - templateGen
       # analysis_tools tasks
+      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract
