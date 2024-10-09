@@ -106,6 +106,8 @@ tasks:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
       connections.source_table_visit: preSourceTable_visit
+      connections.isolated_star_sources: new_isolated_star_presources
+      connections.isolated_star_cat: new_isolated_star_presource_associations
       python:
         config.band_order += ["N708", "N540"]
   writeRecalibratedSourceTable:

@@ -84,6 +84,9 @@ tasks:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
       connections.outputName: matchedVisitCore
+      connections.sourceCatalogs: sourceTable_visit
+      connections.associatedSources: new_isolated_star_sources
+      connections.associatedSourcesInputName: new_isolated_star_sources
       atools.stellarPhotometricRepeatability: StellarPhotometricRepeatability
       atools.stellarPhotometricResiduals: StellarPhotometricResidualsFocalPlane
       atools.stellarPhotometricResiduals.produce.plot.nBins: 80
@@ -213,6 +216,7 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - validateObjectTableCore
+      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeAmpOffsetMetadata
       # The following are from analysis_drp

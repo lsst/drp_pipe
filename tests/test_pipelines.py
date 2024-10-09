@@ -108,8 +108,6 @@ COMMON_OUTPUTS = {
     "icExp",
     "icExpBackground",
     "icSrc",
-    "isolated_star_cat",
-    "isolated_star_sources",
     "objectTable",
     "objectTable_tract",
     "postISRCCD",
@@ -134,6 +132,10 @@ HSC_OUTPUTS = {
     "preSourceTable_visit",
     "skyCorr",
     "srcMatchFull",
+    "new_isolated_star_presource_associations",
+    "new_isolated_star_presources",
+    "new_isolated_star_source_associations",
+    "new_isolated_star_sources",
 }
 
 # LATISS common outputs, in addition to COMMON_OUTPUTS
@@ -176,6 +178,10 @@ LATISS_OUTPUTS = {
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
     "transmission_atmosphere_fgcm",
+    "new_isolated_star_presource_associations",
+    "new_isolated_star_presources",
+    "new_isolated_star_source_associations",
+    "new_isolated_star_sources",
 }
 
 # LSSTCam-imSim common outputs, in addition to COMMON_OUTPUTS
@@ -207,6 +213,9 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "goodSeeingVisits",
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
+    # TODO DM-43077: isolated_star_presource_associations and friend
+    "new_isolated_star_source_associations",
+    "new_isolated_star_sources",
 }
 
 

@@ -46,10 +46,6 @@ tasks:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
       connections.outputCatalog: source
-  isolatedStarAssociation:
-    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
-    config:
-      band_order: ['i', 'r']
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
