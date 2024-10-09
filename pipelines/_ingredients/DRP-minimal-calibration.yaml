@@ -73,6 +73,8 @@ tasks:
   getTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
+      connections.wcs: pvi.wcs
+      connections.bbox: pvi.bbox
       connections.coaddName: goodSeeing
       connections.coaddExposures: goodSeeingCoadd
       connections.template: goodSeeingDiff_templateExp
@@ -80,6 +82,7 @@ tasks:
     class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
     config:
       allowKernelSourceDetection: true
+      connections.science: pvi
       connections.coaddName: goodSeeing
       connections.template: goodSeeingDiff_templateExp
       connections.difference: goodSeeingDiff_differenceTempExp
@@ -87,6 +90,7 @@ tasks:
   detectAndMeasureDiaSources:
     class: lsst.ip.diffim.detectAndMeasure.DetectAndMeasureTask
     config:
+      connections.science: pvi
       connections.coaddName: goodSeeing
       connections.matchedTemplate: goodSeeingDiff_matchedExp
       connections.difference: goodSeeingDiff_differenceTempExp
