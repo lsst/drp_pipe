@@ -15,6 +15,11 @@ tasks:
     config:
       doAmpOffset: true
       ampOffset.doApplyAmpOffset: true
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      band_order:
+        ["i", "r", "z", "y", "g", "N921", "N816", "N1010", "N387", "N515"]
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
