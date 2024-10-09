@@ -9,7 +9,6 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/calexpMetrics.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
 tasks:
   isr:
@@ -20,7 +19,8 @@ tasks:
   isolatedStarAssociation:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
-      band_order: ["i", "r", "z", "y", "g", "N921", "N816", "N1010", "N387", "N515"]
+      band_order:
+        ["i", "r", "z", "y", "g", "N921", "N816", "N1010", "N387", "N515"]
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:

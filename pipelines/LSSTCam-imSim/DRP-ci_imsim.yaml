@@ -19,13 +19,6 @@ tasks:
       multibandDeblend.useCiLimits: true
       # Do not run the deblender on isolated sources
       multibandDeblend.processSingles: false
-  calibrate:
-    class: lsst.pipe.tasks.calibrate.CalibrateTask
-    # Significantly limit the number of sources to deblend, which saves time
-    # in both deblending and measurement
-    config:
-      # Only run the deblender on a small subset of blended parents
-      deblend.useCiLimits: true
   catalogMatchVisit:
     class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
     config:
