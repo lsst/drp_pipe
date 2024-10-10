@@ -14,7 +14,13 @@ tasks:
     config:
       # Turn off slow steps in ISR
       doBrighterFatter: false
+      doBias: false
+      doLinearize: false
       doCrosstalk: false
+      doDefect: false
+      doDark: false
+      doFlat: false
+
   # TO DO: Replace with calibrateImage in a way that we can use the
   # preSources downstream.
   characterizeImage:
