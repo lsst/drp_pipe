@@ -5,6 +5,9 @@ description: |
   Never run this pipeline or any of its subsets directly; always use those in
   the 'pipelines' directory (or create a custom one) instead.
 
+imports:
+  - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
+
 tasks:
   isr: lsst.ip.isr.IsrTask
   characterizeImage: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask

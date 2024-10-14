@@ -176,6 +176,8 @@ subsets:
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
+      - fitDeepCoaddPsfMultiprofit
+      - fitDeblendedObjectsSersicMultiprofit
       # per-tract Tasks
       - consolidateObjectTable
       - analyzeMatchedVisitCore
@@ -188,6 +190,8 @@ subsets:
       - refCatObjectTract
       - validateObjectTableCore
       - objectEpochTable
+      - mergeMultiprofit
+      - analyzeMultiprofitCore
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.

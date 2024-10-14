@@ -112,6 +112,8 @@ subsets:
       - forcedPhotCoadd
       - writeObjectTable
       - transformObjectTable
+      - fitDeepCoaddPsfMultiprofit
+      - fitDeblendedObjectsSersicMultiprofit
       # per tract tasks
       - consolidateObjectTable
       - healSparsePropertyMaps
@@ -123,6 +125,8 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
+      - mergeMultiprofit
+      - analyzeMultiprofitCore
 
     description: |
       tract-level tasks.  Allowed data query constraints: tract
