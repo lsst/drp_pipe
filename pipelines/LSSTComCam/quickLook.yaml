@@ -10,11 +10,10 @@ imports:
       - fgcmOutputProducts
 tasks:
   isr:
-    class: lsst.ip.isr.IsrTask
+    class: lsst.ip.isr.IsrTaskLSST
     config:
       # Turn off slow steps in ISR
       doBrighterFatter: false
-      doCrosstalk: false
   # TO DO: Replace with calibrateImage in a way that we can use the
   # preSources downstream.
   characterizeImage:
