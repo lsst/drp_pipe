@@ -47,6 +47,10 @@ COMMON_INPUTS = {
     "isrOverscanCorrected",
     "raw",
     "skyMap",
+    # New ISR task inputs (LATISS, LSSTComCam, LSSTCam)
+    "ptc",
+    "linearizer",
+    "bfk",
 }
 
 # HSC common inputs, in addition to COMMON_INPUTS
