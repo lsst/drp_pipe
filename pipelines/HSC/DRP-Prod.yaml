@@ -46,6 +46,7 @@ subsets:
   step2b:
     subset:
       - isolatedStarAssociation
+      - analyzeMatchedPreVisitCore
       - gbdesAstrometricFit
     description: |
       Tract-level tasks
@@ -119,6 +120,7 @@ subsets:
       - catalogMatchTract
       - refCatObjectTract
       - validateObjectTableCore
+      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - photometricCatalogMatch
       - photometricRefCatObjectTract
