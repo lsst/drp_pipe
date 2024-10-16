@@ -18,11 +18,31 @@ tasks:
   transformSourceTable: lsst.pipe.tasks.postprocess.TransformSourceTableTask
   consolidateSourceTable: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
-  isolatedStarAssociation: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      connections.source_table_visit: preSourceTable_visit
   finalizeCharacterization: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
   updateVisitSummary: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+  # PreSource tasks are defined here so that the output of calibrateImage can
+  # be passed on to isolatedStarAssocation.
+  transformPreSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: initial_stars_detector
+      connections.outputCatalog: preSourceTable
+      python: |
+        import os.path
+        config.functorFile = os.path.join("$PIPE_TASKS_DIR", "schemas", "initial_stars_detector_standardized.yaml")
+  consolidatePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: preSourceTable
+      connections.outputCatalog: preSourceTable_visit
+  # Use the above preSource tables.
+  reprocessVisitImage: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
   makeWarp:
     class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
@@ -48,7 +68,10 @@ tasks:
   detection: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
   mergeDetections: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
   deblend: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
-  measure: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      connections.sourceTableHandles: preSourceTable_visit
   mergeMeasurements: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
   writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
   transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask

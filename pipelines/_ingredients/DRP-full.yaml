@@ -28,19 +28,6 @@ tasks:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
   fgcmOutputProducts:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
-  transformPreSourceTable:
-    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
-    config:
-      connections.inputCatalog: initial_stars_detector
-      connections.outputCatalog: preSourceTable
-      python: |
-        import os.path
-        config.functorFile = os.path.join("$PIPE_TASKS_DIR", "schemas", "initial_stars_detector_standardized.yaml")
-  consolidatePreSourceTable:
-    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
-    config:
-      connections.inputCatalogs: preSourceTable
-      connections.outputCatalog: preSourceTable_visit
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -63,6 +50,8 @@ tasks:
       connections.outputCatalog: preVisitTable
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: true
 subsets:
   # This pipeline file only defines subsets that have a consistent or
   # near-consistent definition as a set of tasks, for use by downstream
