@@ -34,11 +34,12 @@ tasks:
     config:
       connections.crosstalkSources: overscanRaw
       doCrosstalk: true
-  calibrate:
-    class: lsst.pipe.tasks.calibrate.CalibrateTask
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    # TODO: these should live in obs_decam, probably!
     config:
-      photoCal.match.referenceSelection.magLimit.fluxField: i_flux
-      photoCal.match.referenceSelection.magLimit.maximum: 22.0
+      photometry.match.referenceSelection.magLimit.fluxField: i_flux
+      photometry.match.referenceSelection.magLimit.maximum: 22.0
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -108,14 +109,14 @@ tasks:
       connections.source_table_visit: preSourceTable_visit
       python:
         config.band_order += ["N708", "N540"]
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      connections.outputCatalog: source
   jointcal:
     class: lsst.jointcal.JointcalTask
     config:
       connections.inputSourceTableVisit: preSourceTable_visit
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: false
 subsets:
   step0:
     subset:
@@ -129,10 +130,8 @@ subsets:
   step1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
+      - calibrateImage
       - transformPreSourceTable
-      - writePreSourceTable
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 
@@ -171,15 +170,15 @@ subsets:
   step2d:
     subset:
       - finalizeCharacterization
-      - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
+      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
 
-      writeRecalibratedSourceTable, transformSourceTable run per-detector
+      reprocessVisitImage, transformSourceTable run per-detector
       consolidateSourceTable produces one data product per visit.
       finalizeCharacterization will eventually model full focal plane PSFs.
   step2e:
