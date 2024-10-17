@@ -47,6 +47,10 @@ COMMON_INPUTS = {
     "isrOverscanCorrected",
     "raw",
     "skyMap",
+    # The initial PhotoCalib is an overall input on the expectation that none
+    # will actually be found; it's not disabled by configuration as a guard
+    # against accidental configurations.
+    "initial_photoCalib_detector",
 }
 
 # HSC common inputs, in addition to COMMON_INPUTS
