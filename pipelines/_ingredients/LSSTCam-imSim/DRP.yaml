@@ -147,6 +147,7 @@ subsets:
       - updateVisitSummary
       - catalogMatchVisit
       - astrometricRefCatSourceVisit
+      - reprocessVisitImage
     description: |
       Tasks that can be run together, but only after the 'step1'.
 
