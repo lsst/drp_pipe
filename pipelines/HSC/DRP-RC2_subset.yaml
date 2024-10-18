@@ -332,6 +332,7 @@ subsets:
       - TE4
       - catalogMatchVisit
       - astrometricRefCatSourceVisit
+      - reprocessVisitImage
     description: |
       Per-visit tasks. These should never be run with tract constraints
   nightlyStep3:

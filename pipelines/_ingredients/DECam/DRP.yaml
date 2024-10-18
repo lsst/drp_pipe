@@ -46,6 +46,10 @@ tasks:
       background_provider: "input_summary"
       connections.photoCalibName: "jointcal"
       connections.skyWcsName: "jointcal"
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: false
   makeWarp:
     class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:
@@ -174,6 +178,7 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
+      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
