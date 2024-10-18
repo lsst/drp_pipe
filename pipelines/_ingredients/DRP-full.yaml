@@ -6,8 +6,6 @@ description:
   the 'pipelines' directory (or create a custom one) instead.
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-minimal-calibration.yaml
-    exclude:
-      - writeSourceTable  # cannot reconfigure because different dimensions.
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
@@ -30,24 +28,19 @@ tasks:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
   fgcmOutputProducts:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
-  writePreSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
-    config:
-      connections.outputCatalog: preSource
   transformPreSourceTable:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
-      connections.inputCatalog: preSource
+      connections.inputCatalog: initial_stars_detector
       connections.outputCatalog: preSourceTable
+      python: |
+        import os.path
+        config.functorFile = os.path.join("$PIPE_TASKS_DIR", "schemas", "initial_stars_detector_standardized.yaml")
   consolidatePreSourceTable:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
     config:
       connections.inputCatalogs: preSourceTable
       connections.outputCatalog: preSourceTable_visit
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      connections.outputCatalog: source
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -68,6 +61,8 @@ tasks:
     config:
       connections.visitSummaries: visitSummary
       connections.outputCatalog: preVisitTable
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
 subsets:
   # This pipeline file only defines subsets that have a consistent or
   # near-consistent definition as a set of tasks, for use by downstream
@@ -83,7 +78,6 @@ subsets:
       Subset that includes all FGCM tasks.
   preSourceTable:
     subset:
-      - writePreSourceTable
       - transformPreSourceTable
       - consolidatePreSourceTable
     description: >
@@ -91,7 +85,7 @@ subsets:
       processing steps only.
   sourceTable:
     subset:
-      - writeRecalibratedSourceTable
+      - reprocessVisitImage
     description: >
       Set of tasks to generate parquet Source Tables, using final
       calibrations.

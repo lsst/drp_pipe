@@ -40,9 +40,7 @@ subsets:
   step1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
+      - calibrateImage
       - transformPreSourceTable
     description: |
       Detector level tasks. TO DO: requests include synthetic source injection,
@@ -79,15 +77,15 @@ subsets:
   step2d:
     subset:
       - finalizeCharacterization
-      - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
+      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
 
-      writeRecalibratedSourceTable, transformSourceTable run per-detector
+      transformSourceTable runs per-detector
       consolidateSourceTable produces one data product per visit.
       finalizeCharacterization will eventually model full focal plane PSFs.
   step2e:
