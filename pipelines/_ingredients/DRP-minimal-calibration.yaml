@@ -16,6 +16,11 @@ tasks:
   isolatedStarAssociation: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
   finalizeCharacterization: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
   updateVisitSummary: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      connections.background_1: calexpBackground
+      remove_initial_photo_calib: false
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
   makeWarp:
