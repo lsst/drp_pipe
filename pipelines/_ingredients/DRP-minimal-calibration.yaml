@@ -71,7 +71,11 @@ tasks:
   writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
   transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
   consolidateObjectTable: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
-  forcedPhotCcd: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+  forcedPhotCcd:
+    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+    config:
+      connections.exposure: pvi
+      useVisitSummary: false
   forcedPhotCoadd: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
@@ -91,6 +95,8 @@ tasks:
   getTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
+      connections.bbox: pvi.bbox
+      connections.wcs: pvi.wcs
       connections.coaddName: goodSeeing
       connections.coaddExposures: goodSeeingCoadd
       connections.template: goodSeeingDiff_templateExp
@@ -98,6 +104,7 @@ tasks:
     class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
     config:
       allowKernelSourceDetection: true
+      connections.science: pvi
       connections.coaddName: goodSeeing
       connections.template: goodSeeingDiff_templateExp
       connections.difference: goodSeeingDiff_differenceTempExp
@@ -105,6 +112,7 @@ tasks:
   detectAndMeasureDiaSources:
     class: lsst.ip.diffim.detectAndMeasure.DetectAndMeasureTask
     config:
+      connections.science: pvi
       connections.coaddName: goodSeeing
       connections.matchedTemplate: goodSeeingDiff_matchedExp
       connections.difference: goodSeeingDiff_differenceTempExp
@@ -152,6 +160,7 @@ tasks:
       connections.measCat: forced_diff
       connections.outputSchema: forced_diff_schema
       connections.exposure: goodSeeingDiff_differenceExp
+      useVisitSummary: false  # difference image already has final calibrations
   writeForcedSourceTable: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
   transformForcedSourceTable: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
   consolidateForcedSourceTable:
@@ -161,12 +170,16 @@ tasks:
       connections.outputCatalog: forcedSourceTable_tract
   forcedPhotCcdOnDiaObjects:
     class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      connections.exposure: pvi
+      useVisitSummary: false
   forcedPhotDiffOnDiaObjects:
     class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
     config:
       connections.measCat: forced_diff_diaObject
       connections.outputSchema: forced_diff_diaObject_schema
       connections.exposure: goodSeeingDiff_differenceExp
+      useVisitSummary: false  # difference image already has final calibrations
   writeForcedSourceOnDiaObjectTable:
     class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
     config:
