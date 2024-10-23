@@ -500,7 +500,6 @@ class PipelineTestCase(unittest.TestCase):
                 "#nightlyStep2d",
                 "#nightlyStep3",
                 "#nightlyStep4",
-                "#nightlyStep5",
             ],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},

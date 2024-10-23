@@ -1,5 +1,5 @@
 # This BPS configuration snippet adds updated requestMemory values for all DRP
-# and faro tasks known to frequently exceed the default in regular HSC RC2
+# tasks known to frequently exceed the default in regular HSC RC2
 # processing.
 #
 # Use it by adding:
@@ -72,37 +72,3 @@ pipetask:
     requestMemory: 8192
   diff_matched_analysis:
     requestMemory: 32000
-
-  # faro tasks
-  matchCatalogsPatch:
-    requestMemory: 8192
-  matchCatalogsPatchMultiBand:
-    requestMemory: 120000
-  matchCatalogsTract:
-    requestMemory: 120000
-  TE1:
-    requestMemory: 46000
-  TE2:
-    requestMemory: 46000
-  TE3:
-    requestMemory: 16000
-  TE4:
-    requestMemory: 16000
-  nsrcMeasVisit:
-    requestMemory: 16000
-  wPerp:
-    requestMemory: 120000
-  matchCatalogsTractMag17to21p5:
-    requestMemory: 200000
-  matchCatalogsTractStarsSNR5to80:
-    requestMemory: 200000
-  matchCatalogsTractGxsSNR5to80:
-    requestMemory: 200000
-  modelPhotRepGal1:
-    requestMemory: 5000
-  modelPhotRepGal2:
-    requestMemory: 5000
-  modelPhotRepGal3:
-    requestMemory: 5000
-  modelPhotRepGal4:
-    requestMemory: 5000

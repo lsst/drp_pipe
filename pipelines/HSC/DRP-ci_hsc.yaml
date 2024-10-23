@@ -3,13 +3,10 @@ instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/HSC/DRP.yaml
     exclude:
-      # Don't run fgcm, gbdesAstrometricFit, or (some of) faro, as
+      # Don't run fgcm or gbdesAstrometricFit, as
       # there isn't enough data.
       - fgcm
       - gbdesAstrometricFit
-      - faro_visit
-      - faro_matched
-      - faro_tract
   # Extended-level plots should still be tested in CI
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
 

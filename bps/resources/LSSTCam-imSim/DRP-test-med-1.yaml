@@ -1,5 +1,5 @@
 # This BPS configuration snippet adds updated requestMemory values for all DRP
-# and faro tasks known to frequently exceed the default in regular ImSim-DC2
+# tasks known to frequently exceed the default in regular ImSim-DC2
 # test-med-1 processing.
 #
 # Use it by adding:
@@ -37,38 +37,7 @@ pipetask:
     requestMemory: 8000
   transformDiaSourceCat:
     requestMemory: 8000
-  # faro tasks
-  matchCatalogsPatch:
-    requestMemory: 4096
-  matchCatalogsPatchMultiBand:
-    requestMemory: 8196
-  modelPhotRepGal4:
-    requestMemory: 4096
-  matchCatalogsTract:
-    requestMemory: 32000
-  wPerp:
-    requestMemory: 32000
-  TE1:
-    requestMemory: 50000
-  TE2:
-    requestMemory: 50000
-  TE3:
-    requestMemory: 16000
-  TE4:
-    requestMemory: 16000
-  nsrcMeasVisit:
-    requestMemory: 16000
-  matchCatalogsTractMag17to21p5:
-    requestMemory: 66000
-  matchCatalogsTractStarsSNR5to80:
-    requestMemory: 32000
-  matchCatalogsTractGxsSNR5to80:
-    requestMemory: 66000
-  consolidateForcedSourceTable:
-    requestMemory: 64000
-  consolidateForcedSourceOnDiaObjectTable:
-    requestMemory: 160000
-  # step8 tasks
+  # analysis_tools tasks
   analyzeObjectTableCore:
     requestMemory: 16000
   analyzeMatchedVisitCore:
