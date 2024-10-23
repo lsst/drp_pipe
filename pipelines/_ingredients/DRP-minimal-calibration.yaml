@@ -31,6 +31,11 @@ tasks:
       connections.isolated_star_cats: isolated_star_source_associations
       connections.isolated_star_sources: isolated_star_sources
   updateVisitSummary: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      connections.background_1: calexpBackground
+      remove_initial_photo_calib: false
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
   makeWarp:
