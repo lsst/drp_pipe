@@ -82,6 +82,15 @@ LSSTCAM_IMSIM_INPUTS = {
     "truth_summary",
 }
 
+# LSSTCam common inputs, in addition to COMMON_INPUTS
+LSSTCAM_INPUTS = {
+    "bfk",
+    "linearizer",
+    "defects",
+    "the_monster_20240904",
+    "gaia_dr3_20230707",
+}
+
 # a selection of mostly common outputs
 COMMON_OUTPUTS = {
     "calexp",
@@ -218,6 +227,11 @@ LSSTCAM_IMSIM_OUTPUTS = {
     # TODO DM-43077: remove these two
     "isolated_star_source_associations",
     "isolated_star_sources",
+}
+
+# Outputs common to all "quickLook" pipelines, which only iclude
+QUICKLOOK_OUTPUTS = {
+    "calexp", "visitSummary"
 }
 
 # All refcats used by any pipelines, for inclusion as the initial_dataset_types
@@ -514,6 +528,61 @@ class PipelineTestCase(unittest.TestCase):
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LATISS_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS | LATISS_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_drp(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "DRP.yaml"),
+            [
+                "#step1",
+                # TODO[DM-47010]: all other steps are broken
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            # TODO[DM-47010]: once we run the rest of the steps this should
+            # include at least COMMON_OUTPUTS.
+            expected_outputs={"preSourceTable", "calexp"},
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_nightly_validation(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "nightly-validation.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+                "#step2b",
+                "#step2d",
+                "#step2e",
+                # TODO[DM-47010]: all other steps are broken
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            # TODO[DM-47010]: once we run the rest of the steps this should
+            # include at least COMMON_OUTPUTS.
+            expected_outputs={"sourceTable_visit", "finalVisitSummary"},
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_quickLook(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "quickLook.yaml"),
+            [
+                "#step1",
+                # TODO: step1 only include ISR right now, so the other steps
+                # are not runnable.  Unclear whether this can/should be fixed
+                # before on-sky LSSTCam data is imminent.  When it is fixed the
+                # expected_outputs should include at least the common
+                # QUICKLOOK_OUTPUTS.
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_outputs={"postISRCCD"},
         )
         tester.run(butler, self)
 
