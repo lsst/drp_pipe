@@ -69,6 +69,7 @@ HSC_INPUTS = {
 # LATISS common inputs, in addition to COMMON_INPUTS
 LATISS_INPUTS = {
     "atlas_refcat2_20220201",
+    "the_monster_20240904",
     "defects",
     "gaia_dr3_20230707",
     "sky",
@@ -528,6 +529,7 @@ class PipelineTestCase(unittest.TestCase):
                 ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
                 ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
                 ("atlas_refcat2_20220201", {"htm7"}, "SimpleCatalog", False),
+                ("the_monster_20240904", {"htm7"}, "SimpleCatalog", False),
             ],
             expected_inputs=COMMON_INPUTS | LATISS_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS | LATISS_OUTPUTS,
