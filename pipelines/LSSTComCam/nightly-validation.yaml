@@ -19,15 +19,6 @@ tasks:
       connections.data: preSourceTable_visit
       connections.inputName: preSourceTable_visit
       connections.outputName: preSourceTableCore
-  calibrate:
-    class: lsst.pipe.tasks.calibrate.CalibrateTask
-    config:
-      python: |
-        from lsst.analysis.tools.tasks import CalexpSummaryAnalysisTask
-        config.createSummaryMetrics.retarget(CalexpSummaryAnalysisTask)
-        from lsst.analysis.tools.atools import CalexpSummaryMetrics
-        config.createSummaryMetrics.atools.calexpSummaryMetrics = CalexpSummaryMetrics
-      doCreateSummaryMetrics: true
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -44,6 +35,8 @@ subsets:
       - calibrate
       - writePreSourceTable
       - transformPreSourceTable
+      - calexpSummary
+      - analyzeCalibrateMetadata
     description: |
       Detector level tasks. TO DO: requests include synthetic source injection,
       subtractImages, detectAndMeasureDiaSources.

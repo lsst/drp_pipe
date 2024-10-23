@@ -3,11 +3,7 @@ description: |
     the summit which feeds RubinTV for realtime observer feedback
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
-    exclude:
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
+  - location: $DRP_PIPE_DIR/pipelines/LSSTComCam/quickLook.yaml
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
@@ -22,60 +18,9 @@ tasks:
       doDefect: false
       doDark: false
       doFlat: false
-
-  # TO DO: Replace with calibrateImage in a way that we can use the
-  # preSources downstream.
-  characterizeImage:
-    class: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
-    config:
-      doApCorr: false
-      doDeblend: false
-  calibrate:
-    class: lsst.pipe.tasks.calibrate.CalibrateTask
-    config:
-      python: |
-          config.measurement.plugins.names = ['base_CircularApertureFlux',
-                                              'base_PsfFlux',
-                                              'base_LocalBackground',
-                                              'base_SdssCentroid',
-                                              'base_SdssShape',
-                                              'base_Variance',
-                                              'base_Jacobian',
-                                              'base_PixelFlags',
-                                              'base_GaussianFlux',
-                                              'base_SkyCoord',
-                                              'base_FPPosition',
-                                              'base_ClassificationSizeExtendedness',
-                                              'base_CompensatedTophatFlux',
-                                              ]
-          config.measurement.slots.shape = "base_SdssShape"
-          config.measurement.slots.psfShape = "base_SdssShape_psf"
-          config.measurement.plugins['base_PixelFlags'].masksFpAnywhere.remove('STREAK')
-          config.measurement.plugins['base_PixelFlags'].masksFpCenter.remove('STREAK')
-          config.doApCorr = False
-          config.doDeblend = False
-          config.astrometry.sourceSelector["science"].doRequirePrimary = False
-          config.astrometry.sourceSelector["science"].doIsolated = False
-      # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
 subsets:
   step1:
     subset:
       - isr
-      # - characterizeImage
-      # - calibrate
-      # TO DO: configure and add writePreSourceTable, transformPreSourceTable
     description: |
-      Per-detector tasks that can be run together
-  step2a:
-    subset:
-      - consolidateVisitSummary
-      # TO DO: configure and add consolidatePreSourceTable
-  nightlyRollup:
-    # can be run at end of night or on a timer
-    # Need to either clobber OR use a chained collection of timestamped runs
-    subset:
-      - makePreliminaryCcdVisitTable
-      - makePreliminaryVisitTable
-      - preliminaryVisitCoverageAnalysis
-    description: |
-      Global-level tasks
+      All that runs for cleanroom
