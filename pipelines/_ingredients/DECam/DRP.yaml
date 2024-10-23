@@ -174,7 +174,6 @@ subsets:
   step2d:
     subset:
       - finalizeCharacterization
-      - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary

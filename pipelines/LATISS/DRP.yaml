@@ -153,7 +153,6 @@ subsets:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
-      - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary

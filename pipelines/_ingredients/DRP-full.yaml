@@ -64,10 +64,6 @@ tasks:
     config:
       connections.inputCatalogs: preSourceTable
       connections.outputCatalog: preSourceTable_visit
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      connections.outputCatalog: source
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -78,6 +74,10 @@ tasks:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
       do_use_sky_corr: true
+  transformSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: sources_detector
   measure:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
@@ -113,9 +113,3 @@ subsets:
     description: >
       Set of tasks to generate parquet PreSource Tables, from single-visit
       processing steps only.
-  sourceTable:
-    subset:
-      - writeRecalibratedSourceTable
-    description: >
-      Set of tasks to generate parquet Source Tables, using final
-      calibrations.

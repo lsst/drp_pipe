@@ -137,7 +137,7 @@ COMMON_OUTPUTS = {
     "objectTable",
     "objectTable_tract",
     "postISRCCD",
-    "source",
+    "sources_detector",
     "sourceTable",
     "sourceTable_visit",
     "src",
