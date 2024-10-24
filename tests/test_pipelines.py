@@ -650,13 +650,12 @@ class PipelineTestCase(unittest.TestCase):
                 "#step2b",
                 "#step2d",
                 "#step2e",
-                # TODO[DM-47010]: all other steps are broken
+                "#step3",
+                "#step7",
             ],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS,
-            # TODO[DM-47010]: once we run the rest of the steps this should
-            # include at least COMMON_OUTPUTS.
-            expected_outputs={"preSourceTable", "visitSummary", "calexp"},
+            expected_outputs=COMMON_OUTPUTS,
         )
         tester.run(butler, self)
 
