@@ -220,6 +220,18 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "isolated_star_sources",
 }
 
+# All refcats used by any pipelines, for inclusion as the initial_dataset_types
+# argument to PipelineStepTester; the intent is just to allow the 'skypix'
+# dimension placeholder used in these connections to be resolved.
+REFCATS = [
+    ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+    ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+    ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
+    ("the_monster_20240904", {"htm7"}, "SimpleCatalog", False),
+    ("atlas_refcat2_20220201", {"htm7"}, "SimpleCatalog", False),
+    ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
+]
+
 
 class PipelineTestCase(unittest.TestCase):
     def setUp(self):
@@ -246,11 +258,7 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "DECam", "isrForCrosstalkSources.yaml"),
             ["#step0"],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs={
                 "camera",
                 "raw",
@@ -271,11 +279,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step2e",
                 "#step3",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS
             | {
                 "defects",
@@ -305,11 +309,7 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "HSC", "DRP-ci_hsc.yaml"),
             [""],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS
             | HSC_INPUTS
             | {"jointcalPhotoCalibCatalog", "jointcalSkyWcsCatalog"},
@@ -361,11 +361,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step4",
                 "#step7",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
             | HSC_OUTPUTS
@@ -410,11 +406,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step6",
                 "#step7",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
             | HSC_OUTPUTS
@@ -478,11 +470,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#nightlyStep4",
                 "#nightlyStep5",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
             | HSC_OUTPUTS
@@ -523,12 +511,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step5",
                 "#step6",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-                ("atlas_refcat2_20220201", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LATISS_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS | LATISS_OUTPUTS,
         )
@@ -539,9 +522,7 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-ci_imsim.yaml"),
             [f"#step{N}" for N in range(1, 8)],
-            [
-                ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
             expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
         )
@@ -552,9 +533,7 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-test-med-1.yaml"),
             [f"#step{N}" for N in range(1, 8)],
-            [
-                ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
             expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
         )
