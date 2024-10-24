@@ -20,7 +20,6 @@ subsets:
       select partial visits that overlap that region.
   step2a:
     subset:
-      - analyzeMatchedPreVisitCore
       - consolidatePreSourceTable
       - consolidateVisitSummary
     description: |
@@ -34,6 +33,7 @@ subsets:
   step2b:
     subset:
       - isolatedStarAssociation
+      - analyzeMatchedPreVisitCore
       - gbdesAstrometricFit
     description: |
       Tract-level tasks

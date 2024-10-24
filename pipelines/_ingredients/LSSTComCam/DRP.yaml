@@ -11,6 +11,10 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
 tasks:
   isr: lsst.ip.isr.IsrTaskLSST
+  gbdesAstrometricFit:
+    class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
+    config:
+      connections.referenceCatalog: the_monster_20240904
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
@@ -76,8 +80,8 @@ tasks:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:
       # Only run metrics for analyzing the preSources:
-      connections.data: preSourceTable_visit_gaia_dr3_20230707_match_astrom
-      connections.outputName: preSourceTable_visit_gaia_dr3_20230707_match_astrom
+      connections.data: preSourceTable_visit_the_monster_20240904_match_astrom
+      connections.outputName: preSourceTable_visit_the_monster_20240904_match_astrom
       atools.astromDiffMetrics: TargetRefCatDeltaMetrics
       atools.astromDiffMetrics.applyContext: VisitContext
       python: |
@@ -114,15 +118,15 @@ tasks:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
     config:
       extraColumns: ["x", "y", "ap09Flux", "ap09FluxErr"]
-      connections.refCatalog: gaia_dr3_20230707
+      connections.refCatalog: the_monster_20240904
       connections.catalog: preSourceTable_visit
       connections.targetCatalog: preSourceTable_visit
-      connections.matchedCatalog: preSourceTable_visit_gaia_dr3_20230707_photoMatch
+      connections.matchedCatalog: preSourceTable_visit_the_monster_20240904_photoMatch
   photometricRefCatPreSourceVisit:
     class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
     config:
       # Only run metrics for analyzing the preSources:
-      connections.data: preSourceTable_visit_gaia_dr3_20230707_photoMatch
+      connections.data: preSourceTable_visit_the_monster_20240904_photoMatch
       python: from lsst.analysis.tools.atools import *
   preliminaryVisitCoverageAnalysis:
     class: lsst.analysis.tools.tasks.CcdVisitTableAnalysisTask

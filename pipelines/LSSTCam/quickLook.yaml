@@ -61,8 +61,8 @@ subsets:
   step1:
     subset:
       - isr
-      # - characterizeImage
-      # - calibrate
+      - characterizeImage
+      - calibrate
       # TO DO: configure and add writePreSourceTable, transformPreSourceTable
     description: |
       Per-detector tasks that can be run together
