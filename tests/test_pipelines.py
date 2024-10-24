@@ -629,13 +629,20 @@ class PipelineTestCase(unittest.TestCase):
             os.path.join(PIPELINES_DIR, "LSSTComCamSim", "DRP.yaml"),
             [
                 "#step1",
-                # TODO[DM-47010]: all other steps are broken
+                "#step2a",
+                "#step2b",
+                "#step2c",
+                "#step2d",
+                "#step2e",
+                "#step3",
+                "#step4",
+                "#step5",
+                "#step6",
+                "#step7",
             ],
             initial_dataset_types=REFCATS,
-            expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS,
-            # TODO[DM-47010]: once we run the rest of the steps this should
-            # include at least COMMON_OUTPUTS.
-            expected_outputs={"preSourceTable", "calexp"},
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS | {"fgcmLookUpTable"},
+            expected_outputs=COMMON_OUTPUTS,
         )
         tester.run(butler, self)
 
