@@ -6,7 +6,13 @@ imports:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
-
+tasks:
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      wcs_provider: "tract"
+      photo_calib_provider: "input_summary"
+      background_provider: "input_summary"
 subsets:
   step1:
     subset:
@@ -24,7 +30,6 @@ subsets:
       select partial visits that overlap that region.
   step2a:
     subset:
-      - analyzeMatchedPreVisitCore
       - consolidatePreSourceTable
       - consolidateVisitSummary
     description: |
@@ -37,6 +42,7 @@ subsets:
       TODO: Evaluate SkyCorr after intial DRP
   step2b:
     subset:
+      - analyzeMatchedPreVisitCore
       - isolatedStarAssociation
       - gbdesAstrometricFit
     description: |
@@ -94,6 +100,7 @@ subsets:
       - selectGoodSeeingVisits
       - templateGen
       # analysis_tools tasks
+      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract
