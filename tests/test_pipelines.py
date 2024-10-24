@@ -476,7 +476,6 @@ class PipelineTestCase(unittest.TestCase):
                 "#nightlyStep2d",
                 "#nightlyStep3",
                 "#nightlyStep4",
-                "#nightlyStep5",
             ],
             [
                 ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
