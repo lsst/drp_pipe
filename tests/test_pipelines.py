@@ -91,6 +91,13 @@ LSSTCAM_INPUTS = {
     "gaia_dr3_20230707",
 }
 
+# LSSTComCamSim common inputs, in addition to COMMON_INPUTS
+LSSTCOMCAMSIM_INPUTS = {
+    "uw_stars_20240524",
+    "ptc",
+    "bfk",
+}
+
 # a selection of mostly common outputs
 COMMON_OUTPUTS = {
     "calexp",
@@ -244,6 +251,7 @@ REFCATS = [
     ("the_monster_20240904", {"htm7"}, "SimpleCatalog", False),
     ("atlas_refcat2_20220201", {"htm7"}, "SimpleCatalog", False),
     ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
+    ("uw_stars_20240524", {"htm7"}, "SimpleCatalog", False),
 ]
 
 
@@ -605,6 +613,58 @@ class PipelineTestCase(unittest.TestCase):
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
             expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcamsim_drp(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCamSim", "DRP.yaml"),
+            [
+                "#step1",
+                # TODO[DM-47010]: all other steps are broken
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS,
+            # TODO[DM-47010]: once we run the rest of the steps this should
+            # include at least COMMON_OUTPUTS.
+            expected_outputs={"preSourceTable", "calexp"},
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcamsim_nightly_validation(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCamSim", "nightly-validation.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+                "#step2b",
+                "#step2d",
+                "#step2e",
+                # TODO[DM-47010]: all other steps are broken
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS,
+            # TODO[DM-47010]: once we run the rest of the steps this should
+            # include at least COMMON_OUTPUTS.
+            expected_outputs={"preSourceTable", "visitSummary", "calexp"},
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcamsim_quickLook(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCamSim", "quickLook.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS,
+            expected_outputs=QUICKLOOK_OUTPUTS,
         )
         tester.run(butler, self)
 
