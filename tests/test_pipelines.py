@@ -592,15 +592,12 @@ class PipelineTestCase(unittest.TestCase):
             os.path.join(PIPELINES_DIR, "LSSTCam", "quickLook.yaml"),
             [
                 "#step1",
-                # TODO: step1 only include ISR right now, so the other steps
-                # are not runnable.  Unclear whether this can/should be fixed
-                # before on-sky LSSTCam data is imminent.  When it is fixed the
-                # expected_outputs should include at least the common
-                # QUICKLOOK_OUTPUTS.
+                "#step2a",
+                "#nightlyRollup",
             ],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
-            expected_outputs={"postISRCCD"},
+            expected_outputs=QUICKLOOK_OUTPUTS,
         )
         tester.run(butler, self)
 
@@ -718,17 +715,12 @@ class PipelineTestCase(unittest.TestCase):
             os.path.join(PIPELINES_DIR, "LSSTComCam", "quickLook.yaml"),
             [
                 "#step1",
-                # TODO: step1 only include ISR right now, so the other steps
-                # are not runnable.  Unclear whether this can/should be fixed
-                # before on-sky LSSTCam data is imminent.  When it is fixed the
-                # expected_outputs should include at least the common
-                # QUICKLOOK_OUTPUTS.
+                "#step2a",
+                "#nightlyRollup",
             ],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCOMCAM_INPUTS,
-            # TODO[DM-47010]: once we run the rest of the steps this should
-            # include at least COMMON_OUTPUTS.
-            expected_outputs={"postISRCCD"},
+            expected_outputs=QUICKLOOK_OUTPUTS,
         )
         tester.run(butler, self)
 
