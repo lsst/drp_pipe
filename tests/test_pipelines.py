@@ -99,7 +99,6 @@ LSSTCOMCAM_INPUTS = {
     "linearizer",
     "defects",
     "the_monster_20240904",
-    "gaia_dr3_20230707",
 }
 
 # LSSTComCamSim common inputs, in addition to COMMON_INPUTS
