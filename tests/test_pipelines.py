@@ -80,6 +80,7 @@ LSSTCAM_IMSIM_INPUTS = {
     "bfk",
     "cal_ref_cat_2_2",
     "truth_summary",
+    "cosmodc2_1_1_4_redmapper_v0_8_1_redgals"
 }
 
 # LSSTCam common inputs, in addition to COMMON_INPUTS
@@ -610,7 +611,7 @@ class PipelineTestCase(unittest.TestCase):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-ci_imsim.yaml"),
-            [f"#step{N}" for N in range(1, 8)],
+            [""],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
             expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
