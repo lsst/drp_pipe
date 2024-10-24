@@ -68,9 +68,9 @@ HSC_INPUTS = {
 
 # LATISS common inputs, in addition to COMMON_INPUTS
 LATISS_INPUTS = {
-    "atlas_refcat2_20220201",
+    "the_monster_20240904",
     "defects",
-    "gaia_dr3_20230707",
+    "the_monster_20240904",
     "sky",
     "transmission_atmosphere_fgcm",
 }
@@ -89,7 +89,7 @@ LSSTCAM_INPUTS = {
     "linearizer",
     "defects",
     "the_monster_20240904",
-    "gaia_dr3_20230707",
+    "the_monster_20240904",
 }
 
 # LSSTComCam common inputs, in addition to COMMON_INPUTS
@@ -99,7 +99,7 @@ LSSTCOMCAM_INPUTS = {
     "linearizer",
     "defects",
     "the_monster_20240904",
-    "gaia_dr3_20230707",
+    "the_monster_20240904",
 }
 
 # LSSTComCamSim common inputs, in addition to COMMON_INPUTS

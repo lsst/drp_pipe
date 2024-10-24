@@ -67,17 +67,6 @@ tasks:
         from lsst.analysis.tools.atools import *
         from lsst.analysis.tools.contexts import *
 
-  photometricCatalogMatch:
-    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchTask
-    config:
-      connections.refCatalog: atlas_refcat2_20220201
-
-  photometricRefCatObjectTract:
-    class: lsst.analysis.tools.tasks.refCatObjectPhotometricAnalysis.RefCatObjectPhotometricAnalysisTask
-    config:
-      connections.refCatalog: atlas_refcat2_20220201
-      connections.outputName: objectTable_tract_atlas_refcat2_20220201_match_photom
-
   # Defining analyzematchedVisitCore here to change the nBins config and omit
   # plots currently not relevant for LATISS imaging.
   analyzeMatchedVisitCore:
