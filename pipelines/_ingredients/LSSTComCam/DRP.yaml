@@ -15,6 +15,11 @@ tasks:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
     config:
       connections.referenceCatalog: the_monster_20240904
+  calibrate:
+    class: lsst.pipe.tasks.calibrate.CalibrateTask
+    config:
+      requirePhotoCal: false
+      requireAstrometry: false
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
