@@ -2,6 +2,7 @@ description: DRP specialized for LATISS surveys
 instrument: lsst.obs.lsst.Latiss
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+    exclude: skyCorr
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
@@ -38,6 +39,11 @@ tasks:
       wcs_provider: "input_summary"
       photo_calib_provider: "global"
       background_provider: "input_summary"
+
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: false
 
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
@@ -151,6 +157,7 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
+      - reprocessVisitImage
       - makeCcdVisitTable
       - makeVisitTable
     description: |

@@ -74,6 +74,10 @@ tasks:
       wcs_provider: "tract"
       photo_calib_provider: "global"
       background_provider: "replacement"
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: true
   measure:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
