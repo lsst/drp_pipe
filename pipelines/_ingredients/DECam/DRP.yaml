@@ -7,7 +7,7 @@ description: |
   pre-generated for DECam data processing runs.
 instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
     exclude:
       - skyCorr
       - fgcm

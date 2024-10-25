@@ -1,7 +1,7 @@
 description: DRP Pipeline for LSSTCam
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
