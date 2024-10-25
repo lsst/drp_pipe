@@ -1,5 +1,5 @@
 # This BPS configuration snippet adds the requestMemory values for all DRP
-# and faro tasks as run in the DP0.2 production.
+# tasks as run in the DP0.2 production.
 #
 # Use it by adding:
 #
@@ -30,20 +30,3 @@ pipetask:
     requestMemory: 120000
   consolidateForcedSourceOnDiaObjectTable:
     requestMemory: 18000
-  # faro tasks
-  matchCatalogsPatch:
-    requestMemory: 4096
-  modelPhotRepGal4:
-    requestMemory: 4096
-  imageDifference:
-    requestMemory: 4096
-  matchCatalogsPatchMultiBand:
-    requestMemory: 120000
-  matchCatalogsTract:
-    requestMemory: 120000
-  wPerp:
-    requestMemory: 120000
-  TE1:
-    requestMemory: 46000
-  TE2:
-    requestMemory: 46000

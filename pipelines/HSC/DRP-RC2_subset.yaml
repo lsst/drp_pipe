@@ -2,143 +2,11 @@ description: The DRP pipeline specialized for rc2_subset processing in jenkins a
 imports:
   - $DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml
 tasks:
-  PA1:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: PA1
-      measure.brightSnrMin: 100.0
-      measure.nMinPhotRepeat: 20
-      python: |
-        from lsst.faro.measurement import PA1Task
-        config.measure.retarget(PA1Task)
-  PF1_design:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: PF1_design_gri
-      measure.threshPA2: 15.0
-      measure.brightSnrMin: 100.0
-      measure.nMinPhotRepeat: 20
-      python: |
-        from lsst.faro.measurement import PF1Task
-        config.measure.retarget(PF1Task)
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
       atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
-  modelPhotRepGal1:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: modelPhotRepGal1
-      measure.index: 1
-      measure.selectExtended: true
-      measure.selectSnrMin: 5
-      measure.selectSnrMax: 10
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractGxsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  modelPhotRepGal2:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: modelPhotRepGal2
-      measure.index: 2
-      measure.selectExtended: true
-      measure.selectSnrMin: 10
-      measure.selectSnrMax: 20
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractGxsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  modelPhotRepGal3:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: modelPhotRepGal3
-      measure.index: 3
-      measure.selectExtended: true
-      measure.selectSnrMin: 20
-      measure.selectSnrMax: 40
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractGxsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  modelPhotRepGal4:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: modelPhotRepGal4
-      measure.index: 4
-      measure.selectExtended: true
-      measure.selectSnrMin: 40
-      measure.selectSnrMax: 80
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractGxsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  modelPhotRepStar1:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: modelPhotRepStar1
-      measure.index: 1
-      measure.selectExtended: false
-      measure.selectSnrMin: 5
-      measure.selectSnrMax: 10
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  modelPhotRepStar2:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: modelPhotRepStar2
-      measure.index: 2
-      measure.selectExtended: false
-      measure.selectSnrMin: 10
-      measure.selectSnrMax: 20
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  modelPhotRepStar3:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: modelPhotRepStar3
-      measure.index: 3
-      measure.selectExtended: false
-      measure.selectSnrMin: 20
-      measure.selectSnrMax: 40
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  modelPhotRepStar4:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: modelPhotRepStar4
-      measure.index: 4
-      measure.selectExtended: false
-      measure.selectSnrMin: 40
-      measure.selectSnrMax: 80
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
+
   objectTableCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
@@ -147,66 +15,6 @@ tasks:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
       atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
-  psfPhotRepStar1:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: psfPhotRepStar1
-      measure.index: 1
-      measure.selectExtended: false
-      measure.selectSnrMin: 5
-      measure.selectSnrMax: 10
-      measure.magName: "slot_PsfFlux_mag"
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  psfPhotRepStar2:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: psfPhotRepStar2
-      measure.index: 2
-      measure.selectExtended: false
-      measure.selectSnrMin: 10
-      measure.selectSnrMax: 20
-      measure.magName: "slot_PsfFlux_mag"
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  psfPhotRepStar3:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: psfPhotRepStar3
-      measure.index: 3
-      measure.selectExtended: false
-      measure.selectSnrMin: 20
-      measure.selectSnrMax: 40
-      measure.magName: "slot_PsfFlux_mag"
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
-  psfPhotRepStar4:
-    class: lsst.faro.measurement.TractMatchedMeasurementTask
-    config:
-      connections.package: validate_drp
-      connections.metric: psfPhotRepStar4
-      measure.index: 4
-      measure.selectExtended: false
-      measure.selectSnrMin: 40
-      measure.selectSnrMax: 80
-      measure.magName: "slot_PsfFlux_mag"
-      measure.nMinPhotRepeat: 20
-      python: |
-        config.connections.matchedCatalog = 'matchedCatalogTractStarsSNR5to80'
-        from lsst.faro.measurement import ModelPhotRepTask
-        config.measure.retarget(ModelPhotRepTask)
 subsets:
   fgcm:
     subset:
@@ -327,9 +135,6 @@ subsets:
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
-      - nsrcMeasVisit
-      - TE3
-      - TE4
       - catalogMatchVisit
       - astrometricRefCatSourceVisit
     description: |
@@ -349,36 +154,6 @@ subsets:
       - writeObjectTable
       - consolidateObjectTable
       - healSparsePropertyMaps
-      - matchCatalogsTract
-      - matchCatalogsPatch
-      - matchCatalogsPatchMultiBand
-      - matchCatalogsTractMag17to21p5
-      - matchCatalogsTractStarsSNR5to80
-      - matchCatalogsTractGxsSNR5to80
-      - PA1
-      - PF1_design
-      - AM1
-      - AM2
-      - AM3
-      - AD1_design
-      - AD2_design
-      - AD3_design
-      - AF1_design
-      - AF2_design
-      - AF3_design
-      - AB1
-      - modelPhotRepGal1
-      - modelPhotRepGal2
-      - modelPhotRepGal3
-      - modelPhotRepGal4
-      - modelPhotRepStar1
-      - modelPhotRepStar2
-      - modelPhotRepStar3
-      - modelPhotRepStar4
-      - psfPhotRepStar1
-      - psfPhotRepStar2
-      - psfPhotRepStar3
-      - psfPhotRepStar4
       - objectEpochTable
       - isolatedStarSourceAssociation
     description: |
@@ -405,20 +180,6 @@ subsets:
       'tract' or 'patch' as part of the data ID expression if all
       reference catalogs or diffIm templates that cover these
       detector-level quanta are desired.
-  nightlyStep5:
-    subset:
-      - TE1
-      - TE2
-      - wPerp
-      - skyObjectMean
-      - skyObjectStd
-    description: |
-      Tasks that can be run together, but only after the 'step1', 'step2',
-      'step3', and 'step4' subsets.
-      This step includes patch-level aggregation Tasks. These should be
-      run with explicit 'tract' and 'band' constraints in the data query, or
-      quanta will be created for jobs with only partial visit coverage and
-      for bands with no columns in the object table.
   nightlyStep8:
     subset:
       - analyzeAmpOffsetMetadata
