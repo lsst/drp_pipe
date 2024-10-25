@@ -24,6 +24,8 @@ tasks:
   calibrate:
     class: lsst.pipe.tasks.calibrate.CalibrateTask
     config:
+      requirePhotoCal: false
+      requireAstrometry: false
       python: |
           config.measurement.plugins.names = ['base_CircularApertureFlux',
                                               'base_PsfFlux',
