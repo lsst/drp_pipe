@@ -9,7 +9,6 @@ instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
     exclude:
-      - skyCorr
       - fgcm
       - gbdesAstrometricFit
 tasks:
@@ -43,13 +42,8 @@ tasks:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
       photo_calib_provider: "tract"
-      background_provider: "input_summary"
       connections.photoCalibName: "jointcal"
       connections.skyWcsName: "jointcal"
-  reprocessVisitImage:
-    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
-    config:
-      do_use_sky_corr: false
   makeWarp:
     class: lsst.pipe.tasks.makeWarp.MakeWarpTask
     config:

@@ -19,3 +19,19 @@ tasks:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
       doMultipleCycles: true
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      background_provider: "replacement"
+  makeWarp:
+    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
+    config:
+      # TODO[DM-47010]: remove this override from obs_subaru; better to have
+      # pipeline-structure config overrides here.
+      doApplySkyCorr: true
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: true

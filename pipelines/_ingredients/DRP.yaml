@@ -1,6 +1,8 @@
 description:
-  Base Pipeline for Data Release Production process, with full multi-epoch
-  calibration and characterizations.
+  Base Pipeline for Data Release Production processing.
+
+  This includes global photometric calibration via FGCM and joint astrometric
+  calibration via GBDES, but not full-visit sky backgrounds (skyCorr).
 
   Never run this pipeline or any of its subsets directly; always use those in
   the 'pipelines' directory (or create a custom one) instead.
@@ -16,8 +18,6 @@ tasks:
       # to compute them for analyzeAmpOffsetMetadata to report on as metrics.
       doAmpOffset: true
       ampOffset.doApplyAmpOffset: false
-  skyCorr:
-    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
   isolatedStarAssociation:
     # for global calibration and PSF estimates on preSources
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
@@ -69,11 +69,7 @@ tasks:
     config:
       wcs_provider: "tract"
       photo_calib_provider: "global"
-      background_provider: "replacement"
-  reprocessVisitImage:
-    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
-    config:
-      do_use_sky_corr: true
+      background_provider: "input_summary"
   transformSourceTable:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
