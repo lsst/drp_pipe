@@ -28,6 +28,11 @@ tasks:
         from lsst.analysis.tools.atools import CalexpSummaryMetrics
         config.createSummaryMetrics.atools.calexpSummaryMetrics = CalexpSummaryMetrics
       doCreateSummaryMetrics: true
+  analyzeMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      # no GBDES fit to produce the astrometric correction.
+      applyAstrometricCorrections: false
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -119,6 +124,7 @@ subsets:
       - consolidateObjectTable
       - healSparsePropertyMaps
       # analysis_tools tasks
+      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended

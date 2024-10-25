@@ -80,6 +80,32 @@ LSSTCAM_IMSIM_INPUTS = {
     "bfk",
     "cal_ref_cat_2_2",
     "truth_summary",
+    "cosmodc2_1_1_4_redmapper_v0_8_1_redgals"
+}
+
+# LSSTCam common inputs, in addition to COMMON_INPUTS
+LSSTCAM_INPUTS = {
+    "bfk",
+    "linearizer",
+    "defects",
+    "the_monster_20240904",
+    "gaia_dr3_20230707",
+}
+
+# LSSTComCam common inputs, in addition to COMMON_INPUTS
+LSSTCOMCAM_INPUTS = {
+    "bfk",
+    "ptc",
+    "linearizer",
+    "defects",
+    "the_monster_20240904",
+}
+
+# LSSTComCamSim common inputs, in addition to COMMON_INPUTS
+LSSTCOMCAMSIM_INPUTS = {
+    "uw_stars_20240524",
+    "ptc",
+    "bfk",
 }
 
 # a selection of mostly common outputs
@@ -220,6 +246,24 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "isolated_star_sources",
 }
 
+# Outputs common to all "quickLook" pipelines, which only iclude
+QUICKLOOK_OUTPUTS = {
+    "calexp", "visitSummary"
+}
+
+# All refcats used by any pipelines, for inclusion as the initial_dataset_types
+# argument to PipelineStepTester; the intent is just to allow the 'skypix'
+# dimension placeholder used in these connections to be resolved.
+REFCATS = [
+    ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
+    ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
+    ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
+    ("the_monster_20240904", {"htm7"}, "SimpleCatalog", False),
+    ("atlas_refcat2_20220201", {"htm7"}, "SimpleCatalog", False),
+    ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
+    ("uw_stars_20240524", {"htm7"}, "SimpleCatalog", False),
+]
+
 
 class PipelineTestCase(unittest.TestCase):
     def setUp(self):
@@ -246,11 +290,7 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "DECam", "isrForCrosstalkSources.yaml"),
             ["#step0"],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs={
                 "camera",
                 "raw",
@@ -271,11 +311,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step2e",
                 "#step3",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS
             | {
                 "defects",
@@ -305,11 +341,7 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "HSC", "DRP-ci_hsc.yaml"),
             [""],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS
             | HSC_INPUTS
             | {"jointcalPhotoCalibCatalog", "jointcalSkyWcsCatalog"},
@@ -361,11 +393,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step4",
                 "#step7",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
             | HSC_OUTPUTS
@@ -410,11 +438,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step6",
                 "#step7",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
             | HSC_OUTPUTS
@@ -478,11 +502,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#nightlyStep4",
                 "#nightlyStep5",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | HSC_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS
             | HSC_OUTPUTS
@@ -523,14 +543,66 @@ class PipelineTestCase(unittest.TestCase):
                 "#step5",
                 "#step6",
             ],
-            [
-                ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
-                ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-                ("atlas_refcat2_20220201", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LATISS_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS | LATISS_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_drp(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "DRP.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#step2b",
+                "#step2d",
+                "#step2e",
+                "#step3",
+                "#step4",
+                "#step5",
+                "#step6",
+                "#step7",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_outputs=COMMON_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_nightly_validation(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "nightly-validation.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+                "#step2b",
+                "#step2d",
+                "#step2e",
+                "#step3",
+                "#step7",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_outputs=COMMON_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_quickLook(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "quickLook.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_outputs=QUICKLOOK_OUTPUTS,
         )
         tester.run(butler, self)
 
@@ -538,10 +610,8 @@ class PipelineTestCase(unittest.TestCase):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-ci_imsim.yaml"),
-            [f"#step{N}" for N in range(1, 8)],
-            [
-                ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
-            ],
+            [""],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
             expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
         )
@@ -552,11 +622,124 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam-imSim", "DRP-test-med-1.yaml"),
             [f"#step{N}" for N in range(1, 8)],
-            [
-                ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
-            ],
+            initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_IMSIM_INPUTS,
             expected_outputs=COMMON_OUTPUTS | LSSTCAM_IMSIM_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcamsim_drp(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCamSim", "DRP.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#step2b",
+                "#step2c",
+                "#step2d",
+                "#step2e",
+                "#step3",
+                "#step4",
+                "#step5",
+                "#step6",
+                "#step7",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS | {"fgcmLookUpTable"},
+            expected_outputs=COMMON_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcamsim_nightly_validation(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCamSim", "nightly-validation.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+                "#step2b",
+                "#step2d",
+                "#step2e",
+                "#step3",
+                "#step7",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS,
+            expected_outputs=COMMON_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcamsim_quickLook(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCamSim", "quickLook.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAMSIM_INPUTS,
+            expected_outputs=QUICKLOOK_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcam_drp(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCam", "DRP.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#step2b",
+                "#step2d",
+                "#step2e",
+                "#step3",
+                "#step4",
+                "#step5",
+                "#step6",
+                "#step7",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAM_INPUTS,
+            expected_outputs=COMMON_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcam_nightly_validation(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCam", "nightly-validation.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+                "#step2b",
+                "#step2d",
+                "#step2e",
+                "#step3",
+                "#step7",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAM_INPUTS,
+            expected_outputs=COMMON_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcomcam_quickLook(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTComCam", "quickLook.yaml"),
+            [
+                "#step1",
+                "#step2a",
+                "#nightlyRollup",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAM_INPUTS,
+            expected_outputs=QUICKLOOK_OUTPUTS,
         )
         tester.run(butler, self)
 
