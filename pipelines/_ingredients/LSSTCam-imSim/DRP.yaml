@@ -5,12 +5,10 @@ imports:
     exclude:
      - fgcm
      - gbdesAstrometricFit
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
+  # TODO[DM-47010]: inclusion is historical, possibly unintentional (at least
+  # for test-med-1; we want it in ci_imsim for test coverage).  If we don't
+  # want it in test-med-1, we should move its inclusion to ci_imsim.
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 parameters:
   filterMap: {
     "u": "lsst_u_smeared",

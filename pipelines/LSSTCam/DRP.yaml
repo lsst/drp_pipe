@@ -1,11 +1,7 @@
 description: DRP Pipeline for LSSTCam
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
-    exclude:
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
+  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
 tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask

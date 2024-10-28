@@ -7,7 +7,37 @@ description:
   Never run this pipeline or any of its subsets directly; always use those in
   the 'pipelines' directory (or create a custom one) instead.
 imports:
-  location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
+  # Analysis and MultiProFit pipelines are included by default in the base
+  # pipeline. All tasks in each imported file are assigned to a label of the
+  # same name, which can be excluded in downstream pipelines when desired.
+  -
+    location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
+    label: multiprofit_fit_standard
+  -
+    location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+    label: analysis_drp_plots
+  -
+    location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
+    label: coaddColumnValidate
+  -
+    location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+    label: coaddQualityCore
+  -
+    location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
+    label: exposureQualityCore
+  -
+    location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
+    label: matchedVisitQualityCore
+  -
+    location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+    label: visitQualityCore
+  -
+    location: $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+    label: wholeSkyCore
+
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
+    label: diaTractQualityCore
+
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
@@ -242,11 +272,10 @@ tasks:
       connections.inputCatalogs: forcedSourceOnDiaObjectTable
       connections.outputCatalog: forcedSourceOnDiaObjectTable_tract
 subsets:
-  # This pipeline file only defines subsets that have a consistent or
-  # near-consistent definition as a set of tasks, for use by downstream
-  # pipelines as way to include or exclude those tasks.  It does not (and
-  # should not) contain "step" subsets aimed at splitting up a processing
-  # campaign.
+  # These non-step subsets that have a consistent or near-consistent definition
+  # as a set of tasks, for use by downstream pipelines as way to include or
+  # exclude those tasks.  Note that each imported analysis pipeline also has
+  # as labeled subset that can be used the same way.
   fgcm:
     subset:
       - fgcmBuildFromIsolatedStars
@@ -254,15 +283,30 @@ subsets:
       - fgcmOutputProducts
     description: |
       Subset that includes all FGCM tasks.
-  preSourceTable:
+  analysis_tools:
     subset:
-      - writePreSourceTable
+      - coaddColumnValidate
+      - coaddQualityCore
+      - exposureQualityCore
+      - matchedVisitQualityCore
+      - visitQualityCore
+  # These steps are broadly consistent across all DRP pipelines, aside from
+  # analysis tasks that are sometimes excluded.  But excluding tasks on import
+  # also removes them from steps, allowing the step definitions here to be
+  # reused in nearly all cases.
+  step1:
+    subset:
+      - isr
+      - characterizeImage
+      - calibrate
       - transformPreSourceTable
-      - consolidatePreSourceTable
-    description: >
-      Set of tasks to generate parquet PreSource Tables, from single-visit
-      processing steps only.
-
+      - writePreSourceTable
+      - analyzeAmpOffsetMetadata
+      - analyzeCalibrateMetadata
+      - wholeSkyCore
+      - diaTractQualityCore
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
 contracts:
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
   - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures

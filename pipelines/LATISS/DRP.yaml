@@ -2,11 +2,14 @@ description: DRP specialized for LATISS surveys
 instrument: lsst.obs.lsst.Latiss
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
     exclude:
-      - analyzeObjectTableCore
+      - analysis_drp_plots
+      - multiprofit_fit_standard
+      # TODO[DM-47010]: exclusion is historical, possibly unintentional
+      - matchedVisitQualityCore
+      - visitQualityCore
+      - wholeSkyCore
+      - diaTractQualityCore.yaml
 
 tasks:
   fgcmFitCycle:

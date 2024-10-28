@@ -3,9 +3,12 @@ instrument: lsst.obs.lsst.LsstComCam
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCam/DRP.yaml
     exclude:
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
+      - fgcm
+      # TODO[DM-47010]: exclusion is historical, possibly unintentional
+      - analysis_drp_plots
+      - exposureQualityCore
+    # TODO[DM-47010]: inclusion is historical, possibly unintentional
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
 tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask

@@ -9,4 +9,14 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DECam/DRP.yaml
     exclude:
       - isrForCrosstalkSources
-  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
+      # DECam/Merian has historically not run the analysis_tools pipelines;
+      # they are excluded here only because we've switched from opt-in to
+      # opt-out, and they could presumably be included whenever anyone is
+      # prepared to check to see if they work.
+      # Note that is has historically included the analysis_drp plots
+      - coaddColumnValidate
+      - coaddQualityCore
+      - exposureQualityCore
+      - matchedVisitQualityCore
+      - visitQualityCore
+      - wholeSkyCore

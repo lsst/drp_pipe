@@ -11,6 +11,7 @@ imports:
     exclude:
       - fgcm
       - gbdesAstrometricFit
+      - multiprofit_fit_standard
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask
@@ -104,6 +105,8 @@ tasks:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
       python:
+        # TODO[DM-47010]: need an override for isolatedStarSourceAssociation,
+        # too, but these and other band configs should go in obs_decam.
         config.band_order += ["N708", "N540"]
   writeRecalibratedSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask

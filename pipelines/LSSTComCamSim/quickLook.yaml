@@ -3,7 +3,13 @@ description: |
     the summit which feeds RubinTV for realtime observer feedback
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+    exclude:
+      - multiprofit_fit_standard
+      # TODO[DM-47010]: exclusion is historical, possibly unintentional
+      - analysis_drp_plots
+  # TODO[DM-47010]: inclusion is historical, possibly unintentional
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
 tasks:
   isr:
     class: lsst.ip.isr.IsrTaskLSST

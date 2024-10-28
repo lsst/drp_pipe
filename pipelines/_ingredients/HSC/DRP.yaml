@@ -1,14 +1,11 @@
 description: The DRP pipeline specialized for Subaru's HyperSuprime-Cam
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
-  - $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
+    exclude:
+      # TODO[DM-47010]: move down out of ingredients.
+      # TODO[DM-47010]: exclusion is historical, possibly unintentional
+      - diaTractQualityCore
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
