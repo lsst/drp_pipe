@@ -7,9 +7,7 @@ description:
   Never run this pipeline or any of its subsets directly; always use those in
   the 'pipelines' directory (or create a custom one) instead.
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-minimal-calibration.yaml
-    exclude:
-      - writeSourceTable  # cannot reconfigure because different dimensions.
+  location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
@@ -18,38 +16,8 @@ tasks:
       # to compute them for analyzeAmpOffsetMetadata to report on as metrics.
       doAmpOffset: true
       ampOffset.doApplyAmpOffset: false
-  isolatedStarAssociation:
-    # for global calibration and PSF estimates on preSources
-    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
-    config:
-      # TODO DM-43077: delete these three overrides.
-      # preSource is task default. DM-43077 will remove the overrides to use
-      # sourceTable catalogs in DRP-minimal-calibration, and eliminate the
-      # need for these:
-      connections.source_table_visit: preSourceTable_visit
-      connections.isolated_star_sources: isolated_star_presources
-      connections.isolated_star_cat: isolated_star_presource_associations
-  isolatedStarSourceAssociation:
-    # for final repeatability metrics on final source table
-    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
-    config:
-      connections.source_table_visit: sourceTable_visit
-      connections.isolated_star_sources: isolated_star_sources
-      connections.isolated_star_cat: isolated_star_source_associations
-  finalizeCharacterization:
-    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
-    config:
-      # TODO DM-43077: delete these two overrides. preSource is task default
-      connections.isolated_star_cats: isolated_star_presource_associations
-      connections.isolated_star_sources: isolated_star_presources
-  gbdesAstrometricFit:
-    class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
-  fgcmBuildFromIsolatedStars:
-    class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
-  fgcmFitCycle:
-    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
-  fgcmOutputProducts:
-    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+  characterizeImage: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
+  calibrate: lsst.pipe.tasks.calibrate.CalibrateTask
   writePreSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
     config:
@@ -64,20 +32,7 @@ tasks:
     config:
       connections.inputCatalogs: preSourceTable
       connections.outputCatalog: preSourceTable_visit
-  updateVisitSummary:
-    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
-    config:
-      wcs_provider: "tract"
-      photo_calib_provider: "global"
-      background_provider: "input_summary"
-  transformSourceTable:
-    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
-    config:
-      connections.inputCatalog: sources_detector
-  measure:
-    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
-    config:
-      connections.sourceTableHandles: preSourceTable_visit
+  consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
   makePreliminaryCcdVisitTable:
     class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
     config:
@@ -88,6 +43,204 @@ tasks:
     config:
       connections.visitSummaries: visitSummary
       connections.outputCatalog: preVisitTable
+  isolatedStarAssociation: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+  gbdesAstrometricFit: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
+  fgcmBuildFromIsolatedStars: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
+  fgcmFitCycle: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+  fgcmOutputProducts: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+  finalizeCharacterization: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      wcs_provider: "tract"
+      photo_calib_provider: "global"
+      background_provider: "input_summary"
+  makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+  makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      connections.background_1: calexpBackground
+      remove_initial_photo_calib: false
+  transformSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: sources_detector
+  consolidateSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: sourceTable
+      connections.outputCatalog: sourceTable_visit
+  isolatedStarSourceAssociation:
+    # for final repeatability metrics on final source table
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      connections.source_table_visit: sourceTable_visit
+      connections.isolated_star_sources: isolated_star_sources
+      connections.isolated_star_cat: isolated_star_source_associations
+  makeWarp:
+    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
+    config:
+      makePsfMatched: true
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      connections.goodVisits: deepCoaddVisits
+      # Maximum sensible default psf fwhm in arcseconds to use for a coadd
+      maxPsfFwhm: 2.0
+      # By default for deep coadds, use all input visits better than maxPsfFwhm
+      nVisitsMax: -1
+  assembleCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      doInputMap: true
+      doSelectVisits: true
+      doWriteArtifactMasks: true
+      assembleStaticSkyModel.doSelectVisits: true
+      connections.selectedVisits: deepCoaddVisits
+  healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
+  consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
+  detection: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+  mergeDetections: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
+  deblend: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      connections.sourceTableHandles: preSourceTable_visit
+  mergeMeasurements: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
+  writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
+  transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
+  consolidateObjectTable: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
+  forcedPhotCcd:
+    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+    config:
+      connections.exposure: pvi
+      useVisitSummary: false
+  forcedPhotCoadd: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+  selectGoodSeeingVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    config:
+      connections.goodVisits: goodSeeingVisits
+  templateGen:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      doSelectVisits: true
+      assembleStaticSkyModel.doSelectVisits: true
+      doNImage: true
+      connections.selectedVisits: goodSeeingVisits
+      connections.outputCoaddName: goodSeeing
+      # Setting template 'outputCoaddName' to goodSeeing is not sufficient to
+      # convince contract checker that coaddExposure == goodSeeingCoadd
+      connections.coaddExposure: goodSeeingCoadd
+  getTemplate:
+    class: lsst.ip.diffim.getTemplate.GetTemplateTask
+    config:
+      connections.bbox: pvi.bbox
+      connections.wcs: pvi.wcs
+      connections.coaddName: goodSeeing
+      connections.coaddExposures: goodSeeingCoadd
+      connections.template: goodSeeingDiff_templateExp
+  subtractImages:
+    class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
+    config:
+      allowKernelSourceDetection: true
+      connections.science: pvi
+      connections.coaddName: goodSeeing
+      connections.template: goodSeeingDiff_templateExp
+      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.matchedTemplate: goodSeeingDiff_matchedExp
+  detectAndMeasureDiaSources:
+    class: lsst.ip.diffim.detectAndMeasure.DetectAndMeasureTask
+    config:
+      connections.science: pvi
+      connections.coaddName: goodSeeing
+      connections.matchedTemplate: goodSeeingDiff_matchedExp
+      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.subtractedMeasuredExposure: goodSeeingDiff_differenceExp
+  transformDiaSourceCat:
+    class: lsst.ap.association.TransformDiaSourceCatalogTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.diaSourceSchema: goodSeeingDiff_diaSrc_schema
+      connections.diaSourceCat: goodSeeingDiff_diaSrc
+      connections.diffIm: goodSeeingDiff_differenceExp
+      connections.diaSourceTable: goodSeeingDiff_diaSrcTable
+  consolidateDiaSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: goodSeeingDiff_diaSrcTable
+      connections.outputCatalog: diaSourceTable
+  drpAssociation:
+    class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.diaSourceTables: goodSeeingDiff_diaSrcTable
+      connections.assocDiaSourceTable: goodSeeingDiff_assocDiaSrcTable
+      connections.diaObjectTable: goodSeeingDiff_diaObjTable
+  drpDiaCalculation:
+    class: lsst.pipe.tasks.drpDiaCalculationPipe.DrpDiaCalculationPipeTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.assocDiaSourceTable: goodSeeingDiff_assocDiaSrcTable
+      connections.diaObjectTable: goodSeeingDiff_diaObjTable
+      connections.fullDiaObjectTable: goodSeeingDiff_fullDiaObjTable
+  consolidateAssocDiaSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: goodSeeingDiff_assocDiaSrcTable
+      connections.outputCatalog: diaSourceTable_tract
+  consolidateFullDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: goodSeeingDiff_fullDiaObjTable
+      connections.outputCatalog: diaObjectTable_tract
+  forcedPhotDiffim:
+    class: lsst.meas.base.ForcedPhotCcdTask
+    config:
+      connections.measCat: forced_diff
+      connections.outputSchema: forced_diff_schema
+      connections.exposure: goodSeeingDiff_differenceExp
+      useVisitSummary: false  # difference image already has final calibrations
+  writeForcedSourceTable: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
+  transformForcedSourceTable: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+  consolidateForcedSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: forcedSourceTable
+      connections.outputCatalog: forcedSourceTable_tract
+  forcedPhotCcdOnDiaObjects:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      connections.exposure: pvi
+      useVisitSummary: false
+  forcedPhotDiffOnDiaObjects:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      connections.measCat: forced_diff_diaObject
+      connections.outputSchema: forced_diff_diaObject_schema
+      connections.exposure: goodSeeingDiff_differenceExp
+      useVisitSummary: false  # difference image already has final calibrations
+  writeForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
+    config:
+      key: diaObjectId
+      connections.inputCatalogDiff: forced_diff_diaObject
+      connections.inputCatalog: forced_src_diaObject
+      connections.outputCatalog: mergedForcedSourceOnDiaObject
+  transformForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+    config:
+      referenceColumns: []
+      keyRef: diaObjectId
+      key: forcedSourceOnDiaObjectId
+      connections.inputCatalogs: mergedForcedSourceOnDiaObject
+      connections.outputCatalog: forcedSourceOnDiaObjectTable
+      connections.referenceCatalog: goodSeeingDiff_fullDiaObjTable
+  consolidateForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: forcedSourceOnDiaObjectTable
+      connections.outputCatalog: forcedSourceOnDiaObjectTable_tract
 subsets:
   # This pipeline file only defines subsets that have a consistent or
   # near-consistent definition as a set of tasks, for use by downstream
@@ -109,3 +262,22 @@ subsets:
     description: >
       Set of tasks to generate parquet PreSource Tables, from single-visit
       processing steps only.
+
+contracts:
+  - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
+  - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures
+  - getTemplate.connections.template == subtractImages.connections.template
+  - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSources.connections.matchedTemplate
+  - subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
+  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == transformDiaSourceCat.connections.diffIm
+  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotDiffim.connections.exposure
+  - transformDiaSourceCat.connections.diaSourceTable == consolidateDiaSourceTable.connections.inputCatalogs
+  - transformDiaSourceCat.connections.diaSourceTable == drpAssociation.connections.diaSourceTables
+  - drpAssociation.connections.assocDiaSourceTable == drpDiaCalculation.connections.assocDiaSourceTable
+  - drpAssociation.connections.diaObjectTable == drpDiaCalculation.connections.diaObjectTable
+  - forcedPhotDiffim.connections.refCat == forcedPhotCcd.connections.refCat
+  - consolidateHealSparsePropertyMaps.property_maps == healSparsePropertyMaps.property_maps
+  - "'calib_psf_candidate' not in measure.propagateFlags.source_flags if makeWarp.useVisitSummaryPsf else True"
+  - "'calib_psf_used' not in measure.propagateFlags.source_flags if makeWarp.useVisitSummaryPsf else True"
+  - "'calib_psf_reserved' not in measure.propagateFlags.source_flags if makeWarp.useVisitSummaryPsf else True"
+  - "makeWarp.warpAndPsfMatch.warp.cacheSize == assembleCoadd.coaddPsf.cacheSize"
