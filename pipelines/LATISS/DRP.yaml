@@ -7,18 +7,6 @@ imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
     exclude:
       - analyzeObjectTableCore
-  # The following are from analysis_drp
-  # TODO: remove once they have all been ported to analysis_tools (DM-39081)
-  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml
-    include:
-      - plot_ri_gr_psf
-      - plot_ri_gr_cmodel
-      - plot_wFit_PSF
-      - plot_xFit_PSF
-  - location: $ANALYSIS_DRP_DIR/pipelines/coaddQAPlots_tier2_3.yaml
-    include:
-      - plot_ri_gr_contour_psf
-      - plot_ri_gr_contour_cmodel
 
 tasks:
   fgcmFitCycle:
@@ -214,12 +202,6 @@ subsets:
       - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeAmpOffsetMetadata
-      # The following are from analysis_drp
-      # TODO: remove once they have all been ported to analysis_tools (DM-39081)
-      - plot_ri_gr_psf
-      - plot_ri_gr_cmodel
-      - plot_wFit_PSF
-      - plot_xFit_PSF
     description: |
       Healsparse maps and "core" (most important), coadd-level plots/metrics
       from analysis_tools (plus a few from analysis_drp to be deprecated once
