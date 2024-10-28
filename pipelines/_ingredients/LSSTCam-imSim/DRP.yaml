@@ -1,14 +1,15 @@
 description: DRP specialized for ImSim-DC2 data
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-minimal-calibration.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
+    exclude:
+     - fgcm
+     - gbdesAstrometricFit
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
-    exclude:
-      - analyzeMatchedPreVisitCore  # imSim does not have preSourceTable_visit catalogs
+  - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
 parameters:
   filterMap: {
@@ -42,6 +43,11 @@ tasks:
       python: |
         config.astromRefObjLoader.filterMap = parameters.filterMap
         config.photoRefObjLoader.filterMap = parameters.filterMap
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      photo_calib_provider: "input_summary"
+      wcs_provider: "input_summary"
   measure:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
@@ -123,8 +129,8 @@ subsets:
       - isr
       - characterizeImage
       - calibrate
-      - writeSourceTable
-      - transformSourceTable
+      - writePreSourceTable
+      - transformPreSourceTable
       - analyzeAmpOffsetMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
@@ -138,7 +144,7 @@ subsets:
       failures before continuing on to step2.
   step2:
     subset:
-      - consolidateSourceTable
+      - consolidatePreSourceTable
       - consolidateVisitSummary
       - isolatedStarAssociation
       - finalizeCharacterization
@@ -148,6 +154,9 @@ subsets:
       - catalogMatchVisit
       - astrometricRefCatSourceVisit
       - reprocessVisitImage
+      - transformSourceTable
+      - consolidateSourceTable
+      - isolatedStarSourceAssociation
     description: |
       Tasks that can be run together, but only after the 'step1'.
 
@@ -159,8 +168,8 @@ subsets:
       isolatedStarAssociation from producing results for all skymaps in the
       data repository.
 
-      Visit-level tasks include consolidateSourceTable, consolidateVisitSummary,
-      finalizeCharacterization, updateVisitSummary.
+      Visit-level tasks include consolidatePreSourceTable,
+      consolidateVisitSummary, finalizeCharacterization, updateVisitSummary.
       Tract-level tasks include: isolatedStarAssociation
       Full collection-level tasks include: makeCcdVisitTable, makeVisitTable
   step3:
