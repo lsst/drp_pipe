@@ -5,7 +5,6 @@ imports:
   - $ANALYSIS_DRP_DIR/pipelines/LSSTCam-imSim/analysis_drp_plots.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
-  - $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
   - $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_match_dc2.yaml
   - $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_analyze_diff_matched_dc2.yaml
 
