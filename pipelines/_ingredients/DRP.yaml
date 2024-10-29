@@ -283,6 +283,19 @@ subsets:
       - fgcmOutputProducts
     description: |
       Subset that includes all FGCM tasks.
+  dia:
+    - selectGoodSeeingVisits
+    - templateGen
+    - forcedPhotDiffim
+    - getTemplate
+    - subtractImages
+    - detectAndMeasureDiaSources
+    - transformDiaSourceCat
+    # Writing, transforming, and consolidating the forced source table is
+    # considered part of DIA because they are not configurable to run without
+    # forced photometry on difference images.  This may not ever be worth
+    # fixing, since our production pipelines will do DIA.
+    - writeForcedSourceTable
   # These steps are broadly consistent across all DRP pipelines, aside from
   # analysis tasks that are sometimes excluded.  But excluding tasks on import
   # also removes them from steps, allowing the step definitions here to be
@@ -334,6 +347,17 @@ subsets:
       - analyzeMultiprofitCore
     description: |
       Tract- and patch-level coaddition and coadd processing tasks.
+  step4:
+    subset:
+      - forcedPhotCcd
+      - forcedPhotDiffim
+      - getTemplate
+      - subtractImages
+      - detectAndMeasureDiaSources
+      - transformDiaSourceCat
+      - writeForcedSourceTable
+    description: |
+      Detector-level image-subtraction and forced photometry tasks.
 contracts:
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
   - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures

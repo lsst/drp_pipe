@@ -2,6 +2,8 @@ description: The DRP pipeline specialized for large data release productions
 imports:
   - location: "$DRP_PIPE_DIR/pipelines/_ingredients/HSC/DRP.yaml"
     labeledSubsetModifyMode: EDIT
+    exclude:
+    - dia
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
@@ -81,16 +83,8 @@ subsets:
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
   # step3 is imported.
-  step4:
-    subset:
-      - forcedPhotCcd
-    description: |
-      Detector-level tasks
-      Allowed data query constraints: visit, detector
-
-      These detector-level tasks should not be run with 'tract' or 'patch' as
-      part of the data ID expression if all reference catalogs for seeding
-      forced photometry cover these detector-level quanta are desired.
+  # step4 is imported, but most tasks are dropped because the 'dia' subset is
+  # excluded.
   step7:
     subset:
       - consolidateHealSparsePropertyMaps

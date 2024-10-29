@@ -142,24 +142,7 @@ subsets:
       occurrence if it was included in any later step).
 
   # step3 is imported.
-
-  step4:
-    subset:
-      - forcedPhotCcd
-      - forcedPhotDiffim
-      - getTemplate
-      - subtractImages
-      - detectAndMeasureDiaSources
-      - transformDiaSourceCat
-      - writeForcedSourceTable
-    description: |
-      Tasks that be run together, but only after the 'step1', 'step2', and
-      'step3' subsets.
-
-      A skymap data query constraint is always required for this step.
-      These detector-level tasks should not be run with 'tract' or 'patch' as
-      part of the data ID expression if all reference catalogs are desired,
-      and to ensure that consolidateSourceTable contains complete visits.
+  # step4 is imported.
 
   step5:
     subset:

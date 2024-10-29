@@ -13,6 +13,7 @@ imports:
       - fgcm
       - gbdesAstrometricFit
       - multiprofit_fit_standard
+      - step4
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask
@@ -184,4 +185,5 @@ subsets:
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
   # step3 is imported.
-  # Steps 4-7 are not currently implemented in this DECam DRP processing pipeline.
+  # Steps 4-7 are not currently implemented in this DECam DRP processing
+  # pipeline and are explicitly excluded from the import of the base pipeline.

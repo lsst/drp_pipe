@@ -12,6 +12,8 @@ imports:
     exclude:
       - fgcm
       - multiprofit_fit_standard
+      - dia
+      - step4
       # TODO[DM-47010]: exclusion is historical, possibly unintentional
       - analysis_drp_plots
       - exposureQualityCore
