@@ -2,6 +2,7 @@ description: The DRP pipeline specialized for Subaru's HyperSuprime-Cam
 instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
       # TODO[DM-47010]: move down out of ingredients.
       # TODO[DM-47010]: exclusion is historical, possibly unintentional

@@ -2,6 +2,7 @@ description: DRP specialized for the ImSim-DC2 test-med-1 dataset
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
     # TODO[DM-47010]: exclusion is historical, possibly unintentional
     - diaTractQualityCore

@@ -2,6 +2,7 @@ description: DRP specialized for ci_imsim test package.
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
     # TODO[DM-47010]: exclusion is historical, possibly unintentional
     - wholeSkyCore
@@ -44,19 +45,3 @@ tasks:
     class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
     config:
       connections.data: sourceTable_visit_cal_ref_cat_2_2_photoMatch
-subsets:
-  analysis_tools:
-    subset:
-      - analyzeAmpOffsetMetadata
-      - analyzeMatchedVisitCore
-      - analyzeObjectTableCore
-      - analyzeObjectTableExtended
-      - analyzeObjectTableSurveyCore
-      - analyzeSourceTableCore
-      - catalogMatchTract
-      - diff_matched_analysis
-      - refCatObjectTract
-      - validateObjectTableCore
-      - catalogMatchVisit
-      - astrometricRefCatSourceVisit
-      - sourceObjectMatch

@@ -1,6 +1,7 @@
 description: The DRP pipeline specialized for rc2_subset processing in jenkins and tutorials
 imports:
-  - $DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml
+  - location: $DRP_PIPE_DIR/pipelines/HSC/DRP-RC2.yaml
+    labeledSubsetModifyMode: EDIT
 tasks:
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
@@ -16,6 +17,7 @@ tasks:
     config:
       atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
 subsets:
+  # TODO[DM-47010]: replace "nightly" steps with regular ones.
   nightlyStep1:
     subset:
       - isr

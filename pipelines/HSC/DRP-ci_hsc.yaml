@@ -1,7 +1,7 @@
 description: The DRP pipeline specialized for the ci_hsc test dataset.
-instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/HSC/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
       # Don't run fgcm or gbdesAstrometricFit, as
       # there isn't enough data.

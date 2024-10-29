@@ -2,6 +2,7 @@ description: DRP Pipeline for Simulated ComCam
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
       # TODO[DM-47010]: move down out of ingredients.
       # TODO[DM-47010]: exclusion is historical, possibly unintentional
@@ -9,20 +10,7 @@ imports:
   # TODO[DM-47010]: inclusion is historical, possibly unintentional
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
 subsets:
-  step1:
-    subset:
-      - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
-      - transformPreSourceTable
-    description: |
-      Per-detector tasks that can be run together to start the DRP pipeline.
-
-      These should never be run with 'tract' or 'patch' as part of the data ID
-      expression if any later steps will also be run, because downstream steps
-      require full visits and 'tract' and 'patch' constraints will always
-      select partial visits that overlap that region.
+  # step1 is imported.
   step2a:
     subset:
       - consolidatePreSourceTable

@@ -2,6 +2,7 @@ description: DRP specialized for LATISS surveys
 instrument: lsst.obs.lsst.Latiss
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
       - analysis_drp_plots
       - multiprofit_fit_standard
@@ -97,22 +98,7 @@ tasks:
         from lsst.analysis.tools.atools import *
 
 subsets:
-  step1:
-    subset:
-      - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
-      - transformPreSourceTable
-    description: |
-      Per-detector tasks that can be run together to start the DRP pipeline.
-      These should never be run with 'tract' or 'patch' as part of the data ID
-      expression if any later steps will also be run, because downstream steps
-      require full visits and 'tract' and 'patch' constraints will always
-      select partial visits that overlap that region (also noting that while
-      this may be moot for a single-detector camera, we would still like to
-      follow best practices envisioned for the full LSST survey).
-
+  # step1 is imported.
   step2a:
     subset:
       - consolidatePreSourceTable

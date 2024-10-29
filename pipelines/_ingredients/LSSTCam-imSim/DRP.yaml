@@ -2,6 +2,7 @@ description: DRP specialized for ImSim-DC2 data
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
      - fgcm
      - gbdesAstrometricFit
@@ -122,24 +123,7 @@ tasks:
     config:
       connections.data: objectTable_tract_cal_ref_cat_2_2_photoMatch
 subsets:
-  step1:
-    subset:
-      - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
-      - transformPreSourceTable
-      - analyzeAmpOffsetMetadata
-    description: |
-      Per-detector tasks that can be run together to start the DRP pipeline.
-
-      These may or may not be run with 'tract' or 'patch' as part of the data
-      ID expression. This specific pipeline contains no tasks that require full
-      visits. Running with 'tract' (and 'patch') constraints will select
-      partial visits that overlap that region.
-
-      In data release processing, operators should stop to address unexpected
-      failures before continuing on to step2.
+  # step1 is imported.
   step2:
     subset:
       - consolidatePreSourceTable

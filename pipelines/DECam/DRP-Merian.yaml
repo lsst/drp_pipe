@@ -7,7 +7,11 @@ description: |
   found in the isrForCrosstalkSources.yaml pipeline file.
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DECam/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
+      # TODO[DM-46023]: step0/isrForCrosstalkSources is in a separate pipeline
+      # in order to allow a full graph for the remainder of this pipeline to be
+      # built, but full step support should make this unnecessary.
       - isrForCrosstalkSources
       # DECam/Merian has historically not run the analysis_tools pipelines;
       # they are excluded here only because we've switched from opt-in to

@@ -283,13 +283,6 @@ subsets:
       - fgcmOutputProducts
     description: |
       Subset that includes all FGCM tasks.
-  analysis_tools:
-    subset:
-      - coaddColumnValidate
-      - coaddQualityCore
-      - exposureQualityCore
-      - matchedVisitQualityCore
-      - visitQualityCore
   # These steps are broadly consistent across all DRP pipelines, aside from
   # analysis tasks that are sometimes excluded.  But excluding tasks on import
   # also removes them from steps, allowing the step definitions here to be
@@ -303,8 +296,6 @@ subsets:
       - writePreSourceTable
       - analyzeAmpOffsetMetadata
       - analyzeCalibrateMetadata
-      - wholeSkyCore
-      - diaTractQualityCore
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
 contracts:

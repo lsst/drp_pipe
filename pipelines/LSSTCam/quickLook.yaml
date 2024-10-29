@@ -4,12 +4,17 @@ description: |
 instrument: lsst.obs.lsst.LsstCam
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
       - fgcm
       - multiprofit_fit_standard
       # TODO[DM-47010]: exclusion is historical, possibly unintentional
       - analysis_drp_plots
       - exposureQualityCore
+      # TODO[DM-47010]: exclusion is historical with a TODO comment suggesting
+      # it was undesirable.
+      - writePreSourceTable
+      - transformPreSourceTable
   # TODO[DM-47010]: inclusion is historical, possibly unintentional
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
 tasks:
@@ -62,14 +67,7 @@ tasks:
           config.astrometry.sourceSelector["science"].doIsolated = False
       # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
 subsets:
-  step1:
-    subset:
-      - isr
-      - characterizeImage
-      - calibrate
-      # TO DO: configure and add writePreSourceTable, transformPreSourceTable
-    description: |
-      Per-detector tasks that can be run together
+  # step1 is imported.
   step2a:
     subset:
       - consolidateVisitSummary

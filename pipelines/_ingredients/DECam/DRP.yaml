@@ -8,6 +8,7 @@ description: |
 instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP.yaml
+    labeledSubsetModifyMode: EDIT
     exclude:
       - fgcm
       - gbdesAstrometricFit
@@ -126,20 +127,7 @@ subsets:
       This step generates crosstalk sources for ISR/inter-chip crosstalk by
       applying overscan correction on raw frames. A new dataset is written,
       which should be used as an input for further data processing.
-  step1:
-    subset:
-      - isr
-      - characterizeImage
-      - calibrate
-      - transformPreSourceTable
-      - writePreSourceTable
-    description: |
-      Per-detector tasks that can be run together to start the DRP pipeline.
-
-      These should never be run with 'tract' or 'patch' as part of the data ID
-      expression if any later steps will also be run, because downstream steps
-      require full visits and 'tract' and 'patch' constraints will always
-      select partial visits that overlap that region.
+  # step1 is imported.
   step2a:
     subset:
       - consolidatePreSourceTable

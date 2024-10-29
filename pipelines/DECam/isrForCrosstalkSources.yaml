@@ -7,24 +7,9 @@ description: |
   processing.
 
   This task is intended to be run once, prior to initial data processing.
-instrument: lsst.obs.decam.DarkEnergyCamera
-tasks:
-  isrForCrosstalkSources:
-    class: lsst.ip.isr.IsrTask
-    config:
-      connections.outputExposure: overscanRaw
-      doOverscan: true
-      doAssembleCcd: false
-      doBias: false
-      doCrosstalk: false
-      doVariance: false
-      doLinearize: false
-      doDefect: false
-      doNanMasking: false
-      doDark: false
-      doFlat: false
-      doFringe: false
-      doInterpolate: false
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DECam/DRP.yaml
+    include: isrForCrosstalkSources
 subsets:
   step0:
     subset:
