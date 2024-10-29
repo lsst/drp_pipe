@@ -104,39 +104,7 @@ subsets:
       Tasks generate one data product per collection.
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
-  step3:
-    subset:
-      - makeWarp
-      - selectDeepCoaddVisits
-      - assembleCoadd
-      - detection
-      - mergeDetections
-      - deblend
-      - measure
-      - mergeMeasurements
-      - forcedPhotCoadd
-      - transformObjectTable
-      - writeObjectTable
-      - consolidateObjectTable
-      - healSparsePropertyMaps
-      # analysis_tools tasks
-      - isolatedStarSourceAssociation
-      - analyzeMatchedVisitCore
-      - analyzeObjectTableCore
-      - analyzeObjectTableExtended
-      - catalogMatchTract
-      - photometricCatalogMatch
-      - photometricRefCatObjectTract
-      - plotPropertyMapTract
-      - refCatObjectTract
-      - validateObjectTableCore
-    description: |
-      This overrides the default DRP pipeline by not making nightly templates.
-      We may want to make daily templates in the future.
-
-      Patch and Tract-level tasks that make coadds and object tables that
-      can be run together, but only after the 'step1' and 'step2d'
-      subsets.
+  # step3 is imported.
   step7:
     subset:
       - consolidateHealSparsePropertyMaps

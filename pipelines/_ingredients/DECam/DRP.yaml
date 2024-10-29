@@ -183,27 +183,5 @@ subsets:
       Tasks generate one data product per collection.
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
-  step3:
-    subset:
-      - selectGoodSeeingVisits
-      - selectDeepCoaddVisits
-      - makeWarp
-      - templateGen
-      - deblend
-      - detection
-      - writeObjectTable
-      - measure
-      - mergeMeasurements
-      - assembleCoadd
-      - forcedPhotCoadd
-      - transformObjectTable
-      - consolidateObjectTable
-      - mergeDetections
-    description: |
-      Tract-level tasks that can be run together, but only after the 'step1'
-      and 'step2' subsets.
-
-      These should be run with explicit 'tract' constraints essentially all the
-      time, because otherwise quanta will be created for jobs with only partial visit
-      coverage.
+  # step3 is imported.
   # Steps 4-7 are not currently implemented in this DECam DRP processing pipeline.

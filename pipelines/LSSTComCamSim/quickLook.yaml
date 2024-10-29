@@ -7,6 +7,7 @@ imports:
     labeledSubsetModifyMode: EDIT
     exclude:
       - multiprofit_fit_standard
+      - step3
       # TODO[DM-47010]: exclusion is historical, possibly unintentional
       - analysis_drp_plots
       # TODO[DM-47010]: exclusion is historical with a TODO comment suggesting

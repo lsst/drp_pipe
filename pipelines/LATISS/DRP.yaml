@@ -141,64 +141,7 @@ subsets:
       if one _did_ run it with a tract constraint (which would be a common
       occurrence if it was included in any later step).
 
-  step3a:
-    subset:
-      - makeWarp
-      - selectDeepCoaddVisits
-      - assembleCoadd
-      - detection
-      - mergeDetections
-      - deblend
-      - measure
-      - mergeMeasurements
-      - forcedPhotCoadd
-      - writeObjectTable
-      - transformObjectTable
-      - selectGoodSeeingVisits
-      - templateGen
-    description: |
-      Tract-level coaddition tasks.
-      Allowed data query constraints: instrument, skymap, tract.
-      Tasks that can be run together, but only after the 'step1' and 'step2'
-      subsets. A skymap constraint must always be provided. If you do not
-      include tract in the data query, you will get tracts with only partial
-      coverage.
-
-      This subset is considered a workaround for missing middleware and task
-      functionality. It may be removed in the future.
-
-  step3b:
-    subset:
-      - consolidateObjectTable
-    description: |
-      Tract-level tasks.
-      Allowed data query constraints: skymap, tract.
-      Tasks that can be run together, but only after the 'step1', 'step2', and
-      'step3a' subsets (separation into step3a and step3b is necessary for now
-      as otherwise failures in upstream tasks will cause these to fail. This
-      is hoped to be a temporary limitation).
-
-  step3c:
-    subset:
-      - healSparsePropertyMaps
-      - analyzeObjectTableCore
-      - analyzeObjectTableSurveyCore
-      - catalogMatchTract
-      - refCatObjectTract
-      - photometricCatalogMatch
-      - photometricRefCatObjectTract
-      - validateObjectTableCore
-      - isolatedStarSourceAssociation
-      - analyzeMatchedVisitCore
-      - analyzeAmpOffsetMetadata
-    description: |
-      Healsparse maps and "core" (most important), coadd-level plots/metrics
-      from analysis_tools (plus a few from analysis_drp to be deprecated once
-      replicated in analysis_tools).
-
-      Needs to be run after 'step3b'. Must be be run with only instrument and
-      skymap dataquery constraints if analyzeObjectTableSurveyCore is included,
-      and optionally with these if analyzeObjectTableSurveyCore is excluded.
+  # step3 is imported.
 
   step4:
     subset:

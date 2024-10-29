@@ -298,6 +298,42 @@ subsets:
       - analyzeCalibrateMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
+  step3:
+    subset:
+      # per-patch Tasks
+      - makeWarp
+      - selectDeepCoaddVisits
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - forcedPhotCoadd
+      - transformObjectTable
+      - writeObjectTable
+      - healSparsePropertyMaps
+      - selectGoodSeeingVisits
+      - templateGen
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
+      # per-tract Tasks
+      - consolidateObjectTable
+      - analyzeMatchedVisitCore
+      - isolatedStarSourceAssociation
+      - analyzeMatchedPreVisitCore
+      - analyzeObjectTableCore
+      - catalogMatchTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
+      - refCatObjectTract
+      - validateObjectTableCore
+      - objectEpochTable
+      - mergeMultiprofit
+      - analyzeMultiprofitCore
+    description: |
+      Tract- and patch-level coaddition and coadd processing tasks.
 contracts:
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
   - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures

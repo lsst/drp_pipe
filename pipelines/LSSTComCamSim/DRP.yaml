@@ -70,44 +70,7 @@ subsets:
       Tasks generate one data product per collection.
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
-  step3:
-    subset:
-      - makeWarp
-      - selectDeepCoaddVisits
-      - assembleCoadd
-      - detection
-      - mergeDetections
-      - deblend
-      - measure
-      - mergeMeasurements
-      - forcedPhotCoadd
-      - transformObjectTable
-      - writeObjectTable
-      - consolidateObjectTable
-      - healSparsePropertyMaps
-      - selectGoodSeeingVisits
-      - templateGen
-      # analysis_tools tasks
-      - analyzeAmpOffsetMetadata
-      - isolatedStarSourceAssociation
-      - analyzeMatchedVisitCore
-      - analyzeObjectTableCore
-      - catalogMatchTract
-      - photometricCatalogMatch
-      - photometricRefCatObjectTract
-      - plotPropertyMapTract
-      - refCatObjectTract
-      - validateObjectTableCore
-    description: |
-      Tasks that can be run together, but only after the 'step1' and 'step2d'
-      subsets.
-
-      These should be run with explicit 'tract' constraints essentially all the
-      time, because otherwise quanta will be created for jobs with only partial
-      visit coverage.
-
-      This subset is considered a workaround for missing middleware and task
-      functionality.  It may be removed in the future.
+  # step3 is imported.
   step4:
     subset:
       - forcedPhotCcd

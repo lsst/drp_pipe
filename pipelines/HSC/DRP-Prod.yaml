@@ -80,45 +80,7 @@ subsets:
       Tasks generate one data product per collection.
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
-  step3:
-    subset:
-      # per patch tasks
-      - makeWarp
-      - selectDeepCoaddVisits
-      - assembleCoadd
-      - detection
-      - mergeDetections
-      - deblend
-      - measure
-      - mergeMeasurements
-      - forcedPhotCoadd
-      - writeObjectTable
-      - transformObjectTable
-      - fitDeepCoaddPsfGaussians
-      - fitDeblendedObjectsSersic
-      # per tract tasks
-      - consolidateObjectTable
-      - healSparsePropertyMaps
-      - analyzeObjectTableCore
-      - catalogMatchTract
-      - refCatObjectTract
-      - validateObjectTableCore
-      - isolatedStarSourceAssociation
-      - analyzeMatchedVisitCore
-      - photometricCatalogMatch
-      - photometricRefCatObjectTract
-      - plotPropertyMapTract
-      - mergeMultiprofit
-      - analyzeMultiprofitCore
-
-    description: |
-      tract-level tasks.  Allowed data query constraints: tract
-
-      Tasks that can be run together, but only after the 'step1', 'step2a',
-      'step2b', 'step2c', 'step2d' subsets.
-
-      If you do not include tract in the data query, you will get tracts with
-      partial coverage.
+  # step3 is imported.
   step4:
     subset:
       - forcedPhotCcd

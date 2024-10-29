@@ -140,50 +140,7 @@ subsets:
       if one _did_ run it with a tract constraint (which would be a common
       occurrence if it was included in any later step), it would be fed the
       wrong (partial-visit) inputs to its 'background' connection.
-  step3:
-    subset:
-      # per-patch Tasks
-      - makeWarp
-      - selectDeepCoaddVisits
-      - assembleCoadd
-      - detection
-      - mergeDetections
-      - deblend
-      - measure
-      - mergeMeasurements
-      - forcedPhotCoadd
-      - transformObjectTable
-      - writeObjectTable
-      - healSparsePropertyMaps
-      - selectGoodSeeingVisits
-      - templateGen
-      - fitDeepCoaddPsfGaussians
-      - fitDeblendedObjectsSersic
-      # per-tract Tasks
-      - consolidateObjectTable
-      - analyzeMatchedVisitCore
-      - isolatedStarSourceAssociation
-      - analyzeMatchedPreVisitCore
-      - analyzeObjectTableCore
-      - catalogMatchTract
-      - photometricCatalogMatch
-      - photometricRefCatObjectTract
-      - plotPropertyMapTract
-      - refCatObjectTract
-      - validateObjectTableCore
-      - objectEpochTable
-      - mergeMultiprofit
-      - analyzeMultiprofitCore
-    description: |
-      Tasks that can be run together, but only after the 'step1' and 'step2'
-      subsets.
-
-      These should be run with explicit 'tract' constraints essentially all the
-      time, because otherwise quanta will be created for jobs with only partial
-      visit coverage.
-
-      This subset is considered a workaround for missing middleware and task
-      functionality.  It may be removed in the future.
+  # step3 is imported.
   step4:
     subset:
       - forcedPhotCcd
