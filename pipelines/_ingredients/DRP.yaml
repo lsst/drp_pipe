@@ -307,6 +307,7 @@ subsets:
     - writeForcedSourceOnDiaObjectTable
     - transformForcedSourceOnDiaObjectTable
     - consolidateForcedSourceOnDiaObjectTable
+    - consolidateDiaSourceTable
   # These steps are broadly consistent across all DRP pipelines, aside from
   # analysis tasks that are sometimes excluded.  But excluding tasks on import
   # also removes them from steps, allowing the step definitions here to be
@@ -385,6 +386,12 @@ subsets:
     description: |
       Patch- and tract-level DIA and forced photometry matching and catalog
       manipulation tasks.
+  step6:
+    subset:
+      - consolidateDiaSourceTable
+      - sourceObjectMatch
+    description: |
+      Visit-level DIA and analysis tasks.
 contracts:
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
   - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures

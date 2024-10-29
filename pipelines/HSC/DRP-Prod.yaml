@@ -5,6 +5,7 @@ imports:
     exclude:
     - dia
     - step5
+    - step6
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
@@ -86,7 +87,7 @@ subsets:
   # step3 is imported.
   # step4 is imported, but most tasks are dropped because the 'dia' subset is
   # excluded.
-  # step5 is intentionally excluded from the import.
+  # step5 and step6 are intentionally excluded from the import.
   step7:
     subset:
       - consolidateHealSparsePropertyMaps

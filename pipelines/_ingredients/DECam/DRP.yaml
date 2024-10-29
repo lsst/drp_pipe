@@ -15,6 +15,7 @@ imports:
       - multiprofit_fit_standard
       - step4
       - step5
+      - step6
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask

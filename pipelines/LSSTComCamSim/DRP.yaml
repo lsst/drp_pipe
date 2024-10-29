@@ -73,22 +73,7 @@ subsets:
   # step3 is imported.
   # step4 is imported.
   # step5 is imported.
-  step6:
-    subset:
-      - consolidateDiaSourceTable
-    description: |
-      Tasks that can be run together, but only after the 'step1', 'step2',
-      'step3', and 'step4' subsets
-
-      This step includes visit-level aggregation tasks. Running without tract
-      or patch in the data query is recommended, otherwise the outputs of
-      consolidateDiaSourceTable will not contain complete visits.
-
-      This subset is separate from step4 to signal to operators to pause to
-      assess unexpected image differencing failures before these aggregation
-      steps. Otherwise, if run in the same quantum graph, aggregated data
-      products (e.g. diaObjects) would not be created if one or more of the
-      expected inputs is missing.
+  # step6 is imported.
   step7:
     subset:
       - consolidateHealSparsePropertyMaps
