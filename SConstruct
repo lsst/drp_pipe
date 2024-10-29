@@ -1,5 +1,6 @@
 # -*- python -*-
 import os
+
 from lsst.sconsUtils import scripts
 from lsst.sconsUtils.state import env
 from lsst.sconsUtils.utils import libraryLoaderEnvironment
@@ -18,29 +19,68 @@ scripts.BasicSConstruct(
 )
 PKG_ROOT = env.ProductDir("drp_pipe")
 
-# make deepCoadd injection pipelines for rc2_subset and RC2
-rc2_subset_injected_deepCoadd = env.Command(
+additional_pipeline_RC2 = os.path.join(
+    PKG_ROOT,
+    "pipelines",
+    "HSC",
+    "DRP-RC2-post-injected-stars.yaml",
+)
+
+additional_pipeline_LSSTComCam = os.path.join(
+    PKG_ROOT,
+    "pipelines",
+    "LSSTComCam",
+    "DRP-post-injected-stars.yaml",
+)
+
+subset_name = "injected_stars_coadd_analysis"
+subset_description = "Analysis tasks for object_table level injected catalogs."
+
+
+# Make deepCoadd injection pipelines for rc2_subset, RC2, and LSSTComCam.
+rc2_subset_injected_deepCoadd_stars = env.Command(
     target=os.path.join(
-        PKG_ROOT, "pipelines", "HSC", "DRP-RC2_subset+injected_deepCoadd.yaml"
+        PKG_ROOT, "pipelines", "HSC", "DRP-RC2_subset+injected_deepCoadd_stars.yaml"
     ),
     source=os.path.join(PKG_ROOT, "pipelines", "HSC", "DRP-RC2_subset.yaml"),
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            "make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET --overwrite",
+            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {additional_pipeline_RC2} "
+            f"-s {subset_name} -d '{subset_description}' --overwrite",
         ]
     ),
 )
-RC2_injected_deepCoadd = env.Command(
+RC2_injected_deepCoadd_stars = env.Command(
     target=os.path.join(
-        PKG_ROOT, "pipelines", "HSC", "DRP-RC2+injected_deepCoadd.yaml"
+        PKG_ROOT, "pipelines", "HSC", "DRP-RC2+injected_deepCoadd_stars.yaml"
     ),
     source=os.path.join(PKG_ROOT, "pipelines", "HSC", "DRP-RC2.yaml"),
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            "make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET --overwrite",
+            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {additional_pipeline_RC2} "
+            f"-s {subset_name} -d '{subset_description}' --overwrite",
         ]
     ),
 )
-Default([rc2_subset_injected_deepCoadd, RC2_injected_deepCoadd])
+LSSTComCam_injected_deepCoadd_stars = env.Command(
+    target=os.path.join(
+        PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_deepCoadd_stars.yaml"
+    ),
+    source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP.yaml"),
+    action=" ".join(
+        [
+            libraryLoaderEnvironment(),
+            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {additional_pipeline_LSSTComCam} "
+            f"-s {subset_name} -d '{subset_description}' --overwrite",
+        ]
+    ),
+)
+Default(
+    [
+        rc2_subset_injected_deepCoadd_stars,
+        RC2_injected_deepCoadd_stars,
+        LSSTComCam_injected_deepCoadd_stars,
+    ]
+)
