@@ -68,25 +68,7 @@ subsets:
       and CcdVisits.
   # step3 is imported.
   # step4 is imported.
-  step5:
-    subset:
-      - drpAssociation
-      - drpDiaCalculation
-      - forcedPhotCcdOnDiaObjects
-      - forcedPhotDiffOnDiaObjects
-      - transformForcedSourceTable
-      - consolidateAssocDiaSourceTable
-      - consolidateFullDiaObjectTable
-      - writeForcedSourceOnDiaObjectTable
-      - transformForcedSourceOnDiaObjectTable
-      - analyzeDiaSourceTableTract
-    description: |
-      Tasks that can be run together, but only after the 'step1', 'step2',
-      'step3', and 'step4' subsets
-
-      This step includes patch-level aggregation Tasks. These should be run
-      with explicit 'tract' constraints in the data query, otherwise quanta
-      will be created for jobs with only partial visit coverage.
+  # step5 is imported,
   step6:
     subset:
       - consolidateDiaSourceTable

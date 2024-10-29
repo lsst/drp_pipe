@@ -296,6 +296,17 @@ subsets:
     # forced photometry on difference images.  This may not ever be worth
     # fixing, since our production pipelines will do DIA.
     - writeForcedSourceTable
+    - transformForcedSourceTable
+    - consolidateForcedSourceTable
+    - drpAssociation
+    - drpDiaCalculation
+    - forcedPhotCcdOnDiaObjects
+    - forcedPhotDiffOnDiaObjects
+    - consolidateAssocDiaSourceTable
+    - consolidateFullDiaObjectTable
+    - writeForcedSourceOnDiaObjectTable
+    - transformForcedSourceOnDiaObjectTable
+    - consolidateForcedSourceOnDiaObjectTable
   # These steps are broadly consistent across all DRP pipelines, aside from
   # analysis tasks that are sometimes excluded.  But excluding tasks on import
   # also removes them from steps, allowing the step definitions here to be
@@ -358,6 +369,22 @@ subsets:
       - writeForcedSourceTable
     description: |
       Detector-level image-subtraction and forced photometry tasks.
+  step5:
+    subset:
+      - drpAssociation
+      - drpDiaCalculation
+      - forcedPhotCcdOnDiaObjects
+      - forcedPhotDiffOnDiaObjects
+      - transformForcedSourceTable
+      - consolidateForcedSourceTable
+      - consolidateAssocDiaSourceTable
+      - consolidateFullDiaObjectTable
+      - writeForcedSourceOnDiaObjectTable
+      - transformForcedSourceOnDiaObjectTable
+      - consolidateForcedSourceOnDiaObjectTable
+    description: |
+      Patch- and tract-level DIA and forced photometry matching and catalog
+      manipulation tasks.
 contracts:
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
   - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures
