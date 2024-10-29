@@ -16,6 +16,7 @@ imports:
       - step4
       - step5
       - step6
+      - step7
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask

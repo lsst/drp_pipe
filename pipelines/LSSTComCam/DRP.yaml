@@ -77,18 +77,4 @@ subsets:
   # step4 is imported.
   # step5 is imported.
   # step6 is imported.
-  step7:
-    subset:
-      - consolidateHealSparsePropertyMaps
-      - analyzeObjectTableSurveyCore
-      - makeMetricTableMatchedVisitCore
-      - makeMetricTableObjectTableCore
-      - matchedVisitCoreWholeSkyPlot
-      - objectTableCoreWholeSkyPlot
-    description: |
-      Tasks that should be run as the final step that require global inputs,
-      and can be run after the 'step3' subset.
-
-      This step has global aggregation tasks to run over all visits, detectors,
-      tracts, etc.  This step should be run only with the instrument constraint
-      in the data query.
+  # step7 is imported.

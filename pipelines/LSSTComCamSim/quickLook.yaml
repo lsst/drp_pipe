@@ -11,6 +11,7 @@ imports:
       - step4
       - step5
       - step6
+      - step7
       # TODO[DM-47010]: exclusion is historical, possibly unintentional
       - analysis_drp_plots
       # TODO[DM-47010]: exclusion is historical with a TODO comment suggesting

@@ -7,6 +7,7 @@ imports:
       - analysis_drp_plots
       - multiprofit_fit_standard
       # TODO[DM-47010]: exclusion is historical, possibly unintentional
+      - step7
       - matchedVisitQualityCore
       - visitQualityCore
       - wholeSkyCore
