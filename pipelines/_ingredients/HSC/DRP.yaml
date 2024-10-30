@@ -14,7 +14,7 @@ tasks:
     class: lsst.ip.isr.IsrTask
     config:
       doAmpOffset: true
-      ampOffset.doApplyAmpOffset: true
+      ampOffset.measureOnly: false
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
