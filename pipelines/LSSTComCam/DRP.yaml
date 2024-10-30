@@ -4,7 +4,7 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCam/DRP.yaml
     labeledSubsetModifyMode: EDIT
     exclude:
-      - fgcm
+      - fgcm  # configuration is not ready yet
       # TODO[DM-47010]: exclusion is historical, possibly unintentional
       - analysis_drp_plots
       - exposureQualityCore
