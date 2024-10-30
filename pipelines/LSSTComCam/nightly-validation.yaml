@@ -19,6 +19,8 @@ imports:
       # TODO[DM-47010]: exclusion is historical, possibly unintentional
       - analysis_drp_plots
       - exposureQualityCore
+      # TODO[DM-47010]: exclusion needed to avoid duplicate outputs.
+      - calexpSummary
   # TODO[DM-47010]: inclusion is historical, possibly unintentional
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
 tasks:
