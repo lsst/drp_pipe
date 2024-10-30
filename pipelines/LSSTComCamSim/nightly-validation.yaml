@@ -103,6 +103,9 @@ subsets:
       Tasks generate one data product per collection.
       make[Ccd]VisitTable produces per-collection summary of the Visits
       and CcdVisits.
-  # step3 is imported.
+  # step3 is imported, with one addition.
+  +step3:
+    subset:
+      - analyzeObjectTableExtended
   # steps 4-6 are intentionally excluded from the import.
   # step7 is imported.
