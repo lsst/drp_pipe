@@ -24,6 +24,15 @@ tasks:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
       connections.cycleNumber: 4
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      connections.goodVisits: deepCoaddVisits
+      # Maximum default psf fwhm in arcseconds to use for a coadd in
+      # early commissioning.
+      maxPsfFwhm: 2.7
+      # By default for deep coadds, use all input visits better than maxPsfFwhm
+      nVisitsMax: -1
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
