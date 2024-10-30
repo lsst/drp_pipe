@@ -11,6 +11,7 @@ imports:
     labeledSubsetModifyMode: EDIT
     exclude:
       - fgcm
+      - gbdesAstrometricFit
       - multiprofit_fit_standard
       - dia
       - step4
