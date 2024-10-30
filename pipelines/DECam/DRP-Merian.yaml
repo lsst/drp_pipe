@@ -13,11 +13,12 @@ imports:
       # in order to allow a full graph for the remainder of this pipeline to be
       # built, but full step support should make this unnecessary.
       - isrForCrosstalkSources
-      # DECam/Merian has historically not run the analysis_tools pipelines;
-      # they are excluded here only because we've switched from opt-in to
-      # opt-out, and they could presumably be included whenever anyone is
-      # prepared to check to see if they work.
-      # Note that is has historically included the analysis_drp plots
+      # DECam/Merian has historically not run the analysis_tools pipelines or
+      # healSparsePropertyMaps; they are excluded here only because we've
+      # switched from opt-in to opt-out, and they could presumably be included
+      # whenever anyone is prepared to check to see if they work. Note that is
+      # has historically included the analysis_drp plots
+      - healSparsePropertyMaps
       - coaddColumnValidate
       - coaddQualityCore
       - exposureQualityCore
