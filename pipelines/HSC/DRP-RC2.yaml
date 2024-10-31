@@ -177,7 +177,6 @@ subsets:
       # per-tract Tasks
       - consolidateObjectTable
       - analyzeMatchedVisitCore
-      - isolatedStarSourceAssociation
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract

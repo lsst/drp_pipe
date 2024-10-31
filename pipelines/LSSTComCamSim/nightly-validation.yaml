@@ -116,7 +116,6 @@ subsets:
       - healSparsePropertyMaps
       # analysis_tools tasks
       - analyzeAmpOffsetMetadata
-      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended

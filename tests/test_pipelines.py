@@ -148,6 +148,8 @@ COMMON_OUTPUTS = {
     "srcMatch",
     "visitSummary",
     "visitTable",
+    "isolated_star_presource_associations",
+    "isolated_star_presources",
 }
 
 # HSC common outputs, in addition to COMMON_OUTPUTS
@@ -162,11 +164,6 @@ HSC_OUTPUTS = {
     "preSourceTable_visit",
     "skyCorr",
     "srcMatchFull",
-    # DM-43077 move 2 presource associations and friends to COMMON_OUTPUTS
-    "isolated_star_presource_associations",
-    "isolated_star_presources",
-    "isolated_star_source_associations",
-    "isolated_star_sources",
 }
 
 # LATISS common outputs, in addition to COMMON_OUTPUTS
@@ -209,11 +206,6 @@ LATISS_OUTPUTS = {
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
     "transmission_atmosphere_fgcm",
-    # DM-43077 move 2 presource associations and friends to COMMON_OUTPUTS
-    "isolated_star_presource_associations",
-    "isolated_star_presources",
-    "isolated_star_source_associations",
-    "isolated_star_sources",
 }
 
 # LSSTCam-imSim common outputs, in addition to COMMON_OUTPUTS
@@ -245,9 +237,6 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "goodSeeingVisits",
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
-    # TODO DM-43077: remove these two
-    "isolated_star_source_associations",
-    "isolated_star_sources",
 }
 
 # Outputs common to all "quickLook" pipelines, which only iclude
