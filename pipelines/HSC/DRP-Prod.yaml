@@ -120,7 +120,6 @@ subsets:
       - catalogMatchTract
       - refCatObjectTract
       - validateObjectTableCore
-      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - photometricCatalogMatch
       - photometricRefCatObjectTract

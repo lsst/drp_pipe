@@ -94,7 +94,6 @@ subsets:
       - selectGoodSeeingVisits
       - templateGen
       # analysis_tools tasks
-      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract

@@ -112,7 +112,6 @@ subsets:
       - consolidateObjectTable
       - healSparsePropertyMaps
       # analysis_tools tasks
-      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
