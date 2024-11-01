@@ -42,13 +42,24 @@ tasks:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
       # TODO: Evaluate GBDES, SkyCorr, FGCM after initial DRP
-      wcs_provider: "tract"
-      photo_calib_provider: "global"
+      # Nightly validation should always keep these off.
+      wcs_provider: "input_summary"
+      photo_calib_provider: "input_summary"
       background_provider: "input_summary"
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
       do_use_sky_corr: false
+  analyzeMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      # no GBDES fit to produce the astrometric correction.
+      applyAstrometricCorrections: false
+  sourceObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+      # no GBDES
+      applyAstrometricCorrections: false
   analyzeMatchedPreVisitCore:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
