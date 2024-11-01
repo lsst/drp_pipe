@@ -113,10 +113,6 @@ tasks:
         # TODO[DM-47010]: need an override for isolatedStarSourceAssociation,
         # too, but these and other band configs should go in obs_decam.
         config.band_order += ["N708", "N540"]
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      connections.outputCatalog: source
   jointcal:
     class: lsst.jointcal.JointcalTask
     config:

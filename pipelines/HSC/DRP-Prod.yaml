@@ -3,9 +3,21 @@ imports:
   - location: "$DRP_PIPE_DIR/pipelines/_ingredients/HSC/DRP.yaml"
     labeledSubsetModifyMode: EDIT
     exclude:
+    - preliminary_observation_tables
     - dia
     - step5
     - step6
+    # TODO[DM-47010] these tasks were not previously included in steps, but
+    # it's unclear whether their omission was intentional.
+    - analyzeCalibrateMetadata
+    - calexpSummary
+    - analyzeMatchedVisitExtended
+    - objectEpochTable
+    - catalogMatchVisit
+    - astrometricRefCatSourceVisit
+    - photometricMatchVisit
+    - photometricRefCatSourceVisit
+    - analysis_drp_plots
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
@@ -64,6 +76,7 @@ subsets:
       - consolidateSourceTable
       - updateVisitSummary
       - reprocessVisitImage
+      - analyzeSourceTableCore
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit

@@ -283,6 +283,21 @@ subsets:
       - fgcmOutputProducts
     description: |
       Subset that includes all FGCM tasks.
+  preliminary_observation_tables:
+    subset:
+      - makePreliminaryCcdVisitTable
+      - makePreliminaryVisitTable
+  +matchedVisitQualityCore:
+    subset:
+      - makeMetricTableMatchedVisitCore
+      - matchedVisitCoreWholeSkyPlot
+  +coaddQualityCore:
+    subset:
+      - objectTableCoreWholeSkyPlot
+      - makeMetricTableObjectTableCore
+      - makeMetricTableObjectTableCoreRefCatMatch
+      - objectTableCoreRefCatMatchWholeSkyPlot
+      - analyzeObjectTableSurveyCore
   dia:
     - selectGoodSeeingVisits
     - templateGen
@@ -292,9 +307,9 @@ subsets:
     - detectAndMeasureDiaSources
     - transformDiaSourceCat
     # Writing, transforming, and consolidating the forced source table is
-    # considered part of DIA because they are not configurable to run without
-    # forced photometry on difference images.  This may not ever be worth
-    # fixing, since our production pipelines will do DIA.
+    # considered part of DIA because these tasks are not configurable to run
+    # without forced photometry on difference images.  This may not ever be
+    # worth fixing, since our production pipelines will do DIA.
     - writeForcedSourceTable
     - transformForcedSourceTable
     - consolidateForcedSourceTable
@@ -319,13 +334,13 @@ subsets:
       - calibrate
       - transformPreSourceTable
       - writePreSourceTable
+      - calexpSummary
       - analyzeAmpOffsetMetadata
       - analyzeCalibrateMetadata
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
   step3:
     subset:
-      # per-patch Tasks
       - makeWarp
       - selectDeepCoaddVisits
       - assembleCoadd
@@ -342,12 +357,11 @@ subsets:
       - templateGen
       - fitDeepCoaddPsfGaussians
       - fitDeblendedObjectsSersic
-      # per-tract Tasks
       - consolidateObjectTable
       - analyzeMatchedVisitCore
       - isolatedStarSourceAssociation
-      - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
+      - sourceObjectMatch
       - catalogMatchTract
       - photometricCatalogMatch
       - photometricRefCatObjectTract
@@ -409,6 +423,50 @@ subsets:
       This step has global aggregation tasks to run over all visits, detectors,
       tracts, etc.  This step should be run only with the instrument constraint
       in the data query.
+  # Step2 definitions differ from pipeline to pipeline, depending on whether we
+  # expect to have to shard over tract and/or visit and whether we want results
+  # for tracts with incomplete coverage.  The base pipeline defines a few
+  # variants that downstream concrete pipelines can redefine as their version
+  # of step2.
+  #
+  # The boundaries of step2 are largely historical; it starts with full-visit
+  # processing and continues with a fixed number of iterations between
+  # visit-oriented, tract-oriented, and global processing, but some analysis
+  # tasks
+  #
+  step2-monolithic:
+    subset:
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+      - makePreliminaryCcdVisitTable
+      - makePreliminaryVisitTable
+      - isolatedStarAssociation
+      - analyzeMatchedPreVisitCore
+      - gbdesAstrometricFit
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
+      - finalizeCharacterization
+      - updateVisitSummary
+      - reprocessVisitImage
+      - transformSourceTable
+      - consolidateSourceTable
+      - analyzeSourceTableCore
+      - isolatedStarSourceAssociation
+      - makeCcdVisitTable
+      - makeVisitTable
+      - catalogMatchVisit
+      - astrometricRefCatSourceVisit
+      - photometricMatchVisit
+      - photometricRefCatSourceVisit
+    description: |
+      All step2 tasks in the base DRP pipeline.
+  step2a-shard:
+    subset:
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+  step2b-shard:
+    - analyzeMatchedPreVisitCore
 contracts:
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
   - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures
