@@ -20,18 +20,6 @@ tasks:
       connections.data: preSourceTable_visit
       connections.inputName: preSourceTable_visit
       connections.outputName: preSourceTableCore
-  analyzeMatchedVisitCore:
-    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
-    config:
-      # no GBDES fit to produce the astrometric correction.
-      applyAstrometricCorrections: false
-  updateVisitSummary:
-    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
-    config:
-      # No global calibration during nightly validation
-      wcs_provider: "input_summary"
-      photo_calib_provider: "input_summary"
-      background_provider: "input_summary"
 subsets:
   # These 3 steps can be run in real time by Rapid Analysis Framework at USDF
   step1:

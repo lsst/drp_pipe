@@ -6,13 +6,6 @@ imports:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
-tasks:
-  updateVisitSummary:
-    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
-    config:
-      wcs_provider: "tract"
-      photo_calib_provider: "input_summary"
-      background_provider: "input_summary"
 subsets:
   step1:
     subset:
@@ -44,7 +37,6 @@ subsets:
     subset:
       - analyzeMatchedPreVisitCore
       - isolatedStarAssociation
-      - gbdesAstrometricFit
     description: |
       Tract-level tasks
       Allowed data query constraints: tract
