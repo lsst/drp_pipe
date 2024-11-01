@@ -159,7 +159,6 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
-      - reprocessVisitImage
       - makeCcdVisitTable
       - makeVisitTable
     description: |
@@ -242,6 +241,7 @@ subsets:
 
   step4:
     subset:
+      - reprocessVisitImage
       - forcedPhotCcd
       - forcedPhotDiffim
       - getTemplate

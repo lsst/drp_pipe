@@ -135,7 +135,6 @@ subsets:
       - fgcmFitCycle
       - fgcmOutputProducts
       - updateVisitSummary
-      - reprocessVisitImage
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
@@ -204,6 +203,7 @@ subsets:
     subset:
       - forcedPhotCcd
       - forcedPhotDiffim
+      - reprocessVisitImage
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
