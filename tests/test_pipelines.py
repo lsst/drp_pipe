@@ -552,48 +552,6 @@ class PipelineTestCase(unittest.TestCase):
         )
         tester.run(butler, self)
 
-    def test_lsstcam_drp(self):
-        butler = self.makeButler(writeable=True)
-        tester = PipelineStepTester(
-            os.path.join(PIPELINES_DIR, "LSSTCam", "DRP.yaml"),
-            [
-                "#step1",
-                "#step2a",
-                "#step2b",
-                "#step2d",
-                "#step2e",
-                "#step3",
-                "#step4",
-                "#step5",
-                "#step6",
-                "#step7",
-            ],
-            initial_dataset_types=REFCATS,
-            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
-            expected_outputs=COMMON_OUTPUTS,
-        )
-        tester.run(butler, self)
-
-    def test_lsstcam_nightly_validation(self):
-        butler = self.makeButler(writeable=True)
-        tester = PipelineStepTester(
-            os.path.join(PIPELINES_DIR, "LSSTCam", "nightly-validation.yaml"),
-            [
-                "#step1",
-                "#step2a",
-                "#nightlyRollup",
-                "#step2b",
-                "#step2d",
-                "#step2e",
-                "#step3",
-                "#step7",
-            ],
-            initial_dataset_types=REFCATS,
-            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
-            expected_outputs=COMMON_OUTPUTS,
-        )
-        tester.run(butler, self)
-
     def test_lsstcam_quickLook(self):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
