@@ -1,0 +1,76 @@
+description: |
+  Tier1 plots and metrics to assess repeatability of initial stars matched per
+  tract.
+parameters:
+  matchedVisitCoreKeysWithBand: [
+    "stellarAstrometricRepeatability1_{band}_AM1",
+    "stellarAstrometricRepeatability1_{band}_AF1",
+    "stellarAstrometricRepeatability1_{band}_AD1",
+    "stellarAstrometricRepeatability2_{band}_AM2",
+    "stellarAstrometricRepeatability2_{band}_AF2",
+    "stellarAstrometricRepeatability2_{band}_AD2",
+    "stellarAstrometricRepeatability3_{band}_AM3",
+    "stellarAstrometricRepeatability3_{band}_AF3",
+    "stellarAstrometricRepeatability3_{band}_AD3",
+    "stellarAstrometricSelfRepeatabilityDec_{band}_dmL2AstroErr_Dec",
+    "stellarAstrometricSelfRepeatabilityRA_{band}_dmL2AstroErr_RA",
+    "stellarPhotometricRepeatability_{band}_stellarPhotRepeatStdev",
+    "stellarPhotometricRepeatability_{band}_stellarPhotRepeatOutlierFraction",
+    "stellarPhotometricResiduals_{band}_photResidTractSigmaMad",
+    "stellarPhotometricResiduals_{band}_photResidTractStdev",
+    "stellarPhotometricResiduals_{band}_photResidTractMedian",
+  ]
+tasks:
+  analyzeInitialStarAssociationsCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      connections.sourceCatalogs: initial_stars
+      connections.associatedSources: isolated_star_source_associations
+      connections.outputName: initial_star_associations_core
+      applyAstrometricCorrections: false
+      atools.stellarPhotometricRepeatability: StellarPhotometricRepeatability
+      atools.stellarPhotometricResiduals: StellarPhotometricResidualsFocalPlane
+      atools.stellarPhotometricRepeatabilityCalib: StellarPhotometricRepeatability
+      atools.stellarPhotometricRepeatabilityCalib.fluxType: 'calibFlux'
+      atools.stellarPhotometricResidualsCalib: StellarPhotometricResidualsFocalPlane
+      atools.stellarPhotometricResidualsCalib.fluxType: 'calibFlux'
+      atools.stellarAstrometricResidualsRA: StellarAstrometricResidualsRAFocalPlanePlot
+      atools.stellarAstrometricResidualsDec: StellarAstrometricResidualsDecFocalPlanePlot
+      atools.stellarAstrometricResidualStdDevRA: StellarAstrometricResidualStdDevRAFocalPlanePlot
+      atools.stellarAstrometricResidualStdDevDec: StellarAstrometricResidualStdDevDecFocalPlanePlot
+      atools.stellarAstrometricRepeatability1: AstrometricRelativeRepeatability
+      atools.stellarAstrometricRepeatability1.xValue: 1
+      atools.stellarAstrometricRepeatability1.process.calculateActions.rms.annulus: 5
+      atools.stellarAstrometricRepeatability2: AstrometricRelativeRepeatability
+      atools.stellarAstrometricRepeatability2.xValue: 2
+      atools.stellarAstrometricRepeatability2.process.calculateActions.rms.annulus: 20
+      atools.stellarAstrometricRepeatability3: AstrometricRelativeRepeatability
+      atools.stellarAstrometricRepeatability3.xValue: 3
+      atools.stellarAstrometricRepeatability3.process.calculateActions.rms.annulus: 200
+      atools.stellarAstrometricRepeatability3.process.calculateActions.rms.threshAD: 30
+      atools.stellarAstrometricSelfRepeatabilityRA: AstrometricRepeatability
+      atools.stellarAstrometricSelfRepeatabilityRA.level: 2
+      atools.stellarAstrometricSelfRepeatabilityRA.coordinate: 'RA'
+      atools.stellarAstrometricSelfRepeatabilityDec: AstrometricRepeatability
+      atools.stellarAstrometricSelfRepeatabilityDec.level: 2
+      atools.stellarAstrometricSelfRepeatabilityDec.coordinate: 'Dec'
+      python: |
+        from lsst.analysis.tools.atools import *
+  makeAnalysisInitialStarsMatchedMetricTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "initial_star_associations_core_metrics"
+      connections.metricTable: "initial_star_associations_metrics_table"
+      loadMatchedVisitData: true
+      python: |
+        from lsst.analysis.tools.atools import *
+  makeAnalysisInitialStarsMatchedSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "initial_star_associations_metrics_table"
+      connections.outputName: "initial_star_associations_whole_sky"
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.plotKeys: []
+      atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
+      python: |
+        from lsst.analysis.tools.atools import *

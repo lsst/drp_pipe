@@ -1,0 +1,128 @@
+# TODO[DM-47320] sync configurations with tasks in visitQualityCore.
+# This pipeline has most of the same tasks (no matching to objects) but renames
+# all of them.
+description: |
+  Tier 1 plots and metrics to assess visit quality before joint calibration
+  steps and with matching only to external reference catalogs.
+tasks:
+  analyzeInitialVisitImageSummary:
+    class: lsst.analysis.tools.tasks.CalexpSummaryAnalysisTask
+    config:
+      connections.data: initial_visit_image.summaryStats
+      connections.outputName: initial_visit_image_summary
+      atools.calexpSummaryMetrics: CalexpSummaryMetrics
+      python: from lsst.analysis.tools.atools import *
+  analyzeCalibrateImageMetadata:
+    class: lsst.analysis.tools.tasks.MetadataAnalysisTask
+    config:
+      connections.taskName: calibrateImage
+      connections.outputName: calibrateImage_metadata
+      metadataDimensions: ["instrument", "visit", "detector"]
+      atools.calibrateImageMetadataMetrics: MetadataMetricTool
+      atools.calibrateImageMetadataMetrics.taskName: calibrateImage
+      atools.calibrateImageMetadataMetrics.metrics:
+        initial_psf_positive_footprint_count: ct
+        initial_psf_negative_footprint_count: ct
+        initial_psf_positive_peak_count: ct
+        initial_psf_negative_peak_count: ct
+        simple_psf_positive_footprint_count: ct
+        simple_psf_negative_footprint_count: ct
+        simple_psf_positive_peak_count: ct
+        simple_psf_negative_peak_count: ct
+        bad_mask_fraction: ""
+        cr_mask_fraction: ""
+        crosstalk_mask_fraction: ""
+        detected_mask_fraction: ""
+        detected_negative_mask_fraction: ""
+        edge_mask_fraction: ""
+        intrp_mask_fraction: ""
+        no_data_mask_fraction: ""
+        sat_mask_fraction: ""
+        suspect_mask_fraction: ""
+        unmaskednan_mask_fraction: ""
+        numAvailStars: ct
+        numGoodStars: ct
+        sky_footprint_count: ct
+        post_deblend_source_count: ct
+        star_count: ct
+        saturated_source_count: ct
+        bad_source_count: ct
+        cosmic_ray_count: ct
+        matched_psf_star_count: ct
+        final_psf_sigma: pixel
+        astrometry_matches_count: ct
+        photometry_matches_count: ct
+      atools.calibrateImageMetadataMetrics.subTaskNames:
+        numAvailStars: psf_measure_psf
+        numGoodStars: psf_measure_psf
+        sky_footprint_count: star_sky_sources
+        cosmic_ray_count: psf_repair
+      atools.calibrateImageMetadataMetrics.newNames:
+        numAvailStars: psf_available_star_count
+        numGoodStars: psf_good_star_count
+      python: |
+        from lsst.analysis.tools.atools import MetadataMetricTool
+  analyzeInitialStarsTable:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      connections.data: initial_stars
+      connections.outputName: initial_stars_table_core
+      atools.skyFluxVisitStatisticMetric: SkyFluxStatisticMetric
+      atools.skyFluxVisitStatisticMetric.applyContext: VisitContext
+      atools.skySourceSky: SkySourceSkyPlot
+      atools.skySourceFlux: SkySourceHistPlot
+      atools.relativeSizeResidualPlot: RelativeSizeResidualPlot
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+  makeAnalysisInitialStarsAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+    config:
+      # TODO[DM-47320]: uses a refcat, needs overrides in all obs_*.
+      connections.targetCatalog: initial_stars
+      connections.visitSummaryTable: initial_visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_astrom"
+      # TODO[DM-47320]: temporary to get PipelineGraph without obs_ overrides {
+      referenceCatalogLoader.doApplyColorTerms: false
+      # } END_TODO
+  analyzeInitialStarsAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      connections.targetCatalog: initial_stars
+      connections.data: initial_stars_ref_match_astrom
+      connections.outputName: initial_stars_ref_match_astrom
+      atools.astromDiffRASkyVisitPlot: TargetRefCatDeltaRASkyVisitPlot
+      atools.astromDiffDecSkyVisitPlot: TargetRefCatDeltaDecSkyVisitPlot
+      atools.astromDiffRAScatterVisitPlot: TargetRefCatDeltaRAScatterVisitPlot
+      atools.astromDiffDecScatterVisitPlot: TargetRefCatDeltaDecScatterVisitPlot
+      atools.astromDiffMetrics: TargetRefCatDeltaMetrics
+      atools.astromDiffMetrics.applyContext: VisitContext
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+  makeAnalysisInitialStarsPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
+    config:
+      extraColumns: ["x", "y", "ap09Flux", "ap09FluxErr"]
+      # TODO[DM-47320]: uses a refcat, needs overrides in all obs_*.
+      connections.targetCatalog: initial_stars
+      connections.visitSummaryTable: initial_visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_photom"
+      # TODO[DM-47320]: temporary to get PipelineGraph without obs_ overrides {
+      referenceCatalogLoader.doApplyColorTerms: false
+      # } END_TODO
+  analyzeInitialStarsPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      connections.targetCatalog: initial_stars
+      connections.data: initial_stars_ref_match_photom
+      connections.outputName: initial_stars_ref_match_photom
+      atools.photomDiffPsfSkyVisitPlot: TargetRefCatDeltaPsfSkyVisitPlot
+      atools.photomDiffAp09SkyVisitPlot: TargetRefCatDeltaAp09SkyVisitPlot
+      atools.photoDiffPsfScatterVisitPlot: TargetRefCatDeltaPsfScatterVisitPlot
+      atools.photoDiffCModelScatterVisitPlot: TargetRefCatDeltaAp09ScatterVisitPlot
+      python: from lsst.analysis.tools.atools import *
