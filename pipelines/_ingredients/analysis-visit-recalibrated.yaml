@@ -1,0 +1,73 @@
+# TODO[DM-47320] sync configurations with tasks in visitQualityCore.
+# This pipeline has most of the same tasks (no matching to objects) but renames
+# all of them.
+description: |
+  Tier 1 plots and metrics to assess visit quality after joint calibration
+  steps, with matching only to external reference catalogs.
+tasks:
+  analyzeRecalibratedStars:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      connections.data: recalibrated_stars
+      connections.outputName: recalibrated_stars_table_core
+      atools.skyFluxVisitStatisticMetric: SkyFluxStatisticMetric
+      atools.skyFluxVisitStatisticMetric.applyContext: VisitContext
+      atools.skySourceSky: SkySourceSkyPlot
+      atools.skySourceFlux: SkySourceHistPlot
+      atools.relativeSizeResidualPlot: RelativeSizeResidualPlot
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+  makeAnalysisRecalibratedStarsAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+    config:
+      # TODO[DM-47320]: uses a refcat, needs overrides in all obs_*.
+      connections.targetCatalog: recalibrated_stars
+      connections.visitSummaryTable: visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_astrom"
+      # TODO[DM-47320]: temporary to get PipelineGraph without obs_ overrides {
+      referenceCatalogLoader.doApplyColorTerms: false
+      # } END_TODO
+  analyzeRecalibratedStarsAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      connections.targetCatalog: recalibrated_stars
+      connections.data: recalibrated_stars_ref_match_astrom
+      connections.outputName: recalibrated_stars_ref_match_astrom
+      # TODO[DM-47320]: use config files to reduce duplication with initial.
+      atools.astromDiffRASkyVisitPlot: TargetRefCatDeltaRASkyVisitPlot
+      atools.astromDiffDecSkyVisitPlot: TargetRefCatDeltaDecSkyVisitPlot
+      atools.astromDiffRAScatterVisitPlot: TargetRefCatDeltaRAScatterVisitPlot
+      atools.astromDiffDecScatterVisitPlot: TargetRefCatDeltaDecScatterVisitPlot
+      atools.astromDiffMetrics: TargetRefCatDeltaMetrics
+      atools.astromDiffMetrics.applyContext: VisitContext
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+  makeAnalysisRecalibratedStarsPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
+    config:
+      extraColumns: ["x", "y", "ap09Flux", "ap09FluxErr"]
+      # TODO[DM-47320]: uses a refcat, needs overrides in all obs_*.
+      connections.targetCatalog: recalibrated_stars
+      connections.visitSummaryTable: visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_photom"
+      # TODO[DM-47320]: temporary to get PipelineGraph without obs_ overrides {
+      referenceCatalogLoader.doApplyColorTerms: false
+      # } END_TODO
+  analyzeRecalibratedStarsPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      connections.targetCatalog: recalibrated_stars
+      connections.data: recalibrated_stars_ref_match_photom
+      connections.outputName: recalibrated_stars_ref_match_photom
+      # TODO[DM-47320]: use config files to reduce duplication with initial.
+      atools.photomDiffPsfSkyVisitPlot: TargetRefCatDeltaPsfSkyVisitPlot
+      atools.photomDiffAp09SkyVisitPlot: TargetRefCatDeltaAp09SkyVisitPlot
+      atools.photoDiffPsfScatterVisitPlot: TargetRefCatDeltaPsfScatterVisitPlot
+      atools.photoDiffCModelScatterVisitPlot: TargetRefCatDeltaAp09ScatterVisitPlot
+      python: from lsst.analysis.tools.atools import *

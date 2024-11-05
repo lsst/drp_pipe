@@ -8,18 +8,26 @@ description: |
   Never run this pipeline or any of its subsets directly; always use those in
   the 'pipelines' directory (or create a custom one) instead.
 
+# TODO[DM-47320]: temporary; only for dev pipeline-graph building {
+instrument: lsst.obs.subaru.HyperSuprimeCam
+# } END_TODO
+
 imports:
   # TODO[DM-47320]: rename/move for consistency with the others? {
   - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
   # } END_TODO
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-initial.yaml
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-associations-initial.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-recalibrated.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-associations-recalibrated.yaml
 
 tasks:
+  # 1-initial production tasks
   isr: lsst.ip.isr.IsrTask
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
+      connections.stars_footprints: initial_stars_footprints_detector
       connections.stars: initial_stars_detector_raw
       connections.exposure: initial_visit_image
       connections.background: initial_visit_image_background
@@ -56,6 +64,66 @@ tasks:
     config:
       connections.visitSummaries: initial_visit_summary
       connections.outputCatalog: preliminary_visits
+  # 2-recalibration production tasks
+  fgcmBuildFromIsolatedStars:
+    class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
+    config:
+      connections.isolated_star_cats: isolated_star_source_associations
+      connections.isolated_star_sources: isolated_star_sources
+      connections.visit_summaries: initial_visit_summary
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      doMultipleCycles: true
+  fgcmOutputProducts:
+    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+  gbdesAstrometricFit:
+    class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
+    config:
+      connections.inputCatalogRefs: initial_stars
+      connections.inputVisitSummaries: initial_visit_summary
+  finalizeCharacterization:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+    config:
+      connections.srcs: initial_stars_footprints_detector
+      connections.src_schema: initial_stars_schema
+      connections.calexps: initial_visit_image
+      connections.isolated_star_cats: isolated_star_source_associations
+      connections.isolated_star_sources: isolated_star_sources
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      connections.input_exposures: initial_visit_image
+      connections.input_summary_schema: initial_visit_summary_schema
+      connections.input_summary_catalog: initial_visit_summary
+      connections.output_summary_schema: visit_summary_schema
+      connections.output_summary_catalog: visit_summary
+  recalibrateInitialStars:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      connections.visitSummary: visit_summary
+      connections.catalog: initial_stars_footprints_detector
+      connections.outputCatalog: recalibrated_stars_detector_raw
+  transformRecalibratedStars:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: recalibrated_stars_detector_raw
+      connections.outputCatalog: recalibrated_stars_detector
+  consolidateRecalibratedStars:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: recalibrated_stars_detector
+      connections.outputCatalog: recalibrated_stars
+  makeVisitDetectorTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+    config:
+      connections.visitSummaryRefs: visit_summary
+      connections.outputCatalog: visit_detectors
+  makeVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+    config:
+      connections.visitSummaries: visit_summary
+      connections.outputCatalog: visits
 subsets:
   1a-initial-detectors:
     subset:
@@ -69,17 +137,15 @@ subsets:
       A step that processes raws to initial processed images and star catalogs.
       These all run per-detector and may be sharded by detector or visit.
 
-      An instrument constraint is generally unnecessary but may be slightly
-      helpful in QuantumGraph generation.
+      An instrument constraint is generally redundant but recommended.
 
-      A skymap constraint is unnecessary and may make QuantumGraph generation
-      slightly more complicated.
+      A skymap constraint is unnecessary and not recommended.
 
   1b-initial-consolidate-visits:
     subset:
       - consolidateInitialStars
       - consolidateVisitSummary
-      - analyzeInitialStarsTable
+      - analyzeInitialStars
       - makeAnalysisInitialStarsAstrometricRefMatch
       - analyzeInitialStarsAstrometricRefMatch
       - makeAnalysisInitialStarsPhotometricRefMatch
@@ -89,19 +155,17 @@ subsets:
       to full-focal-plane visit-level versions, and runs analysis on initial
       stars.
 
-      A visit constraint may be used for this step, but is not necessary unless
-      sharding.
+      A visit constraint may be used for sharding and may be useful in speeding
+      up QuantumGraph generation.
 
-      An instrument constraint is generally unnecessary but may be slightly
-      helpful in QuantumGraph generation.
+      An instrument constraint is generally redundant but recommended.
 
-      A skymap constraint is unnecessary and may make QuantumGraph generation
-      slightly more complicated.
+      A skymap constraint is unnecessary and not recommended.
 
   1c-initial-consolidate-all-tracts:
     subset:
       - isolatedStarAssociation
-      - analyzeInitialStarAssociationsCore
+      - analyzeInitialStarAssociations
     description: |
       A step that matches initial star catalogs (running over tracts) and
       runs analysis on those matches.
@@ -109,8 +173,7 @@ subsets:
       Tract constraints may only be used for sharding; tracts with partial
       visit coverage must always be included.
 
-      An instrument constraint is generally unnecessary but may be slightly
-      helpful in QuantumGraph generation.
+      An instrument constraint is generally redundant but recommended.
 
       A skymap constraint is always necessary, to avoid running all tasks
       redundantly on all skymaps in the data repository.
@@ -119,8 +182,8 @@ subsets:
     subset:
       - makePreliminaryVisitDetectorTable
       - makePreliminaryVisitTable
-      - makeAnalysisInitialStarsMatchedMetricTable
-      - makeAnalysisInitialStarsMatchedSkyPlot
+      - makeAnalysisInitialStarAssociationsMetricTable
+      - makeAnalysisInitialStarAssociationsSkyPlot
     description: |
       A step that consolidates visit[, detector] metadata and analysis into
       full-survey tables.
@@ -129,11 +192,95 @@ subsets:
       dropped by pipelines that don't need a checkpoint before multi-epoch
       calibration.
 
-      An instrument constraint is generally unnecessary but may be slightly
-      helpful in QuantumGraph generation.
+      An instrument constraint is generally redundant but recommended.
 
-      A skymap constraint is generally unnecessary but may be slightly
-      helpful in QuantumGraph generation.
+      A skymap constraint is generally redundant but recommended.
+
+  2a-recalibration-global:
+    subset:
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
+    description: |
+      A step that runs survey-wide multi-visit calibration tasks.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  2b-recalibration-tracts:
+    subset:
+      - gbdesAstrometricFit
+    description: |
+      A step that runs tract-level multi-visit calibration tasks.
+
+      A tract constraint may be used for sharding or avoiding partial-coverage
+      tracts, and may be helpful in speeding up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  2c-recalibration-visits:
+    subset:
+      - finalizeCharacterization
+      - updateVisitSummary
+      - recalibrateInitialStars
+      - transformRecalibratedStars
+      - consolidateRecalibratedStars
+      - analyzeRecalibratedStars
+      - makeAnalysisRecalibratedStarsAstrometricRefMatch
+      - analyzeRecalibratedStarsAstrometricRefMatch
+      - makeAnalysisRecalibratedStarsPhotometricRefMatch
+      - analyzeRecalibratedStarsPhotometricRefMatch
+    description: |
+      A step that runs visit-level multi-detector calibration tasks and then
+      recalibrates the initial stars catalog and runs visit-level analysis
+      on it.
+
+      A visit constraint may be used for sharding and may be useful in speeding
+      up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  2d-recalibration-tracts:
+    subset:
+      - analyzeRecalibratedStarAssociations
+    description: |
+      A step that runs tract-level analysis on associations between
+      recalibrated stars (using the same associations originally computed on
+      the initial stars).
+
+      This step's outputs are not consumed by downstream steps and may be
+      dropped by pipelines that don't need a checkpoint after multi-epoch
+      calibration.
+
+      A tract constraint may be used for sharding or avoiding partial-coverage
+      tracts, and may be helpful in speeding up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  2e-recalibration-global:
+    subset:
+      - makeVisitDetectorTable
+      - makeVisitTable
+      - makeAnalysisRecalibratedStarAssociationsMetricTable
+      - makeAnalysisRecalibratedStarAssociationsSkyPlot
+    description: |
+      A step that consolidates final visit[, detector] metadata and analysis
+      into full-survey tables.
+
+      This step's outputs are not consumed by downstream steps and may be
+      dropped by pipelines that don't need a checkpoint after multi-epoch
+      calibration.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
 
   # TODO[DM-47320]: allow defining labeled subsets via other labeled subsets,
   # define top-level steps here.

@@ -3,7 +3,7 @@
 # all of them.
 description: |
   Tier 1 plots and metrics to assess visit quality before joint calibration
-  steps and with matching only to external reference catalogs.
+  steps, with matching only to external reference catalogs.
 tasks:
   analyzeInitialVisitImageSummary:
     class: lsst.analysis.tools.tasks.CalexpSummaryAnalysisTask
@@ -62,7 +62,7 @@ tasks:
         numGoodStars: psf_good_star_count
       python: |
         from lsst.analysis.tools.atools import MetadataMetricTool
-  analyzeInitialStarsTable:
+  analyzeInitialStars:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
     config:
       connections.data: initial_stars
@@ -84,9 +84,6 @@ tasks:
       # Drop explicit refcat name from template to avoid needing to set it in
       # downstream task configs.
       connections.matchedCatalog: "{targetCatalog}_ref_match_astrom"
-      # TODO[DM-47320]: temporary to get PipelineGraph without obs_ overrides {
-      referenceCatalogLoader.doApplyColorTerms: false
-      # } END_TODO
   analyzeInitialStarsAstrometricRefMatch:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:
@@ -112,9 +109,6 @@ tasks:
       # Drop explicit refcat name from template to avoid needing to set it in
       # downstream task configs.
       connections.matchedCatalog: "{targetCatalog}_ref_match_photom"
-      # TODO[DM-47320]: temporary to get PipelineGraph without obs_ overrides {
-      referenceCatalogLoader.doApplyColorTerms: false
-      # } END_TODO
   analyzeInitialStarsPhotometricRefMatch:
     class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
     config:

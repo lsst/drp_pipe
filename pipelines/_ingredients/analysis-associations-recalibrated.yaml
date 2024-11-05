@@ -1,6 +1,6 @@
 description: |
-  Tier1 plots and metrics to assess repeatability of initial stars matched per
-  tract.
+  Tier1 plots and metrics to assess repeatability of recalibrated stars matched
+  per tract.
 parameters:
   matchedVisitCoreKeysWithBand: [
     "stellarAstrometricRepeatability1_{band}_AM1",
@@ -21,12 +21,12 @@ parameters:
     "stellarPhotometricResiduals_{band}_photResidTractMedian",
   ]
 tasks:
-  analyzeInitialStarAssociations:
+  analyzeRecalibratedStarAssociations:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
-      connections.sourceCatalogs: initial_stars
+      connections.sourceCatalogs: recalibrated_stars
       connections.associatedSources: isolated_star_source_associations
-      connections.outputName: initial_star_associations
+      connections.outputName: recalibrated_star_associations
       applyAstrometricCorrections: false
       atools.stellarPhotometricRepeatability: StellarPhotometricRepeatability
       atools.stellarPhotometricResiduals: StellarPhotometricResidualsFocalPlane
@@ -56,19 +56,19 @@ tasks:
       atools.stellarAstrometricSelfRepeatabilityDec.coordinate: 'Dec'
       python: |
         from lsst.analysis.tools.atools import *
-  makeAnalysisInitialStarAssociationsMetricTable:
+  makeAnalysisRecalibratedStarAssociationsMetricTable:
     class: lsst.analysis.tools.tasks.MakeMetricTableTask
     config:
-      connections.metricBundleName: "initial_star_associations_metrics"
-      connections.metricTable: "initial_star_associations_metrics_table"
+      connections.metricBundleName: "recalibrated_star_associations_metrics"
+      connections.metricTable: "recalibrated_star_associations_metrics_table"
       loadMatchedVisitData: true
       python: |
         from lsst.analysis.tools.atools import *
-  makeAnalysisInitialStarAssociationsSkyPlot:
+  makeAnalysisRecalibratedStarAssociationsSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      connections.inputName: "initial_star_associations_metrics_table"
-      connections.outputName: "initial_star_associations_whole_sky"
+      connections.inputName: "recalibrated_star_associations_metrics_table"
+      connections.outputName: "recalibrated_star_associations_whole_sky"
       atools.wholeSkyMetric: WholeSkyPlotTool
       atools.wholeSkyMetric.plotKeys: []
       atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
