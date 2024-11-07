@@ -24,6 +24,17 @@ tasks:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
       connections.cycleNumber: 4
+  finalizeCharacterization:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+    config:
+      # Swtich to psfex with 41x41 stamps for early commissioning data.
+      # TODO DM-47231: do full PSF model config sweep for LSSTComCam
+      # TBD if we want to always use psfex for final PSF modeling in
+      # nightly-validation pipeline, but piff for DRP pipeline.
+      make_psf_candidates.kernelSize: 41
+      psf_determiner.name: "psfex"
+      python: |
+        import lsst.meas.extensions.psfex.psfexPsfDeterminer
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
