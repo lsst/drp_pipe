@@ -137,7 +137,6 @@ subsets:
       - consolidateSourceTable
       - catalogMatchVisit
       - astrometricRefCatSourceVisit
-      - reprocessVisitImage
     description: |
       Per-visit tasks. These should never be run with tract constraints
   nightlyStep3:
@@ -156,7 +155,6 @@ subsets:
       - consolidateObjectTable
       - healSparsePropertyMaps
       - objectEpochTable
-      - isolatedStarSourceAssociation
     description: |
       Tasks that can be run together, but only after the 'step1' and 'step2'
       subsets.
@@ -172,6 +170,7 @@ subsets:
       functionality.  It may be removed in the future.
   nightlyStep4:
     subset:
+      - reprocessVisitImage
       - forcedPhotCcd
       - sourceObjectMatch
     description: |

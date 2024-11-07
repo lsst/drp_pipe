@@ -75,7 +75,6 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
-      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
@@ -119,7 +118,6 @@ subsets:
       - catalogMatchTract
       - refCatObjectTract
       - validateObjectTableCore
-      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - photometricCatalogMatch
       - photometricRefCatObjectTract
@@ -137,6 +135,7 @@ subsets:
       partial coverage.
   step4:
     subset:
+      - reprocessVisitImage
       - forcedPhotCcd
     description: |
       Detector-level tasks

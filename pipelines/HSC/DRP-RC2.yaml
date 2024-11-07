@@ -135,7 +135,6 @@ subsets:
       - fgcmFitCycle
       - fgcmOutputProducts
       - updateVisitSummary
-      - reprocessVisitImage
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
@@ -178,7 +177,6 @@ subsets:
       # per-tract Tasks
       - consolidateObjectTable
       - analyzeMatchedVisitCore
-      - isolatedStarSourceAssociation
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
       - catalogMatchTract
@@ -204,6 +202,7 @@ subsets:
     subset:
       - forcedPhotCcd
       - forcedPhotDiffim
+      - reprocessVisitImage
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources

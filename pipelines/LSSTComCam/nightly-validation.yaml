@@ -70,7 +70,6 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
-      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
@@ -112,7 +111,6 @@ subsets:
       - healSparsePropertyMaps
       - consolidateObjectTable
       # analysis_tools tasks
-      - isolatedStarSourceAssociation
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended

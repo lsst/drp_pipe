@@ -178,7 +178,6 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
-      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
