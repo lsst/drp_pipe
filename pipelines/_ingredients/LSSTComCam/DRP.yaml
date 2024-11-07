@@ -9,6 +9,9 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+parameters:
+  highSNThreshold: 540
+  lowSNThreshold: 100
 tasks:
   isr: lsst.ip.isr.IsrTaskLSST
   gbdesAstrometricFit:
@@ -137,6 +140,45 @@ tasks:
       atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
       python: |
         from lsst.analysis.tools.atools import *
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      connections.outputName: objectTableCore
+      atools.shapeSizeFractionalDiff: ShapeSizeFractionalDiffScatter
+      atools.shapeSizeFractionalDiff.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.shapeSizeFractionalDiff.process.calculateActions.stars.highSNSelector.threshold: parameters.highSNThreshold
+      atools.shapeSizeFractionalDiff.process.calculateActions.stars.lowSNSelector.threshold: parameters.lowSNThreshold
+      atools.e1Diff: E1DiffScatter
+      atools.e1Diff.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.e1Diff.process.calculateActions.stars.highSNSelector.threshold: parameters.highSNThreshold
+      atools.e1Diff.process.calculateActions.stars.lowSNSelector.threshold: parameters.lowSNThreshold
+      atools.e2Diff: E2DiffScatter
+      atools.e2Diff.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.e2Diff.process.calculateActions.stars.highSNSelector.threshold: parameters.highSNThreshold
+      atools.e2Diff.process.calculateActions.stars.lowSNSelector.threshold: parameters.lowSNThreshold
+      atools.wPerpPSFP: WPerpPSF
+      atools.wPerpPSFP.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.wPerpCModel: WPerpCModel
+      atools.wPerpCModel.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.xPerpPSFP: XPerpPSF
+      atools.xPerpPSFP.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.xPerpCModel: XPerpCModel
+      atools.xPerpCModel.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.yPerpPSF: YPerpPSF
+      atools.yPerpPSF.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.yPerpCModel: YPerpCModel
+      atools.yPerpCModel.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.skyObjectSky: SkyObjectSkyPlot
+      atools.skyObjectSky.prep.selectors.skyObjectSelector.bands: ["r"]
+      atools.skyObjectFlux: SkyObjectHistPlot
+      atools.skyObjectFlux.prep.selectors.skyObjectSelector.bands: ["r"]
+      atools.psfCModelScatter: PsfCModelScatterPlot
+      atools.psfCModelScatter.prep.selectors.snSelector.threshold: parameters.lowSNThreshold
+      atools.psfCModelScatter.process.calculateActions.stars.highSNSelector.threshold: parameters.highSNThreshold
+      atools.psfCModelScatter.process.calculateActions.stars.lowSNSelector.threshold: parameters.lowSNThreshold
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
   # These don't actually work now:
   photometricMatchPreVisit:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
