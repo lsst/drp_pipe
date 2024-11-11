@@ -61,7 +61,10 @@ tasks:
         # include already-calibrated columns.
         config.star_measurement.plugins.names |= ["base_LocalPhotoCalib", "base_LocalWcs"]
 
-  transformSourceTable: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+  transformSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
   consolidateSourceTable: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
   isolatedStarAssociation:

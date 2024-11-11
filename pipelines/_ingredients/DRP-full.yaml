@@ -43,8 +43,13 @@ tasks:
   transformPreSourceTable:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
+      functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
       connections.inputCatalog: preSource
       connections.outputCatalog: preSourceTable
+  transformSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      functorFile: $PIPE_TASKS_DIR/schemas/Source.yaml
   consolidatePreSourceTable:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
     config:
