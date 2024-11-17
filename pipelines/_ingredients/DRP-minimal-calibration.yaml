@@ -77,8 +77,8 @@ tasks:
       remove_initial_photo_calib: false
   makeCcdVisitTable: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
   makeVisitTable: lsst.pipe.tasks.postprocess.MakeVisitTableTask
-  makeDirectWarp: lsst.pipe.tasks.make_direct_warp.MakeDirectWarpTask
-  makePsfMatchedWarp: lsst.pipe.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
+  makeDirectWarp: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+  makePsfMatchedWarp: lsst.drp.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:

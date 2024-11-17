@@ -52,7 +52,7 @@ tasks:
     config:
       do_use_sky_corr: false
   makeDirectWarp:
-    class: lsst.pipe.tasks.make_direct_warp.MakeDirectWarpTask
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
       warper.warpingKernelName: lanczos5
@@ -62,7 +62,7 @@ tasks:
         from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
         config.select.retarget(PsfWcsSelectImagesTask)
   makePsfMatchedWarp:
-    class: lsst.pipe.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
+    class: lsst.drp.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
     config:
       # These configs match obs_subaru, to facilitate 1:1 comparisons between DECam and HSC
       modelPsf.defaultFwhm: 7.7
