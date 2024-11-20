@@ -25,10 +25,12 @@ subsets:
   step1:
     subset:
       - isr
-      - calibrateImage
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
       - transformPreSourceTable
       - calexpSummary
-      - analyzeCalibrateImageMetadata
+      - analyzeCalibrateMetadata
     description: |
       Detector level tasks. TO DO: requests include synthetic source injection,
       subtractImages, detectAndMeasureDiaSources.

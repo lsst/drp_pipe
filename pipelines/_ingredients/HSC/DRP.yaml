@@ -7,7 +7,9 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+    exclude:
+      - analyzeCalibrateMetadata
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/pviMetrics.yaml  # TODO[DM-47632] merge this into visitQualityCore
 tasks:

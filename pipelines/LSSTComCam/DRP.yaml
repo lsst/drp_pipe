@@ -10,7 +10,9 @@ subsets:
   step1:
     subset:
       - isr
-      - calibrateImage
+      - characterizeImage
+      - calibrate
+      - writePreSourceTable
       - transformPreSourceTable
     description: |
       Per-detector tasks that can be run together to start the DRP pipeline.
