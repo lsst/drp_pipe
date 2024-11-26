@@ -14,7 +14,7 @@ tasks:
   # preSources downstream.
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
-      # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
+    # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
 subsets:
   step1:
     subset:
