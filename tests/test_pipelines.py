@@ -114,8 +114,6 @@ LSSTCOMCAMSIM_INPUTS = {
 
 # a selection of mostly common outputs
 COMMON_OUTPUTS = {
-    "calexp",
-    "calexpBackground",
     "ccdVisitTable",
     "compare_warp_artifact_mask",
     "deepCoaddVisits",
@@ -135,22 +133,27 @@ COMMON_OUTPUTS = {
     "deepCoadd_scarletModelData",
     "finalized_src_table",
     "finalVisitSummary",
-    "icExp",
-    "icExpBackground",
-    "icSrc",
+    "calexp",
+    "calexpBackground",
+    "src",
+    "source",
     "objectTable",
     "objectTable_tract",
     "postISRCCD",
-    "source",
-    "sourceTable",
     "sourceTable_visit",
-    "src",
-    "srcMatch",
     "visitSummary",
     "visitTable",
     "isolated_star_presource_associations",
     "isolated_star_presources",
 }
+
+CALIBRATE_IMAGE_OUTPUTS = {
+    "initial_astrometry_match_detector",
+    "initial_photometry_match_detector",
+    "initial_psf_stars_footprints_detector",
+    "initial_psf_stars_detector",
+}
+
 
 # HSC common outputs, in addition to COMMON_OUTPUTS
 HSC_OUTPUTS = {
@@ -159,12 +162,10 @@ HSC_OUTPUTS = {
     "deepCoadd_measMatch",
     "deepCoadd_measMatchFull",
     "forced_src",
-    "preSource",
     "preSourceTable",
     "preSourceTable_visit",
     "skyCorr",
-    "srcMatchFull",
-}
+} | CALIBRATE_IMAGE_OUTPUTS
 
 # LATISS common outputs, in addition to COMMON_OUTPUTS
 LATISS_OUTPUTS = {
@@ -206,7 +207,7 @@ LATISS_OUTPUTS = {
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
     "transmission_atmosphere_fgcm",
-}
+} | CALIBRATE_IMAGE_OUTPUTS
 
 # LSSTCam-imSim common outputs, in addition to COMMON_OUTPUTS
 LSSTCAM_IMSIM_OUTPUTS = {
@@ -237,7 +238,7 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "goodSeeingVisits",
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
-}
+} | CALIBRATE_IMAGE_OUTPUTS
 
 # Outputs common to all "quickLook" pipelines, which only iclude
 QUICKLOOK_OUTPUTS = {
@@ -321,10 +322,8 @@ class PipelineTestCase(unittest.TestCase):
                 "goodSeeingCoadd",
                 "goodSeeingCoadd_nImage",
                 "goodSeeingVisits",
-                "preSource",
                 "preSourceTable",
                 "preSourceTable_visit",
-                "srcMatchFull",
             },
         )
         tester.run(butler, self)

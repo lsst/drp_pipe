@@ -10,10 +10,61 @@ imports:
 
 tasks:
   isr: lsst.ip.isr.IsrTask
-  characterizeImage: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
-  calibrate: lsst.pipe.tasks.calibrate.CalibrateTask
-  writeSourceTable: lsst.pipe.tasks.postprocess.WriteSourceTableTask
-  transformSourceTable: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+
+      # In DRP not calibrating the pixels (or the backgrounds) until we have
+      # our final photometric calibration makes everything downstream much
+      # simpler.
+      do_calibrate_pixels: false
+
+      # TODO[DM-47320]: for now we rename outputs to look like those of the
+      # tasks calibrateImage replaces; we'll change the input connection
+      # defaults downstream later and then remove these overrides.
+      connections.initial_stars_schema: src_schema
+      connections.stars_footprints: src
+      connections.stars: source
+      connections.exposure: calexp
+      connections.background: calexpBackground
+
+      python: |
+        # TODO[DM-47320]: make output catalog as similar to the old 'src' as
+        # possible; we'll try to go back to calibrateImage defaults with a
+        # smaller catalog after it's integrated.
+        # Goal is to remove all of these overrides except the aperture radii,
+        # which we instead want to set to the same as the compensated tophat
+        # radii below for lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+        config.star_detection.includeThresholdMultiplier = 1.0
+        config.star_selector["science"].doUnresolved = False
+        config.star_selector["science"].doSignalToNoise = False
+        config.star_measurement.plugins["base_CircularApertureFlux"].radii = [
+            3.0, 6.0, 9.0, 12.0, 17.0, 25.0, 35.0, 50.0, 70.0
+        ]
+        config.star_measurement.plugins.names |= [
+          "base_Variance",
+          "ext_shapeHSM_HsmPsfMomentsDebiased",
+          "ext_shapeHSM_HsmShapeRegauss",
+          "base_Blendedness",
+          "base_Jacobian",
+        ]
+
+        # fgcmcal needs an inner and outer aperture and may want an estimate of
+        # the local background
+        config.star_measurement.plugins["base_CircularApertureFlux"].maxSincRadius = 12.0
+        config.star_measurement.plugins["base_CompensatedTophatFlux"].apertures = [12, 17]
+        config.star_measurement.plugins.names |= ["base_LocalBackground"]
+
+        # Table schema standardization currently works by looking at these
+        # 'local' calibration columns and using them to re-calibrate the raw
+        # measurements, despite the fact that the calibrateImage outputs also
+        # include already-calibrated columns.
+        config.star_measurement.plugins.names |= ["base_LocalPhotoCalib", "base_LocalWcs"]
+
+  transformSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
   consolidateSourceTable: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
   consolidateVisitSummary: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
   isolatedStarAssociation:
@@ -201,14 +252,12 @@ subsets:
   processCcd:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
+      - calibrateImage
     description: >
       Set of tasks to run when doing single frame processing, without any
       conversions to Parquet/DataFrames or visit-level summaries.
   sourceTable:
     subset:
-      - writeSourceTable
       - transformSourceTable
       - consolidateSourceTable
     description: >

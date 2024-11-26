@@ -9,7 +9,10 @@ imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
     exclude:
       - analyzeMatchedPreVisitCore  # imSim does not have preSourceTable_visit catalogs
-  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+    exclude:
+      - analyzeCalibrateMetadata
+  - $ANALYSIS_TOOLS_DIR/pipelines/pviMetrics.yaml  # TODO[DM-47632] merge this into visitQualityCore
 parameters:
   filterMap: {
     "u": "lsst_u_smeared",
@@ -34,14 +37,8 @@ tasks:
       # to compute them for analyzeAmpOffsetMetadata to report on as metrics.
       doAmpOffset: true
       ampOffset.doApplyAmpOffset: false
-  calibrate:
-    class: lsst.pipe.tasks.calibrate.CalibrateTask
-    config:
-      connections.astromRefCat: "cal_ref_cat_2_2"
-      connections.photoRefCat: "cal_ref_cat_2_2"
-      python: |
-        config.astromRefObjLoader.filterMap = parameters.filterMap
-        config.photoRefObjLoader.filterMap = parameters.filterMap
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
   measure:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
@@ -121,9 +118,7 @@ subsets:
   step1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      - writeSourceTable
+      - calibrateImage
       - transformSourceTable
       - analyzeAmpOffsetMetadata
     description: |

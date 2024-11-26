@@ -16,9 +16,7 @@ subsets:
   step1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      - writePreSourceTable
+      - calibrateImage
       - transformPreSourceTable
       - analyzeAmpOffsetMetadata
     description: |
