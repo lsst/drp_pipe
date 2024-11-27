@@ -159,8 +159,6 @@ CALIBRATE_IMAGE_OUTPUTS = {
 HSC_OUTPUTS = {
     "calexp_skyCorr_visit_mosaic",
     "calexpBackground_skyCorr_visit_mosaic",
-    "deepCoadd_measMatch",
-    "deepCoadd_measMatchFull",
     "forced_src",
     "preSourceTable",
     "preSourceTable_visit",
@@ -211,8 +209,6 @@ LATISS_OUTPUTS = {
 
 # LSSTCam-imSim common outputs, in addition to COMMON_OUTPUTS
 LSSTCAM_IMSIM_OUTPUTS = {
-    "deepCoadd_measMatch",
-    "deepCoadd_measMatchFull",
     "diaObjectTable_tract",
     "diaSourceTable",
     "diaSourceTable_tract",
@@ -317,8 +313,6 @@ class PipelineTestCase(unittest.TestCase):
             },
             expected_outputs=COMMON_OUTPUTS
             | {
-                "deepCoadd_measMatch",
-                "deepCoadd_measMatchFull",
                 "goodSeeingCoadd",
                 "goodSeeingCoadd_nImage",
                 "goodSeeingVisits",
