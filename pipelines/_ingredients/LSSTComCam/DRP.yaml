@@ -50,6 +50,10 @@ tasks:
       psf_determiner.name: "psfex"
       python: |
         import lsst.meas.extensions.psfex.psfexPsfDeterminer
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      maxPsfFwhm: 1.7
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
