@@ -49,6 +49,7 @@ tasks:
           config.doDeblend = False
           config.astrometry.sourceSelector["science"].doRequirePrimary = False
           config.astrometry.sourceSelector["science"].doIsolated = False
+          config.astrometry.matcher.maxRefObjects = 8192
       # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
 subsets:
   step1:
