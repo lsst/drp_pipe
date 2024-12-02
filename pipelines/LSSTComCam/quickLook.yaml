@@ -8,55 +8,40 @@ imports:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
+      # We exclude calibrateImage here because we don't want the default DRP
+      # configs for quickLook; instead we want something much closer to the
+      # task defaults (basically the AP configuration), and we get that by not
+      # importing the task and instead just redeclaring it below.
+      - calibrateImage
 tasks:
   isr:
     class: lsst.ip.isr.IsrTaskLSST
     config:
       # Turn off slow steps in ISR
       doBrighterFatter: false
-  # TO DO: Replace with calibrateImage in a way that we can use the
-  # preSources downstream.
-  characterizeImage:
-    class: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
-      doApCorr: false
-      doDeblend: false
-  calibrate:
-    class: lsst.pipe.tasks.calibrate.CalibrateTask
-    config:
-      requirePhotoCal: false
-      requireAstrometry: false
-      python: |
-          config.measurement.plugins.names = ['base_CircularApertureFlux',
-                                              'base_PsfFlux',
-                                              'base_LocalBackground',
-                                              'base_SdssCentroid',
-                                              'base_SdssShape',
-                                              'base_Variance',
-                                              'base_Jacobian',
-                                              'base_PixelFlags',
-                                              'base_GaussianFlux',
-                                              'base_SkyCoord',
-                                              'base_FPPosition',
-                                              'base_ClassificationSizeExtendedness',
-                                              'base_CompensatedTophatFlux',
-                                              ]
-          config.measurement.slots.shape = "base_SdssShape"
-          config.measurement.slots.psfShape = "base_SdssShape_psf"
-          config.measurement.plugins['base_PixelFlags'].masksFpAnywhere.remove('STREAK')
-          config.measurement.plugins['base_PixelFlags'].masksFpCenter.remove('STREAK')
-          config.doApCorr = False
-          config.doDeblend = False
-          config.astrometry.sourceSelector["science"].doRequirePrimary = False
-          config.astrometry.sourceSelector["science"].doIsolated = False
-      # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
+      # In DRP not calibrating the pixels (or the backgrounds) until we have
+      # our final photometric calibration makes everything downstream much
+      # simpler.
+      do_calibrate_pixels: false
+      # TODO[DM-47320]: for now we rename outputs to look like those of the
+      # tasks calibrateImage replaces; we'll change the input connection
+      # defaults downstream later and then remove these overrides.
+      connections.initial_stars_schema: src_schema
+      connections.stars_footprints: src
+      connections.stars: source
+      connections.exposure: calexp
+      connections.background: calexpBackground
+
+    # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
 subsets:
   step1:
     subset:
       - isr
-      - characterizeImage
-      - calibrate
-      # TO DO: configure and add writePreSourceTable, transformPreSourceTable
+      - calibrateImage
+      # TO DO: configure and add transformPreSourceTable
     description: |
       Per-detector tasks that can be run together
   step2a:
