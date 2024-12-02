@@ -3,7 +3,11 @@ description: |
     the summit which feeds RubinTV for realtime observer feedback
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+    exclude:
+      # We exclude calibrateImage here in order to restore the performance-
+      # oriented task default configs.
+      - calibrateImage
 tasks:
   isr:
     class: lsst.ip.isr.IsrTaskLSST
@@ -14,6 +18,19 @@ tasks:
   # preSources downstream.
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+      # In DRP not calibrating the pixels (or the backgrounds) until we have
+      # our final photometric calibration makes everything downstream much
+      # simpler.
+      do_calibrate_pixels: false
+      # TODO[DM-47320]: for now we rename outputs to look like those of the
+      # tasks calibrateImage replaces; we'll change the input connection
+      # defaults downstream later and then remove these overrides.
+      connections.initial_stars_schema: src_schema
+      connections.stars_footprints: src
+      connections.stars: source
+      connections.exposure: calexp
+      connections.background: calexpBackground
     # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
 subsets:
   step1:
