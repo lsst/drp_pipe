@@ -1,9 +1,7 @@
 description: DRP Pipeline for ComCam
 instrument: lsst.obs.lsst.LsstComCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
-    exclude:
-      - calibrateImage
+  - $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
@@ -13,19 +11,6 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
 tasks:
   isr: lsst.ip.isr.IsrTaskLSST
-  # ComCam is using the old tasks (characterizeImage, calibrate) for a bit
-  # longer because we need to be very careful about testing and coordinating
-  # that switchover during active commissioning.  TODO[47632].
-  characterizeImage: lsst.pipe.tasks.characterizeImage.CharacterizeImageTask
-  calibrate: lsst.pipe.tasks.calibrate.CalibrateTask
-  writePreSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteSourceTableTask
-    config:
-      connections.outputCatalog: preSource
-  transformPreSourceTable:
-    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
-    config:
-      functorFile: $PIPE_TASKS_DIR/schemas/Source.yaml
   gbdesAstrometricFit:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
     config:
@@ -169,7 +154,7 @@ tasks:
     class: lsst.analysis.tools.tasks.CcdVisitTableAnalysisTask
     config:
       connections.data: preCcdVisitTable
-      connections.calibrateConfig: calibrate_config  # all it needs is config.astrometry.
+      connections.calibrateConfig: calibrateImage_config  # all it needs is config.astrometry.
       atools.raDecCoveragePlot: RaDecMultiVisitCoveragePlot
       atools.raDecCoveragePlot.produce.plot.showExtremeOutliers: false
       atools.focalPlaneCoveragePlot: FocalPlaneMultiVisitCoveragePlot
