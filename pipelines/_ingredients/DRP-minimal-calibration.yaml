@@ -159,9 +159,19 @@ tasks:
       connections.matchedTemplate: goodSeeingDiff_matchedExp
       connections.difference: goodSeeingDiff_differenceTempExp
       connections.subtractedMeasuredExposure: goodSeeingDiff_differenceExp
+  rbClassify:
+    class: lsst.meas.transiNet.RBTransiNetTask
+    config:
+      modelPackageStorageMode: butler
+      connections.science: pvi
+      connections.coaddName: goodSeeing
+      connections.template: goodSeeingDiff_templateExp
+      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.diaSources: goodSeeingDiff_diaSrc
   transformDiaSourceCat:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
+      doIncludeReliability: True
       connections.coaddName: goodSeeing
       connections.diaSourceSchema: goodSeeingDiff_diaSrc_schema
       connections.diaSourceCat: goodSeeingDiff_diaSrc
@@ -301,6 +311,7 @@ subsets:
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
+      - rbClassify
       - transformDiaSourceCat
       - consolidateDiaSourceTable
       - drpAssociation
