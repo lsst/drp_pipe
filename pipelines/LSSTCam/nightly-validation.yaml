@@ -5,9 +5,13 @@ description: |
   level tasks can be run in real time by e.g. Rapid Analysis.
   The rest of the pipeline is expected to be run as part of the
   10am processing.
-instrument: lsst.obs.lsst.LsstComCamSim
+instrument: lsst.obs.lsst.LsstCam
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
+    exclude:
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
 tasks:
   analyzePreSourceTableCore:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
@@ -15,8 +19,15 @@ tasks:
       connections.data: preSourceTable_visit
       connections.inputName: preSourceTable_visit
       connections.outputName: preSourceTableCore
-  calibrateImage:
-    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+  calibrate:
+    class: lsst.pipe.tasks.calibrate.CalibrateTask
+    config:
+      python: |
+        from lsst.analysis.tools.tasks import CalexpSummaryAnalysisTask
+        config.createSummaryMetrics.retarget(CalexpSummaryAnalysisTask)
+        from lsst.analysis.tools.atools import CalexpSummaryMetrics
+        config.createSummaryMetrics.atools.calexpSummaryMetrics = CalexpSummaryMetrics
+      doCreateSummaryMetrics: true
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -31,8 +42,6 @@ subsets:
       - isr
       - calibrateImage
       - transformPreSourceTable
-      - calexpSummary
-      - analyzeCalibrateImageMetadata
     description: |
       Detector level tasks. TO DO: requests include synthetic source injection,
       subtractImages, detectAndMeasureDiaSources.
@@ -68,15 +77,15 @@ subsets:
   step2d:
     subset:
       - finalizeCharacterization
-      - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
+      - reprocessVisitImage
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit
 
-      writeRecalibratedSourceTable, transformSourceTable run per-detector
+      transformSourceTable runs per-detector
       consolidateSourceTable produces one data product per visit.
       finalizeCharacterization will eventually model full focal plane PSFs.
   step2e:
@@ -109,7 +118,6 @@ subsets:
       - consolidateObjectTable
       - healSparsePropertyMaps
       # analysis_tools tasks
-      - analyzeAmpOffsetMetadata
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
       - analyzeObjectTableExtended
