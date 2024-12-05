@@ -51,6 +51,7 @@ COMMON_INPUTS = {
     "ptc",
     "linearizer",
     "bfk",
+    "pretrainedModelPackage",
 }
 
 # HSC common inputs, in addition to COMMON_INPUTS

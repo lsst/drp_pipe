@@ -120,6 +120,7 @@ subsets:
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
+      - rbClassify
       - transformDiaSourceCat
       - writeForcedSourceTable
     description: |
