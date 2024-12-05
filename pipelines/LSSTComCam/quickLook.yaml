@@ -50,12 +50,20 @@ tasks:
           config.astrometry.sourceSelector["science"].doRequirePrimary = False
           config.astrometry.sourceSelector["science"].doIsolated = False
       # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
+  binVisitImage4:
+    class: lsst.ip.isr.BinExposureTask
+    config:
+      connections.inputExposure: calexp
+      connections.binnedExposure: calexp_binned_4x
+      exposureDimensions: ["visit", "detector"]
+      binFactor: 4
 subsets:
   step1:
     subset:
       - isr
       - characterizeImage
       - calibrate
+      - binVisitImage4
       # TO DO: configure and add writePreSourceTable, transformPreSourceTable
     description: |
       Per-detector tasks that can be run together
