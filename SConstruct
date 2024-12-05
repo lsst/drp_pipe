@@ -1,5 +1,6 @@
 # -*- python -*-
 import os
+
 from lsst.sconsUtils import scripts
 from lsst.sconsUtils.state import env
 from lsst.sconsUtils.utils import libraryLoaderEnvironment
@@ -18,6 +19,17 @@ scripts.BasicSConstruct(
 )
 PKG_ROOT = env.ProductDir("drp_pipe")
 
+additional_pipeline = os.path.join(
+    PKG_ROOT,
+    "pipelines",
+    "HSC",
+    "DRP-RC2-post-injected.yaml",
+)
+
+subset_name = "injected_coadd_analysis"
+subset_description = "Analysis tasks for object_table level injected catalogs."
+
+
 # make deepCoadd injection pipelines for rc2_subset and RC2
 rc2_subset_injected_deepCoadd = env.Command(
     target=os.path.join(
@@ -27,7 +39,8 @@ rc2_subset_injected_deepCoadd = env.Command(
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            "make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET --overwrite",
+            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {additional_pipeline} "
+            f"-s {subset_name} -d '{subset_description}' --overwrite",
         ]
     ),
 )
@@ -39,7 +52,8 @@ RC2_injected_deepCoadd = env.Command(
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            "make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET --overwrite",
+            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {additional_pipeline} "
+            f"-s {subset_name} -d '{subset_description}' --overwrite",
         ]
     ),
 )
