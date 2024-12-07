@@ -12,7 +12,6 @@ tasks:
   analyzePreSourceTableCore:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
     config:
-      connections.data: preSourceTable_visit
       connections.inputName: preSourceTable_visit
       connections.outputName: preSourceTableCore
   calibrateImage:
