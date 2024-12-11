@@ -43,4 +43,16 @@ RC2_injected_deepCoadd = env.Command(
         ]
     ),
 )
-Default([rc2_subset_injected_deepCoadd, RC2_injected_deepCoadd])
+ComCam_injected_deepCoadd = env.Command(
+    target=os.path.join(
+        PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_deepCoadd.yaml"
+    ),
+    source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP.yaml"),
+    action=" ".join(
+        [
+            libraryLoaderEnvironment(),
+            "make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET --overwrite",
+        ]
+    ),
+)
+Default([rc2_subset_injected_deepCoadd, RC2_injected_deepCoadd, ComCam_injected_deepCoadd])
