@@ -2,10 +2,6 @@ description: DRP Pipeline for LSSTComCam
 instrument: lsst.obs.lsst.LsstComCam
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCam/DRP.yaml
-    exclude:
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
 subsets:
   step1:
     subset:
@@ -47,6 +43,15 @@ subsets:
       gbdesAstrometricFit produces solutions per-tract, per-visit
       isolatedStarAssociation produces solutions per-tract.
       TODO: Evaluate GBDES after first DRP
+  step2c:
+    subset:
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
+    description: |
+      This subset is the FGCM run that runs in "global" mode, which means
+      that one should only use an `instrument` and a `skymap` connection
+      (the latter of which links with the correct isolated star tables).
   step2d:
     subset:
       - finalizeCharacterization
