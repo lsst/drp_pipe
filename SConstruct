@@ -19,23 +19,29 @@ scripts.BasicSConstruct(
 )
 PKG_ROOT = env.ProductDir("drp_pipe")
 
-additional_pipeline_RC2 = os.path.join(
+injected_pipeline_RC2 = os.path.join(
     PKG_ROOT,
     "pipelines",
     "HSC",
     "DRP-RC2-post-injected-stars.yaml",
 )
 
-additional_pipeline_LSSTComCam = os.path.join(
-    PKG_ROOT,
-    "pipelines",
-    "LSSTComCam",
-    "DRP-post-injected-stars.yaml",
-)
+injection_descriptions = {
+    "stars": "Bright stars",
+    "DC2": "DC2 stars and galaxies",
+}
+injected_pipelines_LSSTComCam = {
+    suffix: os.path.join(
+        PKG_ROOT,
+        "pipelines",
+        "LSSTComCam",
+        f"DRP-post-injected-{suffix}.yaml",
+    )
+    for suffix in injection_descriptions
+}
 
 subset_name = "injected_stars_coadd_analysis"
 subset_description = "Analysis tasks for object_table level injected catalogs."
-
 
 # Make deepCoadd injection pipelines for rc2_subset, RC2, and LSSTComCam.
 rc2_subset_injected_deepCoadd_stars = env.Command(
@@ -46,7 +52,7 @@ rc2_subset_injected_deepCoadd_stars = env.Command(
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {additional_pipeline_RC2} "
+            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {injected_pipeline_RC2} "
             f"-s {subset_name} -d '{subset_description}' --overwrite",
         ]
     ),
@@ -59,37 +65,42 @@ RC2_injected_deepCoadd_stars = env.Command(
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {additional_pipeline_RC2} "
+            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {injected_pipeline_RC2} "
             f"-s {subset_name} -d '{subset_description}' --overwrite",
         ]
     ),
 )
-LSSTComCam_excluded_tasks = [
+LSSTComCam_excluded_tasks = ','.join([
     "jointcal",
     "gbdesAstrometricFit",
     "fgcmBuildFromIsolatedStars",
     "fgcmFitCycle",
     "fgcmOutputProducts",
     "skyCorr",
+])
+
+subset_name = "injected_{suffix}_coadd_analysis"
+
+LSSTComCam_injected = [
+    env.Command(
+        target=os.path.join(
+            PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_deepCoadd_stars.yaml"
+        ),
+        source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP.yaml"),
+        action=" ".join(
+            [
+                libraryLoaderEnvironment(),
+                f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {pipeline} "
+                f"-s {subset_name.format(suffix=suffix)} -d '{injection_descriptions[suffix]}' "
+                f"-x {LSSTComCam_excluded_tasks} --overwrite",
+            ]
+        ),
+    )
+    for suffix, pipeline in injected_pipelines_LSSTComCam.items()
 ]
-LSSTComCam_injected_deepCoadd_stars = env.Command(
-    target=os.path.join(
-        PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_deepCoadd_stars.yaml"
-    ),
-    source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP.yaml"),
-    action=" ".join(
-        [
-            libraryLoaderEnvironment(),
-            f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {additional_pipeline_LSSTComCam} "
-            f"-s {subset_name} -d '{subset_description}' -x {','.join(LSSTComCam_excluded_tasks)} "
-            "--overwrite",
-        ]
-    ),
-)
 Default(
     [
         rc2_subset_injected_deepCoadd_stars,
         RC2_injected_deepCoadd_stars,
-        LSSTComCam_injected_deepCoadd_stars,
-    ]
+    ] + LSSTComCam_injected
 )
