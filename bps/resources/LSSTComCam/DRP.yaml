@@ -1,0 +1,17 @@
+# This BPS configuration snippet adds requestMemory values for DRP
+# and tasks.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/resources/LSSTComCam/DRP.yaml
+#
+# (with no outer indentation) to your BPS config file.
+
+pipetask:
+  fgcmBuildFromIsolatedStars:
+    requestMemory: 16000
+  fgcmFitCycle:
+    requestCpus: 16
+    requestMemory: 32000
+    extraRunQuantumOptions: "-j 1 -n 16"

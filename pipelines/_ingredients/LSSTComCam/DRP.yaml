@@ -34,11 +34,11 @@ tasks:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
       doMultipleCycles: true
-      multipleCyclesFinalCycleNumber: 4
+      multipleCyclesFinalCycleNumber: 5
   fgcmOutputProducts:
     class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
     config:
-      connections.cycleNumber: 4
+      connections.cycleNumber: 5
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
@@ -54,7 +54,7 @@ tasks:
       # TODO: Evaluate GBDES, SkyCorr, FGCM after initial DRP
       # Nightly validation should always keep these off.
       wcs_provider: "input_summary"
-      photo_calib_provider: "input_summary"
+      photo_calib_provider: "global"
       background_provider: "input_summary"
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask

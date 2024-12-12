@@ -638,6 +638,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step1",
                 "#step2a",
                 "#step2b",
+                "#step2c",
                 "#step2d",
                 "#step2e",
                 "#step3a",
@@ -648,7 +649,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#step7",
             ],
             initial_dataset_types=REFCATS,
-            expected_inputs=COMMON_INPUTS | LSSTCOMCAM_INPUTS,
+            expected_inputs=COMMON_INPUTS | LSSTCOMCAM_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_OUTPUTS,
         )
         tester.run(butler, self)

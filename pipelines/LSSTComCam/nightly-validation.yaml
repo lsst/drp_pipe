@@ -14,6 +14,13 @@ imports:
       - fgcmOutputProducts
       - gbdesAstrometricFit
 tasks:
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      # Nightly validation should always keep these off.
+      wcs_provider: "input_summary"
+      photo_calib_provider: "input_summary"
+      background_provider: "input_summary"
   analyzePreSourceTableCore:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
     config:
