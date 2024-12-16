@@ -55,12 +55,6 @@ tasks:
         config.star_measurement.plugins["base_CompensatedTophatFlux"].apertures = [12, 17]
         config.star_measurement.plugins.names |= ["base_LocalBackground"]
 
-        # Table schema standardization currently works by looking at these
-        # 'local' calibration columns and using them to re-calibrate the raw
-        # measurements, despite the fact that the calibrateImage outputs also
-        # include already-calibrated columns.
-        config.star_measurement.plugins.names |= ["base_LocalPhotoCalib", "base_LocalWcs"]
-
   transformSourceTable:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
