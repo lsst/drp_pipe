@@ -12,41 +12,41 @@
 pipetask:
   # DRP tasks
   deblend:
-    requestMemory: 14000
+    requestMemory: 10000
   forcedPhotCoadd:
     requestMemory: 10000
   measure:
-    requestMemory: 10000
+    requestMemory: 8000
   detection:
-    requestMemory: 16384
+    requestMemory: 8000
   assembleCoadd:
-    requestMemory: 16384
+    requestMemory: 7000
   transformObjectTable:
-    requestMemory: 16384
+    requestMemory: 9000
   writeObjectTable:
-    requestMemory: 16384
+    requestMemory: 9000
   healSparsePropertyMaps:
-    requestMemory: 8192
+    requestMemory: 10000
   consolidateObjectTable:
-    requestMemory: 16384
+    requestMemory: 24000
   consolidateForcedSourceTable:
-    requestMemory: 100000
+    requestMemory: 80000
   consolidateForcedSourceOnDiaObjectTable:
-    requestMemory: 18000
+    requestMemory: 4000
   getTemplate:
-    requestMemory: 8000
+    requestMemory: 5000
   subtractImages:
-    requestMemory: 8000
+    requestMemory: 5000
   detectAndMeasureDiaSources:
-    requestMemory: 8000
+    requestMemory: 5000
   transformDiaSourceCat:
-    requestMemory: 8000
+    requestMemory: 5000
   # analysis_tools tasks
   analyzeObjectTableCore:
-    requestMemory: 16000
+    requestMemory: 9000
   analyzeMatchedVisitCore:
-    requestMemory: 64000
+    requestMemory: 9000
   analyzeMatchedPreVisitCore:
     requestMemory: 8192
   diff_matched_analysis:
-    requestMemory: 32000
+    requestMemory: 10000
