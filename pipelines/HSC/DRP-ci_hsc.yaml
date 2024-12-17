@@ -39,6 +39,16 @@ tasks:
     config:
       # Only run the deblender on a small subset of blended parents
       star_deblend.useCiLimits: true
+      # Make the good-astrometry theshold unreasonably small to force a
+      # failure in one detector {'visit': 903344, 'detector': 0}.
+      astrometry.maxMeanDistanceArcsec: 0.020
+  makeWarp:
+    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
+    config:
+      # Make the PSF size residual threshold for inclusion in the warps
+      # unreasonably small to force {'visit': 903334, 'detector': 22} to be
+      # rejected.
+      select.maxPsfTraceRadiusDelta: 0.2
   writeRecalibratedSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
