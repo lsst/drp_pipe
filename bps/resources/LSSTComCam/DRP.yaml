@@ -13,10 +13,10 @@ pipetask:
     requestMemory: 16000
   fgcmFitCycle:
     requestMemory: 32000
-#   The following need DM-48156 before they can be implemented in USDF PanDA 
-#    queue: SLAC_Rubin_Extra_Himem_32Cores
-#    requestCpus: 16
-#    extraRunQuantumOptions: "-j 1 -n 16"
+    #  The following need DM-48156 before they can be implemented in USDF PanDA:
+    #  queue: SLAC_Rubin_Extra_Himem_32Cores
+    #  requestCpus: 16
+    #  extraRunQuantumOptions: "-j 1 -n 16"
   assembleCoadd:
     requestMemory: 14000
   patch_coaddition:
