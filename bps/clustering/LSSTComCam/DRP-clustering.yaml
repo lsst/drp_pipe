@@ -1,1 +1,45 @@
+# This is a prescription for quantum clustering with BPS with LSSTComCam DRP.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/clustering/LSSTComCam/DRP-clustering.yaml
+#
+# (with no outer indentation) to your BPS config file.
 
+clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
+cluster:
+    visit_step1:
+        pipetasks: isr,characterizeImage,calibrate, writePreSourceTable,transformPreSourceTable
+        dimensions: visit,detector
+        equalDimensions: visit:exposure
+    visit_step2a:
+        pipetasks: consolidatePreSourceTable,consolidateVisitSummary
+        dimensions: visit
+    patch_coaddition:
+        pipetasks: assembleCoadd,detection
+        dimensions: tract,patch,band
+    patch_detect_deblend:
+        pipetasks: mergeDetections,deblend
+        dimensions: tract,patch
+    patch_postprocess:
+        pipetasks: writeObjectTable,transformObjectTable
+        dimensions: tract,patch
+    property_maps:
+        pipetasks: healSparsePropertyMaps
+        dimensions: tract,band
+    selectGoodSeeingVisits_templateGen:
+        pipetasks: selectGoodSeeingVisits,templateGen
+        dimensions: tract,patch,band
+    source_tables:
+        pipetasks: writeRecalibratedSourceTable,transformSourceTable
+        dimensions: visit,detector
+    diffim:
+        pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
+        dimensions: visit,detector
+    association:
+        pipetasks: drpAssociation,drpDiaCalculation
+        dimensions: tract,patch
+    forced_phot_step5:
+        pipetasks: forcedPhotDiffOnDiaObjects,forcedPhotCcdOnDiaObjects,writeForcedSourceOnDiaObjectTable
+        dimensions: visit,detector
