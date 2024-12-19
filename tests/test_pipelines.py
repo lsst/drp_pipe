@@ -359,8 +359,6 @@ class PipelineTestCase(unittest.TestCase):
                 "goodSeeingVisits",
                 "mergedForcedSource",
                 "mergedForcedSourceOnDiaObject",
-                "objectTable_tract_astrometryRefCat_match",
-                "sourceTable_visit_astrometryRefCat_match",
             },
         )
         tester.run(butler, self)

@@ -9,4 +9,3 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DECam/DRP.yaml
     exclude:
       - isrForCrosstalkSources
-  - location: $ANALYSIS_DRP_DIR/pipelines/analysis_drp_plots.yaml

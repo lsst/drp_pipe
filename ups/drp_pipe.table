@@ -18,7 +18,6 @@ setupRequired(meas_transiNet)
 # dependency until all of its plots and metrics have analysis_tools
 # replacements in order to make it easier to run as a one-off.
 setupRequired(faro)
-setupRequired(analysis_drp)
 setupRequired(analysis_tools)
 setupRequired(drp_tasks)
 setupRequired(ap_association)

@@ -165,7 +165,7 @@ tasks:
   transformDiaSourceCat:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
-      doIncludeReliability: True
+      doIncludeReliability: true
       connections.coaddName: goodSeeing
       connections.diaSourceSchema: goodSeeingDiff_diaSrc_schema
       connections.diaSourceCat: goodSeeingDiff_diaSrc
