@@ -9,12 +9,6 @@ instrument: lsst.obs.lsst.LsstComCamSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
 tasks:
-  analyzePreSourceTableCore:
-    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
-    config:
-      connections.data: preSourceTable_visit
-      connections.inputName: preSourceTable_visit
-      connections.outputName: preSourceTableCore
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
   updateVisitSummary:
