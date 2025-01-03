@@ -92,6 +92,7 @@ tasks:
     config:
       connections.catalog: "preSourceTable_visit"
       connections.targetCatalog: "preSourceTable_visit"
+      connections.visitSummaryTable: "visitSummary"
   astrometricRefCatPreSourceVisit:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:

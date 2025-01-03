@@ -111,6 +111,7 @@ tasks:
     config:
       connections.catalog: "preSourceTable_visit"
       connections.targetCatalog: "preSourceTable_visit"
+      connections.visitSummaryTable: "visitSummary"
   astrometricRefCatPreSourceVisit:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:
@@ -157,6 +158,7 @@ tasks:
       connections.catalog: preSourceTable_visit
       connections.targetCatalog: preSourceTable_visit
       connections.matchedCatalog: preSourceTable_visit_the_monster_20240904_photoMatch
+      connections.visitSummaryTable: "visitSummary"
   photometricRefCatPreSourceVisit:
     class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
     config:
