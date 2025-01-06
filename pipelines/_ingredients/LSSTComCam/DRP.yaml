@@ -15,6 +15,7 @@ tasks:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
     config:
       connections.referenceCatalog: the_monster_20240904
+      fitProperMotion: true
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
@@ -38,7 +39,7 @@ tasks:
     config:
       # TODO: Evaluate GBDES, SkyCorr, FGCM after initial DRP
       # Nightly validation should always keep these off.
-      wcs_provider: "input_summary"
+      wcs_provider: "tract"
       photo_calib_provider: "global"
       background_provider: "input_summary"
   reprocessVisitImage:
@@ -48,7 +49,6 @@ tasks:
   analyzeMatchedVisitCore:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
-      # no GBDES fit to produce the astrometric correction.
       applyAstrometricCorrections: false
   sourceObjectMatch:
     class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
