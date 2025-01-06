@@ -33,6 +33,7 @@ subsets:
     subset:
       - analyzeMatchedPreVisitCore
       - isolatedStarAssociation
+      - gbdesAstrometricFit
     description: |
       Tract-level tasks
       Allowed data query constraints: tract
