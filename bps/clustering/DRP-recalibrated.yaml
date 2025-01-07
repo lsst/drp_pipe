@@ -19,17 +19,12 @@ cluster:
     pipetasks: assembleCoadd,inject_coadd,templateGen,detection
     dimensions: tract,patch,band
 
-  finalizeSourceTable:
-    pipetasks: finalizeCharacterization,updateVisitSummary,writeRecalibratedSourceTable,transformSourceTable,consolidateSourceTable
-    dimensions: visit
-    equalDimensions: visit:exposure
-
   objectTable:
     pipetasks: writeObjectTable,transformObjectTable
     dimensions: tract,patch
 
   diffim:
-    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,transformDiaSourceCat
+    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
     dimensions: visit,detector
 
   association:
@@ -43,3 +38,10 @@ cluster:
   forced_phot_dia:
     pipetasks: forcedPhotDiffOnDiaObjects, forcedPhotCcdOnDiaObjects, writeForcedSourceOnDiaObjectTable
     dimensions: visit,detector,tract
+
+
+# removing this cluster pending fix of DM-48222
+# finalizeSourceTable:
+#   pipetasks: finalizeCharacterization,updateVisitSummary,writeRecalibratedSourceTable,transformSourceTable,consolidateSourceTable
+#   dimensions: visit
+#   equalDimensions: visit:exposure
