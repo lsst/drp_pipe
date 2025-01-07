@@ -1,3 +1,4 @@
+_build*
 .sconsign.dblite
 config.log
 .sconf_temp
@@ -22,3 +23,4 @@ pytest_session.txt
 
 # Dynamically generated source injection pipelines
 pipelines/*/*injected_deepCoadd.yaml
+python/*.dist-info/
