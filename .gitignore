@@ -22,3 +22,4 @@ pytest_session.txt
 
 # Dynamically generated source injection pipelines
 pipelines/*/*injected_deepCoadd.yaml
+python/*.dist-info/
