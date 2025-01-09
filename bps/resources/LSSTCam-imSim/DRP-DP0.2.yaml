@@ -10,6 +10,10 @@
 #
 pipetask:
   # DRP tasks
+  makeDirectWarp:
+    requestMemory: 8192
+  makePsfMatchedWarp:
+    requestMemory: 8192
   assembleCoadd:
     requestMemory: 16384
   detection:
