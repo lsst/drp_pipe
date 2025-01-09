@@ -99,6 +99,7 @@ tasks:
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   detection: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
   mergeDetections: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
+  deconvolve: lsst.meas.extensions.scarlet.deconvolveExposureTask.DeconvolveExposureTask
   deblend: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
   measure: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
   mergeMeasurements: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
@@ -277,6 +278,7 @@ subsets:
     subset:
       - detection
       - mergeDetections
+      - deconvolve
       - deblend
       - measure
       - mergeMeasurements
