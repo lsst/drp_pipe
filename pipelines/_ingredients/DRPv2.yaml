@@ -31,7 +31,7 @@ tasks:
       connections.stars: initial_stars_detector_raw
       connections.exposure: initial_visit_image
       connections.background: initial_visit_image_background
-      # TODO[DM-47320]: disable applying calibration to pixels
+      do_calibrate_pixels: false
   transformInitialStars:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
@@ -124,6 +124,110 @@ tasks:
     config:
       connections.visitSummaries: visit_summary
       connections.outputCatalog: visits
+  # 3-coadds production tasks
+  makeWarp:
+    class: lsst.pipe.tasks.makeWarp.MakeWarpTask
+    config:
+      connections.calExpList: initial_visit_image
+      connections.backgroundList: initial_visit_image_background
+      connections.visitSummary: visit_summary
+      connections.direct: direct_warp
+      connections.psfMatched: psf_matched_warp
+      makePsfMatched: true
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      connections.visitSummaries: visit_summary
+      connections.goodVisits: deep_coadd_visits
+      # Maximum sensible default psf fwhm in arcseconds to use for a coadd
+      maxPsfFwhm: 2.0
+      # By default for deep coadds, use all input visits better than maxPsfFwhm
+      nVisitsMax: -1
+  selectTemplateCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    config:
+      connections.goodVisits: template_coadd_visits
+  assembleDeepCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      connections.inputWarps: direct_warp
+      connections.psfMatchedWarps: psf_matched_warp
+      connections.selectedVisits: deep_coadd_visits
+      connections.coaddExposure: initial_deep_coadd
+      connections.nImage: deep_coadd_n_image
+      connections.inputMap: deep_coadd_input_map
+      connections.templateCoadd: deep_coadd_compare_template
+      doInputMap: true
+      doSelectVisits: true
+      doWriteArtifactMasks: true
+      assembleStaticSkyModel.doSelectVisits: true
+  assembleTemplateCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      connections.inputWarps: direct_warp
+      connections.psfMatchedWarps: psf_matched_warp
+      connections.selectedVisits: template_coadd_visits
+      connections.coaddExposure: template_coadd
+      connections.nImage: template_coadd_n_image
+      connections.inputMap: template_coadd_input_map
+      connections.templateCoadd: template_coadd_compare_template
+      doSelectVisits: true
+      assembleStaticSkyModel.doSelectVisits: true
+      doNImage: true
+  healSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
+    config:
+      connections.input_maps: deep_coadd_input_map
+      connections.coadd_exposures: initial_deep_coadd
+      connections.visit_summaries: visit_summary
+      # TODO[DM-47320]: we can't adjust this task's output dataset type names
+      # to use the new conventions without code changes.
+  detectObjects:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      connections.detectionSchema: object_detections_schema
+      connections.exposure: initial_deep_coadd
+      connections.outputBackgrounds: deep_coadd_background
+      connections.outputSources: object_detections
+      connections.outputExposure: deep_coadd
+  mergeObjectDetections:
+    class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
+    config:
+      connections.schema: object_detections_schema
+      connections.outputSchema: object_detections_merged_schema
+      connections.outputPeakSchema: object_detections_peak_schema
+      connections.catalogs: object_detections_merged
+  deblendObjects:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    config:
+      connections.inputSchema: object_detections_merged_schema
+      connections.peakSchema: object_detections_peak_schema
+      connections.mergedDetections: object_detections_merged
+      connections.coadds: deep_coadd
+      # TODO[DM-47320]: the catalog that corresponds to this schema might be
+      # soft deprecated and not written.  Is this the right name?  Should it go
+      # away instead? {
+      connections.outputSchema: object_deblends_schema
+      # } END_TODO
+      connections.deblendedCatalog: object_deblends
+      connections.scarletModelData: object_deblend_model
+  measureObjectsUnforced:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      connections.inputSchema: object_deblends_schema
+      connections.outputSchema: object_unforced_schema
+      connections.exposure: deep_coadd
+      connections.visitCatalogs
+
+  mergeMeasurements: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
+  writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
+  transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
+  consolidateObjectTable: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
+  forcedPhotCoadd: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+
+  consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
+
+
 subsets:
   1a-initial-detectors:
     subset:
@@ -281,6 +385,11 @@ subsets:
       An instrument constraint is generally redundant but recommended.
 
       A skymap constraint is generally redundant but recommended.
+
+  3a-coadds-tracts:
+    subset: []
+  3b-coadds-global:
+    subset: []
 
   # TODO[DM-47320]: allow defining labeled subsets via other labeled subsets,
   # define top-level steps here.
