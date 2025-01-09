@@ -53,7 +53,7 @@ tasks:
     config:
       # TODO: Evaluate GBDES, SkyCorr, FGCM after initial DRP
       # Nightly validation should always keep these off.
-      wcs_provider: "input_summary"
+      wcs_provider: "tract"
       photo_calib_provider: "global"
       background_provider: "input_summary"
   reprocessVisitImage:
