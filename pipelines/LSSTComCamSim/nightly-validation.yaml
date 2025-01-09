@@ -96,6 +96,7 @@ subsets:
       - assembleCellCoadd
       - detection
       - mergeDetections
+      - deconvolve
       - deblend
       - measure
       - mergeMeasurements

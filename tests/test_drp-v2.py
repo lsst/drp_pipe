@@ -233,7 +233,7 @@ class DrpV2TestCase(unittest.TestCase):
         step_member_union = set()
         for step_label in step_labels:
             step_member_union.update(pipeline_graph.task_subsets[step_label])
-        self.assertEqual(step_member_union, stage_members)
+        self.assertSetEqual(step_member_union, set(stage_members))
 
     def test_comcam_correspondence(self) -> None:
         butler = self.make_butler(writeable=True)

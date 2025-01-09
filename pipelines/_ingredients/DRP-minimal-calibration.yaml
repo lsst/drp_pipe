@@ -73,6 +73,10 @@ tasks:
     config:
       useCellCoadds: parameters.use_cell_coadds
   mergeDetections: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
+  deconvolve:
+    class: lsst.meas.extensions.scarlet.deconvolveExposureTask.DeconvolveExposureTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
   deblend:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     config:
@@ -285,6 +289,7 @@ subsets:
     subset:
       - detection
       - mergeDetections
+      - deconvolve
       - deblend
       - measure
       - mergeMeasurements

@@ -250,6 +250,14 @@ tasks:
       connections.outputPeakSchema: object_detection_peak_schema
       connections.outputCatalog: object_detection_merged
       idGenerator.release_id: parameters.release_id
+  deconvolve:
+    class: lsst.meas.extensions.scarlet.deconvolveExposureTask.DeconvolveExposureTask
+    config:
+      connections.coadd: deep_coadd
+      connections.catalog: object_detection_merged
+      connections.deconvolved: deconvolved_deep_coadd
+      connections.background: deep_coadd_background
+      useCellCoadds: parameters.use_cell_coadds
   deblendCoaddFootprints:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     config:
@@ -722,6 +730,7 @@ subsets:
       - makeHealSparsePropertyMaps
       - detectCoaddPeaks
       - mergeObjectDetection
+      - deconvolve
       - deblendCoaddFootprints
       - measureObjectUnforced
       - mergeObjectMeasurement
@@ -884,6 +893,7 @@ subsets:
     - makeHealSparsePropertyMaps
     - detectCoaddPeaks
     - mergeObjectDetection
+    - deconvolve
     - deblendCoaddFootprints
     - measureObjectUnforced
     - mergeObjectMeasurement
