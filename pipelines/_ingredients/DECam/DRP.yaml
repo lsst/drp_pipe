@@ -203,6 +203,7 @@ subsets:
       - makeDirectWarp
       - makePsfMatchedWarp
       - templateGen
+      - deconvolve
       - deblend
       - detection
       - writeObjectTable
