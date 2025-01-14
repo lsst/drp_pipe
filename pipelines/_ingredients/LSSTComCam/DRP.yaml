@@ -63,13 +63,11 @@ tasks:
   analyzeMatchedVisitCore:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
-      # no GBDES fit to produce the astrometric correction.
-      applyAstrometricCorrections: false
+      applyAstrometricCorrections: true
   sourceObjectMatch:
     class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
     config:
-      # no GBDES
-      applyAstrometricCorrections: false
+      applyAstrometricCorrections: true
   analyzeMatchedPreVisitCore:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
