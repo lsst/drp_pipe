@@ -95,6 +95,9 @@ subsets:
       - writeObjectTable
       - selectGoodSeeingVisits
       - templateGen
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
+      - mergeMultiprofit
     description: |
       Patch-level tasks that can be run together after the 'step2d'
       subsets.
@@ -112,6 +115,7 @@ subsets:
       - refCatObjectTract
       - validateObjectTableCore
       - objectEpochTable
+      - analyzeMultiprofitCore
     description: |
       Tract-level tasks that can be run together after the 'step3a'
       subsets.
