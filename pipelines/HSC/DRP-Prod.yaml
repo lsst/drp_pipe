@@ -58,7 +58,7 @@ subsets:
       - fgcmOutputProducts
     description: |
       Global-level tasks that must not be run with any data query constraints
-      Can be run anytime after subset step2a.
+      Can be run anytime after subset step2b.
 
       Allowed data query constraints: instrument
 
