@@ -75,6 +75,7 @@ tasks:
       # gbdesAstrometricFit is not run on ci_hsc, so there is no proper motion
       # and parallax catalog available to use here.
       applyAstrometricCorrections: false
+      refCat_bands: ["r", "i"]
   fitDeblendedObjectsSersic:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
     config:
