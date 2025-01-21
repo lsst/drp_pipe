@@ -72,3 +72,9 @@ pipetask:
     requestMemory: 8192
   diff_matched_analysis:
     requestMemory: 32000
+  analyzeMultiprofitCore:
+    requestMemory: 8000
+  mergeMultiprofit:
+    requestMemory: 8000
+  fitDeblendedObjectsSersic:
+    requestMemory: 8000
