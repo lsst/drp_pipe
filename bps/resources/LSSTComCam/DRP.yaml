@@ -12,6 +12,54 @@ pipetask:
   fgcmBuildFromIsolatedStars:
     requestMemory: 16000
   fgcmFitCycle:
-    requestCpus: 16
     requestMemory: 32000
-    extraRunQuantumOptions: "-j 1 -n 16"
+    #  The following need DM-48156 before they can be implemented in USDF PanDA:
+    #  queue: SLAC_Rubin_Extra_Himem_32Cores
+    #  requestCpus: 16
+    #  extraRunQuantumOptions: "-j 1 -n 16"
+  assembleCoadd:
+    requestMemory: 14000
+  patch_coaddition:
+    requestMemory: 7000
+  diffim:
+    request_memory: 7000
+  getTemplate:
+    requestMemory: 7000
+  transformForcedSourceOnDiaObjectTable:
+    requestMemory: 7000
+  consolidateForcedSourceOnDiaObjectTable:
+    requestMemory: 17000
+  patch_detect_deblend:
+    requestMemory: 50000
+  deblend:
+    requestMemory: 50000
+  measure:
+    requestMemory: 7000
+  forcedPhotCoadd:
+    requestMemory: 7000
+  healSparsePropertyMaps:
+    requestMemory: 7000
+  property_maps:
+    requestMemory: 7000
+  consolidateForcedSourceTable:
+    requestMemory: 7000
+  objectTableCoreWholeSkyPlot:
+    requestMemory: 7000
+  patch_postprocess:
+    requestMemory: 7000
+  writeObjectTable:
+    requestMemory: 7000
+  selectGoodSeeingVisits_templateGen:
+    requestMemory: 14000
+  templateGen:
+    requestMemory: 14000
+  analyzeMatchedVisitCore:
+    requestMemory: 7000
+  analyzeMatchedPreVisitCore:
+    requestMemory: 7000
+  finalizeCharacterization:
+    requestMemory: 7000
+  makeCcdVisitTable:
+    requestMemory: 7000
+  makeVisitTable:
+    requestMemory: 7000
