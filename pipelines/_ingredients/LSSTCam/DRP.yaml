@@ -88,20 +88,9 @@ tasks:
       python: |
         from lsst.analysis.tools.atools import *
         from lsst.analysis.tools.contexts import *
-  matchedVisitCoreWholeSkyPlot:
-    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
-    config:
-      connections.inputName: "matchedVisitCore_metricsTable"
-      connections.outputName: "matchedVisitCore_wholeSky"
-      atools.wholeSkyMetric: WholeSkyPlotTool
-      atools.wholeSkyMetric.plotKeys: []
-      atools.wholeSkyMetric.keysWithBand: parameters.matchedVisitCoreKeysWithBand
-      python: |
-        from lsst.analysis.tools.atools import *
   objectTableCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric: WholeSkyPlotTool
       atools.wholeSkyMetric.plotKeys: [
         "wPerpPSFP_wPerp_psfFlux_median",
         "wPerpPSFP_wPerp_psfFlux_sigmaMAD",
@@ -111,9 +100,6 @@ tasks:
         "skippedDeblenderMetrics_numBlendTooManyPeaks",
         "skippedDeblenderMetrics_numBlendTooManyMasked",
       ]
-      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
-      python: |
-        from lsst.analysis.tools.atools import *
   # These don't actually work now:
   photometricMatchPreVisit:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
