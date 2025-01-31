@@ -76,21 +76,6 @@ tasks:
         "skippedDeblenderMetrics_numBlendTooManyPeaks",
         "skippedDeblenderMetrics_numBlendTooManyMasked",
       ]
-  # These don't actually work now:
-  photometricMatchPreVisit:
-    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
-    config:
-      extraColumns: ["x", "y", "ap09Flux", "ap09FluxErr"]
-      connections.refCatalog: uw_stars_20240524
-      connections.catalog: preSourceTable_visit
-      connections.targetCatalog: preSourceTable_visit
-      connections.matchedCatalog: preSourceTable_visit_uw_stars_20240524_photoMatch
-  photometricRefCatPreSourceVisit:
-    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
-    config:
-      # Only run metrics for analyzing the preSources:
-      connections.data: preSourceTable_visit_uw_stars_20240524_photoMatch
-      python: from lsst.analysis.tools.atools import *
   preliminaryVisitCoverageAnalysis:
     class: lsst.analysis.tools.tasks.CcdVisitTableAnalysisTask
     config:
