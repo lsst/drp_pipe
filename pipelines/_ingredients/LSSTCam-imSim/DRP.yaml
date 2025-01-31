@@ -9,7 +9,9 @@ imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
     exclude:
       - analyzeMatchedPreVisitCore  # imSim does not have preSourceTable_visit catalogs
-  - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+    exclude:
+      - analyzePreSourceTableCore
 parameters:
   filterMap: {
     "u": "lsst_u_smeared",

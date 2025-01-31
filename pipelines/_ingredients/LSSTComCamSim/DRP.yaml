@@ -48,18 +48,6 @@ tasks:
         # no z-band in comCamSim
         del config.atools.yPerpPSF
         del config.atools.yPerpCModel
-  analyzePreSourceTableCore:
-    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
-    config:
-      connections.inputName: preSourceTable_visit
-      connections.outputName: preSourceTableCore
-      atools.skyFluxVisitStatisticMetric: SkyFluxStatisticMetric
-      atools.skyFluxVisitStatisticMetric.applyContext: VisitContext
-      atools.skySourceSky: SkySourceSkyPlot
-      atools.skySourceFlux: SkySourceHistPlot
-      python: |
-        from lsst.analysis.tools.atools import *
-        from lsst.analysis.tools.contexts import *
   catalogMatchPreVisit:
     class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
     config:
