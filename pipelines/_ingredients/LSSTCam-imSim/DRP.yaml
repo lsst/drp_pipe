@@ -12,6 +12,7 @@ imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
     exclude:
       - analyzePreSourceTableCore
+      - catalogMatchPreVisit
 parameters:
   filterMap: {
     "u": "lsst_u_smeared",

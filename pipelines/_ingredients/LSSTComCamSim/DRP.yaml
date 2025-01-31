@@ -48,12 +48,6 @@ tasks:
         # no z-band in comCamSim
         del config.atools.yPerpPSF
         del config.atools.yPerpCModel
-  catalogMatchPreVisit:
-    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
-    config:
-      connections.catalog: "preSourceTable_visit"
-      connections.targetCatalog: "preSourceTable_visit"
-      connections.visitSummaryTable: "visitSummary"
   astrometricRefCatPreSourceVisit:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:
