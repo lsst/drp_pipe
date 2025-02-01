@@ -31,7 +31,7 @@ tasks:
       # defaults downstream later and then remove these overrides.
       connections.initial_stars_schema: src_schema
       connections.stars_footprints: src
-      connections.stars: source
+      connections.stars: preSource
       connections.exposure: calexp
       connections.background: calexpBackground
 
