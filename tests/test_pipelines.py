@@ -133,6 +133,8 @@ COMMON_OUTPUTS = {
     "deepCoadd_psfMatchedWarp",
     "deepCoadd_ref",
     "deepCoadd_scarletModelData",
+    "deepCoaddCell",
+    "deepCoaddCell_stitched",
     "finalized_src_table",
     "finalVisitSummary",
     "initial_astrometry_match_detector",
