@@ -78,19 +78,22 @@ tasks:
       python: |
         from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
         columns_flux = {}
-        fluxes_meas_psf = []
+        fluxes_meas_other = []
+        models_other = ("psf", "gaap1p0", "gaap3p0", "kron", "sersic")
         for band in parameters.filterMap:
             columns_flux[band] = MatchedCatalogFluxesConfig(
                 column_ref_flux=f"flux_{band}",
                 columns_target_flux=[f"{band}_cModelFlux",],
                 columns_target_flux_err=[f"{band}_cModelFluxErr",],
             )
-            fluxes_meas_psf.append(f"{band}_psfFlux")
+            # Can't use a list comp here for weird scoping reasons
+            for model in models_other:
+                fluxes_meas_other.append(f"{band}_{model}Flux")
         config.columns_flux = columns_flux
         # Extendedness columns are needed for downstream plots/metrics/etc.
         columns_target_copy = ["patch", "refExtendedness", "refSizeExtendedness"]
-        columns_target_copy.extend(fluxes_meas_psf)
-        columns_target_copy.extend([f"{col}Err" for col in fluxes_meas_psf])
+        columns_target_copy.extend(fluxes_meas_other)
+        columns_target_copy.extend([f"{col}Err" for col in fluxes_meas_other])
         columns_target_copy.extend(["x", "y", "xErr", "yErr"])
         config.columns_target_copy = columns_target_copy
   catalogMatchTract:
