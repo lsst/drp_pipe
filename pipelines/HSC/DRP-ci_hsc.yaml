@@ -80,10 +80,6 @@ tasks:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
     config:
       fit_coadd_multiband.bands_fit: ["r", "i"]
-  analyzeMultiprofitCore:
-    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
-    config:
-      bands: ["r", "i"]
 
 subsets:
   analysis_tools:

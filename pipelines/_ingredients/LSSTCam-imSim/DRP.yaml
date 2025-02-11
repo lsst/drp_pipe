@@ -166,6 +166,8 @@ subsets:
       - measure
       - mergeMeasurements
       - forcedPhotCoadd
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
       - transformObjectTable
       - writeObjectTable
       - selectGoodSeeingVisits

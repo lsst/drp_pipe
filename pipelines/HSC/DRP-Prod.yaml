@@ -106,6 +106,8 @@ subsets:
       - measure
       - mergeMeasurements
       - forcedPhotCoadd
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
       - writeObjectTable
       - transformObjectTable
       - fitDeepCoaddPsfGaussians
@@ -121,8 +123,6 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
-      - mergeMultiprofit
-      - analyzeMultiprofitCore
 
     description: |
       tract-level tasks.  Allowed data query constraints: tract
