@@ -103,6 +103,7 @@ LSSTCOMCAM_INPUTS = {
     "ptc",
     "linearizer",
     "defects",
+    "cti",
     "the_monster_20240904",
 }
 
