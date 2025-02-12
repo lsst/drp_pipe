@@ -52,6 +52,8 @@ COMMON_INPUTS = {
     "linearizer",
     "bfk",
     "pretrainedModelPackage",
+    # Optional preloaded solar system objects.
+    "preloaded_DRP_SsObjects",
 }
 
 # HSC common inputs, in addition to COMMON_INPUTS
