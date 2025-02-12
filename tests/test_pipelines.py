@@ -133,8 +133,6 @@ COMMON_OUTPUTS = {
     "deepCoadd_psfMatchedWarp",
     "deepCoadd_ref",
     "deepCoadd_scarletModelData",
-    "deepCoaddCell",
-    "deepCoaddCell_stitched",
     "finalized_src_table",
     "finalVisitSummary",
     "initial_astrometry_match_detector",
@@ -234,6 +232,8 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "goodSeeingVisits",
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
+    "deepCoaddCell",
+    "deepCoaddCell_stitched",
 }
 
 # Outputs common to all "quickLook" pipelines, which only iclude
@@ -358,6 +358,8 @@ class PipelineTestCase(unittest.TestCase):
                 "goodSeeingVisits",
                 "mergedForcedSource",
                 "mergedForcedSourceOnDiaObject",
+                "deepCoaddCell",
+                "deepCoaddCell_stitched",
             },
         )
         tester.run(butler, self)
@@ -647,7 +649,7 @@ class PipelineTestCase(unittest.TestCase):
             ],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCOMCAM_INPUTS | {"fgcmLookUpTable"},
-            expected_outputs=COMMON_OUTPUTS,
+            expected_outputs=COMMON_OUTPUTS | {"deepCoaddCell", "deepCoaddCell_stitched",},
         )
         tester.run(butler, self)
 
