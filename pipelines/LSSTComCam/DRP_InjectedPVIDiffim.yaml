@@ -1,0 +1,345 @@
+description: DRP Pipeline for LSSTComCam with injected point sources
+instrument: lsst.obs.lsst.LsstComCam
+
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/LSSTComCam/DRP.yaml
+
+parameters:
+  fakesType: 'injected_'
+  injection_prefix: 'injection_'
+  injected_prefix: 'injected_'
+
+tasks:
+  inject_visit:
+    class: lsst.source.injection.inject_visit.VisitInjectTask
+    config:
+      external_psf: false
+      external_photo_calib: false
+      external_wcs: false
+      connections.input_exposure: pvi
+      connections.output_exposure: injected_pvi
+      connections.output_catalog: injected_pvi_catalog
+      selection: "np.isin(injection_catalog['visit'], {visit})"
+  injectedMatch:
+    class: lsst.ap.pipe.matchSourceInjected.MatchPVIInjectedTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.fakesType: injected_
+      connections.injectedPVICat: injected_pvi_catalog
+      connections.diaSrcTable: injected_goodSeeingDiff_diaSrcTable
+      matchDistanceArcseconds: 0.5
+      trimBuffer: 50
+  consolidateMatchDiaSrc:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      # Task doesn't support coaddName, so coopt catalogType instead.
+      connections.catalogType: goodSeeing
+      connections.inputCatalogs: "injected_{catalogType}Diff_matchPVIDiaSrc"
+      connections.outputCatalog: "injected_{catalogType}Diff_matchDiaSourceTable"
+  analyzeDiaFakesDetectorVisitCore:
+    class: lsst.analysis.tools.tasks.DiaFakesDetectorVisitAnalysisTask
+    config:
+      connections.data: injected_goodSeeingDiff_matchPVIDiaSrc
+      atools.numFoundFakesDiaAllMetric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaAllMetric.snrMin: 0
+      # atools.numFoundFakesDiaAllMetric.snrMax: NO MAXIMUM: all the fakes
+      # Bins of SNR
+      atools.numFoundFakesDiaSNR0t3Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR0t3Metric.snrMin: 0
+      atools.numFoundFakesDiaSNR0t3Metric.snrMax: 3
+      atools.numFoundFakesDiaSNR3t6Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR3t6Metric.snrMin: 3
+      atools.numFoundFakesDiaSNR3t6Metric.snrMax: 6
+      atools.numFoundFakesDiaSNR6t8Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR6t8Metric.snrMin: 6
+      atools.numFoundFakesDiaSNR6t8Metric.snrMax: 8
+      atools.numFoundFakesDiaSNR8t10Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR8t10Metric.snrMin: 8
+      atools.numFoundFakesDiaSNR8t10Metric.snrMax: 10
+      atools.numFoundFakesDiaSNR10t20Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR10t20Metric.snrMin: 10
+      atools.numFoundFakesDiaSNR10t20Metric.snrMax: 20
+      # From 6 to infinity
+      atools.numFoundFakesDiaSNR6tInfMetric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR6tInfMetric.snrMin: 6
+      # Completeness as function of magnitude
+      atools.numFoundFakesDiaMag20t22Metric: FractionFoundFakesDiaMagMetric
+      atools.numFoundFakesDiaMag20t22Metric.magMin: 20
+      atools.numFoundFakesDiaMag20t22Metric.magMax: 22
+      atools.numFoundFakesDiaMag22t24Metric: FractionFoundFakesDiaMagMetric
+      atools.numFoundFakesDiaMag22t24Metric.magMin: 22
+      atools.numFoundFakesDiaMag22t24Metric.magMax: 24
+      atools.numFoundFakesDiaMag24t26Metric: FractionFoundFakesDiaMagMetric
+      atools.numFoundFakesDiaMag24t26Metric.magMin: 24
+      atools.numFoundFakesDiaMag24t26Metric.magMax: 26
+      connections.outputName: diaFakesDetectorVisitCore
+      python: |
+        from lsst.analysis.tools.atools import FractionFoundFakesDiaSnrMetric
+        from lsst.analysis.tools.atools import FractionFoundFakesDiaMagMetric
+  analyzeDiaFakesVisitCore:
+    class: lsst.analysis.tools.tasks.DiaFakesVisitAnalysisTask
+    config:
+      atools.numFoundFakesDiaAllMetric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaAllMetric.snrMin: 0
+      # atools.numFoundFakesDiaAllMetric.snrMax: NO MAXIMUM: all the fakes
+      # Bins of SNR
+      atools.numFoundFakesDiaSNR0t3Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR0t3Metric.snrMin: 0
+      atools.numFoundFakesDiaSNR0t3Metric.snrMax: 3
+      atools.numFoundFakesDiaSNR3t6Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR3t6Metric.snrMin: 3
+      atools.numFoundFakesDiaSNR3t6Metric.snrMax: 6
+      atools.numFoundFakesDiaSNR6t8Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR6t8Metric.snrMin: 6
+      atools.numFoundFakesDiaSNR6t8Metric.snrMax: 8
+      atools.numFoundFakesDiaSNR8t10Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR8t10Metric.snrMin: 8
+      atools.numFoundFakesDiaSNR8t10Metric.snrMax: 10
+      atools.numFoundFakesDiaSNR10t20Metric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR10t20Metric.snrMin: 10
+      atools.numFoundFakesDiaSNR10t20Metric.snrMax: 20
+      # From 6 to infinity
+      atools.numFoundFakesDiaSNR6tInfMetric: FractionFoundFakesDiaSnrMetric
+      atools.numFoundFakesDiaSNR6tInfMetric.snrMin: 6
+      # Completeness as function of magnitude
+      atools.numFoundFakesDiaMag20t22Metric: FractionFoundFakesDiaMagMetric
+      atools.numFoundFakesDiaMag20t22Metric.magMin: 20
+      atools.numFoundFakesDiaMag20t22Metric.magMax: 22
+      atools.numFoundFakesDiaMag22t24Metric: FractionFoundFakesDiaMagMetric
+      atools.numFoundFakesDiaMag22t24Metric.magMin: 22
+      atools.numFoundFakesDiaMag22t24Metric.magMax: 24
+      atools.numFoundFakesDiaMag24t26Metric: FractionFoundFakesDiaMagMetric
+      atools.numFoundFakesDiaMag24t26Metric.magMin: 24
+      atools.numFoundFakesDiaMag24t26Metric.magMax: 26
+      connections.data: injected_goodSeeingDiff_matchDiaSourceTable
+      connections.outputName: diaFakesVisitCore
+      python: |
+        from lsst.analysis.tools.atools import FractionFoundFakesDiaSnrMetric
+        from lsst.analysis.tools.atools import FractionFoundFakesDiaMagMetric
+  forcedPhotCcd:
+    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+    config:
+      useVisitSummary: false
+      connections.exposure: injected_pvi
+      connections.outputSchema: injected_forced_src_schema
+      connections.measCat: injected_forced_src
+  getTemplate:
+    class: lsst.ip.diffim.getTemplate.GetTemplateTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.coaddExposures: goodSeeingCoadd
+      connections.wcs: injected_pvi.wcs
+      connections.bbox: injected_pvi.bbox
+      connections.template: injected_goodSeeingDiff_templateExp
+  subtractImages:
+    class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
+    config:
+      allowKernelSourceDetection: true
+      connections.coaddName: goodSeeing
+      connections.science: injected_pvi
+      connections.template: injected_goodSeeingDiff_templateExp
+      connections.matchedTemplate: injected_goodSeeingDiff_matchedExp
+      connections.psfMatchingKernel: injected_goodSeeingDiff_psfMatchKernel
+      connections.kernelSources: injected_goodSeeingDiff_psfMatchSources
+      connections.difference: injected_goodSeeingDiff_differenceTempExp
+  detectAndMeasureDiaSources:
+    class: lsst.ip.diffim.detectAndMeasure.DetectAndMeasureTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.science: injected_pvi
+      connections.difference: injected_goodSeeingDiff_differenceTempExp
+      connections.matchedTemplate: injected_goodSeeingDiff_matchedExp
+      connections.outputSchema: injected_goodSeeingDiff_diaSrc_schema
+      connections.subtractedMeasuredExposure: injected_goodSeeingDiff_differenceExp
+      connections.diaSources: injected_goodSeeingDiff_diaSrc
+  rbClassify:
+    class: lsst.meas.transiNet.RBTransiNetTask
+    config:
+      modelPackageStorageMode: butler
+      connections.coaddName: goodSeeing
+      connections.science: injected_pvi
+      connections.difference: injected_goodSeeingDiff_differenceTempExp
+      connections.diaSources: injected_goodSeeingDiff_diaSrc
+      connections.template: injected_goodSeeingDiff_templateExp
+      connections.classifications: injected_goodSeeingRealBogusSources
+  transformDiaSourceCat:
+    class: lsst.ap.association.TransformDiaSourceCatalogTask
+    config:
+      doIncludeReliability: true
+      connections.coaddName: goodSeeing
+      connections.diaSourceSchema: injected_goodSeeingDiff_diaSrc_schema
+      connections.reliability: injected_goodSeeingRealBogusSources
+      connections.diaSourceCat: injected_goodSeeingDiff_diaSrc
+      connections.diffIm: injected_goodSeeingDiff_differenceExp
+      connections.diaSourceTable: injected_goodSeeingDiff_diaSrcTable
+  consolidateDiaSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: injected_goodSeeingDiff_diaSrcTable
+      connections.outputCatalog: injected_diaSourceTable
+  drpAssociation:
+    class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.diaSourceTables: injected_goodSeeingDiff_diaSrcTable
+      connections.diaObjectTable: injected_goodSeeingDiff_diaObjTable
+      connections.assocDiaSourceTable: injected_goodSeeingDiff_assocDiaSrcTable
+  drpDiaCalculation:
+    class: lsst.pipe.tasks.drpDiaCalculationPipe.DrpDiaCalculationPipeTask
+    config:
+      connections.coaddName: goodSeeing
+      connections.diaObjectTable: injected_goodSeeingDiff_diaObjTable
+      connections.assocDiaSourceTable: injected_goodSeeingDiff_assocDiaSrcTable
+      connections.fullDiaObjectTable: injected_goodSeeingDiff_fullDiaObjTable
+  consolidateAssocDiaSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: injected_goodSeeingDiff_assocDiaSrcTable
+      connections.outputCatalog: injected_diaSourceTable_tract
+  consolidateFullDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: injected_goodSeeingDiff_fullDiaObjTable
+      connections.outputCatalog: injected_diaObjectTable_tract
+  forcedPhotDiffim:
+    class: lsst.meas.base.ForcedPhotCcdTask
+    config:
+      useVisitSummary: false
+      connections.exposure: injected_goodSeeingDiff_differenceExp
+      connections.outputSchema: injected_forced_diff_schema
+      connections.measCat: injected_forced_diff
+  writeForcedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
+    config:
+      connections.inputCatalog: injected_forced_src
+      connections.inputCatalogDiff: injected_forced_diff
+      connections.outputCatalog: injected_mergedForcedSource
+  transformForcedSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+    config:
+      connections.inputCatalogs: injected_mergedForcedSource
+      connections.outputCatalog: injected_forcedSourceTable
+  consolidateForcedSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: injected_forcedSourceTable
+      connections.outputCatalog: injected_forcedSourceTable_tract
+  forcedPhotCcdOnDiaObjects:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      useVisitSummary: false
+      connections.exposure: injected_pvi
+      connections.refCat: injected_goodSeeingDiff_fullDiaObjTable
+      connections.outputSchema: injected_forced_src_diaObject_schema
+      connections.measCat: injected_forced_src_diaObject
+  forcedPhotDiffOnDiaObjects:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      useVisitSummary: false
+      connections.exposure: injected_goodSeeingDiff_differenceExp
+      connections.refCat: injected_goodSeeingDiff_fullDiaObjTable
+      connections.outputSchema: injected_forced_diff_diaObject_schema
+      connections.measCat: injected_forced_diff_diaObject
+  writeForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
+    config:
+      key: diaObjectId
+      connections.inputCatalog: injected_forced_src_diaObject
+      connections.inputCatalogDiff: injected_forced_diff_diaObject
+      connections.outputCatalog: injected_mergedForcedSourceOnDiaObject
+  transformForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+    config:
+      referenceColumns: []
+      keyRef: diaObjectId
+      key: forcedSourceOnDiaObjectId
+      connections.referenceCatalog: injected_goodSeeingDiff_fullDiaObjTable
+      connections.inputCatalogs: injected_mergedForcedSourceOnDiaObject
+      connections.outputCatalog: injected_forcedSourceOnDiaObjectTable
+  consolidateForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: injected_forcedSourceOnDiaObjectTable
+      connections.outputCatalog: injected_forcedSourceOnDiaObjectTable_tract
+  analyzeDiaSourceTableTract:
+    class: lsst.analysis.tools.tasks.DiaSourceTableTractAnalysisTask
+    config:
+      python: 'from lsst.analysis.tools.atools import *
+
+        '
+      atools.NumDiaSources: NumDiaSourcesMetric
+      atools.NumStreakDiaSources: NumStreakDiaSourcesMetric
+      atools.NumStreakCenterDiaSources: NumStreakCenterDiaSourcesMetric
+      atools.streakDiaSourcePlot: PlotStreakDiaSources
+      connections.outputName: injected_diaSourceTableTract
+      connections.data: injected_diaSourceTable_tract
+contracts:
+  - contract: detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotDiffim.connections.exposure
+  - contract: detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == transformDiaSourceCat.connections.diffIm
+  - contract: drpAssociation.connections.assocDiaSourceTable == drpDiaCalculation.connections.assocDiaSourceTable
+  - contract: drpAssociation.connections.diaObjectTable == drpDiaCalculation.connections.diaObjectTable
+  - contract: forcedPhotDiffim.connections.refCat == forcedPhotCcd.connections.refCat
+  - contract: getTemplate.connections.template == subtractImages.connections.template
+  - contract: subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
+  - contract: subtractImages.connections.matchedTemplate == detectAndMeasureDiaSources.connections.matchedTemplate
+  - contract: transformDiaSourceCat.connections.diaSourceTable == consolidateDiaSourceTable.connections.inputCatalogs
+  - contract: transformDiaSourceCat.connections.diaSourceTable == drpAssociation.connections.diaSourceTables
+subsets:
+  diffimDRP:
+    subset:
+      - getTemplate
+      - transformDiaSourceCat
+      - forcedPhotCcdOnDiaObjects
+      - drpAssociation
+      - consolidateDiaSourceTable
+      - templateGen
+      - drpDiaCalculation
+      - rbClassify
+      - forcedPhotDiffOnDiaObjects
+      - forcedPhotDiffim
+      - subtractImages
+      - selectGoodSeeingVisits
+      - detectAndMeasureDiaSources
+    description: 'Subset for running image differencing branch of the DRP pipeline
+
+      '
+  stepDiffimWithFakes:
+    subset:
+      - getTemplate
+      - inject_visit
+      - transformDiaSourceCat
+      - forcedPhotCcd
+      - drpAssociation
+      - consolidateDiaSourceTable
+      - forcedPhotCcdOnDiaObjects
+      - drpDiaCalculation
+      - writeForcedSourceTable
+      - rbClassify
+      - forcedPhotDiffim
+      - subtractImages
+      - detectAndMeasureDiaSources
+      - injectedMatch
+      - consolidateMatchDiaSrc
+      - analyzeDiaFakesDetectorVisitCore
+      - analyzeDiaFakesVisitCore
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2d' and
+      'step3' subsets
+
+      These detector-level tasks should not be run with 'tract' or 'patch' as
+      part of the data ID expression if all reference catalogs or diffIm
+      templates that cover these detector-level quanta are desired.
+  injected_diffimDRP:
+    subset:
+      - getTemplate
+      - transformDiaSourceCat
+      - forcedPhotCcdOnDiaObjects
+      - drpAssociation
+      - consolidateDiaSourceTable
+      - drpDiaCalculation
+      - rbClassify
+      - forcedPhotDiffOnDiaObjects
+      - forcedPhotDiffim
+      - subtractImages
+      - detectAndMeasureDiaSources
+    description: All tasks from the 'diffimDRP' subset impacted by source injection.
