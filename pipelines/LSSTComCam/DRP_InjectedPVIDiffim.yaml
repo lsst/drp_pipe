@@ -6,8 +6,6 @@ imports:
 
 parameters:
   fakesType: 'injected_'
-  injection_prefix: 'injection_'
-  injected_prefix: 'injected_'
 
 tasks:
   inject_visit:
@@ -21,12 +19,12 @@ tasks:
       connections.output_catalog: injected_pvi_catalog
       selection: "np.isin(injection_catalog['visit'], {visit})"
   injectedMatch:
-    class: lsst.ap.pipe.matchSourceInjected.MatchPVIInjectedTask
+    class: lsst.ap.pipe.matchSourceInjected.MatchInitialPVIInjectedTask
     config:
       connections.coaddName: goodSeeing
-      connections.fakesType: injected_
+      connections.fakesType: parameters.fakesType
       connections.injectedPVICat: injected_pvi_catalog
-      connections.diaSrcTable: injected_goodSeeingDiff_diaSrcTable
+      connections.assocDiaSources: injected_goodSeeingDiff_diaSrcTable
       matchDistanceArcseconds: 0.5
       trimBuffer: 50
   consolidateMatchDiaSrc:
