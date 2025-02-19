@@ -5,7 +5,9 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityExtended.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
+  - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
     exclude:
       - analyzeMatchedPreVisitCore  # imSim does not have preSourceTable_visit catalogs
@@ -257,6 +259,10 @@ subsets:
     subset:
       - consolidateHealSparsePropertyMaps
       - analyzeObjectTableSurveyCore
+      - makeMetricTableMatchedVisitCore
+      - makeMetricTableObjectTableCore
+      - matchedVisitCoreWholeSkyPlot
+      - objectTableCoreWholeSkyPlot
     description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.
