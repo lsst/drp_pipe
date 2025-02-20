@@ -212,6 +212,8 @@ subsets:
       - mergeMeasurements
       - assembleCoadd
       - forcedPhotCoadd
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
       - transformObjectTable
       - consolidateObjectTable
       - mergeDetections

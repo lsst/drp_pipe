@@ -3,8 +3,6 @@ instrument: lsst.obs.lsst.LsstCamImSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
-  - $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_match_dc2.yaml
-  - $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_analyze_diff_matched_dc2.yaml
 
 tasks:
   deblend:
