@@ -1,0 +1,37 @@
+# This is a prescription for quantum clustering with BPS with DC2
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam-imSim/DRP-OR5-clustering.yaml
+#
+# (with no outer indentation) to your BPS config file.
+
+clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
+cluster:
+  step1detector:
+    pipetasks: isr,calibrateImage,analyzeAmpOffsetMetadata,transformSourceTable
+    dimensions: detector
+  coadd:
+    pipetasks: assembleCoadd,inject_coadd,detection
+    dimensions: tract,patch,band
+
+  objectTable:
+    pipetasks: writeObjectTable,transformObjectTable
+    dimensions: tract,patch
+
+  diffim:
+    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
+    dimensions: visit,detector
+
+  association:
+    pipetasks: drpAssociation,drpDiaCalculation
+    dimensions: tract,patch
+
+  forced_phot:
+    pipetasks: forcedPhotCcd, forcedPhotDiffim, writeForcedSourceTable
+    dimensions: visit,detector,tract
+
+  forced_phot_dia:
+    pipetasks: forcedPhotDiffOnDiaObjects, forcedPhotCcdOnDiaObjects, writeForcedSourceOnDiaObjectTable
+    dimensions: visit,detector,tract
