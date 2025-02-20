@@ -95,6 +95,13 @@ tasks:
         columns_target_copy.extend(fluxes_meas_other)
         columns_target_copy.extend([f"{col}Err" for col in fluxes_meas_other])
         columns_target_copy.extend(["x", "y", "xErr", "yErr"])
+        if "sersic" in models_other:
+          columns_target_copy.extend([
+            "sersic_x", "sersic_y", "sersic_xErr", "sersic_yErr",
+            "sersic_ra", "sersic_dec", "sersic_raErr", "sersic_decErr",
+            "sersic_index", "sersic_indexErr", "sersic_rho", "sersic_rhoErr",
+            "sersic_reff_x", "sersic_reff_xErr", "sersic_reff_y", "sersic_reff_yErr",
+          ])
         config.columns_target_copy = columns_target_copy
   catalogMatchTract:
     class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchTask
