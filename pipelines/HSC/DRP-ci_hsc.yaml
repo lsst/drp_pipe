@@ -76,6 +76,10 @@ tasks:
       # and parallax catalog available to use here.
       applyAstrometricCorrections: false
       refCat_bands: ["r", "i"]
+  drpAssociation:
+    class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
+    config:
+      doSolarSystemAssociation: false
 
 subsets:
   analysis_tools:
