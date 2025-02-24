@@ -1,0 +1,22 @@
+description: |
+  Tier 1 plots and metrics to assess DIASource and DIAObject quality.
+imports:
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
+tasks:
+  analyzeDiaSourceTableTract:
+    class: lsst.analysis.tools.tasks.DiaSourceTableTractAnalysisTask
+    config:
+      connections.data: dia_source
+      connections.outputName: dia_source
+      python: |
+        from lsst.analysis.tools.atools import *
+  makeDiaSourceMetricTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "dia_source_metrics"
+      connections.metricTable: "dia_source_metrics_table"
+  makeDiaSourceWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "dia_source_metrics_table"
+      connections.outputName: "dia_source_whole_sky"
