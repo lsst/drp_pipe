@@ -53,9 +53,9 @@ tasks:
       atools.e2Diff: E2DiffScatter
       atools.skyFluxStatisticMetric: SkyFluxStatisticMetric
       atools.skyFluxStatisticMetric.applyContext: CoaddContext
-      atools.wPerpPSFP: WPerpPSF
+      atools.wPerpPSF: WPerpPSF
       atools.wPerpCModel: WPerpCModel
-      atools.xPerpPSFP: XPerpPSF
+      atools.xPerpPSF: XPerpPSF
       atools.xPerpCModel: XPerpCModel
       atools.skyObjectSky: SkyObjectSkyPlot
       atools.skyObjectFlux: SkyObjectHistPlot
