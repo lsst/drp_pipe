@@ -14,7 +14,7 @@ tasks:
   gbdesAstrometricFit:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
     config:
-      connections.referenceCatalog: the_monster_20240904
+      connections.referenceCatalog: the_monster_20250219
       fitProperMotion: true
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
@@ -59,8 +59,8 @@ tasks:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:
       # Only run metrics for analyzing the preSources:
-      connections.data: preSourceTable_visit_the_monster_20240904_match_astrom
-      connections.outputName: preSourceTable_visit_the_monster_20240904_match_astrom
+      connections.data: preSourceTable_visit_the_monster_20250219_match_astrom
+      connections.outputName: preSourceTable_visit_the_monster_20250219_match_astrom
       atools.astromDiffMetrics: TargetRefCatDeltaMetrics
       atools.astromDiffMetrics.applyContext: VisitContext
       python: |

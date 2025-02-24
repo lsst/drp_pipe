@@ -95,7 +95,7 @@ LSSTCAM_INPUTS = {
     "bfk",
     "linearizer",
     "defects",
-    "the_monster_20240904",
+    "the_monster_20250219",
     "gaia_dr3_20230707",
 }
 
@@ -106,7 +106,7 @@ LSSTCOMCAM_INPUTS = {
     "linearizer",
     "defects",
     "cti",
-    "the_monster_20240904",
+    "the_monster_20250219",
 }
 
 # LSSTComCamSim common inputs, in addition to COMMON_INPUTS
@@ -248,7 +248,7 @@ REFCATS = [
     ("ps1_pv3_3pi_20170110", {"htm7"}, "SimpleCatalog", False),
     ("gaia_dr2_20200414", {"htm7"}, "SimpleCatalog", False),
     ("gaia_dr3_20230707", {"htm7"}, "SimpleCatalog", False),
-    ("the_monster_20240904", {"htm7"}, "SimpleCatalog", False),
+    ("the_monster_20250219", {"htm7"}, "SimpleCatalog", False),
     ("atlas_refcat2_20220201", {"htm7"}, "SimpleCatalog", False),
     ("cal_ref_cat_2_2", {"htm7"}, "SimpleCatalog", False),
     ("uw_stars_20240524", {"htm7"}, "SimpleCatalog", False),
