@@ -1,0 +1,35 @@
+description: |
+  Tier1 plots and metrics to assess repeatability of sources matched per tract.
+
+  This pipeline includes matching between isolated sources, which for the
+  initial stars (and recalibrated stars) is part of the production pipeline;
+  this later run is needed only for analysis, and arguably we should run this
+  analysis on source-object matches instead of source self-matches anyway.
+tasks:
+  associateAnalysisSource:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      connections.source_table_visit: source
+      connections.isolated_star_sources: isolated_analysis_source
+      connections.isolated_star_cat: isolated_analysis_source_association
+  analyzeSourceAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
+      connections.sourceCatalogs: source
+      connections.associatedSources: isolated_analysis_source_association
+      connections.outputName: analysis_source_association
+      connections.visitTable: visit_table
+      applyAstrometricCorrections: true
+  makeAnalysisSourceAssociationMetricTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "analysis_source_association_metrics"
+      connections.metricTable: "analysis_source_association_metrics_table"
+      inputDataDimensions: ["instrument", "skymap", "tract"]
+  makeAnalysisSourceAssociationWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCoreWholeSkyPlot.py
+      connections.inputName: "analysis_source_association_metrics_table"
+      connections.outputName: "analysis_source_association_whole_sky"

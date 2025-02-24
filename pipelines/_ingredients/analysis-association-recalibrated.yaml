@@ -1,0 +1,25 @@
+description: |
+  Tier1 plots and metrics to assess repeatability of recalibrated stars matched
+  per tract.
+tasks:
+  analyzeRecalibratedStarAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
+      connections.sourceCatalogs: recalibrated_star
+      connections.associatedSources: isolated_star_association
+      connections.outputName: recalibrated_star_association
+      connections.visitTable: visit_table
+      applyAstrometricCorrections: true
+  makeAnalysisRecalibratedStarAssociationMetricTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "recalibrated_star_association_metrics"
+      connections.metricTable: "recalibrated_star_association_metrics_table"
+      inputDataDimensions: ["instrument", "skymap", "tract"]
+  makeAnalysisRecalibratedStarAssociationWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCoreWholeSkyPlot.py
+      connections.inputName: "recalibrated_star_association_metrics_table"
+      connections.outputName: "recalibrated_star_association_whole_sky"
