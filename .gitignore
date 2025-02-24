@@ -24,3 +24,6 @@ pytest_session.txt
 # Dynamically generated source injection pipelines
 pipelines/*/*injected_deepCoadd.yaml
 python/*.dist-info/
+
+# Files created by tests for human review on failure:
+tests/migration_data/**/*.new.json
