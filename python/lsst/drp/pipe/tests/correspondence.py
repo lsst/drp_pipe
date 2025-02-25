@@ -29,6 +29,7 @@ from __future__ import annotations
 
 __all__ = ("Correspondence",)
 
+import csv
 import dataclasses
 import logging
 import os.path
@@ -42,12 +43,12 @@ from lsst.pipe.base.pipeline_graph import PipelineGraph, NodeType, TaskNode
 _LOG = logging.getLogger(__name__)
 
 
-def without_automatic_connections(names: Iterable[str]) -> set[str]:
-    return {
+def without_automatic_connections(names: Iterable[str]) -> list[str]:
+    return [
         name
         for name in names
         if not name.endswith("_config") and not name.endswith("_log") and not name.endswith("_metadata")
-    }
+    ]
 
 
 class Correspondence(pydantic.BaseModel):
@@ -188,8 +189,8 @@ class Correspondence(pydantic.BaseModel):
         dataset_types_old_to_new = {
             old_label: new_label for new_label, old_label in self.dataset_types_new_to_old.items()
         }
-        old_dataset_types = without_automatic_connections(old.dataset_types.keys())
-        new_dataset_types = without_automatic_connections(new.dataset_types.keys())
+        old_dataset_types = set(without_automatic_connections(old.dataset_types.keys()))
+        new_dataset_types = set(without_automatic_connections(new.dataset_types.keys()))
         if len(dataset_types_old_to_new) != len(self.dataset_types_new_to_old):
             for new_label, old_label in self.dataset_types_new_to_old.items():
                 if dataset_types_old_to_new[old_label] != new_label:
@@ -209,7 +210,7 @@ class Correspondence(pydantic.BaseModel):
             messages.append(f"Dataset type {name!r} is marked as unmappable but is not part of {old_name}.")
         for name in sorted(self.unmappable_new_dataset_types.keys() - new_dataset_types):
             messages.append(f"Dataset type {name!r} is marked as unmappable but is not part of {new_name}.")
-        missing_old_dataset_types = without_automatic_connections(old.dataset_types.keys())
+        missing_old_dataset_types = set(without_automatic_connections(old.dataset_types.keys()))
         missing_old_dataset_types.difference_update(dataset_types_old_to_new.keys())
         missing_old_dataset_types.difference_update(self.unmappable_old_dataset_types)
         for name in sorted(missing_old_dataset_types):
@@ -217,7 +218,7 @@ class Correspondence(pydantic.BaseModel):
                 f"Dataset type {name!r} in {old_name} is missing from the "
                 "correspondence; it needs to be mapped or marked as unmappable."
             )
-        missing_new_dataset_types = without_automatic_connections(new_dataset_types)
+        missing_new_dataset_types = set(without_automatic_connections(new_dataset_types))
         missing_new_dataset_types.difference_update(self.dataset_types_new_to_old.keys())
         missing_new_dataset_types.difference_update(self.unmappable_new_dataset_types)
         for name in sorted(missing_new_dataset_types):
@@ -359,6 +360,91 @@ class Correspondence(pydantic.BaseModel):
         compareConfigs(new.label, new.config, old.config, output=output)
         return messages
 
+    def write_task_csv(self, filename: str, new: PipelineGraph, old: PipelineGraph) -> None:
+        """Write the mapping between tasks to a CSV file.
+
+        Parameters
+        ----------
+        filename : `str`
+            Name of the file.
+        new : `lsst.pipe.base.PipelineGraph`
+            New pipeline graph.
+        old : `lsst.pipe.base.PipelineGraph`
+            Old pipeline graph.
+        """
+        with open(filename, "w") as stream:
+            writer = csv.writer(stream, delimiter=";")
+            n = 0
+            for new_label, new_task_node in new.tasks.items():
+                step = new.get_task_step(new_label)
+                old_label = self.tasks_new_to_old.get(new_label, "")
+                writer.writerow(
+                    [
+                        n,
+                        step,
+                        new_label,
+                        old_label,
+                        new_task_node.task_class_name,
+                        ", ".join(new_task_node.dimensions.required),
+                    ]
+                )
+                n += 1
+            for old_label, old_task_node in old.tasks.items():
+                if old_label in self.unmappable_old_tasks:
+                    writer.writerow(
+                        [
+                            n,
+                            "",
+                            "",
+                            old_label,
+                            old_task_node.task_class_name,
+                            ", ".join(old_task_node.dimensions.required),
+                        ]
+                    )
+                    n += 1
+
+    def write_dataset_type_csv(self, filename: str, new: PipelineGraph, old: PipelineGraph) -> None:
+        """Write the mapping between dataset types to a CSV file.
+
+        Parameters
+        ----------
+        filename : `str`
+            Name of the file.
+        new : `lsst.pipe.base.PipelineGraph`
+            New pipeline graph.
+        old : `lsst.pipe.base.PipelineGraph`
+            Old pipeline graph.
+        """
+        with open(filename, "w") as stream:
+            writer = csv.writer(stream, delimiter=";")
+            n = 0
+            for new_name in without_automatic_connections(new.dataset_types):
+                new_dataset_type_node = new.dataset_types[new_name]
+                old_name = self.dataset_types_new_to_old.get(new_name, "")
+                writer.writerow(
+                    [
+                        n,
+                        new_name,
+                        old_name,
+                        new_dataset_type_node.storage_class_name,
+                        ", ".join(new_dataset_type_node.dimensions.required),
+                    ]
+                )
+                n += 1
+            for old_name in without_automatic_connections(old.dataset_types):
+                if old_name in self.unmappable_old_dataset_types:
+                    old_dataset_type_node = old.dataset_types[old_name]
+                    writer.writerow(
+                        [
+                            n,
+                            "",
+                            old_name,
+                            old_dataset_type_node.storage_class_name,
+                            ", ".join(old_dataset_type_node.dimensions.required),
+                        ]
+                    )
+                    n += 1
+
 
 @dataclasses.dataclass
 class _CorrespondenceFinderSide:
@@ -397,7 +483,7 @@ class _CorrespondenceFinderSide:
         """Dataset types on this side that could be mapped but have not yet
         been.
         """
-        result = without_automatic_connections(self.pipeline_graph.dataset_types.keys())
+        result = set(without_automatic_connections(self.pipeline_graph.dataset_types.keys()))
         result.difference_update(self.map_dataset_types.keys())
         result.difference_update(self.unmappable_dataset_types)
         return result
@@ -600,3 +686,27 @@ class _CorrespondenceFinderSide:
         rev1 = name1[::-1]
         rev2 = name2[::-1]
         return len(os.path.commonprefix([rev1, rev2]))
+
+
+def _main():
+    import argparse
+    from lsst.pipe.base import Pipeline
+
+    parser = argparse.ArgumentParser("Create CSV files from a pipeline correspondence.")
+    parser.add_argument("new", help="New pipeline YAML filename.")
+    parser.add_argument("old", help="Old pipeline YAML filename.")
+    parser.add_argument("correspondence", help="Correspondence JSON file.")
+    parser.add_argument("--tasks", default="tasks.csv", help="Filename for task CSV.")
+    parser.add_argument("--dataset-types", default="dataset-types.csv", help="Filename for dataset type CSV.")
+    args = parser.parse_args()
+    new = Pipeline.from_uri(args.new).to_graph(visualization_only=True)
+    old = Pipeline.from_uri(args.old).to_graph(visualization_only=True)
+    correspondence = Correspondence.read(args.correspondence)
+    if args.tasks:
+        correspondence.write_task_csv(args.tasks, new, old)
+    if args.dataset_types:
+        correspondence.write_dataset_type_csv(args.dataset_types, new, old)
+
+
+if __name__ == "__main__":
+    _main()
