@@ -68,8 +68,8 @@ tasks:
     config:
       atools.wholeSkyMetric.bands: ["g", "r", "i"]
       atools.wholeSkyMetric.plotKeys: [
-        "wPerpPSFP_wPerp_psfFlux_median",
-        "wPerpPSFP_wPerp_psfFlux_sigmaMAD",
+        "wPerpPSF_wPerp_psfFlux_median",
+        "wPerpPSF_wPerp_psfFlux_sigmaMAD",
         "skippedDeblenderMetrics_numSkippedPeaks",
         "skippedDeblenderMetrics_numSkippedBlends",
         "skippedDeblenderMetrics_numBlendParentTooBig",
