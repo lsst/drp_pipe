@@ -661,9 +661,7 @@
     "associateAnalysisSource": "No final sources in v1.",
     "analyzeSourceAssociation": "No final sources in v1.",
     "makeAnalysisSourceAssociationMetricTable": "No final sources in v1.",
-    "makeAnalysisSourceAssociationWholeSkyPlot": "No final sources in v1.",
-    "makeDiaSourceMetricTable": "No DIA analysis in v1.",
-    "makeDiaSourceWholeSkyPlot": "No DIA analysis in v1."
+    "makeAnalysisSourceAssociationWholeSkyPlot": "No final sources in v1."
   },
   "unmappable_old_tasks": {},
   "unmappable_new_dataset_types": {
@@ -933,8 +931,7 @@
     "analysis_source_association_whole_sky_wholeSkyMetric_stellarPhotometricResiduals_y_photResidTractStdev_WholeSkyPlot": "",
     "analysis_source_association_whole_sky_wholeSkyMetric_stellarPhotometricResiduals_z_photResidTractMedian_WholeSkyPlot": "",
     "analysis_source_association_whole_sky_wholeSkyMetric_stellarPhotometricResiduals_z_photResidTractSigmaMad_WholeSkyPlot": "",
-    "analysis_source_association_whole_sky_wholeSkyMetric_stellarPhotometricResiduals_z_photResidTractStdev_WholeSkyPlot": "",
-    "dia_source_metrics_table": ""
+    "analysis_source_association_whole_sky_wholeSkyMetric_stellarPhotometricResiduals_z_photResidTractStdev_WholeSkyPlot": ""
   },
   "unmappable_old_dataset_types": {},
   "config_ignores": {
