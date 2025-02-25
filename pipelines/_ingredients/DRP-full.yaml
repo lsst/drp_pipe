@@ -109,3 +109,6 @@ subsets:
     description: >
       Set of tasks to generate parquet Source Tables, using final
       calibrations.
+
+contracts:
+  - skyCorr.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
