@@ -314,6 +314,7 @@ tasks:
     config:
       connections.inputCatalog: source_unstandardized
       connections.outputCatalog: source_detector
+      functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
   consolidateSource:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
     config:
