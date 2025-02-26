@@ -1,6 +1,6 @@
 description: |
-  Tier1 plots and metrics to assess repeatability of recalibrated stars matched
-  per tract.
+  Plots and metrics to assess repeatability of recalibrated stars matched per
+  tract.
 tasks:
   analyzeRecalibratedStarAssociation:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask

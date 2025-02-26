@@ -1,5 +1,5 @@
 description: |
-  Tier 1 plots and metrics to assess DIASource and DIAObject quality.
+  Plots and metrics to assess DIASource and DIAObject quality.
 imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
 tasks:
