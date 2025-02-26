@@ -20,7 +20,7 @@ imports:
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
 
 tasks:
-  # 1-initial production tasks
+  # stage1-initial production tasks
   isr:
     class: lsst.ip.isr.IsrTask
     config:
@@ -71,7 +71,7 @@ tasks:
       connections.visitSummaries: initial_visit_summary
       connections.outputCatalog: initial_visit_table
 
-  # 2-recalibration production tasks
+  # stage2-recalibration production tasks
   fgcmBuildFromIsolatedStars:
     class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
     config:
@@ -142,7 +142,7 @@ tasks:
       connections.visitSummaries: visit_summary
       connections.outputCatalog: visit_table
 
-  # 3-coadds production tasks
+  # stage3-coadds production tasks
   makeDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
@@ -460,7 +460,7 @@ tasks:
       connections.referenceCatalog: dia_object_patch
 
 subsets:
-  1a-initial-detectors:
+  step1a-initial-detectors:
     subset:
       - isr
       - calibrateImage
@@ -477,7 +477,7 @@ subsets:
 
       A skymap constraint is unnecessary and not recommended.
 
-  1b-initial-visits:
+  step1b-initial-visits:
     subset:
       - consolidateInitialStar
       - consolidateInitialVisitSummary
@@ -498,7 +498,7 @@ subsets:
 
       A skymap constraint is unnecessary and not recommended.
 
-  1c-initial-tracts:
+  step1c-initial-tracts:
     subset:
       - associateIsolatedStar
       - analyzeInitialStarAssociation
@@ -514,7 +514,7 @@ subsets:
       A skymap constraint is always necessary, to avoid running all tasks
       redundantly on all skymaps in the data repository.
 
-  1d-initial-global:
+  step1d-initial-global:
     subset:
       - makeInitialVisitDetectorTable
       - makeInitialVisitTable
@@ -532,7 +532,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  2a-recalibration-global:
+  step2a-recalibration-global:
     subset:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
@@ -544,7 +544,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  2b-recalibration-tracts:
+  step2b-recalibration-tracts:
     subset:
       - gbdesAstrometricFit
     description: |
@@ -557,7 +557,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  2c-recalibration-visits:
+  step2c-recalibration-visits:
     subset:
       - refitPsfModel
       - updateVisitSummary
@@ -581,7 +581,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  2d-recalibration-tracts:
+  step2d-recalibration-tracts:
     subset:
       - analyzeRecalibratedStarAssociation
     description: |
@@ -600,7 +600,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  2e-recalibration-global:
+  step2e-recalibration-global:
     subset:
       - makeVisitDetectorTable
       - makeVisitTable
@@ -618,7 +618,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  3a-coadds-tracts:
+  step3a-coadds-tracts:
     subset:
       - makeDirectWarp
       - makePsfMatchedWarp
@@ -657,7 +657,7 @@ subsets:
 
       A skymap constraint is required.
 
-  3b-coadds-global:
+  step3b-coadds-global:
     subset:
       - consolidateHealSparsePropertyMaps
       - analyzeObjectTableSurveyCore
@@ -677,7 +677,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  4a-variability-visits:
+  step4a-variability-visits:
     subset:
       - reprocessVisitImage
       - transformSource
@@ -695,7 +695,7 @@ subsets:
       - makeAnalysisSourcePhotometricRefMatch
       - analyzeSourcePhotometricRefMatch
 
-  4b-variability-tracts:
+  step4b-variability-tracts:
     subset:
       - associateDiaSource
       - calculateDiaObject
@@ -713,7 +713,7 @@ subsets:
       - analyzeSourceAssociation
       - analyzeDiaSourceTableTract
 
-  4c-variability-global:
+  step4c-variability-global:
     subset:
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
@@ -723,7 +723,7 @@ subsets:
   # duplicate the lists of tasks and verify that they're consistent via unit
   # tests.
 
-  1-initial:
+  stage1-initial:
     # 1a
     - isr
     - calibrateImage
@@ -748,7 +748,7 @@ subsets:
     - makeInitialVisitTable
     - makeAnalysisInitialStarAssociationMetricTable
     - makeAnalysisInitialStarAssociationWholeSkyPlot
-  2-recalibration:
+  stage2-recalibration:
     # 2a
     - fgcmBuildFromIsolatedStars
     - fgcmFitCycle
@@ -773,7 +773,7 @@ subsets:
     - makeVisitTable
     - makeAnalysisRecalibratedStarAssociationMetricTable
     - makeAnalysisRecalibratedStarAssociationWholeSkyPlot
-  3-coadds:
+  stage3-coadds:
     # 3a
     - makeDirectWarp
     - makePsfMatchedWarp
@@ -809,7 +809,7 @@ subsets:
     - makeMetricTableObjectTableCoreRefCatMatch
     - objectTableCoreRefCatMatchWholeSkyPlot
     - plotPropertyMapSurvey
-  4-variability:
+  stage4-variability:
     # 4a:
     - reprocessVisitImage
     - transformSource
@@ -847,31 +847,31 @@ subsets:
     - makeAnalysisSourceAssociationWholeSkyPlot
 
 steps:
-  - label: 1a-initial-detectors
+  - label: step1a-initial-detectors
     dimensions: [visit, detector]
-  - label: 1b-initial-visits
+  - label: step1b-initial-visits
     dimensions: [visit]
-  - label: 1c-initial-tracts
+  - label: step1c-initial-tracts
     dimensions: [tract]
-  - label: 1d-initial-global
+  - label: step1d-initial-global
     dimensions: []
-  - label: 2a-recalibration-global
+  - label: step2a-recalibration-global
     dimensions: []
-  - label: 2b-recalibration-tracts
+  - label: step2b-recalibration-tracts
     dimensions: ["tract"]
-  - label: 2c-recalibration-visits
+  - label: step2c-recalibration-visits
     dimensions: ["visit"]
-  - label: 2d-recalibration-tracts
+  - label: step2d-recalibration-tracts
     dimensions: ["tract"]
-  - label: 2e-recalibration-global
+  - label: step2e-recalibration-global
     dimensions: []
-  - label: 3a-coadds-tracts
+  - label: step3a-coadds-tracts
     dimensions: ["tract"]
-  - label: 3b-coadds-global
+  - label: step3b-coadds-global
     dimensions: []
-  - label: 4a-variability-visits
+  - label: step4a-variability-visits
     dimensions: ["visit"]
-  - label: 4b-variability-tracts
+  - label: step4b-variability-tracts
     dimensions: ["tract"]
-  - label: 4c-variability-global
+  - label: step4c-variability-global
     dimensions: []
