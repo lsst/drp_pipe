@@ -37,7 +37,7 @@ tasks:
       connections.stars: initial_star_unstandardized
       connections.exposure: initial_visit_image
       connections.background: initial_visit_image_background
-  transformInitialStar:
+  standardizeInitialStar:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
       connections.inputCatalog: initial_star_unstandardized
@@ -121,7 +121,7 @@ tasks:
       connections.visitSummary: visit_summary
       connections.catalog: initial_star_footprints
       connections.outputCatalog: recalibrated_star_unstandardized
-  transformRecalibratedStar:
+  standardizeRecalibratedStar:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
       connections.inputCatalog: recalibrated_star_unstandardized
@@ -279,7 +279,7 @@ tasks:
       connections.inputCatalogForcedSrc: object_forced_measurement
       connections.inputCatalogPsfsMultiprofit: object_psf_multiprofit
       connections.outputCatalog: object_unstandardized
-  transformObject:
+  standardizeObject:
     class: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
     config:
       connections.inputCatalog: object_unstandardized
@@ -309,7 +309,7 @@ tasks:
       connections.sources_footprints: source_footprints
       connections.visit_summary: visit_summary
       remove_initial_photo_calib: false
-  transformSource:
+  standardizeSource:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
       connections.inputCatalog: source_unstandardized
@@ -357,7 +357,7 @@ tasks:
       connections.difference: difference_image_predetection
       connections.diaSources: dia_source_unstandardized
       connections.classifications: dia_source_reliability
-  transformDiaSource:
+  standardizeDiaSource:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
       doIncludeReliability: true
@@ -420,7 +420,7 @@ tasks:
       connections.inputCatalog: object_forced_source_direct
       connections.inputCatalogDiff: object_forced_source_difference
       connections.outputCatalog: object_forced_source_unstandardized
-  transformObjectForcedSource:
+  standardizeObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
     config:
       connections.inputCatalogs: object_forced_source_unstandardized
@@ -449,7 +449,7 @@ tasks:
       connections.inputCatalog: dia_object_forced_source_direct
       connections.inputCatalogDiff: dia_object_forced_source_difference
       connections.outputCatalog: dia_object_forced_source_unstandardized
-  transformDiaObjectForcedSource:
+  standardizeDiaObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
     config:
       referenceColumns: []
@@ -464,7 +464,7 @@ subsets:
     subset:
       - isr
       - calibrateImage
-      - transformInitialStar
+      - standardizeInitialStar
       - analyzeAmpOffsetMetadata
       - analyzeAmpInterfaceOffsetMetadata
       - analyzeCalibrateImageMetadata
@@ -562,7 +562,7 @@ subsets:
       - refitPsfModel
       - updateVisitSummary
       - recalibrateInitialStar
-      - transformRecalibratedStar
+      - standardizeRecalibratedStar
       - consolidateRecalibratedStar
       - analyzeRecalibratedStar
       - makeAnalysisRecalibratedStarAstrometricRefMatch
@@ -636,7 +636,7 @@ subsets:
       - fitDeepCoaddPsfGaussians
       - fitDeblendedObjectsSersic
       - rewriteObject
-      - transformObject
+      - standardizeObject
       - consolidateObject
       - analyzeObjectTableCore
       - catalogMatchTract
@@ -680,13 +680,13 @@ subsets:
   step4a-variability-visits:
     subset:
       - reprocessVisitImage
-      - transformSource
+      - standardizeSource
       - consolidateSource
       - rewarpTemplate
       - subtractImages
       - detectAndMeasureDiaSource
       - computeReliability
-      - transformDiaSource
+      - standardizeDiaSource
       - consolidateVisitDiaSource
       - analyzeRecalibratedStarObjectMatch
       - analyzeSource
@@ -704,11 +704,11 @@ subsets:
       - forcedPhotObjectDirect
       - forcedPhotObjectDifference
       - writeObjectForcedSource
-      - transformObjectForcedSource
+      - standardizeObjectForcedSource
       - forcedPhotDiaObjectDirect
       - forcedPhotDiaObjectDifference
       - writeDiaObjectForcedSource
-      - transformDiaObjectForcedSource
+      - standardizeDiaObjectForcedSource
       - associateAnalysisSource
       - analyzeSourceAssociation
       - analyzeDiaSourceTableTract
@@ -727,7 +727,7 @@ subsets:
     # 1a
     - isr
     - calibrateImage
-    - transformInitialStar
+    - standardizeInitialStar
     - analyzeAmpOffsetMetadata
     - analyzeAmpInterfaceOffsetMetadata
     - analyzeCalibrateImageMetadata
@@ -759,7 +759,7 @@ subsets:
     - refitPsfModel
     - updateVisitSummary
     - recalibrateInitialStar
-    - transformRecalibratedStar
+    - standardizeRecalibratedStar
     - consolidateRecalibratedStar
     - analyzeRecalibratedStar
     - makeAnalysisRecalibratedStarAstrometricRefMatch
@@ -791,7 +791,7 @@ subsets:
     - fitDeepCoaddPsfGaussians
     - fitDeblendedObjectsSersic
     - rewriteObject
-    - transformObject
+    - standardizeObject
     - consolidateObject
     - analyzeObjectTableCore
     - catalogMatchTract
@@ -812,13 +812,13 @@ subsets:
   stage4-variability:
     # 4a:
     - reprocessVisitImage
-    - transformSource
+    - standardizeSource
     - consolidateSource
     - rewarpTemplate
     - subtractImages
     - detectAndMeasureDiaSource
     - computeReliability
-    - transformDiaSource
+    - standardizeDiaSource
     - consolidateVisitDiaSource
     - analyzeRecalibratedStarObjectMatch
     - analyzeSource
@@ -834,11 +834,11 @@ subsets:
     - forcedPhotObjectDirect
     - forcedPhotObjectDifference
     - writeObjectForcedSource
-    - transformObjectForcedSource
+    - standardizeObjectForcedSource
     - forcedPhotDiaObjectDirect
     - forcedPhotDiaObjectDifference
     - writeDiaObjectForcedSource
-    - transformDiaObjectForcedSource
+    - standardizeDiaObjectForcedSource
     - associateAnalysisSource
     - analyzeSourceAssociation
     - analyzeDiaSourceTableTract
