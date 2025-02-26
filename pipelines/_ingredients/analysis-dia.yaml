@@ -1,0 +1,12 @@
+description: |
+  Plots and metrics to assess DIASource and DIAObject quality.
+imports:
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
+tasks:
+  analyzeDiaSourceTableTract:
+    class: lsst.analysis.tools.tasks.DiaSourceTableTractAnalysisTask
+    config:
+      connections.data: dia_source
+      connections.outputName: dia_source
+      python: |
+        from lsst.analysis.tools.atools import *

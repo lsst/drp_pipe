@@ -1,0 +1,74 @@
+# The v2 version of matchedVisitCore.
+#
+# This pipeline has almost of the same tasks (objectEpochTable is now
+# computeObjectMeanEpochs in analysis-coadds.yaml) but renames them and changes
+# dataset type names.
+description: |
+  Plots and metrics to assess visit quality after joint calibration steps, with
+  matching only to external reference catalogs.
+tasks:
+  analyzeRecalibratedStar:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/sourceTableCore.py
+      connections.data: recalibrated_star
+      connections.outputName: recalibrated_star
+  makeAnalysisRecalibratedStarAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+    config:
+      connections.targetCatalog: recalibrated_star
+      connections.visitSummaryTable: visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_astrom"
+  analyzeRecalibratedStarAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/refCatSourceAstrometricCore.py
+      connections.targetCatalog: recalibrated_star
+      connections.data: "{targetCatalog}_ref_match_astrom"
+      # Can't use {targetCatalog} in outputName because it is a template.
+      connections.outputName: "recalibrated_star_ref_match_astrom"
+  makeAnalysisRecalibratedStarPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
+    config:
+      connections.targetCatalog: recalibrated_star
+      connections.visitSummaryTable: visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_photom"
+  analyzeRecalibratedStarPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/refCatSourcePhotometricCore.py
+      connections.targetCatalog: recalibrated_star
+      connections.data: "{targetCatalog}_ref_match_photom"
+      # Can't use {targetCatalog} in outputName because it is a template.
+      connections.outputName: "recalibrated_star_ref_match_photom"
+  analyzeRecalibratedStarObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+      connections.data: recalibrated_star
+      connections.associatedSources: isolated_star_association
+      connections.refCat: object_patch
+      connections.visitTable: visit_table
+
+subsets:
+  analysis-visit-recalibrated:
+    subset:
+      - analyzeRecalibratedStar
+      - makeAnalysisRecalibratedStarAstrometricRefMatch
+      - analyzeRecalibratedStarAstrometricRefMatch
+      - makeAnalysisRecalibratedStarPhotometricRefMatch
+      - analyzeRecalibratedStarPhotometricRefMatch
+      # analyzeRecalibratedStarObjectMatch (previously sourceObjectMatch) is
+      # not included in this subset right now because we've been running it
+      # in ComCam DRPs (unlike all other visit-level analysis), and only Clare
+      # might know why.  Excluding it from the subset includes it in the DRP
+      # pipeline, since that pipeline excludes this subset.
+    description: |
+      Subset containing all visit-level analysis tasks that run on the
+      recalibrated stars.  This subset contains all of the tasks in this
+      pipeline, and hence allows it to be included in steps in a base pipeline
+      and then excluded (with labeledSubsetModifyMode=EDIT) in downstream
+      pipelines that do not want visit-level analysis.

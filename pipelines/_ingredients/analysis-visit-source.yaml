@@ -1,0 +1,62 @@
+# A new v2-only variant of matched[Pre]VisitCore that runs on the final
+# sources from reprocessVisitImage.
+#
+# This pipeline has almost all of the same tasks but renames them and changes
+# dataset type names.
+description: |
+  Plots and metrics to assess visit quality after final source detection and
+  measurement with matching only to external reference catalogs.
+tasks:
+  analyzeSource:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/sourceTableCore.py
+      connections.data: source
+      connections.outputName: source
+  makeAnalysisSourceAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+    config:
+      connections.targetCatalog: source
+      connections.visitSummaryTable: visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_astrom"
+  analyzeSourceAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/refCatSourceAstrometricCore.py
+      connections.targetCatalog: source
+      connections.data: "{targetCatalog}_ref_match_astrom"
+      # Can't use {targetCatalog} in outputName because it is a template.
+      connections.outputName: "source_ref_match_astrom"
+  makeAnalysisSourcePhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
+    config:
+      connections.targetCatalog: source
+      connections.visitSummaryTable: visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_photom"
+  analyzeSourcePhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/refCatSourcePhotometricCore.py
+      connections.targetCatalog: source
+      connections.data: "{targetCatalog}_ref_match_photom"
+      # Can't use {targetCatalog} in outputName because it is a template.
+      connections.outputName: "source_ref_match_photom"
+
+subsets:
+  analysis-visit-source:
+    subset:
+      - analyzeSource
+      - makeAnalysisSourceAstrometricRefMatch
+      - analyzeSourceAstrometricRefMatch
+      - makeAnalysisSourcePhotometricRefMatch
+      - analyzeSourcePhotometricRefMatch
+    description: |
+      Subset containing all visit-level analysis tasks that run on the
+      recalibrated star.  This subset contains all of the tasks in this
+      pipeline, and hence allows it to be included in steps in a base pipeline
+      and then excluded (with labeledSubsetModifyMode=EDIT) in downstream
+      pipelines that do not want visit-level analysis.
