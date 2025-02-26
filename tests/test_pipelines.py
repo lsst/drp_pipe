@@ -107,6 +107,7 @@ LSSTCOMCAM_INPUTS = {
     "defects",
     "cti",
     "the_monster_20250219",
+    "illuminationCorrection",
 }
 
 # LSSTComCamSim common inputs, in addition to COMMON_INPUTS
