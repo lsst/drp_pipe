@@ -283,6 +283,8 @@ subsets:
       Subset for running image differencing branch of the DRP pipeline
 
 contracts:
+  # Please modify base-v2.yaml whenever modifying the contracts here to keep
+  # them in sync, until we complete the transition to the v2 pipelines.
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
   - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures
   - getTemplate.connections.template == subtractImages.connections.template
