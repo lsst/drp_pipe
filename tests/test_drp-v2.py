@@ -38,7 +38,7 @@ PIPELINES_DIR = os.path.join(os.path.dirname(__file__), "..", "pipelines")
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
-COMCAM_REFCAT = "the_monster_20240904"
+COMCAM_REFCAT = "the_monster_20250219"
 COMCAM_INPUTS = {
     COMCAM_REFCAT,
     "raw",
