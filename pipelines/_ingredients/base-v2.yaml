@@ -203,7 +203,7 @@ tasks:
       connections.coadd_exposures: deep_coadd_predetection
       connections.visit_summaries: visit_summary
       connections.prefix: deep_coadd_
-  detectObject:
+  detectCoaddPeaks:
     class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
     config:
       connections.detectionSchema: object_detection_schema
@@ -219,7 +219,7 @@ tasks:
       connections.outputSchema: object_detection_merged_schema
       connections.outputPeakSchema: object_detection_peak_schema
       connections.outputCatalog: object_detection_merged
-  deblendObject:
+  deblendCoaddFootprints:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     config:
       connections.inputSchema: object_detection_merged_schema
@@ -627,9 +627,9 @@ subsets:
       - assembleDeepCoadd
       - assembleTemplateCoadd
       - makeHealSparsePropertyMaps
-      - detectObject
+      - detectCoaddPeaks
       - mergeObjectDetection
-      - deblendObject
+      - deblendCoaddFootprints
       - measureObjectUnforced
       - mergeObjectMeasurement
       - measureObjectForced
@@ -782,9 +782,9 @@ subsets:
     - assembleDeepCoadd
     - assembleTemplateCoadd
     - makeHealSparsePropertyMaps
-    - detectObject
+    - detectCoaddPeaks
     - mergeObjectDetection
-    - deblendObject
+    - deblendCoaddFootprints
     - measureObjectUnforced
     - mergeObjectMeasurement
     - measureObjectForced
