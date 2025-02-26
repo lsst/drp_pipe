@@ -105,10 +105,10 @@ class DrpV2TestCase(unittest.TestCase):
         # valid (step flow is what the PipelineStepTester checks for the v1
         # pipelines).
         pipeline_graph = pipeline.to_graph(registry=butler.registry)
-        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["1-initial"], "1")
-        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["2-recalibration"], "2")
-        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["3-coadds"], "3")
-        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["4-variability"], "4")
+        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage1-initial"], "step1")
+        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage2-recalibration"], "step2")
+        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage3-coadds"], "step3")
+        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage4-variability"], "step4")
         # Check that the overall inputs are only the ones we expect.
         overall_inputs = {name for name, _ in pipeline_graph.iter_overall_inputs()}
         self.assertEqual(overall_inputs, COMCAM_INPUTS)
@@ -120,21 +120,21 @@ class DrpV2TestCase(unittest.TestCase):
         butler = self.make_butler(writeable=True)
         self.register_refcat(butler, COMCAM_REFCAT)
         pipeline_graph_1 = Pipeline.from_uri(
-            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#1-initial")
+            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage1-initial")
         ).to_graph(registry=butler.registry)
         self.check_stage(pipeline_graph_1, pipeline_graph_1.tasks.keys(), "")
         pipeline_graph_2 = Pipeline.from_uri(
-            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#2-recalibration")
+            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage2-recalibration")
         ).to_graph(registry=butler.registry)
-        self.check_stage(pipeline_graph_2, pipeline_graph_2.task_subsets["2-recalibration"], "")
+        self.check_stage(pipeline_graph_2, pipeline_graph_2.task_subsets["stage2-recalibration"], "")
         pipeline_graph_3 = Pipeline.from_uri(
-            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#3-coadds")
+            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage3-coadds")
         ).to_graph(registry=butler.registry)
-        self.check_stage(pipeline_graph_3, pipeline_graph_3.task_subsets["3-coadds"], "")
+        self.check_stage(pipeline_graph_3, pipeline_graph_3.task_subsets["stage3-coadds"], "")
         pipeline_graph_4 = Pipeline.from_uri(
-            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#4-variability")
+            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage4-variability")
         ).to_graph(registry=butler.registry)
-        self.check_stage(pipeline_graph_4, pipeline_graph_4.task_subsets["4-variability"], "")
+        self.check_stage(pipeline_graph_4, pipeline_graph_4.task_subsets["stage4-variability"], "")
         # Spot-check a few prominent outputs for each stage.
         self.assertIsNotNone(pipeline_graph_1.producer_of("initial_star"))
         self.assertIsNotNone(pipeline_graph_1.producer_of("initial_visit_image"))
