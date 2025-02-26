@@ -4,8 +4,8 @@
 # This pipeline has almost all of the same tasks but renames them and changes
 # dataset type names.
 description: |
-  Tier 1 plots and metrics to assess visit quality after final source detection
-  and measurement with matching only to external reference catalogs.
+  Plots and metrics to assess visit quality after final source detection and
+  measurement with matching only to external reference catalogs.
 tasks:
   analyzeSource:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask

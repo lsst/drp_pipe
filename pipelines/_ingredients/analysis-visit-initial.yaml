@@ -5,8 +5,8 @@
 # recalibrated stars, three's not much value to doing initial-star matches
 # to objects.
 description: |
-  Tier 1 plots and metrics to assess visit quality before joint calibration
-  steps, with matching only to external reference catalogs.
+  Plots and metrics to assess visit quality before joint calibration steps,
+  with matching only to external reference catalogs.
 imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
     include: analyzeCalibrateImageMetadata

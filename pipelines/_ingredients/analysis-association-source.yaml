@@ -1,5 +1,5 @@
 description: |
-  Tier1 plots and metrics to assess repeatability of sources matched per tract.
+  Plots and metrics to assess repeatability of sources matched per tract.
 
   This pipeline includes matching between isolated sources, which for the
   initial stars (and recalibrated stars) is part of the production pipeline;

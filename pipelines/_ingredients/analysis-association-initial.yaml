@@ -1,6 +1,5 @@
 description: |
-  Tier1 plots and metrics to assess repeatability of initial stars matched per
-  tract.
+  Plots and metrics to assess repeatability of initial stars matched per tract.
 tasks:
   analyzeInitialStarAssociation:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask

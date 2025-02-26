@@ -1,7 +1,6 @@
 description: |
-  Tier 1 plots and metrics to assess coadd and object table quality.  This
-  includes both tract-level plots and metrics and survey-level aggregations of
-  those.
+  Plots and metrics to assess coadd and object table quality.  This includes
+  both tract-level plots and metrics and survey-level aggregations of those.
 imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
