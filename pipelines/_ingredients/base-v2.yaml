@@ -409,7 +409,7 @@ tasks:
     class: lsst.meas.base.ForcedPhotCcdTask
     config:
       connections.inputSchema: object_ref_measurement_schema
-      connections.exposure: visit_image
+      connections.exposure: difference_image
       connections.refCat: object_ref_measurement
       connections.outputSchema: object_forced_source_difference_schema
       connections.measCat: object_forced_source_difference
@@ -875,3 +875,30 @@ steps:
     dimensions: ["tract"]
   - label: step4c-variability-global
     dimensions: []
+
+contracts:
+  # Please modify DRP-minimal-calibration.yaml whenever modifying the contracts
+  # here to keep them in sync, until we complete the transition to the v2
+  # pipelines.
+  - selectTemplateCoaddVisits.connections.goodVisits == assembleTemplateCoadd.connections.selectedVisits
+  - assembleTemplateCoadd.connections.coaddExposure == rewarpTemplate.connections.coaddExposures
+  - rewarpTemplate.connections.template == subtractImages.connections.template
+  - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSource.connections.matchedTemplate
+  - subtractImages.connections.difference == detectAndMeasureDiaSource.connections.difference
+  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == standardizeDiaSource.connections.diffIm
+  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotObjectDifference.connections.exposure
+  - standardizeDiaSource.connections.diaSourceTable == consolidateVisitDiaSource.connections.inputCatalogs
+  - standardizeDiaSource.connections.diaSourceTable == associateDiaSource.connections.diaSourceTables
+  - associateDiaSource.connections.assocDiaSourceTable == calculateDiaObject.connections.assocDiaSourceTable
+  - associateDiaSource.connections.diaObjectTable == calculateDiaObject.connections.diaObjectTable
+  - forcedPhotObjectDifference.connections.refCat == forcedPhotObjectDirect.connections.refCat
+  - consolidateHealSparsePropertyMaps.property_maps == makeHealSparsePropertyMaps.property_maps
+  - "'calib_psf_candidate' not in measureObjectUnforced.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "'calib_psf_used' not in measureObjectUnforced.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "'calib_psf_reserved' not in measureObjectUnforced.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "makeDirectWarp.warper.cacheSize == assembleDeepCoadd.coaddPsf.cacheSize"
+  - "makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellX"
+  - "makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellY"
+  - isr.doFlat == True if calibrateImage.do_illumination_correction == True else True
+  - makeDirectWarp.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
+  - reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
