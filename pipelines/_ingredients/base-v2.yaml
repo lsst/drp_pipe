@@ -677,7 +677,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step4a-variability-visits:
+  step4a-measure-variability-visits:
     subset:
       - reprocessVisitImage
       - standardizeSource
@@ -695,7 +695,7 @@ subsets:
       - makeAnalysisSourcePhotometricRefMatch
       - analyzeSourcePhotometricRefMatch
 
-  step4b-variability-tracts:
+  step4b-measure-variability-tracts:
     subset:
       - associateDiaSource
       - calculateDiaObject
@@ -713,7 +713,7 @@ subsets:
       - analyzeSourceAssociation
       - analyzeDiaSourceTableTract
 
-  step4c-variability-global:
+  step4c-measure-variability-global:
     subset:
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
@@ -809,7 +809,7 @@ subsets:
     - makeMetricTableObjectTableCoreRefCatMatch
     - objectTableCoreRefCatMatchWholeSkyPlot
     - plotPropertyMapSurvey
-  stage4-variability:
+  stage4-measure-variability:
     # 4a:
     - reprocessVisitImage
     - standardizeSource
@@ -869,11 +869,11 @@ steps:
     dimensions: ["tract"]
   - label: step3b-coadds-global
     dimensions: []
-  - label: step4a-variability-visits
+  - label: step4a-measure-variability-visits
     dimensions: ["visit"]
-  - label: step4b-variability-tracts
+  - label: step4b-measure-variability-tracts
     dimensions: ["tract"]
-  - label: step4c-variability-global
+  - label: step4c-measure-variability-global
     dimensions: []
 
 contracts:
