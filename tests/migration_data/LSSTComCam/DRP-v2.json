@@ -7,7 +7,7 @@
     "consolidateVisitSummary": "consolidateVisitSummary",
     "associateIsolatedStar": "isolatedStarAssociation",
     "analyzeSingleVisitStarAssociation": "analyzeMatchedPreVisitCore",
-    "fgcmBuildFromIsolatedStars": "fgcmBuildFromIsolatedStars",
+    "fgcmBuildFromIsolatedStar": "fgcmBuildFromIsolatedStars",
     "fgcmFitCycle": "fgcmFitCycle",
     "fgcmOutputProducts": "fgcmOutputProducts",
     "gbdesAstrometricFit": "gbdesAstrometricFit",

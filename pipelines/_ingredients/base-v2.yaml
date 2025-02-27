@@ -72,7 +72,7 @@ tasks:
       connections.outputCatalog: preliminary_visit_table
 
   # stage2-recalibrate production tasks
-  fgcmBuildFromIsolatedStars:
+  fgcmBuildFromIsolatedStar:
     class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
     config:
       connections.isolated_star_cats: isolated_star_association
@@ -534,7 +534,7 @@ subsets:
 
   step2a-recalibrate-global:
     subset:
-      - fgcmBuildFromIsolatedStars
+      - fgcmBuildFromIsolatedStar
       - fgcmFitCycle
       - fgcmOutputProducts
     description: |
@@ -750,7 +750,7 @@ subsets:
     - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
   stage2-recalibrate:
     # 2a
-    - fgcmBuildFromIsolatedStars
+    - fgcmBuildFromIsolatedStar
     - fgcmFitCycle
     - fgcmOutputProducts
     # 2b
