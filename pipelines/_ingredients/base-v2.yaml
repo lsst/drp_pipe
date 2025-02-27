@@ -202,7 +202,6 @@ tasks:
       connections.input_maps: deep_coadd_input_map
       connections.coadd_exposures: deep_coadd_predetection
       connections.visit_summaries: visit_summary
-      connections.prefix: deep_coadd_
   detectCoaddPeaks:
     class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
     config:
@@ -293,8 +292,6 @@ tasks:
       connections.outputCatalog: object
   consolidateHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
-    config:
-      connections.prefix: deep_coadd_
 
   # 4-final production tasks
   reprocessVisitImage:

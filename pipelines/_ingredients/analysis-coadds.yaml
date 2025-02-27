@@ -76,14 +76,8 @@ tasks:
       connections.outputName: "object_ref_match_photom"
   plotPropertyMapTract:
     class: lsst.analysis.tools.tasks.PerTractPropertyMapAnalysisTask
-    config:
-      connections.prefix: deep_coadd_
-      connections.outputName: deep_coadd
   plotPropertyMapSurvey:
     class: lsst.analysis.tools.tasks.SurveyWidePropertyMapAnalysisTask
-    config:
-      connections.prefix: deep_coadd_
-      connections.outputName: deep_coadd
   validateObjectTableCore:
     class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
     config:
@@ -93,4 +87,5 @@ tasks:
     class: lsst.analysis.tools.tasks.ObjectEpochTableTask
     config:
       connections.objectCat: object_patch
-      connections.epochMap: deep_coadd_epoch_map_mean
+      # TODO[DM-49227]: switch this to the new name when possible.
+      connections.epochMap: deepCoadd_epoch_map_mean
