@@ -71,7 +71,7 @@ tasks:
       connections.visitSummaries: preliminary_visit_summary
       connections.outputCatalog: preliminary_visit_table
 
-  # stage2-recalibration production tasks
+  # stage2-recalibrate production tasks
   fgcmBuildFromIsolatedStars:
     class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
     config:
@@ -532,7 +532,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step2a-recalibration-global:
+  step2a-recalibrate-global:
     subset:
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
@@ -544,7 +544,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step2b-recalibration-tracts:
+  step2b-recalibrate-tracts:
     subset:
       - gbdesAstrometricFit
     description: |
@@ -557,7 +557,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step2c-recalibration-visits:
+  step2c-recalibrate-visits:
     subset:
       - refitPsfModel
       - updateVisitSummary
@@ -581,7 +581,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step2d-recalibration-tracts:
+  step2d-recalibrate-tracts:
     subset:
       - analyzeRecalibratedStarAssociation
     description: |
@@ -600,7 +600,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step2e-recalibration-global:
+  step2e-recalibrate-global:
     subset:
       - makeVisitDetectorTable
       - makeVisitTable
@@ -748,7 +748,7 @@ subsets:
     - makeInitialVisitTable
     - makeAnalysisSingleVisitStarAssociationMetricTable
     - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
-  stage2-recalibration:
+  stage2-recalibrate:
     # 2a
     - fgcmBuildFromIsolatedStars
     - fgcmFitCycle
@@ -855,15 +855,15 @@ steps:
     dimensions: [tract]
   - label: step1d-single-visit-global
     dimensions: []
-  - label: step2a-recalibration-global
+  - label: step2a-recalibrate-global
     dimensions: []
-  - label: step2b-recalibration-tracts
+  - label: step2b-recalibrate-tracts
     dimensions: ["tract"]
-  - label: step2c-recalibration-visits
+  - label: step2c-recalibrate-visits
     dimensions: ["visit"]
-  - label: step2d-recalibration-tracts
+  - label: step2d-recalibrate-tracts
     dimensions: ["tract"]
-  - label: step2e-recalibration-global
+  - label: step2e-recalibrate-global
     dimensions: []
   - label: step3a-coadds-tracts
     dimensions: ["tract"]

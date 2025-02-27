@@ -106,7 +106,7 @@ class DrpV2TestCase(unittest.TestCase):
         # pipelines).
         pipeline_graph = pipeline.to_graph(registry=butler.registry)
         self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage1-single-visit"], "step1")
-        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage2-recalibration"], "step2")
+        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage2-recalibrate"], "step2")
         self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage3-coadds"], "step3")
         self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage4-measure-variability"], "step4")
         # Check that the overall inputs are only the ones we expect.
@@ -124,9 +124,9 @@ class DrpV2TestCase(unittest.TestCase):
         ).to_graph(registry=butler.registry)
         self.check_stage(pipeline_graph_1, pipeline_graph_1.tasks.keys(), "")
         pipeline_graph_2 = Pipeline.from_uri(
-            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage2-recalibration")
+            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage2-recalibrate")
         ).to_graph(registry=butler.registry)
-        self.check_stage(pipeline_graph_2, pipeline_graph_2.task_subsets["stage2-recalibration"], "")
+        self.check_stage(pipeline_graph_2, pipeline_graph_2.task_subsets["stage2-recalibrate"], "")
         pipeline_graph_3 = Pipeline.from_uri(
             os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage3-coadds")
         ).to_graph(registry=butler.registry)
