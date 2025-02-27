@@ -14,9 +14,6 @@ tasks:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
       file: $DRP_PIPE_DIR/config/calibrateImage.py
-      # TODO[DM-47320]: for now we rename outputs to look like those of the
-      # tasks calibrateImage replaces; we'll change the input connection
-      # defaults downstream later and then remove these overrides.
       connections.initial_stars_schema: src_schema
       connections.stars_footprints: src
       connections.stars: source

@@ -9,7 +9,7 @@
 # simpler.
 config.do_calibrate_pixels = False
 
-# TODO[DM-47320]: for now we make output catalog as similar to the old 'src' as
+# TODO[DM-49218]: for now we make output catalog as similar to the old 'src' as
 # possible; we'll try to go back to calibrateImage defaults with a smaller
 # catalog after it's integrated. Goal is to remove all of these overrides
 # except the aperture radii, which we instead want to set to the same as the
