@@ -112,3 +112,5 @@ subsets:
 
 contracts:
   - skyCorr.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
+  - fgcmBuildFromIsolatedStars.doApplyWcsJacobian == False if calibrateImage.do_illumination_correction else True
+  - fgcmBuildFromIsolatedStars.doApplyWcsJacobian == fgcmOutputProducts.doComposeWcsJacobian
