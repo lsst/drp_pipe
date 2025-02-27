@@ -1,0 +1,91 @@
+description: |
+  Plots and metrics to assess coadd and object table quality.  This includes
+  both tract-level plots and metrics and survey-level aggregations of those.
+imports:
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+    include:
+      - makeMetricTableObjectTableCore
+      - objectTableCoreWholeSkyPlot
+      - makeMetricTableObjectTableCoreRefCatMatch
+      - objectTableCoreRefCatMatchWholeSkyPlot
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/surveyQualityCore.yaml
+tasks:
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      connections.data: object
+      connections.inputName: object
+      connections.outputName: object
+  makeMetricTableObjectTableCore:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "object_metrics"
+      connections.metricTable: "object_metrics_table"
+  objectTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "object_metrics_table"
+      connections.outputName: "object_whole_sky"
+  analyzeObjectTableSurveyCore:
+    class: lsst.analysis.tools.tasks.ObjectTableSurveyAnalysisTask
+    config:
+      connections.data: object
+      connections.input: deep
+      connections.outputName: object_survey
+  catalogMatchTract:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchTask
+    config:
+      connections.catalog: object
+      connections.targetCatalog: object
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_astrom"
+  refCatObjectTract:
+    class: lsst.analysis.tools.tasks.refCatObjectAnalysis.RefCatObjectAnalysisTask
+    config:
+      connections.targetCatalog: object
+      connections.data: "{targetCatalog}_ref_match_astrom"
+      # Can't use {targetCatalog} in outputName because it is a template.
+      connections.outputName: "object_ref_match_astrom"
+  makeMetricTableObjectTableCoreRefCatMatch:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "object_ref_match_astrom_metrics"
+      connections.metricTable: "object_ref_match_astrom_metrics_table"
+  objectTableCoreRefCatMatchWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "object_ref_match_astrom_metrics_table"
+      connections.outputName: "object_ref_match_astrom_whole_sky"
+  photometricCatalogMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchTask
+    config:
+      connections.catalog: object
+      connections.targetCatalog: object
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_photom"
+  photometricRefCatObjectTract:
+    class: lsst.analysis.tools.tasks.refCatObjectPhotometricAnalysis.RefCatObjectPhotometricAnalysisTask
+    config:
+      connections.targetCatalog: object
+      connections.data: "{targetCatalog}_ref_match_photom"
+      # Can't use {targetCatalog} in outputName because it is a template.
+      connections.outputName: "object_ref_match_photom"
+  plotPropertyMapTract:
+    class: lsst.analysis.tools.tasks.PerTractPropertyMapAnalysisTask
+  plotPropertyMapSurvey:
+    class: lsst.analysis.tools.tasks.SurveyWidePropertyMapAnalysisTask
+  validateObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      connections.data: object
+      connections.outputName: object_column_validate
+  computeObjectMeanEpochs:
+    class: lsst.analysis.tools.tasks.ObjectEpochTableTask
+    config:
+      connections.objectCat: object_patch
+      # TODO[DM-49227]: switch this to the new name when possible.
+      connections.epochMap: deepCoadd_epoch_map_mean

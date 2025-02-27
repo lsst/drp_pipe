@@ -1,0 +1,78 @@
+# The v2 version of matchedPreVisitCore.
+#
+# This pipeline has most of the same tasks (no matching to objects) but renames
+# all of them.  Since we won't have objects until after we also have
+# recalibrated stars, three's not much value to doing initial-star matches
+# to objects.
+description: |
+  Plots and metrics to assess visit quality before joint calibration steps,
+  with matching only to external reference catalogs.
+imports:
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+    include: analyzeCalibrateImageMetadata
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
+tasks:
+  analyzeInitialSummaryStats:
+    class: lsst.analysis.tools.tasks.CalexpSummaryAnalysisTask
+    config:
+      connections.data: preliminary_visit_image.summaryStats
+      connections.outputName: initial_summary_stats
+      atools.calexpSummaryMetrics: CalexpSummaryMetrics
+      python: from lsst.analysis.tools.atools import *
+  analyzeSingleVisitStar:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/sourceTableCore.py
+      connections.data: single_visit_star
+      connections.outputName: single_visit_star
+  makeAnalysisSingleVisitStarAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+    config:
+      connections.targetCatalog: single_visit_star
+      connections.visitSummaryTable: preliminary_visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_astrom"
+  analyzeSingleVisitStarAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/refCatSourceAstrometricCore.py
+      connections.targetCatalog: single_visit_star
+      connections.data: "{targetCatalog}_ref_match_astrom"
+      # Can't use {targetCatalog} in outputName because it is a template.
+      connections.outputName: "single_visit_star_ref_match_photom"
+  makeAnalysisSingleVisitStarPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
+    config:
+      connections.targetCatalog: single_visit_star
+      connections.visitSummaryTable: preliminary_visit_summary
+      # Drop explicit refcat name from template to avoid needing to set it in
+      # downstream task configs.
+      connections.matchedCatalog: "{targetCatalog}_ref_match_photom"
+  analyzeSingleVisitStarPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/refCatSourcePhotometricCore.py
+      connections.targetCatalog: single_visit_star
+      connections.data: "{targetCatalog}_ref_match_photom"
+      # Can't use {targetCatalog} in outputName because it is a template.
+      connections.outputName: "single_visit_star_ref_match_photom"
+
+subsets:
+  analysis-visit-initial:
+    subset:
+      - analyzeAmpOffsetMetadata
+      - analyzeCalibrateImageMetadata
+      - analyzeAmpInterfaceOffsetMetadata
+      - analyzeInitialSummaryStats
+      - analyzeSingleVisitStar
+      - makeAnalysisSingleVisitStarAstrometricRefMatch
+      - analyzeSingleVisitStarAstrometricRefMatch
+      - makeAnalysisSingleVisitStarPhotometricRefMatch
+      - analyzeSingleVisitStarPhotometricRefMatch
+    description: |
+      Subset containing all visit-level analysis tasks that run on the final
+      sources. This subset contains all of the tasks in this pipeline, and
+      hence allows it to be included in steps in a base pipeline and then
+      excluded (with labeledSubsetModifyMode=EDIT) in downstream pipelines that
+      do not want visit-level analysis.

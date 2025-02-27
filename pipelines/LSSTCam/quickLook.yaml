@@ -34,9 +34,6 @@ tasks:
       # our final photometric calibration makes everything downstream much
       # simpler.
       do_calibrate_pixels: false
-      # TODO[DM-47320]: for now we rename outputs to look like those of the
-      # tasks calibrateImage replaces; we'll change the input connection
-      # defaults downstream later and then remove these overrides.
       connections.initial_stars_schema: src_schema
       connections.stars_footprints: src
       connections.stars: preSource

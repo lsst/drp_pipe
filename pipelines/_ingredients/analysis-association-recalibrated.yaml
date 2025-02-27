@@ -1,0 +1,29 @@
+description: |
+  Plots and metrics to assess repeatability of recalibrated stars matched per
+  tract.
+tasks:
+  analyzeRecalibratedStarAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
+      connections.sourceCatalogs: recalibrated_star
+      connections.associatedSources: isolated_star_association
+      connections.outputName: recalibrated_star_association
+      # This task only needs a visit table to get MJDs, which are not changed
+      # when we go from preliminary_visit_table to [final/recalibrated]
+      # visit_table.  Using the initial one here avoids adding another global
+      # gather/scatter to stage 2.
+      connections.visitTable: preliminary_visit_table
+      applyAstrometricCorrections: true
+  makeAnalysisRecalibratedStarAssociationMetricTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "recalibrated_star_association_metrics"
+      connections.metricTable: "recalibrated_star_association_metrics_table"
+      inputDataDimensions: ["instrument", "skymap", "tract"]
+  makeAnalysisRecalibratedStarAssociationWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCoreWholeSkyPlot.py
+      connections.inputName: "recalibrated_star_association_metrics_table"
+      connections.outputName: "recalibrated_star_association_whole_sky"

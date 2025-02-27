@@ -1,0 +1,903 @@
+description: |
+  Base pipeline for Data Release Production.
+
+  This pipeline includes all production common to most instruments and all
+  "core" analysis tasks.  Most downstream pipelines will be defined as subsets
+  that exclude labels they do not need.
+
+  Never run this pipeline or any of its subsets directly; always use those in
+  the 'pipelines' directory (or create a custom one) instead.
+
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-single-visit.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-single-visit.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-recalibrated.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-recalibrated.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-coadds.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-source.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-source.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-dia.yaml
+  - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
+
+tasks:
+  # stage1-single-visit production tasks
+  isr:
+    class: lsst.ip.isr.IsrTask
+    config:
+      connections.outputExposure: post_isr_image
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+      file: $DRP_PIPE_DIR/config/calibrateImage.py
+      connections.exposures: post_isr_image
+      connections.stars_footprints: single_visit_star_footprints
+      connections.psf_stars_footprints: single_visit_psf_star_footprints
+      connections.psf_stars: single_visit_psf_star
+      connections.initial_stars_schema: single_visit_star_schema
+      connections.stars: single_visit_star_unstandardized
+      connections.exposure: preliminary_visit_image
+      connections.background: preliminary_visit_image_background
+  standardizeSingleVisitStar:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: single_visit_star_unstandardized
+      connections.outputCatalog: single_visit_star_detector
+      functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
+  consolidateSingleVisitStar:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: single_visit_star_detector
+      connections.outputCatalog: single_visit_star
+  consolidateVisitSummary:
+    class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
+    config:
+      connections.calexp: preliminary_visit_image
+      connections.visitSummary: preliminary_visit_summary
+      connections.visitSummarySchema: preliminary_visit_summary_schema
+  associateIsolatedStar:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      connections.source_table_visit: single_visit_star
+      connections.isolated_star_sources: isolated_star
+      connections.isolated_star_cat: isolated_star_association
+  makeInitialVisitDetectorTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+    config:
+      connections.visitSummaryRefs: preliminary_visit_summary
+      connections.outputCatalog: preliminary_visit_detector_table
+  makeInitialVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+    config:
+      connections.visitSummaries: preliminary_visit_summary
+      connections.outputCatalog: preliminary_visit_table
+
+  # stage2-recalibrate production tasks
+  fgcmBuildFromIsolatedStar:
+    class: lsst.fgcmcal.fgcmBuildFromIsolatedStars.FgcmBuildFromIsolatedStarsTask
+    config:
+      connections.isolated_star_cats: isolated_star_association
+      connections.isolated_star_sources: isolated_star
+      connections.visit_summaries: preliminary_visit_summary
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      doMultipleCycles: true
+  fgcmOutputProducts:
+    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+  gbdesAstrometricFit:
+    class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
+    config:
+      connections.inputCatalogRefs: single_visit_star
+      connections.inputVisitSummaries: preliminary_visit_summary
+      fitProperMotion: true
+  refitPsfModel:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+    config:
+      connections.srcs: single_visit_star_footprints
+      connections.src_schema: single_visit_star_schema
+      connections.calexps: preliminary_visit_image
+      connections.isolated_star_cats: isolated_star_association
+      connections.isolated_star_sources: isolated_star
+      connections.finalized_src_table: refit_psf_star
+      connections.finalized_psf_ap_corr_cat: refit_psf_models
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      connections.input_exposures: preliminary_visit_image
+      connections.input_summary_schema: preliminary_visit_summary_schema
+      connections.input_summary_catalog: preliminary_visit_summary
+      connections.psf_star_catalog: refit_psf_star
+      connections.psf_overrides: refit_psf_models
+      connections.ap_corr_overrides: refit_psf_models
+      connections.wcs_overrides_tract: gbdesAstrometricFitSkyWcsCatalog
+      connections.photo_calib_overrides_global: fgcmPhotoCalibCatalog
+      connections.output_summary_schema: visit_summary_schema
+      connections.output_summary_catalog: visit_summary
+      wcs_provider: tract
+      photo_calib_provider: global
+  recalibrateSingleVisitStar:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+      connections.visitSummary: visit_summary
+      connections.catalog: single_visit_star_footprints
+      connections.outputCatalog: recalibrated_star_unstandardized
+  standardizeRecalibratedStar:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: recalibrated_star_unstandardized
+      connections.outputCatalog: recalibrated_star_detector
+  consolidateRecalibratedStar:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: recalibrated_star_detector
+      connections.outputCatalog: recalibrated_star
+  makeVisitDetectorTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+    config:
+      connections.visitSummaryRefs: visit_summary
+      connections.outputCatalog: visit_detector_table
+  makeVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+    config:
+      connections.visitSummaries: visit_summary
+      connections.outputCatalog: visit_table
+
+  # stage3-coadd production tasks
+  makeDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+    config:
+      connections.calexp_list: preliminary_visit_image
+      connections.visit_summary: visit_summary
+      connections.warp: direct_warp
+      connections.masked_fraction_warp: direct_warp_masked_fraction
+  makePsfMatchedWarp:
+    class: lsst.drp.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
+    config:
+      connections.direct_warp: direct_warp
+      connections.psf_matched_warp: psf_matched_warp
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      connections.visitSummaries: visit_summary
+      connections.goodVisits: deep_coadd_visit_selection
+      # Maximum sensible default psf fwhm in arcseconds to use for a coadd
+      maxPsfFwhm: 2.0
+      # By default for deep coadds, use all input visits better than maxPsfFwhm
+      nVisitsMax: -1
+  selectTemplateCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    config:
+      connections.visitSummaries: visit_summary
+      connections.goodVisits: template_coadd_visit_selection
+  assembleDeepCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      connections.inputWarps: direct_warp
+      connections.psfMatchedWarps: psf_matched_warp
+      connections.selectedVisits: deep_coadd_visit_selection
+      connections.coaddExposure: deep_coadd_predetection
+      connections.nImage: deep_coadd_n_image
+      connections.inputMap: deep_coadd_input_map
+      connections.templateCoadd: deep_coadd_compare_template
+      doInputMap: true
+      doSelectVisits: true
+      doWriteArtifactMasks: true
+      assembleStaticSkyModel.doSelectVisits: true
+  assembleTemplateCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      connections.inputWarps: direct_warp
+      connections.psfMatchedWarps: psf_matched_warp
+      connections.selectedVisits: template_coadd_visit_selection
+      connections.coaddExposure: template_coadd
+      connections.nImage: template_coadd_n_image
+      connections.inputMap: template_coadd_input_map
+      connections.templateCoadd: template_coadd_compare_template
+      doSelectVisits: true
+      assembleStaticSkyModel.doSelectVisits: true
+      doNImage: true
+  makeHealSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
+    config:
+      connections.input_maps: deep_coadd_input_map
+      connections.coadd_exposures: deep_coadd_predetection
+      connections.visit_summaries: visit_summary
+  detectCoaddPeaks:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      connections.detectionSchema: object_detection_schema
+      connections.exposure: deep_coadd_predetection
+      connections.outputBackgrounds: deep_coadd_background
+      connections.outputSources: object_detection
+      connections.outputExposure: deep_coadd
+  mergeObjectDetection:
+    class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
+    config:
+      connections.schema: object_detection_schema
+      connections.catalogs: object_detection
+      connections.outputSchema: object_detection_merged_schema
+      connections.outputPeakSchema: object_detection_peak_schema
+      connections.outputCatalog: object_detection_merged
+  deblendCoaddFootprints:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    config:
+      connections.inputSchema: object_detection_merged_schema
+      connections.peakSchema: object_detection_peak_schema
+      connections.mergedDetections: object_detection_merged
+      connections.coadds: deep_coadd
+      connections.outputSchema: object_deblend_schema
+      connections.deblendedCatalog: object_deblend
+      connections.scarletModelData: object_scarlet_models
+  measureObjectUnforced:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      connections.inputSchema: object_deblend_schema
+      connections.scarletCatalog: object_deblend
+      connections.scarletModels: object_scarlet_models
+      connections.sourceTableHandles: recalibrated_star
+      connections.finalizedSourceTableHandles: refit_psf_star
+      connections.outputSchema: object_unforced_measurement_schema
+      connections.outputSources: object_unforced_measurement
+      connections.exposure: deep_coadd
+  mergeObjectMeasurement:
+    class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
+    config:
+      connections.inputSchema: object_unforced_measurement_schema
+      connections.catalogs: object_unforced_measurement
+      connections.outputSchema: object_ref_measurement_schema
+      connections.mergedCatalog: object_ref_measurement
+  measureObjectForced:
+    class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+    config:
+      connections.inputSchema: object_ref_measurement_schema
+      connections.exposure: deep_coadd
+      connections.refCat: object_ref_measurement
+      connections.refCatInBand: object_unforced_measurement
+      connections.scarletModels: object_scarlet_models
+      connections.refWcs: deep_coadd.wcs
+      connections.measCat: object_forced_measurement
+  fitDeepCoaddPsfGaussians:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
+    config:
+      connections.coadd: deep_coadd
+      connections.cat_meas: object_unforced_measurement
+      connections.cat_output: object_psf_multiprofit
+  fitDeblendedObjectsSersic:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
+    config:
+      connections.cat_ref: object_ref_measurement
+      connections.cats_meas: object_unforced_measurement
+      connections.coadds: deep_coadd
+      connections.models_psf: object_psf_multiprofit
+      connections.models_scarlet: object_scarlet_models
+      connections.cat_output: object_sersic_multiprofit
+  rewriteObject:
+    class: lsst.pipe.tasks.postprocess.WriteObjectTableTask
+    config:
+      connections.inputCatalogMeas: object_unforced_measurement
+      connections.inputCatalogForcedSrc: object_forced_measurement
+      connections.inputCatalogPsfsMultiprofit: object_psf_multiprofit
+      connections.outputCatalog: object_unstandardized
+  standardizeObject:
+    class: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
+    config:
+      connections.inputCatalog: object_unstandardized
+      connections.outputCatalog: object_patch
+      connections.inputCatalogRef: object_ref_measurement
+      connections.inputCatalogSersicMultiprofit: object_sersic_multiprofit
+  consolidateObject:
+    class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
+    config:
+      connections.inputCatalogs: object_patch
+      connections.outputCatalog: object
+  consolidateHealSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
+
+  # 4-final production tasks
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      connections.exposures: post_isr_image
+      connections.background_1: preliminary_visit_image_background
+      connections.exposure: visit_image
+      connections.calib_sources: refit_psf_star
+      connections.background: visit_image_background
+      connections.sources: source_unstandardized
+      connections.sources_footprints: source_footprints
+      connections.visit_summary: visit_summary
+      remove_initial_photo_calib: false
+  standardizeSource:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: source_unstandardized
+      connections.outputCatalog: source_detector
+      functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
+  consolidateSource:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: source_detector
+      connections.outputCatalog: source
+  rewarpTemplate:
+    class: lsst.ip.diffim.getTemplate.GetTemplateTask
+    config:
+      connections.bbox: visit_image.bbox
+      connections.wcs: visit_image.wcs
+      connections.coaddExposures: template_coadd
+      connections.template: template_detector
+  subtractImages:
+    class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
+    config:
+      allowKernelSourceDetection: true
+      connections.science: visit_image
+      connections.sources: single_visit_star_footprints
+      connections.template: template_detector
+      connections.difference: difference_image_predetection
+      connections.matchedTemplate: template_matched
+      connections.psfMatchingKernel: difference_kernel
+      connections.kernelSources: difference_kernel_sources
+  detectAndMeasureDiaSource:
+    class: lsst.ip.diffim.detectAndMeasure.DetectAndMeasureTask
+    config:
+      connections.science: visit_image
+      connections.matchedTemplate: template_matched
+      connections.difference: difference_image_predetection
+      connections.outputSchema: dia_source_schema
+      connections.diaSources: dia_source_unstandardized
+      connections.subtractedMeasuredExposure: difference_image
+      connections.maskedStreaks: difference_streaks
+  computeReliability:
+    class: lsst.meas.transiNet.RBTransiNetTask
+    config:
+      modelPackageStorageMode: butler
+      connections.science: visit_image
+      connections.template: template_detector
+      connections.difference: difference_image_predetection
+      connections.diaSources: dia_source_unstandardized
+      connections.classifications: dia_source_reliability
+  standardizeDiaSource:
+    class: lsst.ap.association.TransformDiaSourceCatalogTask
+    config:
+      doIncludeReliability: true
+      connections.diaSourceSchema: dia_source_schema
+      connections.diaSourceCat: dia_source_unstandardized
+      connections.diffIm: difference_image
+      connections.reliability: dia_source_reliability
+      connections.diaSourceTable: dia_source_detector
+  consolidateVisitDiaSource:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: dia_source_detector
+      connections.outputCatalog: dia_source_visit
+  associateDiaSource:
+    class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
+    config:
+      connections.finalVisitSummaryRefs: visit_summary
+      connections.diaSourceTables: dia_source_detector
+      connections.assocDiaSourceTable: dia_source_patch
+      connections.diaObjectTable: dia_object_pre_calc
+      connections.associatedSsSources: ss_source_associated
+      connections.unassociatedSsObjects: ss_object_unassociated
+  calculateDiaObject:
+    class: lsst.pipe.tasks.drpDiaCalculationPipe.DrpDiaCalculationPipeTask
+    config:
+      connections.assocDiaSourceTable: dia_source_patch
+      connections.diaObjectTable: dia_object_pre_calc
+      connections.fullDiaObjectTable: dia_object_patch
+  consolidateDiaSource:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: dia_source_patch
+      connections.outputCatalog: dia_source
+  consolidateDiaObject:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      connections.inputCatalogs: dia_object_patch
+      connections.outputCatalog: dia_object
+  forcedPhotObjectDirect:
+    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+    config:
+      connections.inputSchema: object_ref_measurement_schema
+      connections.exposure: visit_image
+      connections.refCat: object_ref_measurement
+      connections.outputSchema: object_forced_source_direct_schema
+      connections.measCat: object_forced_source_direct
+      useVisitSummary: false
+  forcedPhotObjectDifference:
+    class: lsst.meas.base.ForcedPhotCcdTask
+    config:
+      connections.inputSchema: object_ref_measurement_schema
+      connections.exposure: difference_image
+      connections.refCat: object_ref_measurement
+      connections.outputSchema: object_forced_source_difference_schema
+      connections.measCat: object_forced_source_difference
+      useVisitSummary: false
+  writeObjectForcedSource:
+    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
+    config:
+      connections.inputCatalog: object_forced_source_direct
+      connections.inputCatalogDiff: object_forced_source_difference
+      connections.outputCatalog: object_forced_source_unstandardized
+  standardizeObjectForcedSource:
+    class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+    config:
+      connections.inputCatalogs: object_forced_source_unstandardized
+      connections.referenceCatalog: object_patch
+      connections.outputCatalog: object_forced_source
+  forcedPhotDiaObjectDirect:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      connections.exposure: visit_image
+      connections.refCat: dia_object_patch
+      connections.measCat: dia_object_forced_source_direct
+      connections.outputSchema: dia_object_forced_source_direct_schema
+      useVisitSummary: false
+  forcedPhotDiaObjectDifference:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+      connections.exposure: difference_image
+      connections.refCat: dia_object_patch
+      connections.measCat: dia_object_forced_source_difference
+      connections.outputSchema: dia_object_forced_source_difference_schema
+      useVisitSummary: false
+  writeDiaObjectForcedSource:
+    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
+    config:
+      key: diaObjectId
+      connections.inputCatalog: dia_object_forced_source_direct
+      connections.inputCatalogDiff: dia_object_forced_source_difference
+      connections.outputCatalog: dia_object_forced_source_unstandardized
+  standardizeDiaObjectForcedSource:
+    class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+    config:
+      referenceColumns: []
+      keyRef: diaObjectId
+      key: forcedSourceOnDiaObjectId
+      connections.inputCatalogs: dia_object_forced_source_unstandardized
+      connections.outputCatalog: dia_object_forced_source
+      connections.referenceCatalog: dia_object_patch
+
+subsets:
+  step1a-single-visit-detectors:
+    subset:
+      - isr
+      - calibrateImage
+      - standardizeSingleVisitStar
+      - analyzeAmpOffsetMetadata
+      - analyzeAmpInterfaceOffsetMetadata
+      - analyzeCalibrateImageMetadata
+      - analyzeInitialSummaryStats
+    description: |
+      A step that processes raws to initial processed images and star catalogs.
+      These all run per-detector and may be sharded by detector or visit.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is unnecessary and not recommended.
+
+  step1b-single-visit-visits:
+    subset:
+      - consolidateSingleVisitStar
+      - consolidateVisitSummary
+      - analyzeSingleVisitStar
+      - makeAnalysisSingleVisitStarAstrometricRefMatch
+      - analyzeSingleVisitStarAstrometricRefMatch
+      - makeAnalysisSingleVisitStarPhotometricRefMatch
+      - analyzeSingleVisitStarPhotometricRefMatch
+    description: |
+      A step that consolidates per-detector initial star catalogs and metadata
+      to full-focal-plane visit-level versions, and runs analysis on initial
+      stars.
+
+      A visit constraint may be used for sharding and may be useful in speeding
+      up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is unnecessary and not recommended.
+
+  step1c-single-visit-tracts:
+    subset:
+      - associateIsolatedStar
+      - analyzeSingleVisitStarAssociation
+    description: |
+      A step that matches initial star catalogs (running over tracts) and
+      runs analysis on those matches.
+
+      Tract constraints may only be used for sharding; tracts with partial
+      visit coverage must always be included.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is always necessary, to avoid running all tasks
+      redundantly on all skymaps in the data repository.
+
+  step1d-single-visit-global:
+    subset:
+      - makeInitialVisitDetectorTable
+      - makeInitialVisitTable
+      - makeAnalysisSingleVisitStarAssociationMetricTable
+      - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+    description: |
+      A step that consolidates visit[, detector] metadata and analysis into
+      full-survey tables and plots.
+
+      This step's outputs are not consumed by downstream production tasks and
+      may be dropped or deferred by pipelines that don't need a checkpoint
+      before multi-epoch calibration.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  step2a-recalibrate-global:
+    subset:
+      - fgcmBuildFromIsolatedStar
+      - fgcmFitCycle
+      - fgcmOutputProducts
+    description: |
+      A step that runs survey-wide multi-visit calibration tasks.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  step2b-recalibrate-tracts:
+    subset:
+      - gbdesAstrometricFit
+    description: |
+      A step that runs tract-level multi-visit calibration tasks.
+
+      A tract constraint may be used for sharding or avoiding partial-coverage
+      tracts, and may be helpful in speeding up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  step2c-recalibrate-visits:
+    subset:
+      - refitPsfModel
+      - updateVisitSummary
+      - recalibrateSingleVisitStar
+      - standardizeRecalibratedStar
+      - consolidateRecalibratedStar
+      - analyzeRecalibratedStar
+      - makeAnalysisRecalibratedStarAstrometricRefMatch
+      - analyzeRecalibratedStarAstrometricRefMatch
+      - makeAnalysisRecalibratedStarPhotometricRefMatch
+      - analyzeRecalibratedStarPhotometricRefMatch
+    description: |
+      A step that runs visit-level multi-detector calibration tasks and then
+      recalibrates the initial stars catalog and runs visit-level analysis on
+      it.
+
+      A visit constraint may be used for sharding and may be useful in speeding
+      up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  step2d-recalibrate-tracts:
+    subset:
+      - analyzeRecalibratedStarAssociation
+    description: |
+      A step that runs tract-level analysis on associations between
+      recalibrated stars (using the same associations originally computed on
+      the initial stars).
+
+      This step's outputs are not consumed by downstream production tasks and
+      may be dropped by pipelines that don't need a checkpoint after
+      multi-epoch calibration.
+
+      A tract constraint may be used for sharding or avoiding partial-coverage
+      tracts, and may be helpful in speeding up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  step2e-recalibrate-global:
+    subset:
+      - makeVisitDetectorTable
+      - makeVisitTable
+      - makeAnalysisRecalibratedStarAssociationMetricTable
+      - makeAnalysisRecalibratedStarAssociationWholeSkyPlot
+    description: |
+      A step that consolidates final visit[, detector] metadata and analysis
+      into full-survey tables.
+
+      This step's outputs are not consumed by downstream production tasks and
+      may be dropped or deferred by pipelines that don't need a checkpoint
+      after multi-epoch calibration.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  step3a-coadd-tracts:
+    subset:
+      - makeDirectWarp
+      - makePsfMatchedWarp
+      - selectDeepCoaddVisits
+      - selectTemplateCoaddVisits
+      - assembleDeepCoadd
+      - assembleTemplateCoadd
+      - makeHealSparsePropertyMaps
+      - detectCoaddPeaks
+      - mergeObjectDetection
+      - deblendCoaddFootprints
+      - measureObjectUnforced
+      - mergeObjectMeasurement
+      - measureObjectForced
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
+      - rewriteObject
+      - standardizeObject
+      - consolidateObject
+      - analyzeObjectTableCore
+      - catalogMatchTract
+      - refCatObjectTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
+      - validateObjectTableCore
+      - computeObjectMeanEpochs
+    description: |
+      A step that runs patch- and tract-level production and analysis tasks.
+
+      A tract constraint may be used for sharding and may be useful in speeding
+      up QuantumGraph generation or avoiding incomplete "ragged" tracts on the
+      edges of the available-data region.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is required.
+
+  step3b-coadd-global:
+    subset:
+      - consolidateHealSparsePropertyMaps
+      - analyzeObjectTableSurveyCore
+      - makeMetricTableObjectTableCore
+      - objectTableCoreWholeSkyPlot
+      - makeMetricTableObjectTableCoreRefCatMatch
+      - objectTableCoreRefCatMatchWholeSkyPlot
+      - plotPropertyMapSurvey
+    description: |
+      A step that consolidates tract-level analysis into survey-level analysis.
+
+      This step's outputs are not consumed by downstream production tasks and may be
+      dropped or deferred by pipelines that don't need a checkpoint after
+      coaddition and coadd processing.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+
+  step4a-measure-variability-visits:
+    subset:
+      - reprocessVisitImage
+      - standardizeSource
+      - consolidateSource
+      - rewarpTemplate
+      - subtractImages
+      - detectAndMeasureDiaSource
+      - computeReliability
+      - standardizeDiaSource
+      - consolidateVisitDiaSource
+      - analyzeRecalibratedStarObjectMatch
+      - analyzeSource
+      - makeAnalysisSourceAstrometricRefMatch
+      - analyzeSourceAstrometricRefMatch
+      - makeAnalysisSourcePhotometricRefMatch
+      - analyzeSourcePhotometricRefMatch
+
+  step4b-measure-variability-tracts:
+    subset:
+      - associateDiaSource
+      - calculateDiaObject
+      - consolidateDiaSource
+      - consolidateDiaObject
+      - forcedPhotObjectDirect
+      - forcedPhotObjectDifference
+      - writeObjectForcedSource
+      - standardizeObjectForcedSource
+      - forcedPhotDiaObjectDirect
+      - forcedPhotDiaObjectDifference
+      - writeDiaObjectForcedSource
+      - standardizeDiaObjectForcedSource
+      - associateAnalysisSource
+      - analyzeSourceAssociation
+      - analyzeDiaSourceTableTract
+
+  step4c-measure-variability-global:
+    subset:
+      - makeAnalysisSourceAssociationMetricTable
+      - makeAnalysisSourceAssociationWholeSkyPlot
+
+  # Subsets below are the checkpoints for humans, AKA stages.  These
+  # unfortunately can't be declared in terms of other subsets yet; we have to
+  # duplicate the lists of tasks and verify that they're consistent via unit
+  # tests.
+
+  stage1-single-visit:
+    # 1a
+    - isr
+    - calibrateImage
+    - standardizeSingleVisitStar
+    - analyzeAmpOffsetMetadata
+    - analyzeAmpInterfaceOffsetMetadata
+    - analyzeCalibrateImageMetadata
+    - analyzeInitialSummaryStats
+    # 1b
+    - consolidateSingleVisitStar
+    - consolidateVisitSummary
+    - analyzeSingleVisitStar
+    - makeAnalysisSingleVisitStarAstrometricRefMatch
+    - analyzeSingleVisitStarAstrometricRefMatch
+    - makeAnalysisSingleVisitStarPhotometricRefMatch
+    - analyzeSingleVisitStarPhotometricRefMatch
+    # 1c
+    - associateIsolatedStar
+    - analyzeSingleVisitStarAssociation
+    # 1d
+    - makeInitialVisitDetectorTable
+    - makeInitialVisitTable
+    - makeAnalysisSingleVisitStarAssociationMetricTable
+    - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+  stage2-recalibrate:
+    # 2a
+    - fgcmBuildFromIsolatedStar
+    - fgcmFitCycle
+    - fgcmOutputProducts
+    # 2b
+    - gbdesAstrometricFit
+    # 2c
+    - refitPsfModel
+    - updateVisitSummary
+    - recalibrateSingleVisitStar
+    - standardizeRecalibratedStar
+    - consolidateRecalibratedStar
+    - analyzeRecalibratedStar
+    - makeAnalysisRecalibratedStarAstrometricRefMatch
+    - analyzeRecalibratedStarAstrometricRefMatch
+    - makeAnalysisRecalibratedStarPhotometricRefMatch
+    - analyzeRecalibratedStarPhotometricRefMatch
+    # 2d
+    - analyzeRecalibratedStarAssociation
+    # 2e
+    - makeVisitDetectorTable
+    - makeVisitTable
+    - makeAnalysisRecalibratedStarAssociationMetricTable
+    - makeAnalysisRecalibratedStarAssociationWholeSkyPlot
+  stage3-coadd:
+    # 3a
+    - makeDirectWarp
+    - makePsfMatchedWarp
+    - selectDeepCoaddVisits
+    - selectTemplateCoaddVisits
+    - assembleDeepCoadd
+    - assembleTemplateCoadd
+    - makeHealSparsePropertyMaps
+    - detectCoaddPeaks
+    - mergeObjectDetection
+    - deblendCoaddFootprints
+    - measureObjectUnforced
+    - mergeObjectMeasurement
+    - measureObjectForced
+    - fitDeepCoaddPsfGaussians
+    - fitDeblendedObjectsSersic
+    - rewriteObject
+    - standardizeObject
+    - consolidateObject
+    - analyzeObjectTableCore
+    - catalogMatchTract
+    - refCatObjectTract
+    - photometricCatalogMatch
+    - photometricRefCatObjectTract
+    - plotPropertyMapTract
+    - validateObjectTableCore
+    - computeObjectMeanEpochs
+    # 3b
+    - consolidateHealSparsePropertyMaps
+    - analyzeObjectTableSurveyCore
+    - makeMetricTableObjectTableCore
+    - objectTableCoreWholeSkyPlot
+    - makeMetricTableObjectTableCoreRefCatMatch
+    - objectTableCoreRefCatMatchWholeSkyPlot
+    - plotPropertyMapSurvey
+  stage4-measure-variability:
+    # 4a:
+    - reprocessVisitImage
+    - standardizeSource
+    - consolidateSource
+    - rewarpTemplate
+    - subtractImages
+    - detectAndMeasureDiaSource
+    - computeReliability
+    - standardizeDiaSource
+    - consolidateVisitDiaSource
+    - analyzeRecalibratedStarObjectMatch
+    - analyzeSource
+    - makeAnalysisSourceAstrometricRefMatch
+    - analyzeSourceAstrometricRefMatch
+    - makeAnalysisSourcePhotometricRefMatch
+    - analyzeSourcePhotometricRefMatch
+    # 4b:
+    - associateDiaSource
+    - calculateDiaObject
+    - consolidateDiaSource
+    - consolidateDiaObject
+    - forcedPhotObjectDirect
+    - forcedPhotObjectDifference
+    - writeObjectForcedSource
+    - standardizeObjectForcedSource
+    - forcedPhotDiaObjectDirect
+    - forcedPhotDiaObjectDifference
+    - writeDiaObjectForcedSource
+    - standardizeDiaObjectForcedSource
+    - associateAnalysisSource
+    - analyzeSourceAssociation
+    - analyzeDiaSourceTableTract
+    # 4c
+    - makeAnalysisSourceAssociationMetricTable
+    - makeAnalysisSourceAssociationWholeSkyPlot
+
+steps:
+  - label: step1a-single-visit-detectors
+    dimensions: [visit, detector]
+  - label: step1b-single-visit-visits
+    dimensions: [visit]
+  - label: step1c-single-visit-tracts
+    dimensions: [tract]
+  - label: step1d-single-visit-global
+    dimensions: []
+  - label: step2a-recalibrate-global
+    dimensions: []
+  - label: step2b-recalibrate-tracts
+    dimensions: ["tract"]
+  - label: step2c-recalibrate-visits
+    dimensions: ["visit"]
+  - label: step2d-recalibrate-tracts
+    dimensions: ["tract"]
+  - label: step2e-recalibrate-global
+    dimensions: []
+  - label: step3a-coadd-tracts
+    dimensions: ["tract"]
+  - label: step3b-coadd-global
+    dimensions: []
+  - label: step4a-measure-variability-visits
+    dimensions: ["visit"]
+  - label: step4b-measure-variability-tracts
+    dimensions: ["tract"]
+  - label: step4c-measure-variability-global
+    dimensions: []
+
+contracts:
+  # Please modify DRP-minimal-calibration.yaml whenever modifying the contracts
+  # here to keep them in sync, until we complete the transition to the v2
+  # pipelines.
+  - selectTemplateCoaddVisits.connections.goodVisits == assembleTemplateCoadd.connections.selectedVisits
+  - assembleTemplateCoadd.connections.coaddExposure == rewarpTemplate.connections.coaddExposures
+  - rewarpTemplate.connections.template == subtractImages.connections.template
+  - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSource.connections.matchedTemplate
+  - subtractImages.connections.difference == detectAndMeasureDiaSource.connections.difference
+  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == standardizeDiaSource.connections.diffIm
+  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotObjectDifference.connections.exposure
+  - standardizeDiaSource.connections.diaSourceTable == consolidateVisitDiaSource.connections.inputCatalogs
+  - standardizeDiaSource.connections.diaSourceTable == associateDiaSource.connections.diaSourceTables
+  - associateDiaSource.connections.assocDiaSourceTable == calculateDiaObject.connections.assocDiaSourceTable
+  - associateDiaSource.connections.diaObjectTable == calculateDiaObject.connections.diaObjectTable
+  - forcedPhotObjectDifference.connections.refCat == forcedPhotObjectDirect.connections.refCat
+  - consolidateHealSparsePropertyMaps.property_maps == makeHealSparsePropertyMaps.property_maps
+  - "'calib_psf_candidate' not in measureObjectUnforced.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "'calib_psf_used' not in measureObjectUnforced.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "'calib_psf_reserved' not in measureObjectUnforced.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
+  - "makeDirectWarp.warper.cacheSize == assembleDeepCoadd.coaddPsf.cacheSize"
+  - "makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellX"
+  - "makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellY"
+  - isr.doFlat == True if calibrateImage.do_illumination_correction == True else True
+  - makeDirectWarp.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
+  - reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
+  - fgcmBuildFromIsolatedStar.doApplyWcsJacobian == False if calibrateImage.do_illumination_correction else True
+  - fgcmBuildFromIsolatedStar.doApplyWcsJacobian == fgcmOutputProducts.doComposeWcsJacobian
