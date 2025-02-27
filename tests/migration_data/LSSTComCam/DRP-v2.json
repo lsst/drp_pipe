@@ -90,7 +90,6 @@
     "isrStatistics": "isrStatistics",
     "post_isr_image": "postISRCCD",
     "initial_astrometry_match_detector": "initial_astrometry_match_detector",
-    "initial_photoCalib_detector": "initial_photoCalib_detector",
     "initial_photometry_match_detector": "initial_photometry_match_detector",
     "preliminary_visit_image": "calexp",
     "preliminary_visit_image_background": "calexpBackground",
