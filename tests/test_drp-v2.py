@@ -56,6 +56,7 @@ COMCAM_INPUTS = {
     "fgcmLookUpTable",
     "pretrainedModelPackage",
     "preloaded_DRP_SsObjects",
+    "illuminationCorrection",
 }
 
 
