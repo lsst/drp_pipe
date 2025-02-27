@@ -142,7 +142,7 @@ tasks:
       connections.visitSummaries: visit_summary
       connections.outputCatalog: visit_table
 
-  # stage3-coadds production tasks
+  # stage3-coadd production tasks
   makeDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
@@ -618,7 +618,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step3a-coadds-tracts:
+  step3a-coadd-tracts:
     subset:
       - makeDirectWarp
       - makePsfMatchedWarp
@@ -657,7 +657,7 @@ subsets:
 
       A skymap constraint is required.
 
-  step3b-coadds-global:
+  step3b-coadd-global:
     subset:
       - consolidateHealSparsePropertyMaps
       - analyzeObjectTableSurveyCore
@@ -773,7 +773,7 @@ subsets:
     - makeVisitTable
     - makeAnalysisRecalibratedStarAssociationMetricTable
     - makeAnalysisRecalibratedStarAssociationWholeSkyPlot
-  stage3-coadds:
+  stage3-coadd:
     # 3a
     - makeDirectWarp
     - makePsfMatchedWarp
@@ -865,9 +865,9 @@ steps:
     dimensions: ["tract"]
   - label: step2e-recalibrate-global
     dimensions: []
-  - label: step3a-coadds-tracts
+  - label: step3a-coadd-tracts
     dimensions: ["tract"]
-  - label: step3b-coadds-global
+  - label: step3b-coadd-global
     dimensions: []
   - label: step4a-measure-variability-visits
     dimensions: ["visit"]
