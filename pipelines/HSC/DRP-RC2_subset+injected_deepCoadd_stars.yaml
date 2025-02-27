@@ -1,0 +1,1613 @@
+description: The DRP pipeline specialized for rc2_subset processing in jenkins and
+  tutorials
+instrument: lsst.obs.subaru.HyperSuprimeCam
+parameters:
+  add_point_source: false
+  fix_centroid: false
+  use_shapelet_psf: false
+  objectTableCoreKeysWithBand:
+  - e1Diff_{band}_highSNStars_median
+  - e1Diff_{band}_highSNStars_sigmaMad
+  - e1Diff_{band}_lowSNStars_median
+  - e1Diff_{band}_lowSNStars_sigmaMad
+  - e2Diff_{band}_highSNStars_median
+  - e2Diff_{band}_highSNStars_sigmaMad
+  - e2Diff_{band}_lowSNStars_median
+  - e2Diff_{band}_lowSNStars_sigmaMad
+  - psfCModelScatter_{band}_psf_cModel_diff_median
+  - psfCModelScatter_{band}_psf_cModel_diff_sigmaMad
+  - psfCModelScatter_{band}_psf_cModel_diff_mean
+  - shapeSizeFractionalDiff_{band}_highSNStars_median
+  - shapeSizeFractionalDiff_{band}_highSNStars_sigmaMad
+  - shapeSizeFractionalDiff_{band}_lowSNStars_median
+  - shapeSizeFractionalDiff_{band}_lowSNStars_sigmaMad
+  - skyFluxStatisticMetric_{band}_medianSky
+  - skyFluxStatisticMetric_{band}_meanSky
+  - skyFluxStatisticMetric_{band}_stdevSky
+  - skyFluxStatisticMetric_{band}_sigmaMADSky
+  objectTableCorePlotKeys:
+  - wPerpPSF_wPerp_psfFlux_median
+  - wPerpPSF_wPerp_psfFlux_sigmaMAD
+  - yPerpPSF_yPerp_psfFlux_median
+  - yPerpPSF_yPerp_psfFlux_sigmaMAD
+  - skippedDeblenderMetrics_numSkippedPeaks
+  - skippedDeblenderMetrics_numSkippedBlends
+  - skippedDeblenderMetrics_numBlendParentTooBig
+  - skippedDeblenderMetrics_numBlendTooManyPeaks
+  - skippedDeblenderMetrics_numBlendTooManyMasked
+  objectTableCoreRefCatMatchKeysWithBand:
+  - astromDiffMetrics_{band}_AA1_RA_coadd
+  - astromDiffMetrics_{band}_AA1_sigmaMad_RA_coadd
+  - astromDiffMetrics_{band}_AA1_Dec_coadd
+  - astromDiffMetrics_{band}_AA1_sigmaMad_Dec_coadd
+  - astromDiffMetrics_{band}_AA1_tot_coadd
+  - astromDiffMetrics_{band}_AA1_sigmaMad_tot_coadd
+tasks:
+  consolidate_injected_catalogs:
+    class: lsst.source.injection.utils.ConsolidateInjectedCatalogsTask
+  match_object_to_injected:
+    class: lsst.pipe.tasks.match_tract_catalog.MatchTractCatalogTask
+    config:
+    - python: |
+        from lsst.pipe.tasks.match_tract_catalog_probabilistic import MatchTractCatalogProbabilisticTask
+
+        config.match_tract_catalog.retarget(MatchTractCatalogProbabilisticTask)
+      connections.name_input_cat_ref: injected_deepCoadd_catalog_tract
+      connections.name_input_cat_target: injected_objectTable_tract
+      match_tract_catalog.column_ref_order: i_mag
+      match_tract_catalog.columns_ref_meas:
+      - ra
+      - dec
+      match_tract_catalog.columns_target_meas:
+      - coord_ra
+      - coord_dec
+      match_tract_catalog.columns_target_err:
+      - coord_raErr
+      - coord_decErr
+      match_tract_catalog.columns_ref_copy:
+      - injected_id
+      match_tract_catalog.columns_target_copy:
+      - objectId
+      match_tract_catalog.columns_ref_select_true:
+      - injected_isPatchInner
+      match_tract_catalog.columns_ref_select_false:
+      - injection_flag
+      match_tract_catalog.columns_target_select_true:
+      - detect_isDeblendedSource
+      - detect_isPatchInner
+      match_tract_catalog.columns_target_select_false:
+      - merge_peak_sky
+      match_tract_catalog.match_n_finite_min: 2
+      match_tract_catalog.order_ascending: true
+  compare_object_to_injected:
+    class: lsst.pipe.tasks.diff_matched_tract_catalog.DiffMatchedTractCatalogTask
+    config:
+    - connections.name_input_cat_ref: injected_deepCoadd_catalog_tract
+      connections.name_input_cat_target: injected_objectTable_tract
+      column_matched_prefix_ref: ref_
+      columns_ref_mag_to_nJy:
+        g_mag: g_flux
+        r_mag: r_flux
+        i_mag: i_flux
+        z_mag: z_flux
+        y_mag: y_flux
+      columns_ref_copy:
+      - injected_id
+      - source_type
+      - g_mag
+      - r_mag
+      - i_mag
+      - z_mag
+      - y_mag
+      - injection_flag
+      - injected_isPatchInner
+      columns_target_coord_err:
+      - coord_raErr
+      - coord_decErr
+      columns_target_copy:
+      - g_psfFlux
+      - r_psfFlux
+      - i_psfFlux
+      - z_psfFlux
+      - y_psfFlux
+      - g_psfFluxErr
+      - r_psfFluxErr
+      - i_psfFluxErr
+      - z_psfFluxErr
+      - y_psfFluxErr
+      - g_psfFlux_flag
+      - r_psfFlux_flag
+      - i_psfFlux_flag
+      - z_psfFlux_flag
+      - y_psfFlux_flag
+      - patch
+      - detect_isDeblendedSource
+      - detect_isPatchInner
+      - detect_isPrimary
+      - merge_peak_sky
+      - refExtendedness
+      - refSizeExtendedness
+      include_unmatched: true
+    - connections.name_input_cat_ref: injected_deepCoadd_catalog_tract
+      connections.name_input_cat_target: injected_objectTable_tract
+      column_matched_prefix_ref: ref_
+      columns_ref_mag_to_nJy:
+        g_mag: g_flux
+        r_mag: r_flux
+        i_mag: i_flux
+        z_mag: z_flux
+        y_mag: y_flux
+      columns_ref_copy:
+      - injected_id
+      - source_type
+      - g_mag
+      - r_mag
+      - i_mag
+      - z_mag
+      - y_mag
+      - injection_flag
+      - injected_isPatchInner
+      columns_target_coord_err:
+      - coord_raErr
+      - coord_decErr
+      columns_target_copy:
+      - objectId
+      - g_psfFlux
+      - r_psfFlux
+      - i_psfFlux
+      - z_psfFlux
+      - y_psfFlux
+      - g_psfFluxErr
+      - r_psfFluxErr
+      - i_psfFluxErr
+      - z_psfFluxErr
+      - y_psfFluxErr
+      - g_psfFlux_flag
+      - r_psfFlux_flag
+      - i_psfFlux_flag
+      - z_psfFlux_flag
+      - y_psfFlux_flag
+      - patch
+      - detect_isDeblendedSource
+      - detect_isPatchInner
+      - detect_isPrimary
+      - merge_peak_sky
+      - refExtendedness
+      - refSizeExtendedness
+  diff_matched_analysis:
+    class: lsst.analysis.tools.tasks.DiffMatchedAnalysisTask
+    config:
+    - python: |
+        from lsst.analysis.tools.atools.diffMatched import *
+
+        reconfigure_diff_matched_defaults(
+          context="injection", use_any=False, use_galaxies=False, key_flux_meas="psf",
+        )
+      connections.inputName: matched_injected_deepCoadd_catalog_tract_injected_objectTable_tract
+      connections.outputName: matched_injected_deepCoadd_catalog_tract_injected_objectTable_tract
+      atools.matchedRefCompleteness: MatchedRefCoaddCompurityTool
+      atools.matchedRefAngularSeparationDiff: MatchedRefCoaddDiffDistanceTool
+      atools.matchedRefAngularSeparationDiffZoom: MatchedRefCoaddDiffDistanceZoomTool
+      atools.matchedRefAngularSeparationChi: MatchedRefCoaddChiDistanceTool
+      atools.matchedRefPsfColorDiff: MatchedRefCoaddDiffColorTool
+      atools.matchedRefPsfColorDiffZoom: MatchedRefCoaddDiffColorZoomTool
+      atools.matchedRefPsfColorChi: MatchedRefCoaddChiColorTool
+      atools.matchedRefPsfMagDiff: MatchedRefCoaddDiffMagTool
+      atools.matchedRefPsfMagDiffZoom: MatchedRefCoaddDiffMagZoomTool
+      atools.matchedRefPsfMagChi: MatchedRefCoaddChiMagTool
+      atools.matchedRefPositionRaDiff: MatchedRefCoaddDiffCoordRaTool
+      atools.matchedRefPositionRaDiffZoom: MatchedRefCoaddDiffCoordRaZoomTool
+      atools.matchedRefPositionRaChi: MatchedRefCoaddChiCoordRaTool
+      atools.matchedRefPositionDecDiff: MatchedRefCoaddDiffCoordDecTool
+      atools.matchedRefPositionDecDiffZoom: MatchedRefCoaddDiffCoordDecZoomTool
+      atools.matchedRefPositionDecChi: MatchedRefCoaddChiCoordDecTool
+  analyze_matched_injected:
+    class: lsst.analysis.tools.tasks.DiffMatchedAnalysisTask
+    config:
+    - python: |
+        from lsst.analysis.tools.atools.diffMatched import reconfigure_diff_matched_defaults
+
+        reconfigure_diff_matched_defaults(
+          config=config,
+          context="injection",
+          key_flux_meas="psf",
+          bands_color = ["g", "r", "i", "z", "y"],
+          use_any=False,
+          use_galaxies=False,
+        )
+      connections.inputName: matched_injected_deepCoadd_catalog_tract_injected_objectTable_tract
+      connections.outputName: matched_injected_deepCoadd_catalog_tract_injected_objectTable_tract
+      bands:
+      - g
+      - r
+      - i
+      - z
+      - y
+  inject_coadd:
+    class: lsst.source.injection.inject_coadd.CoaddInjectTask
+    config:
+    - connections.input_exposure: deepCoadd
+      connections.output_exposure: injected_deepCoadd
+      connections.output_catalog: injected_deepCoadd_catalog
+  fitDeepCoaddPsfGaussians:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
+    config:
+    - connections.coadd: injected_deepCoadd_calexp
+      connections.cat_meas: injected_deepCoadd_meas
+      connections.cat_output: injected_deepCoadd_psfs_multiprofit
+  fitDeblendedObjectsSersic:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
+    config:
+    - python: |
+        config.finalize(
+          add_point_source=parameters.add_point_source,
+          fix_centroid=parameters.fix_centroid,
+          use_shapelet_psf=parameters.use_shapelet_psf,
+        )
+    - connections.models_scarlet: injected_deepCoadd_scarletModelData
+      connections.cats_meas: injected_deepCoadd_meas
+      connections.coadds: injected_deepCoadd_calexp
+      connections.cat_ref: injected_deepCoadd_ref
+      connections.models_psf: injected_deepCoadd_psfs_multiprofit
+      connections.cat_output: injected_deepCoadd_Sersic_multiprofit
+  isr:
+    class: lsst.ip.isr.IsrTask
+    config:
+    - doAmpOffset: true
+      ampOffset.doApplyAmpOffset: false
+    - doAmpOffset: true
+      ampOffset.doApplyAmpOffset: true
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+    - file:
+      - $DRP_PIPE_DIR/config/calibrateImage.py
+      connections.initial_stars_schema: src_schema
+      connections.stars_footprints: src
+      connections.stars: source
+      connections.exposure: calexp
+      connections.background: calexpBackground
+    - connections.stars: preSource
+      connections.exposure: calexp
+      connections.background: calexpBackground
+  transformSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+    - functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
+    - functorFile: $PIPE_TASKS_DIR/schemas/Source.yaml
+  consolidateSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+  consolidateVisitSummary:
+    class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
+  isolatedStarAssociation:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+    - connections.source_table_visit: sourceTable_visit
+    - connections.source_table_visit: preSourceTable_visit
+  finalizeCharacterization:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+    - wcs_provider: tract
+      photo_calib_provider: global
+      background_provider: replacement
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+    - connections.background_1: calexpBackground
+      remove_initial_photo_calib: false
+      do_use_sky_corr: true
+  makeCcdVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+  makeVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+  makeDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+  makePsfMatchedWarp:
+    class: lsst.drp.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+    - connections.goodVisits: deepCoaddVisits
+      maxPsfFwhm: 2.0
+      nVisitsMax: -1
+  assembleCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+    - doInputMap: true
+      doSelectVisits: true
+      doWriteArtifactMasks: true
+      assembleStaticSkyModel.doSelectVisits: true
+      connections.selectedVisits: deepCoaddVisits
+  healSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
+    config:
+    - connections.coadd_exposures: injected_deepCoadd
+      connections.dcr_e1_map_weighted_mean: injected_deepCoadd_dcr_e1_map_weighted_mean
+      connections.exposure_time_map_sum: injected_deepCoadd_exposure_time_map_sum
+      connections.psf_size_map_weighted_mean: injected_deepCoadd_psf_size_map_weighted_mean
+      connections.sky_noise_map_weighted_mean: injected_deepCoadd_sky_noise_map_weighted_mean
+      connections.epoch_map_mean: injected_deepCoadd_epoch_map_mean
+      connections.dcr_dra_map_weighted_mean: injected_deepCoadd_dcr_dra_map_weighted_mean
+      connections.sky_background_map_weighted_mean: injected_deepCoadd_sky_background_map_weighted_mean
+      connections.psf_e1_map_weighted_mean: injected_deepCoadd_psf_e1_map_weighted_mean
+      connections.psf_e2_map_weighted_mean: injected_deepCoadd_psf_e2_map_weighted_mean
+      connections.epoch_map_max: injected_deepCoadd_epoch_map_max
+      connections.psf_maglim_map_weighted_mean: injected_deepCoadd_psf_maglim_map_weighted_mean
+      connections.dcr_ddec_map_weighted_mean: injected_deepCoadd_dcr_ddec_map_weighted_mean
+      connections.dcr_e2_map_weighted_mean: injected_deepCoadd_dcr_e2_map_weighted_mean
+      connections.epoch_map_min: injected_deepCoadd_epoch_map_min
+  consolidateHealSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
+    config:
+    - connections.dcr_e1_map_weighted_mean: injected_deepCoadd_dcr_e1_map_weighted_mean
+      connections.exposure_time_map_sum: injected_deepCoadd_exposure_time_map_sum
+      connections.psf_size_map_weighted_mean: injected_deepCoadd_psf_size_map_weighted_mean
+      connections.sky_noise_map_weighted_mean: injected_deepCoadd_sky_noise_map_weighted_mean
+      connections.epoch_map_mean: injected_deepCoadd_epoch_map_mean
+      connections.dcr_dra_map_weighted_mean: injected_deepCoadd_dcr_dra_map_weighted_mean
+      connections.sky_background_map_weighted_mean: injected_deepCoadd_sky_background_map_weighted_mean
+      connections.psf_e1_map_weighted_mean: injected_deepCoadd_psf_e1_map_weighted_mean
+      connections.psf_e2_map_weighted_mean: injected_deepCoadd_psf_e2_map_weighted_mean
+      connections.epoch_map_max: injected_deepCoadd_epoch_map_max
+      connections.psf_maglim_map_weighted_mean: injected_deepCoadd_psf_maglim_map_weighted_mean
+      connections.dcr_ddec_map_weighted_mean: injected_deepCoadd_dcr_ddec_map_weighted_mean
+      connections.dcr_e2_map_weighted_mean: injected_deepCoadd_dcr_e2_map_weighted_mean
+      connections.epoch_map_min: injected_deepCoadd_epoch_map_min
+      connections.epoch_consolidated_map_mean: injected_deepCoadd_epoch_consolidated_map_mean
+      connections.epoch_consolidated_map_min: injected_deepCoadd_epoch_consolidated_map_min
+      connections.psf_e2_consolidated_map_weighted_mean: injected_deepCoadd_psf_e2_consolidated_map_weighted_mean
+      connections.sky_background_consolidated_map_weighted_mean: injected_deepCoadd_sky_background_consolidated_map_weighted_mean
+      connections.psf_maglim_consolidated_map_weighted_mean: injected_deepCoadd_psf_maglim_consolidated_map_weighted_mean
+      connections.dcr_dra_consolidated_map_weighted_mean: injected_deepCoadd_dcr_dra_consolidated_map_weighted_mean
+      connections.dcr_e1_consolidated_map_weighted_mean: injected_deepCoadd_dcr_e1_consolidated_map_weighted_mean
+      connections.psf_size_consolidated_map_weighted_mean: injected_deepCoadd_psf_size_consolidated_map_weighted_mean
+      connections.dcr_ddec_consolidated_map_weighted_mean: injected_deepCoadd_dcr_ddec_consolidated_map_weighted_mean
+      connections.epoch_consolidated_map_max: injected_deepCoadd_epoch_consolidated_map_max
+      connections.sky_noise_consolidated_map_weighted_mean: injected_deepCoadd_sky_noise_consolidated_map_weighted_mean
+      connections.dcr_e2_consolidated_map_weighted_mean: injected_deepCoadd_dcr_e2_consolidated_map_weighted_mean
+      connections.psf_e1_consolidated_map_weighted_mean: injected_deepCoadd_psf_e1_consolidated_map_weighted_mean
+      connections.exposure_time_consolidated_map_sum: injected_deepCoadd_exposure_time_consolidated_map_sum
+  detection:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+    - connections.exposure: injected_deepCoadd
+      connections.detectionSchema: injected_deepCoadd_det_schema
+      connections.outputBackgrounds: injected_deepCoadd_calexp_background
+      connections.outputExposure: injected_deepCoadd_calexp
+      connections.outputSources: injected_deepCoadd_det
+  mergeDetections:
+    class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
+    config:
+    - connections.schema: injected_deepCoadd_det_schema
+      connections.catalogs: injected_deepCoadd_det
+      connections.outputSchema: injected_deepCoadd_mergeDet_schema
+      connections.outputPeakSchema: injected_deepCoadd_peak_schema
+      connections.outputCatalog: injected_deepCoadd_mergeDet
+  deblend:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    config:
+    - connections.peakSchema: injected_deepCoadd_peak_schema
+      connections.inputSchema: injected_deepCoadd_mergeDet_schema
+      connections.coadds: injected_deepCoadd_calexp
+      connections.mergedDetections: injected_deepCoadd_mergeDet
+      connections.outputSchema: injected_deepCoadd_deblendedFlux_schema
+      connections.scarletModelData: injected_deepCoadd_scarletModelData
+      connections.deblendedCatalog: injected_deepCoadd_deblendedCatalog
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+    - connections.sourceTableHandles: preSourceTable_visit
+      connections.inputSchema: injected_deepCoadd_deblendedFlux_schema
+      connections.exposure: injected_deepCoadd_calexp
+      connections.scarletModels: injected_deepCoadd_scarletModelData
+      connections.scarletCatalog: injected_deepCoadd_deblendedCatalog
+      connections.outputSchema: injected_deepCoadd_meas_schema
+      connections.outputSources: injected_deepCoadd_meas
+  mergeMeasurements:
+    class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
+    config:
+    - connections.inputSchema: injected_deepCoadd_meas_schema
+      connections.catalogs: injected_deepCoadd_meas
+      connections.outputSchema: injected_deepCoadd_ref_schema
+      connections.mergedCatalog: injected_deepCoadd_ref
+  writeObjectTable:
+    class: lsst.pipe.tasks.postprocess.WriteObjectTableTask
+    config:
+    - connections.inputCatalogForcedSrc: injected_deepCoadd_forced_src
+      connections.inputCatalogMeas: injected_deepCoadd_meas
+      connections.inputCatalogPsfsMultiprofit: injected_deepCoadd_psfs_multiprofit
+      connections.outputCatalog: injected_deepCoadd_obj
+  transformObjectTable:
+    class: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
+    config:
+    - connections.inputCatalog: injected_deepCoadd_obj
+      connections.inputCatalogRef: injected_deepCoadd_ref
+      connections.inputCatalogSersicMultiprofit: injected_deepCoadd_Sersic_multiprofit
+      connections.outputCatalog: injected_objectTable
+  consolidateObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
+    config:
+    - connections.inputCatalogs: injected_objectTable
+      connections.outputCatalog: injected_objectTable_tract
+  forcedPhotCcd:
+    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+    config:
+    - connections.exposure: pvi
+      useVisitSummary: false
+      connections.inputSchema: injected_deepCoadd_ref_schema
+      connections.refCat: injected_deepCoadd_ref
+      connections.outputSchema: injected_forced_src_schema
+      connections.measCat: injected_forced_src
+  forcedPhotCoadd:
+    class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+    config:
+    - connections.inputSchema: injected_deepCoadd_ref_schema
+      connections.exposure: injected_deepCoadd_calexp
+      connections.refCatInBand: injected_deepCoadd_meas
+      connections.scarletModels: injected_deepCoadd_scarletModelData
+      connections.refWcs: injected_deepCoadd.wcs
+      connections.refCat: injected_deepCoadd_ref
+      connections.outputSchema: injected_deepCoadd_forced_src_schema
+      connections.measCat: injected_deepCoadd_forced_src
+  selectGoodSeeingVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    config:
+    - connections.goodVisits: goodSeeingVisits
+  templateGen:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+    - doSelectVisits: true
+      assembleStaticSkyModel.doSelectVisits: true
+      doNImage: true
+      connections.selectedVisits: goodSeeingVisits
+      connections.outputCoaddName: goodSeeing
+      connections.coaddExposure: goodSeeingCoadd
+  getTemplate:
+    class: lsst.ip.diffim.getTemplate.GetTemplateTask
+    config:
+    - connections.bbox: pvi.bbox
+      connections.wcs: pvi.wcs
+      connections.coaddName: goodSeeing
+      connections.coaddExposures: goodSeeingCoadd
+      connections.template: goodSeeingDiff_templateExp
+  subtractImages:
+    class: lsst.ip.diffim.subtractImages.AlardLuptonSubtractTask
+    config:
+    - allowKernelSourceDetection: true
+      connections.science: pvi
+      connections.coaddName: goodSeeing
+      connections.template: goodSeeingDiff_templateExp
+      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.matchedTemplate: goodSeeingDiff_matchedExp
+  detectAndMeasureDiaSources:
+    class: lsst.ip.diffim.detectAndMeasure.DetectAndMeasureTask
+    config:
+    - connections.science: pvi
+      connections.coaddName: goodSeeing
+      connections.matchedTemplate: goodSeeingDiff_matchedExp
+      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.subtractedMeasuredExposure: goodSeeingDiff_differenceExp
+  rbClassify:
+    class: lsst.meas.transiNet.RBTransiNetTask
+    config:
+    - modelPackageStorageMode: butler
+      connections.science: pvi
+      connections.coaddName: goodSeeing
+      connections.template: goodSeeingDiff_templateExp
+      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.diaSources: goodSeeingDiff_diaSrc
+  transformDiaSourceCat:
+    class: lsst.ap.association.TransformDiaSourceCatalogTask
+    config:
+    - doIncludeReliability: true
+      connections.coaddName: goodSeeing
+      connections.diaSourceSchema: goodSeeingDiff_diaSrc_schema
+      connections.diaSourceCat: goodSeeingDiff_diaSrc
+      connections.diffIm: goodSeeingDiff_differenceExp
+      connections.diaSourceTable: goodSeeingDiff_diaSrcTable
+  consolidateDiaSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+    - connections.inputCatalogs: goodSeeingDiff_diaSrcTable
+      connections.outputCatalog: diaSourceTable
+  drpAssociation:
+    class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
+    config:
+    - connections.coaddName: goodSeeing
+      connections.diaSourceTables: goodSeeingDiff_diaSrcTable
+      connections.assocDiaSourceTable: goodSeeingDiff_assocDiaSrcTable
+      connections.diaObjectTable: goodSeeingDiff_diaObjTable
+  drpDiaCalculation:
+    class: lsst.pipe.tasks.drpDiaCalculationPipe.DrpDiaCalculationPipeTask
+    config:
+    - connections.coaddName: goodSeeing
+      connections.assocDiaSourceTable: goodSeeingDiff_assocDiaSrcTable
+      connections.diaObjectTable: goodSeeingDiff_diaObjTable
+      connections.fullDiaObjectTable: goodSeeingDiff_fullDiaObjTable
+  consolidateAssocDiaSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+    - connections.inputCatalogs: goodSeeingDiff_assocDiaSrcTable
+      connections.outputCatalog: diaSourceTable_tract
+  consolidateFullDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+    - connections.inputCatalogs: goodSeeingDiff_fullDiaObjTable
+      connections.outputCatalog: diaObjectTable_tract
+  forcedPhotDiffim:
+    class: lsst.meas.base.ForcedPhotCcdTask
+    config:
+    - connections.measCat: forced_diff
+      connections.outputSchema: forced_diff_schema
+      connections.exposure: goodSeeingDiff_differenceExp
+      useVisitSummary: false
+      connections.inputSchema: injected_deepCoadd_ref_schema
+      connections.refCat: injected_deepCoadd_ref
+    - connections.outputSchema: injected_forced_diff_schema
+      connections.measCat: injected_forced_diff
+  writeForcedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
+    config:
+    - connections.inputCatalog: injected_forced_src
+      connections.inputCatalogDiff: injected_forced_diff
+      connections.outputCatalog: injected_mergedForcedSource
+  transformForcedSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+    config:
+    - connections.inputCatalogs: injected_mergedForcedSource
+      connections.referenceCatalog: injected_objectTable
+      connections.outputCatalog: injected_forcedSourceTable
+  consolidateForcedSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+    - connections.inputCatalogs: forcedSourceTable
+      connections.outputCatalog: forcedSourceTable_tract
+    - connections.inputCatalogs: injected_forcedSourceTable
+      connections.outputCatalog: injected_forcedSourceTable_tract
+  forcedPhotCcdOnDiaObjects:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+    - connections.exposure: pvi
+      useVisitSummary: false
+  forcedPhotDiffOnDiaObjects:
+    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+    config:
+    - connections.measCat: forced_diff_diaObject
+      connections.outputSchema: forced_diff_diaObject_schema
+      connections.exposure: goodSeeingDiff_differenceExp
+      useVisitSummary: false
+  writeForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
+    config:
+    - key: diaObjectId
+      connections.inputCatalogDiff: forced_diff_diaObject
+      connections.inputCatalog: forced_src_diaObject
+      connections.outputCatalog: mergedForcedSourceOnDiaObject
+  transformForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+    config:
+    - referenceColumns: []
+      keyRef: diaObjectId
+      key: forcedSourceOnDiaObjectId
+      connections.inputCatalogs: mergedForcedSourceOnDiaObject
+      connections.outputCatalog: forcedSourceOnDiaObjectTable
+      connections.referenceCatalog: goodSeeingDiff_fullDiaObjTable
+  consolidateForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+    - connections.inputCatalogs: forcedSourceOnDiaObjectTable
+      connections.outputCatalog: forcedSourceOnDiaObjectTable_tract
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+  transformPreSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+    - functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
+      connections.inputCatalog: preSource
+      connections.outputCatalog: preSourceTable
+  consolidatePreSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+    - connections.inputCatalogs: preSourceTable
+      connections.outputCatalog: preSourceTable_visit
+  writeRecalibratedSourceTable:
+    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
+    config:
+    - connections.outputCatalog: source
+  makePreliminaryCcdVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+    config:
+    - connections.visitSummaryRefs: visitSummary
+      connections.outputCatalog: preCcdVisitTable
+  makePreliminaryVisitTable:
+    class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
+    config:
+    - connections.visitSummaries: visitSummary
+      connections.outputCatalog: preVisitTable
+  validateObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+    - python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+      connections.outputName: objectTableColumnValidate
+      atools.validPsfFluxMetric: ValidFracColumnMetric
+      atools.validPsfFluxMetric.vectorKey: psfFlux
+      atools.validPsfFluxMetric.applyContext: CoaddContext
+      atools.validCmodelFluxMetric: ValidFracColumnMetric
+      atools.validCmodelFluxMetric.vectorKey: cModelFlux
+      atools.validCmodelFluxMetric.applyContext: CoaddContext
+    - connections.outputName: injected_objectTableColumnValidate
+      connections.data: injected_objectTable_tract
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+    - python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+      connections.outputName: objectTableCore
+      atools.shapeSizeFractionalDiff: ShapeSizeFractionalDiffScatter
+      atools.e1Diff: E1DiffScatter
+      atools.e2Diff: E2DiffScatter
+      atools.skyFluxStatisticMetric: SkyFluxStatisticMetric
+      atools.skyFluxStatisticMetric.applyContext: CoaddContext
+      atools.parentDeblenderMetrics: ParentDeblenderMetrics
+      atools.skippedDeblenderMetrics: SkippedDeblenderMetrics
+      atools.blendMetrics: BlendMetrics
+      atools.isolatedDeblenderMetrics: IsolatedDeblenderMetrics
+      atools.wPerpPSF: WPerpPSF
+      atools.wPerpCModel: WPerpCModel
+      atools.xPerpPSF: XPerpPSF
+      atools.xPerpCModel: XPerpCModel
+      atools.yPerpPSF: YPerpPSF
+      atools.yPerpCModel: YPerpCModel
+      atools.skyObjectSky: SkyObjectSkyPlot
+      atools.skyObjectFlux: SkyObjectHistPlot
+      atools.psfCModelScatter: PsfCModelScatterPlot
+      atools.shapeSizeDetRadiusVsCmodelMag: SizeMagnitudePlot
+      atools.shapeSizeDetRadiusVsCmodelMag.size_type: determinantRadius
+      atools.shapeSizeDetRadiusVsCmodelMag.mag_x: cmodel_err
+      atools.shapeSizeDetRadiusVsCmodelMag.size_y: shape_slot
+      atools.shapeSizeDetRadiusVsCmodelMag.produce.plot.xLims: (17, 29)
+      atools.shapeSizeDetRadiusVsCmodelMag.produce.plot.yLims: (-4, 3)
+      atools.shapeSizeDetRadiusVsCmodelMag.applyContext: CoaddContext
+      atools.shapeSizeDetRadiusVsPsfMag: SizeMagnitudePlot
+      atools.shapeSizeDetRadiusVsPsfMag.size_type: determinantRadius
+      atools.shapeSizeDetRadiusVsPsfMag.mag_x: psf_err
+      atools.shapeSizeDetRadiusVsPsfMag.size_y: shape_slot
+      atools.shapeSizeDetRadiusVsPsfMag.applyContext: CoaddContext
+      atools.cModelBulgeSizeVsCmodelBulgeMag: SizeMagnitudePlot
+      atools.cModelBulgeSizeVsCmodelBulgeMag.size_type: singleColumnSize
+      atools.cModelBulgeSizeVsCmodelBulgeMag.mag_x: bulge_err
+      atools.cModelBulgeSizeVsCmodelBulgeMag.size_y: bulge
+      atools.cModelBulgeSizeVsCmodelBulgeMag.produce.plot.xLims: (17, 29)
+      atools.cModelBulgeSizeVsCmodelBulgeMag.produce.plot.yLims: (-4, 3)
+      atools.cModelBulgeSizeVsCmodelBulgeMag.applyContext: CoaddContext
+      atools.cModelDiskSizeVsCmodelDiskMag: SizeMagnitudePlot
+      atools.cModelDiskSizeVsCmodelDiskMag.size_type: singleColumnSize
+      atools.cModelDiskSizeVsCmodelDiskMag.mag_x: disk_err
+      atools.cModelDiskSizeVsCmodelDiskMag.size_y: disk
+      atools.cModelDiskSizeVsCmodelDiskMag.produce.plot.xLims: (17, 29)
+      atools.cModelDiskSizeVsCmodelDiskMag.produce.plot.yLims: (-4, 3)
+      atools.cModelDiskSizeVsCmodelDiskMag.applyContext: CoaddContext
+      atools.coaddInputCount: CoaddInputCount
+      atools.coaddPatchCount: CountPatches
+    - connections.outputName: injected_objectTableCore
+      connections.data: injected_objectTable_tract
+  analyzeObjectTableSurveyCore:
+    class: lsst.analysis.tools.tasks.ObjectTableSurveyAnalysisTask
+    config:
+    - python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+        from lsst.analysis.tools.actions.plot import *
+      connections.outputName: objectTableSurvey
+      atools.rhoStatistics: RhoStatistics
+      bands:
+      - i
+    - connections.outputName: injected_objectTableSurvey
+      connections.data: injected_objectTable_tract
+  catalogMatchTract:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchTask
+    config:
+    - connections.catalog: injected_objectTable_tract
+      connections.matchedCatalog: injected_objectTable_tract_gaia_dr3_20230707_match_astrom
+  refCatObjectTract:
+    class: lsst.analysis.tools.tasks.refCatObjectAnalysis.RefCatObjectAnalysisTask
+    config:
+    - python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+      atools.astromDiffRAScatterPlot: TargetRefCatDeltaRAScatterPlot
+      atools.astromDiffDecScatterPlot: TargetRefCatDeltaDecScatterPlot
+      atools.astromDiffRASkyPlot: TargetRefCatDeltaRASkyPlot
+      atools.astromDiffDecSkyPlot: TargetRefCatDeltaDecSkyPlot
+      atools.astromDiffMetrics: TargetRefCatDeltaMetrics
+      atools.astromDiffMetrics.applyContext: CoaddContext
+    - connections.outputName: injected_objectTable_tract_gaia_dr3_20230707_match_astrom
+      connections.data: injected_objectTable_tract_gaia_dr3_20230707_match_astrom
+  photometricCatalogMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchTask
+    config:
+    - connections.catalog: injected_objectTable_tract
+      connections.matchedCatalog: injected_objectTable_tract_ps1_pv3_3pi_20170110_match_photom
+  photometricRefCatObjectTract:
+    class: lsst.analysis.tools.tasks.refCatObjectPhotometricAnalysis.RefCatObjectPhotometricAnalysisTask
+    config:
+    - python: 'from lsst.analysis.tools.atools import *
+
+        '
+      atools.targetRefCatDeltaPsfScatterPlot: TargetRefCatDeltaPsfScatterPlot
+      atools.targetRefCatDeltaCModelScatterPlot: TargetRefCatDeltaCModelScatterPlot
+      atools.targetRefCatDeltaPsfSkyPlot: TargetRefCatDeltaPsfSkyPlot
+      atools.targetRefCatDeltaCModelSkyPlot: TargetRefCatDeltaCModelSkyPlot
+    - connections.outputName: injected_objectTable_tract_ps1_pv3_3pi_20170110_match_photom
+      connections.data: injected_objectTable_tract_ps1_pv3_3pi_20170110_match_photom
+  plotPropertyMapTract:
+    class: lsst.analysis.tools.tasks.PerTractPropertyMapAnalysisTask
+    config:
+    - python: 'from lsst.analysis.tools.atools import PerTractPropertyMapTool
+
+        '
+      connections.outputName: propertyMapTract_deepCoadd
+      connections.prefix: deepCoadd_
+      zoomFactors:
+      - 2
+      - 8
+      projectionKwargs:
+        celestial: true
+        gridlines: true
+      colorbarKwargs:
+        cmap: viridis
+      atools.dcr_ddec_map_weighted_mean: PerTractPropertyMapTool
+      atools.dcr_dra_map_weighted_mean: PerTractPropertyMapTool
+      atools.dcr_e1_map_weighted_mean: PerTractPropertyMapTool
+      atools.dcr_e2_map_weighted_mean: PerTractPropertyMapTool
+      atools.epoch_map_min: PerTractPropertyMapTool
+      atools.epoch_map_max: PerTractPropertyMapTool
+      atools.epoch_map_mean: PerTractPropertyMapTool
+      atools.exposure_time_map_sum: PerTractPropertyMapTool
+      atools.exposure_time_map_sum.nBinsHist: 35
+      atools.psf_e1_map_weighted_mean: PerTractPropertyMapTool
+      atools.psf_e2_map_weighted_mean: PerTractPropertyMapTool
+      atools.psf_maglim_map_weighted_mean: PerTractPropertyMapTool
+      atools.psf_size_map_weighted_mean: PerTractPropertyMapTool
+      atools.sky_background_map_weighted_mean: PerTractPropertyMapTool
+      atools.sky_noise_map_weighted_mean: PerTractPropertyMapTool
+    - connections.outputName: injected_propertyMapTract_deepCoadd
+  analyzeAmpOffsetMetadata:
+    class: lsst.analysis.tools.tasks.MetadataExposureDetectorAnalysisTask
+    config:
+    - python: 'from lsst.analysis.tools.atools import TaskMetadataMetricTool
+
+        '
+      connections.inputName: isr_metadata
+      connections.outputName: isrAmpOffsetMetadata
+      atools.isrAmpOffsetMetadataMetric: TaskMetadataMetricTool
+      atools.isrAmpOffsetMetadataMetric.parameterizedBand: false
+      atools.isrAmpOffsetMetadataMetric.taskName: isr
+      atools.isrAmpOffsetMetadataMetric.metrics:
+        AMPOFFSET_PEDESTALS: adu
+      atools.isrAmpOffsetMetadataMetric.subTaskNames:
+        AMPOFFSET_PEDESTALS: ampOffset
+    - connections.outputName: injected_isrAmpOffsetMetadata
+  analyzeAmpInterfaceOffsetMetadata:
+    class: lsst.analysis.tools.tasks.DatasetMetadataAnalysisTask
+    config:
+    - python: 'from lsst.analysis.tools.atools import DatasetMetadataMetricTool
+
+        '
+      connections.inputName: postISRCCD
+      connections.outputName: ampOffset_metadata
+      connections.storageClass: Exposure
+      inputDimensions:
+      - instrument
+      - exposure
+      - detector
+      atools.isrAmpInterfaceOffsetMetadataMetric: DatasetMetadataMetricTool
+      atools.isrAmpInterfaceOffsetMetadataMetric.parameterizedBand: false
+      atools.isrAmpInterfaceOffsetMetadataMetric.metrics:
+        LSST ISR AMPOFFSET INTERFACEOFFSET: adu
+      atools.isrAmpInterfaceOffsetMetadataMetric.metricsPrefixedWithBaseKeys:
+        LSST ISR AMPOFFSET INTERFACEOFFSET: true
+    - connections.outputName: injected_ampOffset_metadata
+  analyzeMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+    - file:
+      - $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
+      connections.outputName: matchedVisitCore
+    - connections.outputName: injected_matchedVisitCore
+  analyzeMatchedVisitExtended:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+    - file:
+      - $ANALYSIS_TOOLS_DIR/config/matchedVisitExtended.py
+      connections.outputName: matchedVisitExtended
+    - connections.outputName: injected_matchedVisitExtended
+  analyzeMatchedPreVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+    - file:
+      - $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
+      connections.sourceCatalogs: preSourceTable_visit
+      connections.outputName: matchedPreVisitCore
+      applyAstrometricCorrections: false
+    - connections.outputName: injected_matchedPreVisitCore
+  analyzeSourceTableCore:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+    - file:
+      - $ANALYSIS_TOOLS_DIR/config/sourceTableCore.py
+      connections.inputName: sourceTable_visit
+      connections.outputName: sourceTableCore
+    - connections.outputName: injected_sourceTableCore
+  analyzePreSourceTableCore:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+    - file:
+      - $ANALYSIS_TOOLS_DIR/config/sourceTableCore.py
+      connections.inputName: preSourceTable_visit
+      connections.outputName: preSourceTableCore
+    - connections.outputName: injected_preSourceTableCore
+  catalogMatchVisit:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+  catalogMatchPreVisit:
+    class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
+    config:
+    - connections.catalog: preSourceTable_visit
+      connections.targetCatalog: preSourceTable_visit
+      connections.visitSummaryTable: visitSummary
+  astrometricRefCatSourceVisit:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+    - file:
+      - $ANALYSIS_TOOLS_DIR/config/refCatSourceAstrometricCore.py
+    - connections.outputName: injected_sourceTable_visit_gaia_dr3_20230707_match_astrom
+  photometricMatchVisit:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
+  photometricRefCatSourceVisit:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+    - file:
+      - $ANALYSIS_TOOLS_DIR/config/refCatSourcePhotometricCore.py
+    - connections.outputName: injected_sourceTable_visit_ps1_pv3_3pi_20170110_match_photom
+  objectEpochTable:
+    class: lsst.analysis.tools.tasks.ObjectEpochTableTask
+    config:
+    - connections.objectCat: injected_objectTable
+      connections.epochMap: injected_deepCoadd_epoch_map_mean
+      connections.objectEpochs: injected_object_epoch
+  sourceObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+    - connections.outputName: injected_sourceObjectTable
+      connections.refCatEpochs: injected_object_epoch
+      connections.refCat: injected_objectTable
+  calexpSummary:
+    class: lsst.analysis.tools.tasks.CalexpSummaryAnalysisTask
+    config:
+    - python: from lsst.analysis.tools.atools import *
+      atools.calexpSummaryMetrics: CalexpSummaryMetrics
+    - connections.outputName: injected_calexpSummary
+  analyzeCalibrateImageMetadata:
+    class: lsst.analysis.tools.tasks.TaskMetadataAnalysisTask
+    config:
+    - python: 'from lsst.analysis.tools.atools import TaskMetadataMetricTool
+
+        '
+      connections.inputName: calibrateImage_metadata
+      connections.outputName: calibrateImage_metadata
+      connections.storageClass: TaskMetadata
+      raiseNoWorkFoundOnIncompleteMetadata: true
+      inputDimensions:
+      - instrument
+      - visit
+      - detector
+      atools.calibrateImageMetadataMetrics: TaskMetadataMetricTool
+      atools.calibrateImageMetadataMetrics.taskName: calibrateImage
+      atools.calibrateImageMetadataMetrics.metrics:
+        initial_psf_positive_footprint_count: ct
+        initial_psf_negative_footprint_count: ct
+        initial_psf_positive_peak_count: ct
+        initial_psf_negative_peak_count: ct
+        simple_psf_positive_footprint_count: ct
+        simple_psf_negative_footprint_count: ct
+        simple_psf_positive_peak_count: ct
+        simple_psf_negative_peak_count: ct
+        bad_mask_fraction: ''
+        cr_mask_fraction: ''
+        crosstalk_mask_fraction: ''
+        detected_mask_fraction: ''
+        detected_negative_mask_fraction: ''
+        edge_mask_fraction: ''
+        intrp_mask_fraction: ''
+        no_data_mask_fraction: ''
+        sat_mask_fraction: ''
+        suspect_mask_fraction: ''
+        unmaskednan_mask_fraction: ''
+        numAvailStars: ct
+        numGoodStars: ct
+        sky_footprint_count: ct
+        post_deblend_source_count: ct
+        star_count: ct
+        saturated_source_count: ct
+        bad_source_count: ct
+        cosmic_ray_count: ct
+        matched_psf_star_count: ct
+        final_psf_sigma: pixel
+        astrometry_matches_count: ct
+        photometry_matches_count: ct
+      atools.calibrateImageMetadataMetrics.subTaskNames:
+        numAvailStars: psf_measure_psf
+        numGoodStars: psf_measure_psf
+        sky_footprint_count: star_sky_sources
+        cosmic_ray_count: psf_repair
+      atools.calibrateImageMetadataMetrics.newNames:
+        numAvailStars: psf_available_star_count
+        numGoodStars: psf_good_star_count
+    - connections.outputName: injected_calibrateImage_metadata
+  makeMetricTableObjectTableCore:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+    - connections.metricBundleName: objectTableCore_metrics
+      connections.outputTableName: objectTableCore_metricsTable
+      connections.data: injected_objectTableCore_metrics
+      connections.metricTable: injected_objectTableCore_metricsTable
+  objectTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+    - python: 'from lsst.analysis.tools.atools import *
+
+        '
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.plotKeys: parameters.objectTableCorePlotKeys
+      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreKeysWithBand
+    - atools.wholeSkyMetric.bands:
+      - g
+      - r
+      - i
+      - z
+      - y
+      connections.outputName: injected_objectTableCore_wholeSky
+      connections.data: injected_objectTableCore_metricsTable
+  makeMetricTableObjectTableCoreRefCatMatch:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+    - connections.metricBundleName: objectTable_tract_gaia_dr3_20230707_match_astrom_metrics
+      connections.outputTableName: objectTable_tract_gaia_dr3_20230707_match_astrom_metricsTable
+      connections.data: injected_objectTable_tract_gaia_dr3_20230707_match_astrom_metrics
+      connections.metricTable: injected_objectTable_tract_gaia_dr3_20230707_match_astrom_metricsTable
+  objectTableCoreRefCatMatchWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+    - python: 'from lsst.analysis.tools.atools import *
+
+        '
+      connections.inputName: objectTable_tract_gaia_dr3_20230707_match_astrom_metricsTable
+      connections.outputName: objectTableCoreRefCatMatch_wholeSky
+      atools.wholeSkyMetric: WholeSkyPlotTool
+      atools.wholeSkyMetric.plotKeys: []
+      atools.wholeSkyMetric.keysWithBand: parameters.objectTableCoreRefCatMatchKeysWithBand
+    - atools.wholeSkyMetric.bands:
+      - g
+      - r
+      - i
+      - z
+      - y
+      connections.outputName: injected_objectTableCoreRefCatMatch_wholeSky
+      connections.data: injected_objectTable_tract_gaia_dr3_20230707_match_astrom_metricsTable
+  makeMetricTableMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+    - connections.metricBundleName: matchedVisitCore_metrics
+      connections.outputTableName: matchedVisitCore_metricsTable
+      inputDataDimensions:
+      - instrument
+      - skymap
+      - tract
+  matchedVisitCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+    - file:
+      - $ANALYSIS_TOOLS_DIR/config/matchedVisitCoreWholeSkyPlot.py
+      connections.inputName: matchedVisitCore_metricsTable
+      connections.outputName: matchedVisitCore_wholeSky
+    - atools.wholeSkyMetric.bands:
+      - g
+      - r
+      - i
+      - z
+      - y
+      connections.outputName: injected_matchedVisitCore_wholeSky
+contracts:
+- contract: '''calib_psf_candidate'' not in measure.propagateFlags.source_flags if
+    makeDirectWarp.useVisitSummaryPsf else True'
+- contract: '''calib_psf_reserved'' not in measure.propagateFlags.source_flags if
+    makeDirectWarp.useVisitSummaryPsf else True'
+- contract: '''calib_psf_used'' not in measure.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf
+    else True'
+- contract: consolidateHealSparsePropertyMaps.property_maps == healSparsePropertyMaps.property_maps
+- contract: detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotDiffim.connections.exposure
+- contract: detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == transformDiaSourceCat.connections.diffIm
+- contract: drpAssociation.connections.assocDiaSourceTable == drpDiaCalculation.connections.assocDiaSourceTable
+- contract: drpAssociation.connections.diaObjectTable == drpDiaCalculation.connections.diaObjectTable
+- contract: forcedPhotDiffim.connections.refCat == forcedPhotCcd.connections.refCat
+- contract: getTemplate.connections.template == subtractImages.connections.template
+- contract: isr.doFlat == True if calibrateImage.do_illumination_correction == True
+    else True
+- contract: makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellX
+- contract: makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellY
+- contract: makeDirectWarp.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
+- contract: makeDirectWarp.warper.cacheSize == assembleCoadd.coaddPsf.cacheSize
+- contract: reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
+- contract: selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
+- contract: skyCorr.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
+- contract: subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
+- contract: subtractImages.connections.matchedTemplate == detectAndMeasureDiaSources.connections.matchedTemplate
+- contract: templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures
+- contract: transformDiaSourceCat.connections.diaSourceTable == consolidateDiaSourceTable.connections.inputCatalogs
+- contract: transformDiaSourceCat.connections.diaSourceTable == drpAssociation.connections.diaSourceTables
+subsets:
+  processCcd:
+    subset:
+    - isr
+    - calibrateImage
+    description: 'Set of tasks to run when doing single frame processing, without
+      any conversions to Parquet/DataFrames or visit-level summaries.
+
+      '
+  sourceTable:
+    subset:
+    - writeRecalibratedSourceTable
+    description: 'Set of tasks to generate parquet Source Tables, using final calibrations.
+
+      '
+  coaddition:
+    subset:
+    - inject_coadd
+    - makePsfMatchedWarp
+    - assembleCoadd
+    - makeDirectWarp
+    - healSparsePropertyMaps
+    description: 'A set of tasks to run when coadding images.
+
+      '
+  multiband:
+    subset:
+    - mergeDetections
+    - deblend
+    - measure
+    - forcedPhotCoadd
+    - detection
+    - mergeMeasurements
+    description: 'A set of tasks to run when making measurements on coadds.
+
+      '
+  objectTable:
+    subset:
+    - transformObjectTable
+    - writeObjectTable
+    - consolidateObjectTable
+    description: 'A set of tasks to transform multiband outputs into a parquet object
+      table.
+
+      '
+  forced:
+    subset:
+    - forcedPhotCoadd
+    - forcedPhotCcd
+    description: 'A set of tasks to run when doing forced measurements.
+
+      '
+  diffimDRP:
+    subset:
+    - selectGoodSeeingVisits
+    - drpAssociation
+    - transformDiaSourceCat
+    - subtractImages
+    - detectAndMeasureDiaSources
+    - templateGen
+    - getTemplate
+    - forcedPhotCcdOnDiaObjects
+    - forcedPhotDiffOnDiaObjects
+    - forcedPhotDiffim
+    - consolidateDiaSourceTable
+    - rbClassify
+    - drpDiaCalculation
+    description: 'Subset for running image differencing branch of the DRP pipeline
+
+      '
+  preSourceTable:
+    subset:
+    - consolidatePreSourceTable
+    - transformPreSourceTable
+    description: 'Set of tasks to generate parquet PreSource Tables, from single-visit
+      processing steps only.
+
+      '
+  step1:
+    subset:
+    - transformPreSourceTable
+    - analyzeAmpOffsetMetadata
+    - isr
+    - calibrateImage
+    - analyzeCalibrateImageMetadata
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
+
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region.
+  step2a:
+    subset:
+    - consolidatePreSourceTable
+    - consolidateVisitSummary
+    - skyCorr
+    - isolatedStarAssociation
+    description: |
+      Global tasks: This is a mix of visit-level and tract-level tasks that
+      must be run with a skymap data query constraint only (an instrument
+      constraint is fine, but generally unneccessary).  For example, running
+      with 'tract' (and 'patch') constraints will select partial visits that
+      overlap that region.  A skymap constraint is necessary to prevent
+      isolatedStarAssociation from producing results for all skymaps in the
+      data repository. This only works with small to medium jobs.  Use DRP-Prod
+      for large production subsets.
+
+      skyCorr requires full visits, and 'tract' and 'patch'
+      constraints will always select partial visits that overlap that region.
+
+      Visit-level: consolidatePreSourceTable, consolidateVisitSummary,
+      skyCorr
+      Tract-level: isolatedStarAssociation
+  step2cde:
+    subset:
+    - writeRecalibratedSourceTable
+    - transformSourceTable
+    - makeVisitTable
+    - makeCcdVisitTable
+    - catalogMatchVisit
+    - updateVisitSummary
+    - consolidateSourceTable
+    - astrometricRefCatSourceVisit
+    - finalizeCharacterization
+    description: |
+      Per-detector, Per-visit, and per-collection tasks that can be run
+      together after step2b with no data query constraints other than
+      instrument.
+
+      FGCM requires full visits and 'tract' and 'patch' constraints will
+      always select partial visits that overlap that region.
+
+      This includes FGCM because it's configured here to run in "global" mode,
+      which means one should not use a 'tract' expression to constrain it, and
+      if one _did_ run it with a tract constraint (which would be a common
+      occurrence if it was included in any later step), it would be fed the
+      wrong (partial-visit) inputs to its 'background' connection.
+  step3:
+    subset:
+    - mergeDetections
+    - analyzeMatchedPreVisitCore
+    - deblend
+    - analyzeObjectTableCore
+    - fitDeepCoaddPsfGaussians
+    - selectDeepCoaddVisits
+    - objectEpochTable
+    - fitDeblendedObjectsSersic
+    - measure
+    - inject_coadd
+    - forcedPhotCoadd
+    - plotPropertyMapTract
+    - refCatObjectTract
+    - detection
+    - makePsfMatchedWarp
+    - writeObjectTable
+    - photometricRefCatObjectTract
+    - consolidateObjectTable
+    - mergeMeasurements
+    - validateObjectTableCore
+    - makeDirectWarp
+    - healSparsePropertyMaps
+    - analyzeMatchedVisitCore
+    - transformObjectTable
+    - selectGoodSeeingVisits
+    - templateGen
+    - assembleCoadd
+    - photometricCatalogMatch
+    - catalogMatchTract
+    description: |
+      Tasks that can be run together, but only after the 'step1' and 'step2'
+      subsets.
+
+      These should be run with explicit 'tract' constraints essentially all the
+      time, because otherwise quanta will be created for jobs with only partial
+      visit coverage.
+
+      This subset is considered a workaround for missing middleware and task
+      functionality.  It may be removed in the future.
+  step4:
+    subset:
+    - subtractImages
+    - detectAndMeasureDiaSources
+    - transformDiaSourceCat
+    - forcedPhotCcd
+    - getTemplate
+    - reprocessVisitImage
+    - forcedPhotDiffim
+    - rbClassify
+    - writeForcedSourceTable
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2' and
+      'step3' subsets
+
+      These detector-level tasks should not be run with 'tract' or 'patch' as
+      part of the data ID expression if all reference catalogs or diffIm
+      templates that cover these detector-level quanta are desired.
+  step5:
+    subset:
+    - transformForcedSourceTable
+    - drpAssociation
+    - forcedPhotCcdOnDiaObjects
+    - consolidateFullDiaObjectTable
+    - consolidateAssocDiaSourceTable
+    - writeForcedSourceOnDiaObjectTable
+    - forcedPhotDiffOnDiaObjects
+    - consolidateForcedSourceOnDiaObjectTable
+    - transformForcedSourceOnDiaObjectTable
+    - consolidateForcedSourceTable
+    - drpDiaCalculation
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2',
+      'step3', and 'step4' subsets
+
+      This step includes patch-level aggregation Tasks. These should be run
+      with explicit 'tract' constraints in the data query, otherwise quanta
+      will be created for jobs with only partial visit coverage.
+      'consolidateForcedSourceTable' is a tract-level task that aggregates
+      patches and should be rerun if any of the patches fail.
+  step6:
+    subset:
+    - sourceObjectMatch
+    - consolidateDiaSourceTable
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2',
+      'step3', and 'step4', 'step5' subsets
+
+      This step includes visit-level aggregation tasks. Running without tract
+      or patch in the data query is recommended, otherwise the outputs of
+      consolidateDiaSourceTable, and consolidateSourceTable
+      will not contain complete visits.
+
+      This subset is separate from step4 to signal to operators to pause to
+      assess unexpected image differencing failures before these aggregation
+      steps. Otherwise, if run in the same quantum graph, aggregated data
+      products (e.g. diaObjects) would not be created if one or more of the
+      expected inputs is missing.
+  step7:
+    subset:
+    - matchedVisitCoreWholeSkyPlot
+    - objectTableCoreWholeSkyPlot
+    - objectTableCoreRefCatMatchWholeSkyPlot
+    - consolidateHealSparsePropertyMaps
+    - makeMetricTableObjectTableCore
+    - makeMetricTableMatchedVisitCore
+    - makeMetricTableObjectTableCoreRefCatMatch
+    - analyzeObjectTableSurveyCore
+    description: |
+      Tasks that should be run as the final step that require global inputs,
+      and can be run after the 'step3' subset.
+
+      This step has global aggregation tasks to run over all visits, detectors,
+      tracts, etc.  This step should be run only with the instrument constraint
+      in the data query.
+  simpleSingleFrame:
+    subset:
+    - isr
+    - calibrateImage
+    description: 'A simplified single frame pipeline to make the quantum graph more
+      readable.
+
+      '
+  singleFrame:
+    subset:
+    - consolidatePreSourceTable
+    - consolidateVisitSummary
+    - transformPreSourceTable
+    - isolatedStarAssociation
+    - isr
+    - skyCorr
+    - calibrateImage
+    description: |
+      Set of tasks for complete single frame processing. Because this includes
+      skyCorr, it requires multiple detectors per visit. Although they duplicate
+      tasks from the main "stepN" subsets from drp_pipe's DRP-RC2.yaml, we
+      include the subsets singleFrame, source_calibration, coadd_measurement, and
+      forced_objects within this pipeline so that users following the "getting
+      started" tutorial on pipelines.lsst.io understand the basic steps that are
+      contained within each subset.
+  source_calibration:
+    subset:
+    - writeRecalibratedSourceTable
+    - transformSourceTable
+    - makeVisitTable
+    - makeCcdVisitTable
+    - updateVisitSummary
+    - consolidateSourceTable
+    - finalizeCharacterization
+  coadd_measurement:
+    subset:
+    - mergeDetections
+    - deblend
+    - measure
+    - detection
+    - mergeMeasurements
+  forced_objects:
+    subset:
+    - transformObjectTable
+    - forcedPhotCoadd
+    - forcedPhotCcd
+    - writeObjectTable
+    - consolidateObjectTable
+  nightlyStep1:
+    subset:
+    - isr
+    - calibrateImage
+    - transformPreSourceTable
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region.
+  nightlyStep2a:
+    subset:
+    - consolidatePreSourceTable
+    - consolidateVisitSummary
+    - skyCorr
+    description: |
+      Per-visit tasks that can be run together, but only after the 'step1'.
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression. skyCorr and FGCM require full visits and 'tract' and 'patch'
+      constraints will always select partial visits that overlap that region.
+      This includes FGCM because it's configured here to run in "global" mode,
+      which means one should not use 'tract' expression to constrain it, and if
+      one _did_ run it with a tract constraint (which would be a common
+      occurrence if it was included in any later step), it would be fed the
+      wrong (partial-visit) inputs to its 'background' connection.
+      This subset is considered a workaround for missing middleware and task
+      functionality.  It may be removed in the future.
+  nightlyStep2b:
+    subset:
+    - isolatedStarAssociation
+    description: |
+      Per-tract tasks.
+      gbdesAstrometricFit should be run with explicit 'tract' constraints
+      essentially all the time, because otherwise quanta will be created for
+      jobs with only partial visit coverage.
+      isolatedStarAssociation can be run with or without 'tract' constraints.
+  nightlyStep2d:
+    subset:
+    - writeRecalibratedSourceTable
+    - transformSourceTable
+    - makeVisitTable
+    - makeCcdVisitTable
+    - catalogMatchVisit
+    - updateVisitSummary
+    - astrometricRefCatSourceVisit
+    - consolidateSourceTable
+    - finalizeCharacterization
+    description: 'Per-visit tasks. These should never be run with tract constraints
+
+      '
+  nightlyStep3:
+    subset:
+    - mergeDetections
+    - fitDeblendedObjectsSersic
+    - deblend
+    - measure
+    - healSparsePropertyMaps
+    - transformObjectTable
+    - inject_coadd
+    - detection
+    - forcedPhotCoadd
+    - fitDeepCoaddPsfGaussians
+    - makePsfMatchedWarp
+    - assembleCoadd
+    - writeObjectTable
+    - selectDeepCoaddVisits
+    - consolidateObjectTable
+    - mergeMeasurements
+    - makeDirectWarp
+    - objectEpochTable
+    description: |
+      Tasks that can be run together, but only after the 'step1' and 'step2'
+      subsets.
+      These should be run with explicit 'tract' constraints essentially all the
+      time, because otherwise quanta will be created for jobs with only partial
+      visit coverage.
+      It is expected that many forcedPhotCcd quanta will "normally" fail when
+      running this subset, but this isn't a problem right now because there
+      are no tasks downstream of it.  If other tasks regularly fail or we add
+      tasks downstream of forcedPhotCcd, these subsets or the tasks will need
+      additional changes.
+      This subset is considered a workaround for missing middleware and task
+      functionality.  It may be removed in the future.
+  nightlyStep4:
+    subset:
+    - sourceObjectMatch
+    - reprocessVisitImage
+    - forcedPhotCcd
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2'
+      and 'step3' subsets
+      These detector and visit-level tasks should not be run with
+      'tract' or 'patch' as part of the data ID expression if all
+      reference catalogs or diffIm templates that cover these
+      detector-level quanta are desired.
+  nightlyStep8:
+    subset:
+    - matchedVisitCoreWholeSkyPlot
+    - analyzeMatchedPreVisitCore
+    - analyzeMatchedVisitCore
+    - objectTableCoreWholeSkyPlot
+    - analyzeObjectTableCore
+    - objectTableCoreRefCatMatchWholeSkyPlot
+    - makeMetricTableObjectTableCore
+    - analyzeAmpOffsetMetadata
+    - analyzeObjectTableSurveyCore
+    - makeMetricTableMatchedVisitCore
+    - plotPropertyMapTract
+    - photometricRefCatObjectTract
+    - photometricCatalogMatch
+    - validateObjectTableCore
+    - makeMetricTableObjectTableCoreRefCatMatch
+    - catalogMatchTract
+    - refCatObjectTract
+    description: |
+      Core (most important), coadd-level plots/metrics from analysis_tools.
+
+      Must be run after 'step3' (writeObjectTable). Cannot be run with any
+      dataquery constraints if analyzeObjectTableSurveyCore is included.
+  injected_coaddition:
+    subset:
+    - inject_coadd
+    - healSparsePropertyMaps
+    description: All tasks from the 'coaddition' subset impacted by source injection.
+  injected_multiband:
+    subset:
+    - mergeDetections
+    - deblend
+    - measure
+    - forcedPhotCoadd
+    - detection
+    - mergeMeasurements
+    description: All tasks from the 'multiband' subset impacted by source injection.
+  injected_objectTable:
+    subset:
+    - writeObjectTable
+    - consolidateObjectTable
+    - transformObjectTable
+    description: All tasks from the 'objectTable' subset impacted by source injection.
+  injected_forced:
+    subset:
+    - forcedPhotCoadd
+    - forcedPhotCcd
+    description: All tasks from the 'forced' subset impacted by source injection.
+  injected_diffimDRP:
+    subset:
+    - forcedPhotDiffim
+    description: All tasks from the 'diffimDRP' subset impacted by source injection.
+  injected_step3:
+    subset:
+    - mergeDetections
+    - deblend
+    - analyzeObjectTableCore
+    - fitDeepCoaddPsfGaussians
+    - fitDeblendedObjectsSersic
+    - measure
+    - inject_coadd
+    - forcedPhotCoadd
+    - plotPropertyMapTract
+    - refCatObjectTract
+    - detection
+    - writeObjectTable
+    - photometricRefCatObjectTract
+    - consolidateObjectTable
+    - mergeMeasurements
+    - validateObjectTableCore
+    - healSparsePropertyMaps
+    - transformObjectTable
+    - catalogMatchTract
+    - photometricCatalogMatch
+    - objectEpochTable
+    description: All tasks from the 'step3' subset impacted by source injection.
+  injected_step4:
+    subset:
+    - forcedPhotCcd
+    - forcedPhotDiffim
+    - writeForcedSourceTable
+    description: All tasks from the 'step4' subset impacted by source injection.
+  injected_step5:
+    subset:
+    - transformForcedSourceTable
+    - consolidateForcedSourceTable
+    description: All tasks from the 'step5' subset impacted by source injection.
+  injected_step6:
+    subset:
+    - sourceObjectMatch
+    description: All tasks from the 'step6' subset impacted by source injection.
+  injected_step7:
+    subset:
+    - objectTableCoreWholeSkyPlot
+    - objectTableCoreRefCatMatchWholeSkyPlot
+    - makeMetricTableObjectTableCore
+    - consolidateHealSparsePropertyMaps
+    - makeMetricTableObjectTableCoreRefCatMatch
+    - analyzeObjectTableSurveyCore
+    description: All tasks from the 'step7' subset impacted by source injection.
+  injected_coadd_measurement:
+    subset:
+    - mergeDetections
+    - deblend
+    - measure
+    - detection
+    - mergeMeasurements
+    description: All tasks from the 'coadd_measurement' subset impacted by source
+      injection.
+  injected_forced_objects:
+    subset:
+    - transformObjectTable
+    - forcedPhotCoadd
+    - forcedPhotCcd
+    - writeObjectTable
+    - consolidateObjectTable
+    description: All tasks from the 'forced_objects' subset impacted by source injection.
+  injected_nightlyStep3:
+    subset:
+    - mergeDetections
+    - fitDeblendedObjectsSersic
+    - deblend
+    - measure
+    - transformObjectTable
+    - inject_coadd
+    - detection
+    - forcedPhotCoadd
+    - fitDeepCoaddPsfGaussians
+    - writeObjectTable
+    - consolidateObjectTable
+    - mergeMeasurements
+    - objectEpochTable
+    - healSparsePropertyMaps
+    description: All tasks from the 'nightlyStep3' subset impacted by source injection.
+  injected_nightlyStep4:
+    subset:
+    - sourceObjectMatch
+    - forcedPhotCcd
+    description: All tasks from the 'nightlyStep4' subset impacted by source injection.
+  injected_nightlyStep8:
+    subset:
+    - objectTableCoreWholeSkyPlot
+    - analyzeObjectTableCore
+    - objectTableCoreRefCatMatchWholeSkyPlot
+    - makeMetricTableObjectTableCore
+    - catalogMatchTract
+    - plotPropertyMapTract
+    - photometricRefCatObjectTract
+    - photometricCatalogMatch
+    - validateObjectTableCore
+    - makeMetricTableObjectTableCoreRefCatMatch
+    - analyzeObjectTableSurveyCore
+    - refCatObjectTract
+    description: All tasks from the 'nightlyStep8' subset impacted by source injection.
+  injected_stars_coadd_analysis:
+    subset:
+    - compare_object_to_injected
+    - analyze_matched_injected
+    - diff_matched_analysis
+    - consolidate_injected_catalogs
+    - match_object_to_injected
+    description: Analysis tasks for object_table level injected catalogs.

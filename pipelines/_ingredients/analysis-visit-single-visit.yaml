@@ -15,48 +15,48 @@ tasks:
   analyzeInitialSummaryStats:
     class: lsst.analysis.tools.tasks.CalexpSummaryAnalysisTask
     config:
-      connections.data: initial_visit_image.summaryStats
+      connections.data: preliminary_visit_image.summaryStats
       connections.outputName: initial_summary_stats
       atools.calexpSummaryMetrics: CalexpSummaryMetrics
       python: from lsst.analysis.tools.atools import *
-  analyzeInitialStar:
+  analyzeSingleVisitStar:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
     config:
       file: $ANALYSIS_TOOLS_DIR/config/sourceTableCore.py
-      connections.data: initial_star
-      connections.outputName: initial_star
-  makeAnalysisInitialStarAstrometricRefMatch:
+      connections.data: single_visit_star
+      connections.outputName: single_visit_star
+  makeAnalysisSingleVisitStarAstrometricRefMatch:
     class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
     config:
-      connections.targetCatalog: initial_star
-      connections.visitSummaryTable: initial_visit_summary
+      connections.targetCatalog: single_visit_star
+      connections.visitSummaryTable: preliminary_visit_summary
       # Drop explicit refcat name from template to avoid needing to set it in
       # downstream task configs.
       connections.matchedCatalog: "{targetCatalog}_ref_match_astrom"
-  analyzeInitialStarAstrometricRefMatch:
+  analyzeSingleVisitStarAstrometricRefMatch:
     class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
     config:
       file: $ANALYSIS_TOOLS_DIR/config/refCatSourceAstrometricCore.py
-      connections.targetCatalog: initial_star
+      connections.targetCatalog: single_visit_star
       connections.data: "{targetCatalog}_ref_match_astrom"
       # Can't use {targetCatalog} in outputName because it is a template.
-      connections.outputName: "initial_star_ref_matches_photom"
-  makeAnalysisInitialStarPhotometricRefMatch:
+      connections.outputName: "single_visit_star_ref_match_photom"
+  makeAnalysisSingleVisitStarPhotometricRefMatch:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
     config:
-      connections.targetCatalog: initial_star
-      connections.visitSummaryTable: initial_visit_summary
+      connections.targetCatalog: single_visit_star
+      connections.visitSummaryTable: preliminary_visit_summary
       # Drop explicit refcat name from template to avoid needing to set it in
       # downstream task configs.
       connections.matchedCatalog: "{targetCatalog}_ref_match_photom"
-  analyzeInitialStarPhotometricRefMatch:
+  analyzeSingleVisitStarPhotometricRefMatch:
     class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
     config:
       file: $ANALYSIS_TOOLS_DIR/config/refCatSourcePhotometricCore.py
-      connections.targetCatalog: initial_star
+      connections.targetCatalog: single_visit_star
       connections.data: "{targetCatalog}_ref_match_photom"
       # Can't use {targetCatalog} in outputName because it is a template.
-      connections.outputName: "initial_star_ref_match_photom"
+      connections.outputName: "single_visit_star_ref_match_photom"
 
 subsets:
   analysis-visit-initial:
@@ -65,11 +65,11 @@ subsets:
       - analyzeCalibrateImageMetadata
       - analyzeAmpInterfaceOffsetMetadata
       - analyzeInitialSummaryStats
-      - analyzeInitialStar
-      - makeAnalysisInitialStarAstrometricRefMatch
-      - analyzeInitialStarAstrometricRefMatch
-      - makeAnalysisInitialStarPhotometricRefMatch
-      - analyzeInitialStarPhotometricRefMatch
+      - analyzeSingleVisitStar
+      - makeAnalysisSingleVisitStarAstrometricRefMatch
+      - analyzeSingleVisitStarAstrometricRefMatch
+      - makeAnalysisSingleVisitStarPhotometricRefMatch
+      - analyzeSingleVisitStarPhotometricRefMatch
     description: |
       Subset containing all visit-level analysis tasks that run on the final
       sources. This subset contains all of the tasks in this pipeline, and

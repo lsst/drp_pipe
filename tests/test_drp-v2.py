@@ -105,7 +105,7 @@ class DrpV2TestCase(unittest.TestCase):
         # valid (step flow is what the PipelineStepTester checks for the v1
         # pipelines).
         pipeline_graph = pipeline.to_graph(registry=butler.registry)
-        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage1-initial"], "step1")
+        self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage1-single-visit"], "step1")
         self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage2-recalibration"], "step2")
         self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage3-coadds"], "step3")
         self.check_stage(pipeline_graph, pipeline_graph.task_subsets["stage4-variability"], "step4")
@@ -120,7 +120,7 @@ class DrpV2TestCase(unittest.TestCase):
         butler = self.make_butler(writeable=True)
         self.register_refcat(butler, COMCAM_REFCAT)
         pipeline_graph_1 = Pipeline.from_uri(
-            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage1-initial")
+            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage1-single-visit")
         ).to_graph(registry=butler.registry)
         self.check_stage(pipeline_graph_1, pipeline_graph_1.tasks.keys(), "")
         pipeline_graph_2 = Pipeline.from_uri(
@@ -136,12 +136,12 @@ class DrpV2TestCase(unittest.TestCase):
         ).to_graph(registry=butler.registry)
         self.check_stage(pipeline_graph_4, pipeline_graph_4.task_subsets["stage4-variability"], "")
         # Spot-check a few prominent outputs for each stage.
-        self.assertIsNotNone(pipeline_graph_1.producer_of("initial_star"))
-        self.assertIsNotNone(pipeline_graph_1.producer_of("initial_visit_image"))
-        self.assertIsNotNone(pipeline_graph_1.producer_of("initial_visit_summary"))
-        self.assertIsNotNone(pipeline_graph_1.producer_of("initial_visit_table"))
-        self.assertIsNotNone(pipeline_graph_1.producer_of("initial_visit_detector_table"))
-        self.assertIsNotNone(pipeline_graph_1.producer_of("initial_star_association_metrics"))
+        self.assertIsNotNone(pipeline_graph_1.producer_of("single_visit_star"))
+        self.assertIsNotNone(pipeline_graph_1.producer_of("preliminary_visit_image"))
+        self.assertIsNotNone(pipeline_graph_1.producer_of("preliminary_visit_summary"))
+        self.assertIsNotNone(pipeline_graph_1.producer_of("preliminary_visit_table"))
+        self.assertIsNotNone(pipeline_graph_1.producer_of("preliminary_visit_detector_table"))
+        self.assertIsNotNone(pipeline_graph_1.producer_of("single_visit_star_association_metrics"))
         self.assertIsNotNone(pipeline_graph_2.producer_of("recalibrated_star"))
         self.assertIsNotNone(pipeline_graph_2.producer_of("recalibrated_star_association_metrics"))
         self.assertIsNotNone(pipeline_graph_2.producer_of("visit_summary"))

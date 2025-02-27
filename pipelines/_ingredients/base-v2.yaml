@@ -9,8 +9,8 @@ description: |
   the 'pipelines' directory (or create a custom one) instead.
 
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-initial.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-initial.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-single-visit.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-single-visit.yaml
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-recalibrated.yaml
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-recalibrated.yaml
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-coadds.yaml
@@ -20,7 +20,7 @@ imports:
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
 
 tasks:
-  # stage1-initial production tasks
+  # stage1-single-visit production tasks
   isr:
     class: lsst.ip.isr.IsrTask
     config:
@@ -30,46 +30,46 @@ tasks:
     config:
       file: $DRP_PIPE_DIR/config/calibrateImage.py
       connections.exposures: post_isr_image
-      connections.stars_footprints: initial_star_footprints
-      connections.psf_stars_footprints: initial_psf_star_footprints
-      connections.psf_stars: initial_psf_star
-      connections.initial_stars_schema: initial_star_schema
-      connections.stars: initial_star_unstandardized
-      connections.exposure: initial_visit_image
-      connections.background: initial_visit_image_background
-  standardizeInitialStar:
+      connections.stars_footprints: single_visit_star_footprints
+      connections.psf_stars_footprints: single_visit_psf_star_footprints
+      connections.psf_stars: single_visit_psf_star
+      connections.initial_stars_schema: single_visit_star_schema
+      connections.stars: single_visit_star_unstandardized
+      connections.exposure: preliminary_visit_image
+      connections.background: preliminary_visit_image_background
+  standardizeSingleVisitStar:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
-      connections.inputCatalog: initial_star_unstandardized
-      connections.outputCatalog: initial_star_detector
+      connections.inputCatalog: single_visit_star_unstandardized
+      connections.outputCatalog: single_visit_star_detector
       functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
-  consolidateInitialStar:
+  consolidateSingleVisitStar:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
     config:
-      connections.inputCatalogs: initial_star_detector
-      connections.outputCatalog: initial_star
-  consolidateInitialVisitSummary:
+      connections.inputCatalogs: single_visit_star_detector
+      connections.outputCatalog: single_visit_star
+  consolidateVisitSummary:
     class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
     config:
-      connections.calexp: initial_visit_image
-      connections.visitSummary: initial_visit_summary
-      connections.visitSummarySchema: initial_visit_summary_schema
+      connections.calexp: preliminary_visit_image
+      connections.visitSummary: preliminary_visit_summary
+      connections.visitSummarySchema: preliminary_visit_summary_schema
   associateIsolatedStar:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
-      connections.source_table_visit: initial_star
+      connections.source_table_visit: single_visit_star
       connections.isolated_star_sources: isolated_star
       connections.isolated_star_cat: isolated_star_association
   makeInitialVisitDetectorTable:
     class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
     config:
-      connections.visitSummaryRefs: initial_visit_summary
-      connections.outputCatalog: initial_visit_detector_table
+      connections.visitSummaryRefs: preliminary_visit_summary
+      connections.outputCatalog: preliminary_visit_detector_table
   makeInitialVisitTable:
     class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
     config:
-      connections.visitSummaries: initial_visit_summary
-      connections.outputCatalog: initial_visit_table
+      connections.visitSummaries: preliminary_visit_summary
+      connections.outputCatalog: preliminary_visit_table
 
   # stage2-recalibration production tasks
   fgcmBuildFromIsolatedStars:
@@ -77,7 +77,7 @@ tasks:
     config:
       connections.isolated_star_cats: isolated_star_association
       connections.isolated_star_sources: isolated_star
-      connections.visit_summaries: initial_visit_summary
+      connections.visit_summaries: preliminary_visit_summary
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
@@ -87,15 +87,15 @@ tasks:
   gbdesAstrometricFit:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
     config:
-      connections.inputCatalogRefs: initial_star
-      connections.inputVisitSummaries: initial_visit_summary
+      connections.inputCatalogRefs: single_visit_star
+      connections.inputVisitSummaries: preliminary_visit_summary
       fitProperMotion: true
   refitPsfModel:
     class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
     config:
-      connections.srcs: initial_star_footprints
-      connections.src_schema: initial_star_schema
-      connections.calexps: initial_visit_image
+      connections.srcs: single_visit_star_footprints
+      connections.src_schema: single_visit_star_schema
+      connections.calexps: preliminary_visit_image
       connections.isolated_star_cats: isolated_star_association
       connections.isolated_star_sources: isolated_star
       connections.finalized_src_table: refit_psf_star
@@ -103,9 +103,9 @@ tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
-      connections.input_exposures: initial_visit_image
-      connections.input_summary_schema: initial_visit_summary_schema
-      connections.input_summary_catalog: initial_visit_summary
+      connections.input_exposures: preliminary_visit_image
+      connections.input_summary_schema: preliminary_visit_summary_schema
+      connections.input_summary_catalog: preliminary_visit_summary
       connections.psf_star_catalog: refit_psf_star
       connections.psf_overrides: refit_psf_models
       connections.ap_corr_overrides: refit_psf_models
@@ -115,11 +115,11 @@ tasks:
       connections.output_summary_catalog: visit_summary
       wcs_provider: tract
       photo_calib_provider: global
-  recalibrateInitialStar:
+  recalibrateSingleVisitStar:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
       connections.visitSummary: visit_summary
-      connections.catalog: initial_star_footprints
+      connections.catalog: single_visit_star_footprints
       connections.outputCatalog: recalibrated_star_unstandardized
   standardizeRecalibratedStar:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
@@ -146,7 +146,7 @@ tasks:
   makeDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
-      connections.calexp_list: initial_visit_image
+      connections.calexp_list: preliminary_visit_image
       connections.visit_summary: visit_summary
       connections.warp: direct_warp
       connections.masked_fraction_warp: direct_warp_masked_fraction
@@ -301,7 +301,7 @@ tasks:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
       connections.exposures: post_isr_image
-      connections.background_1: initial_visit_image_background
+      connections.background_1: preliminary_visit_image_background
       connections.exposure: visit_image
       connections.calib_sources: refit_psf_star
       connections.background: visit_image_background
@@ -332,7 +332,7 @@ tasks:
     config:
       allowKernelSourceDetection: true
       connections.science: visit_image
-      connections.sources: initial_star_footprints
+      connections.sources: single_visit_star_footprints
       connections.template: template_detector
       connections.difference: difference_image_predetection
       connections.matchedTemplate: template_matched
@@ -460,11 +460,11 @@ tasks:
       connections.referenceCatalog: dia_object_patch
 
 subsets:
-  step1a-initial-detectors:
+  step1a-single-visit-detectors:
     subset:
       - isr
       - calibrateImage
-      - standardizeInitialStar
+      - standardizeSingleVisitStar
       - analyzeAmpOffsetMetadata
       - analyzeAmpInterfaceOffsetMetadata
       - analyzeCalibrateImageMetadata
@@ -477,15 +477,15 @@ subsets:
 
       A skymap constraint is unnecessary and not recommended.
 
-  step1b-initial-visits:
+  step1b-single-visit-visits:
     subset:
-      - consolidateInitialStar
-      - consolidateInitialVisitSummary
-      - analyzeInitialStar
-      - makeAnalysisInitialStarAstrometricRefMatch
-      - analyzeInitialStarAstrometricRefMatch
-      - makeAnalysisInitialStarPhotometricRefMatch
-      - analyzeInitialStarPhotometricRefMatch
+      - consolidateSingleVisitStar
+      - consolidateVisitSummary
+      - analyzeSingleVisitStar
+      - makeAnalysisSingleVisitStarAstrometricRefMatch
+      - analyzeSingleVisitStarAstrometricRefMatch
+      - makeAnalysisSingleVisitStarPhotometricRefMatch
+      - analyzeSingleVisitStarPhotometricRefMatch
     description: |
       A step that consolidates per-detector initial star catalogs and metadata
       to full-focal-plane visit-level versions, and runs analysis on initial
@@ -498,10 +498,10 @@ subsets:
 
       A skymap constraint is unnecessary and not recommended.
 
-  step1c-initial-tracts:
+  step1c-single-visit-tracts:
     subset:
       - associateIsolatedStar
-      - analyzeInitialStarAssociation
+      - analyzeSingleVisitStarAssociation
     description: |
       A step that matches initial star catalogs (running over tracts) and
       runs analysis on those matches.
@@ -514,12 +514,12 @@ subsets:
       A skymap constraint is always necessary, to avoid running all tasks
       redundantly on all skymaps in the data repository.
 
-  step1d-initial-global:
+  step1d-single-visit-global:
     subset:
       - makeInitialVisitDetectorTable
       - makeInitialVisitTable
-      - makeAnalysisInitialStarAssociationMetricTable
-      - makeAnalysisInitialStarAssociationWholeSkyPlot
+      - makeAnalysisSingleVisitStarAssociationMetricTable
+      - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
     description: |
       A step that consolidates visit[, detector] metadata and analysis into
       full-survey tables and plots.
@@ -561,7 +561,7 @@ subsets:
     subset:
       - refitPsfModel
       - updateVisitSummary
-      - recalibrateInitialStar
+      - recalibrateSingleVisitStar
       - standardizeRecalibratedStar
       - consolidateRecalibratedStar
       - analyzeRecalibratedStar
@@ -723,31 +723,31 @@ subsets:
   # duplicate the lists of tasks and verify that they're consistent via unit
   # tests.
 
-  stage1-initial:
+  stage1-single-visit:
     # 1a
     - isr
     - calibrateImage
-    - standardizeInitialStar
+    - standardizeSingleVisitStar
     - analyzeAmpOffsetMetadata
     - analyzeAmpInterfaceOffsetMetadata
     - analyzeCalibrateImageMetadata
     - analyzeInitialSummaryStats
     # 1b
-    - consolidateInitialStar
-    - consolidateInitialVisitSummary
-    - analyzeInitialStar
-    - makeAnalysisInitialStarAstrometricRefMatch
-    - analyzeInitialStarAstrometricRefMatch
-    - makeAnalysisInitialStarPhotometricRefMatch
-    - analyzeInitialStarPhotometricRefMatch
+    - consolidateSingleVisitStar
+    - consolidateVisitSummary
+    - analyzeSingleVisitStar
+    - makeAnalysisSingleVisitStarAstrometricRefMatch
+    - analyzeSingleVisitStarAstrometricRefMatch
+    - makeAnalysisSingleVisitStarPhotometricRefMatch
+    - analyzeSingleVisitStarPhotometricRefMatch
     # 1c
     - associateIsolatedStar
-    - analyzeInitialStarAssociation
+    - analyzeSingleVisitStarAssociation
     # 1d
     - makeInitialVisitDetectorTable
     - makeInitialVisitTable
-    - makeAnalysisInitialStarAssociationMetricTable
-    - makeAnalysisInitialStarAssociationWholeSkyPlot
+    - makeAnalysisSingleVisitStarAssociationMetricTable
+    - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
   stage2-recalibration:
     # 2a
     - fgcmBuildFromIsolatedStars
@@ -758,7 +758,7 @@ subsets:
     # 2c
     - refitPsfModel
     - updateVisitSummary
-    - recalibrateInitialStar
+    - recalibrateSingleVisitStar
     - standardizeRecalibratedStar
     - consolidateRecalibratedStar
     - analyzeRecalibratedStar
@@ -847,13 +847,13 @@ subsets:
     - makeAnalysisSourceAssociationWholeSkyPlot
 
 steps:
-  - label: step1a-initial-detectors
+  - label: step1a-single-visit-detectors
     dimensions: [visit, detector]
-  - label: step1b-initial-visits
+  - label: step1b-single-visit-visits
     dimensions: [visit]
-  - label: step1c-initial-tracts
+  - label: step1c-single-visit-tracts
     dimensions: [tract]
-  - label: step1d-initial-global
+  - label: step1d-single-visit-global
     dimensions: []
   - label: step2a-recalibration-global
     dimensions: []
