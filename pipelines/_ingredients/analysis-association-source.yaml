@@ -17,7 +17,7 @@ tasks:
     config:
       file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
       connections.sourceCatalogs: source
-      connections.associatedSources: isolated_analysis_source_association
+      connections.associatedSources: isolated_analysis_source
       connections.outputName: analysis_source_association
       connections.visitTable: visit_table
       applyAstrometricCorrections: true
