@@ -49,7 +49,7 @@ tasks:
     class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
     config:
       connections.data: recalibrated_star
-      connections.associatedSources: isolated_star_association
+      connections.associatedSources: isolated_star
       connections.refCat: object_patch
       connections.visitTable: visit_table
 
