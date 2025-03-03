@@ -7,7 +7,7 @@ tasks:
     config:
       file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
       connections.sourceCatalogs: recalibrated_star
-      connections.associatedSources: isolated_star_association
+      connections.associatedSources: isolated_star
       connections.outputName: recalibrated_star_association
       # This task only needs a visit table to get MJDs, which are not changed
       # when we go from preliminary_visit_table to [final/recalibrated]

@@ -33,7 +33,7 @@ import csv
 import dataclasses
 import logging
 import os.path
-from collections.abc import Iterable
+from collections.abc import Iterable, Set
 
 from lsst.pex.config import compareConfigs
 import pydantic
@@ -47,7 +47,9 @@ def without_automatic_connections(names: Iterable[str]) -> list[str]:
     return [
         name
         for name in names
-        if not name.endswith("_config") and not name.endswith("_log") and not name.endswith("_metadata")
+        if not name.endswith("_config")
+        and not name.endswith("_log")
+        and not name.endswith("_metadata")
     ]
 
 
@@ -55,10 +57,12 @@ class Correspondence(pydantic.BaseModel):
     """A serializable mapping from one pipeline to another."""
 
     tasks_new_to_old: dict[str, str] = pydantic.Field(
-        default_factory=dict, description="Mapping from new task label to old task label."
+        default_factory=dict,
+        description="Mapping from new task label to old task label.",
     )
     dataset_types_new_to_old: dict[str, str] = pydantic.Field(
-        default_factory=dict, description="Mapping from new dataset type name to old dataset type name."
+        default_factory=dict,
+        description="Mapping from new dataset type name to old dataset type name.",
     )
     unmappable_new_tasks: dict[str, str] = pydantic.Field(
         default_factory=dict,
@@ -124,7 +128,9 @@ class Correspondence(pydantic.BaseModel):
         for new_name in new.dataset_types.keys():
             if (old_name := self.dataset_types_new_to_old.get(new_name)) is not None:
                 result.dataset_types_new_to_old[new_name] = old_name
-            elif (reason := self.unmappable_new_dataset_types.get(new_name)) is not None:
+            elif (
+                reason := self.unmappable_new_dataset_types.get(new_name)
+            ) is not None:
                 result.unmappable_new_dataset_types[new_name] = reason
         for old_name in old.dataset_types.keys():
             if (reason := self.unmappable_old_dataset_types.get(old_name)) is not None:
@@ -132,7 +138,14 @@ class Correspondence(pydantic.BaseModel):
         assert result.config_ignores.keys() == self.config_ignores.keys()
         return result
 
-    def check(self, new: PipelineGraph, old: PipelineGraph, new_name: str, old_name: str) -> list[str]:
+    def check(
+        self,
+        new: PipelineGraph,
+        old: PipelineGraph,
+        new_name: str,
+        old_name: str,
+        ignore_edges: Set[tuple[str, str]] = frozenset(),
+    ) -> list[str]:
         """Check the correspondence for consistency with the given pipeline
         graphs.
 
@@ -146,6 +159,11 @@ class Correspondence(pydantic.BaseModel):
             Name of the new pipeline for use in messages.
         old_name : `str`
             Name of the old pipeline for use in messages.
+        ignore_edges : `~collections.abc.Set` [ `tuple` [ `str`, `str` ] ], \
+                optional
+            Connections that are not expected to match, even though both the
+            task and dataset type are mapped, as a set of
+            ``(new task label, connection name)`` tuples.
 
         Returns
         -------
@@ -154,7 +172,10 @@ class Correspondence(pydantic.BaseModel):
             problems.
         """
         messages: list[str] = []
-        tasks_old_to_new = {old_label: new_label for new_label, old_label in self.tasks_new_to_old.items()}
+        tasks_old_to_new = {
+            old_label: new_label
+            for new_label, old_label in self.tasks_new_to_old.items()
+        }
         if len(tasks_old_to_new) != len(self.tasks_new_to_old):
             for new_label, old_label in self.tasks_new_to_old.items():
                 if tasks_old_to_new[old_label] != new_label:
@@ -167,9 +188,13 @@ class Correspondence(pydantic.BaseModel):
         for label in sorted(self.tasks_new_to_old.keys() - new.tasks.keys()):
             messages.append(f"Task {label!r} is mapped but is not part of {new_name}.")
         for label in sorted(self.unmappable_old_tasks.keys() - old.tasks.keys()):
-            messages.append(f"Task {label!r} is marked as unmappable but is not part of {old_name}.")
+            messages.append(
+                f"Task {label!r} is marked as unmappable but is not part of {old_name}."
+            )
         for label in sorted(self.unmappable_new_tasks.keys() - new.tasks.keys()):
-            messages.append(f"Task {label!r} is marked as unmappable but is not part of {new_name}.")
+            messages.append(
+                f"Task {label!r} is marked as unmappable but is not part of {new_name}."
+            )
         missing_old_tasks = set(old.tasks.keys())
         missing_old_tasks.difference_update(tasks_old_to_new.keys())
         missing_old_tasks.difference_update(self.unmappable_old_tasks)
@@ -187,7 +212,8 @@ class Correspondence(pydantic.BaseModel):
                 "correspondence; it needs to be mapped or marked as unmappable."
             )
         dataset_types_old_to_new = {
-            old_label: new_label for new_label, old_label in self.dataset_types_new_to_old.items()
+            old_label: new_label
+            for new_label, old_label in self.dataset_types_new_to_old.items()
         }
         old_dataset_types = set(without_automatic_connections(old.dataset_types.keys()))
         new_dataset_types = set(without_automatic_connections(new.dataset_types.keys()))
@@ -206,11 +232,21 @@ class Correspondence(pydantic.BaseModel):
             messages.append(
                 f"Dataset type {name!r} is mapped by the correspondence but is not part of {new_name}."
             )
-        for name in sorted(self.unmappable_old_dataset_types.keys() - old_dataset_types):
-            messages.append(f"Dataset type {name!r} is marked as unmappable but is not part of {old_name}.")
-        for name in sorted(self.unmappable_new_dataset_types.keys() - new_dataset_types):
-            messages.append(f"Dataset type {name!r} is marked as unmappable but is not part of {new_name}.")
-        missing_old_dataset_types = set(without_automatic_connections(old.dataset_types.keys()))
+        for name in sorted(
+            self.unmappable_old_dataset_types.keys() - old_dataset_types
+        ):
+            messages.append(
+                f"Dataset type {name!r} is marked as unmappable but is not part of {old_name}."
+            )
+        for name in sorted(
+            self.unmappable_new_dataset_types.keys() - new_dataset_types
+        ):
+            messages.append(
+                f"Dataset type {name!r} is marked as unmappable but is not part of {new_name}."
+            )
+        missing_old_dataset_types = set(
+            without_automatic_connections(old.dataset_types.keys())
+        )
         missing_old_dataset_types.difference_update(dataset_types_old_to_new.keys())
         missing_old_dataset_types.difference_update(self.unmappable_old_dataset_types)
         for name in sorted(missing_old_dataset_types):
@@ -218,14 +254,47 @@ class Correspondence(pydantic.BaseModel):
                 f"Dataset type {name!r} in {old_name} is missing from the "
                 "correspondence; it needs to be mapped or marked as unmappable."
             )
-        missing_new_dataset_types = set(without_automatic_connections(new_dataset_types))
-        missing_new_dataset_types.difference_update(self.dataset_types_new_to_old.keys())
+        missing_new_dataset_types = set(
+            without_automatic_connections(new_dataset_types)
+        )
+        missing_new_dataset_types.difference_update(
+            self.dataset_types_new_to_old.keys()
+        )
         missing_new_dataset_types.difference_update(self.unmappable_new_dataset_types)
         for name in sorted(missing_new_dataset_types):
             messages.append(
                 f"Dataset type {name!r} in {new_name} is missing from the "
                 "correspondence; it needs to be mapped or marked as unmappable."
             )
+        for new_task_label, old_task_label in self.tasks_new_to_old.items():
+            new_task_node = new.tasks[new_task_label]
+            old_task_node = old.tasks[old_task_label]
+            for new_edge_map, old_edge_map in [
+                (new_task_node.inputs, old_task_node.inputs),
+                (new_task_node.prerequisite_inputs, old_task_node.prerequisite_inputs),
+                (new_task_node.outputs, old_task_node.outputs),
+            ]:
+                for connection_name, new_edge in new_edge_map.items():
+                    if (new_task_label, connection_name) in ignore_edges:
+                        continue
+                    new_name = new_edge.parent_dataset_type_name
+                    old_collection_name = connection_name
+                    if mapped_old_name := self.dataset_types_new_to_old.get(new_name):
+                        if not (old_edge := old_edge_map.get(connection_name)):
+                            # Some analysis_tools tasks change their connection
+                            # name when configured differently, but use the
+                            # dataset type name as the connection.
+                            old_connection_name = mapped_old_name
+                            if not (old_edge := old_edge_map.get(old_connection_name)):
+                                # This is some other kind of dynamic connection
+                                # that we just can't check.
+                                continue
+                        old_name = old_edge.parent_dataset_type_name
+                        if old_name != mapped_old_name:
+                            messages.append(
+                                f"Connection {new_task_label}.{connection_name}={new_name} is mapped to "
+                                f"{mapped_old_name}, but {old_task_label}.{old_collection_name}={old_name}."
+                            )
         return messages
 
     def find_matches(self, new: PipelineGraph, old: PipelineGraph) -> Correspondence:
@@ -257,18 +326,25 @@ class Correspondence(pydantic.BaseModel):
         dataset_types_new_to_old = {
             new_name: old_name
             for new_name, old_name in self.dataset_types_new_to_old.items()
-            if new_name in new.dataset_types.keys() and old_name in old.dataset_types.keys()
+            if new_name in new.dataset_types.keys()
+            and old_name in old.dataset_types.keys()
         }
         new_side.map_tasks.update(tasks_new_to_old)
         new_side.map_dataset_types.update(dataset_types_new_to_old)
-        new_side.unmappable_tasks.update(self.unmappable_new_tasks.keys() & new.tasks.keys())
+        new_side.unmappable_tasks.update(
+            self.unmappable_new_tasks.keys() & new.tasks.keys()
+        )
         new_side.unmappable_dataset_types.update(
             self.unmappable_new_dataset_types.keys() & new.dataset_types.keys()
         )
         old_side = _CorrespondenceFinderSide(old)
         old_side.map_tasks.update({old: new for new, old in tasks_new_to_old.items()})
-        old_side.map_dataset_types.update({old: new for new, old in dataset_types_new_to_old.items()})
-        old_side.unmappable_tasks.update(self.unmappable_old_tasks.keys() & old.tasks.keys())
+        old_side.map_dataset_types.update(
+            {old: new for new, old in dataset_types_new_to_old.items()}
+        )
+        old_side.unmappable_tasks.update(
+            self.unmappable_old_tasks.keys() & old.tasks.keys()
+        )
         old_side.unmappable_dataset_types.update(
             self.unmappable_old_dataset_types.keys() & old.dataset_types.keys()
         )
@@ -277,9 +353,15 @@ class Correspondence(pydantic.BaseModel):
         for task_label in new_side.unmatched_tasks & old_side.unmatched_tasks:
             if new_side.task_nodes_match(task_label, task_label, old_side):
                 new_side.relate_tasks(task_label, task_label, old_side)
-        for dataset_type_name in new_side.unmatched_dataset_types & old_side.unmatched_dataset_types:
-            if new_side.dataset_type_nodes_match(dataset_type_name, dataset_type_name, old_side):
-                new_side.relate_dataset_types(dataset_type_name, dataset_type_name, old_side)
+        for dataset_type_name in (
+            new_side.unmatched_dataset_types & old_side.unmatched_dataset_types
+        ):
+            if new_side.dataset_type_nodes_match(
+                dataset_type_name, dataset_type_name, old_side
+            ):
+                new_side.relate_dataset_types(
+                    dataset_type_name, dataset_type_name, old_side
+                )
         _LOG.info(
             f"{len(new_side.map_tasks)} tasks, {len(new_side.map_dataset_types)} dataset types "
             "mapped after direct-name matching."
@@ -291,9 +373,13 @@ class Correspondence(pydantic.BaseModel):
         while successes:
             successes = 0
             for new_task_label in new_side.unmatched_tasks:
-                successes += new_side.match_task_via_output_producers(new_task_label, old_side, "<-")
+                successes += new_side.match_task_via_output_producers(
+                    new_task_label, old_side, "<-"
+                )
             for old_task_label in old_side.unmatched_tasks:
-                successes += old_side.match_task_via_output_producers(old_task_label, new_side, "->")
+                successes += old_side.match_task_via_output_producers(
+                    old_task_label, new_side, "->"
+                )
             for new_dataset_type_name in new_side.unmatched_dataset_types:
                 successes += new_side.match_dataset_type_via_producer_outputs(
                     new_dataset_type_name, old_side, "<-"
@@ -303,9 +389,13 @@ class Correspondence(pydantic.BaseModel):
                     old_dataset_type_name, new_side, "->"
                 )
             for new_task_label in new_side.unmatched_tasks:
-                successes += new_side.match_task_via_input_consumers(new_task_label, old_side, "<-")
+                successes += new_side.match_task_via_input_consumers(
+                    new_task_label, old_side, "<-"
+                )
             for old_task_label in old_side.unmatched_tasks:
-                successes += old_side.match_task_via_input_consumers(old_task_label, new_side, "->")
+                successes += old_side.match_task_via_input_consumers(
+                    old_task_label, new_side, "->"
+                )
             for new_dataset_type_name in new_side.unmatched_dataset_types:
                 successes += new_side.match_dataset_type_via_consumer_inputs(
                     new_dataset_type_name, old_side, "<-"
@@ -323,10 +413,16 @@ class Correspondence(pydantic.BaseModel):
         result.tasks_new_to_old.update(new_side.map_tasks.items())
         result.dataset_types_new_to_old.update(new_side.map_dataset_types.items())
         result.unmappable_new_tasks.update(
-            {label: self.unmappable_new_tasks.get(label, "") for label in new_side.unmappable_tasks}
+            {
+                label: self.unmappable_new_tasks.get(label, "")
+                for label in new_side.unmappable_tasks
+            }
         )
         result.unmappable_old_tasks.update(
-            {label: self.unmappable_old_tasks.get(label, "") for label in old_side.unmappable_tasks}
+            {
+                label: self.unmappable_old_tasks.get(label, "")
+                for label in old_side.unmappable_tasks
+            }
         )
         result.unmappable_new_dataset_types.update(
             {
@@ -341,7 +437,8 @@ class Correspondence(pydantic.BaseModel):
             }
         )
         result.config_ignores = {
-            new_label: ignore_lines.copy() for new_label, ignore_lines in self.config_ignores.items()
+            new_label: ignore_lines.copy()
+            for new_label, ignore_lines in self.config_ignores.items()
         }
         return result
 
@@ -360,7 +457,9 @@ class Correspondence(pydantic.BaseModel):
         compareConfigs(new.label, new.config, old.config, output=output)
         return messages
 
-    def write_task_csv(self, filename: str, new: PipelineGraph, old: PipelineGraph) -> None:
+    def write_task_csv(
+        self, filename: str, new: PipelineGraph, old: PipelineGraph
+    ) -> None:
         """Write the mapping between tasks to a CSV file.
 
         Parameters
@@ -403,7 +502,9 @@ class Correspondence(pydantic.BaseModel):
                     )
                     n += 1
 
-    def write_dataset_type_csv(self, filename: str, new: PipelineGraph, old: PipelineGraph) -> None:
+    def write_dataset_type_csv(
+        self, filename: str, new: PipelineGraph, old: PipelineGraph
+    ) -> None:
         """Write the mapping between dataset types to a CSV file.
 
         Parameters
@@ -483,22 +584,30 @@ class _CorrespondenceFinderSide:
         """Dataset types on this side that could be mapped but have not yet
         been.
         """
-        result = set(without_automatic_connections(self.pipeline_graph.dataset_types.keys()))
+        result = set(
+            without_automatic_connections(self.pipeline_graph.dataset_types.keys())
+        )
         result.difference_update(self.map_dataset_types.keys())
         result.difference_update(self.unmappable_dataset_types)
         return result
 
-    def relate_tasks(self, label: str, other_label: str, other: _CorrespondenceFinderSide) -> None:
+    def relate_tasks(
+        self, label: str, other_label: str, other: _CorrespondenceFinderSide
+    ) -> None:
         """Add a mapping between the given task labels."""
         self.map_tasks[label] = other_label
         other.map_tasks[other_label] = label
 
-    def relate_dataset_types(self, name: str, other_name: str, other: _CorrespondenceFinderSide) -> None:
+    def relate_dataset_types(
+        self, name: str, other_name: str, other: _CorrespondenceFinderSide
+    ) -> None:
         """Add a mapping between the given dataset type names."""
         self.map_dataset_types[name] = other_name
         other.map_dataset_types[other_name] = name
 
-    def task_nodes_match(self, label: str, other_label: str, other: _CorrespondenceFinderSide) -> bool:
+    def task_nodes_match(
+        self, label: str, other_label: str, other: _CorrespondenceFinderSide
+    ) -> bool:
         """Test whether two tasks can be matched.
 
         This checks whether the tasks are still available to be matched and
@@ -519,7 +628,9 @@ class _CorrespondenceFinderSide:
             and new_node.task_class_name == old_node.task_class_name
         )
 
-    def dataset_type_nodes_match(self, name: str, other_name: str, other: _CorrespondenceFinderSide) -> bool:
+    def dataset_type_nodes_match(
+        self, name: str, other_name: str, other: _CorrespondenceFinderSide
+    ) -> bool:
         """Test whether two dataset types can be matched.
 
         This checks whether the dataset types are still available to be matched
@@ -546,7 +657,9 @@ class _CorrespondenceFinderSide:
         """Look for a match for the given task by inspecting the mappings of
         its outputs' producers.
         """
-        my_outputs = self.pipeline_graph.outputs_of(label).keys() - self.unmappable_tasks
+        my_outputs = (
+            self.pipeline_graph.outputs_of(label).keys() - self.unmappable_tasks
+        )
         other_outputs = {
             other_output
             for my_output in my_outputs
@@ -555,17 +668,22 @@ class _CorrespondenceFinderSide:
         other_output_producers = {
             other_producer_node.label
             for other_output in other_outputs
-            if (other_producer_node := other.pipeline_graph.producer_of(other_output)) is not None
+            if (other_producer_node := other.pipeline_graph.producer_of(other_output))
+            is not None
             and self.task_nodes_match(label, other_producer_node.label, other)
         }
         other_output_producers -= other.unmappable_tasks
         if len(other_output_producers) == 1:
             other_label = other_output_producers.pop()
-            _LOG.debug(f"Successful output producer match {label} {direction} {other_label}.")
+            _LOG.debug(
+                f"Successful output producer match {label} {direction} {other_label}."
+            )
             self.relate_tasks(label, other_label, other)
             return True
         else:
-            _LOG.info(f"No unique output producer match for {label} {direction}: {other_output_producers}.")
+            _LOG.info(
+                f"No unique output producer match for {label} {direction}: {other_output_producers}."
+            )
         return False
 
     def match_task_via_input_consumers(
@@ -574,7 +692,9 @@ class _CorrespondenceFinderSide:
         """Look for a match for the given task by inspecting the mappings of
         its inputs' consumers.
         """
-        my_inputs = self.pipeline_graph.inputs_of(label).keys() - self.unmappable_dataset_types
+        my_inputs = (
+            self.pipeline_graph.inputs_of(label).keys() - self.unmappable_dataset_types
+        )
         other_inputs = {
             other_input
             for my_input in my_inputs
@@ -583,17 +703,23 @@ class _CorrespondenceFinderSide:
         other_input_consumers = {
             other_input_consumer_node.label
             for other_input in other_inputs
-            for other_input_consumer_node in other.pipeline_graph.consumers_of(other_input)
+            for other_input_consumer_node in other.pipeline_graph.consumers_of(
+                other_input
+            )
             if self.task_nodes_match(label, other_input_consumer_node.label, other)
         }
         other_input_consumers -= other.unmappable_tasks
         if len(other_input_consumers) == 1:
             other_label = other_input_consumers.pop()
-            _LOG.debug(f"Successful input consumer match {label} {direction} {other_label}.")
+            _LOG.debug(
+                f"Successful input consumer match {label} {direction} {other_label}."
+            )
             self.relate_tasks(label, other_label, other)
             return True
         else:
-            _LOG.info(f"No unique input consumer match for {label} {direction}: {other_input_consumers}.")
+            _LOG.info(
+                f"No unique input consumer match for {label} {direction}: {other_input_consumers}."
+            )
         return False
 
     def match_dataset_type_via_producer_outputs(
@@ -606,14 +732,20 @@ class _CorrespondenceFinderSide:
         mappings of its producer's outputs.
         """
         if (my_producer_node := self.pipeline_graph.producer_of(name)) is None:
-            _LOG.info(f"No producer output match for {name} {direction}; it is an overall input.")
+            _LOG.info(
+                f"No producer output match for {name} {direction}; it is an overall input."
+            )
             return False
         if my_producer_node.label in self.unmappable_tasks:
-            _LOG.debug(f"No producer output match for {name} {direction}; its producer is unmappable.")
+            _LOG.debug(
+                f"No producer output match for {name} {direction}; its producer is unmappable."
+            )
             self.unmappable_dataset_types.add(name)
             return True
         if (other_producer := self.map_tasks.get(my_producer_node.label)) is None:
-            _LOG.info(f"No producer output match for {name} {direction}; its producer is not mapped yet.")
+            _LOG.info(
+                f"No producer output match for {name} {direction}; its producer is not mapped yet."
+            )
             return False
         other_producer_outputs = {
             other_producer_output
@@ -638,10 +770,14 @@ class _CorrespondenceFinderSide:
             best_score, other_name = common_suffix_scores[0]
             next_best_score, _ = common_suffix_scores[1]
             if best_score > next_best_score:  # no tie for first place
-                _LOG.debug(f"Scored producer output match {name} {direction} {other_name}.")
+                _LOG.debug(
+                    f"Scored producer output match {name} {direction} {other_name}."
+                )
                 self.relate_dataset_types(name, other_name, other)
                 return True
-            _LOG.info(f"No unique producer output match for {name} {direction}: {common_suffix_scores}.")
+            _LOG.info(
+                f"No unique producer output match for {name} {direction}: {common_suffix_scores}."
+            )
         else:
             _LOG.info(f"No producer output matches for {name} {direction}.")
         return False
@@ -655,7 +791,10 @@ class _CorrespondenceFinderSide:
         """Look for a match for the given dataset type by inspecting the
         mappings of its consumers' inputs.
         """
-        my_consumers = {my_consumer_node.label for my_consumer_node in self.pipeline_graph.consumers_of(name)}
+        my_consumers = {
+            my_consumer_node.label
+            for my_consumer_node in self.pipeline_graph.consumers_of(name)
+        }
         my_consumers -= self.unmappable_tasks
         other_consumers = {
             other_consumer
@@ -671,11 +810,15 @@ class _CorrespondenceFinderSide:
         other_consumer_inputs -= other.unmappable_dataset_types
         if len(other_consumer_inputs) == 1:
             other_name = other_consumer_inputs.pop()
-            _LOG.info(f"Successful consumer input match {name} {direction} {other_name}.")
+            _LOG.info(
+                f"Successful consumer input match {name} {direction} {other_name}."
+            )
             self.relate_dataset_types(name, other_name, other)
             return True
         else:
-            _LOG.info(f"No unique consumer input match for {name} {direction}: {other_consumer_inputs}.")
+            _LOG.info(
+                f"No unique consumer input match for {name} {direction}: {other_consumer_inputs}."
+            )
         return False
 
     @staticmethod
@@ -697,7 +840,11 @@ def _main():
     parser.add_argument("old", help="Old pipeline YAML filename.")
     parser.add_argument("correspondence", help="Correspondence JSON file.")
     parser.add_argument("--tasks", default="tasks.csv", help="Filename for task CSV.")
-    parser.add_argument("--dataset-types", default="dataset-types.csv", help="Filename for dataset type CSV.")
+    parser.add_argument(
+        "--dataset-types",
+        default="dataset-types.csv",
+        help="Filename for dataset type CSV.",
+    )
     args = parser.parse_args()
     new = Pipeline.from_uri(args.new).to_graph(visualization_only=True)
     old = Pipeline.from_uri(args.old).to_graph(visualization_only=True)

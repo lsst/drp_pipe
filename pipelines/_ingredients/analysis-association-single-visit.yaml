@@ -6,7 +6,7 @@ tasks:
     config:
       file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
       connections.sourceCatalogs: single_visit_star
-      connections.associatedSources: isolated_star_association
+      connections.associatedSources: isolated_star
       connections.outputName: single_visit_star_association
       applyAstrometricCorrections: false
   makeAnalysisSingleVisitStarAssociationMetricTable:
