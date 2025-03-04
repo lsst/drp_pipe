@@ -9,3 +9,33 @@ imports:
       - matchObjectToTruth
       - compareObjectToTruth
       - diff_matched_analysis
+subsets:
+  step3a:
+    subset:
+      # Per-patch tasks
+      - makeDirectWarp
+      - makePsfMatchedWarp
+      - selectDeepCoaddVisits
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - forcedPhotCoadd
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
+      - transformObjectTable
+      - writeObjectTable
+      - selectGoodSeeingVisits
+      - templateGen
+  step3b:
+    subset:
+      # Per-tract Tasks
+      - consolidateObjectTable
+      - healSparsePropertyMaps
+      - analyzeMatchedVisitCore
+      - analyzeObjectTableCore
+      - catalogMatchTract
+      - refCatObjectTract
+      - validateObjectTableCore
