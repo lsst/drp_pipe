@@ -345,6 +345,7 @@ tasks:
       connections.diaSources: dia_source_unstandardized
       connections.subtractedMeasuredExposure: difference_image
       connections.maskedStreaks: difference_streaks
+      doSkySources: true
   computeReliability:
     class: lsst.meas.transiNet.RBTransiNetTask
     config:
@@ -357,6 +358,7 @@ tasks:
   standardizeDiaSource:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
+      doRemoveSkySources: true
       doIncludeReliability: true
       connections.diaSourceSchema: dia_source_schema
       connections.diaSourceCat: dia_source_unstandardized
