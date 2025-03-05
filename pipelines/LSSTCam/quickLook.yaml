@@ -15,7 +15,7 @@ imports:
       - calibrateImage
 tasks:
   isr:
-    class: lsst.ip.isr.IsrTask
+    class: lsst.ip.isr.IsrTaskLSST
     config:
       # Turn off slow steps in ISR
       doBrighterFatter: false
