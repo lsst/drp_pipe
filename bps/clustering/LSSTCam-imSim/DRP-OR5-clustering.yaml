@@ -13,7 +13,7 @@ cluster:
     pipetasks: isr,calibrateImage,analyzeAmpOffsetMetadata,transformSourceTable
     dimensions: detector
   makeWarpTract:
-    pipetaks: makeDirectWarp,makePsfMatchedWarp
+    pipetasks: makeDirectWarp,makePsfMatchedWarp
     dimensions: tract,visit
   coadd:
     pipetasks: assembleCoadd,inject_coadd,detection
