@@ -62,7 +62,8 @@ subsets:
       (the latter of which links with the correct isolated star tables).
   step2d:
     subset:
-      - finalizeCharacterization
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
