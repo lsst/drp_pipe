@@ -54,7 +54,8 @@ subsets:
       contained within each subset.
   source_calibration:
     subset:
-      - finalizeCharacterization
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
       - updateVisitSummary
       - makeCcdVisitTable
       - makeVisitTable
@@ -125,7 +126,8 @@ subsets:
     subset:
       - makeVisitTable
       - makeCcdVisitTable
-      - finalizeCharacterization
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
       - updateVisitSummary
       - writeRecalibratedSourceTable
       - transformSourceTable

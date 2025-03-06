@@ -284,8 +284,10 @@ tasks:
     config:
     - connections.source_table_visit: sourceTable_visit
     - connections.source_table_visit: preSourceTable_visit
-  finalizeCharacterization:
-    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+  finalizeCharacterizationDetector:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationDetectorTask
+  consolidateFinalizeCharacterization:
+    class: lsst.pipe.tasks.finalizeCharacterization.ConsolidateFinalizeCharacterizationDetectorTask
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -1174,7 +1176,8 @@ subsets:
     - updateVisitSummary
     - consolidateSourceTable
     - astrometricRefCatSourceVisit
-    - finalizeCharacterization
+    - finalizeCharacterizationDetector
+    - consolidateFinalizeCharacterization
     description: |
       Per-detector, Per-visit, and per-collection tasks that can be run
       together after step2b with no data query constraints other than
@@ -1337,7 +1340,8 @@ subsets:
     - makeCcdVisitTable
     - updateVisitSummary
     - consolidateSourceTable
-    - finalizeCharacterization
+    - finalizeCharacterizationDetector
+    - consolidateFinalizeCharacterization
   coadd_measurement:
     subset:
     - mergeDetections
@@ -1399,7 +1403,8 @@ subsets:
     - updateVisitSummary
     - astrometricRefCatSourceVisit
     - consolidateSourceTable
-    - finalizeCharacterization
+    - finalizeCharacterizationDetector
+    - consolidateFinalizeCharacterization
     description: 'Per-visit tasks. These should never be run with tract constraints
 
       '
