@@ -27,6 +27,12 @@ tasks:
       doDefect: false
       doDark: false
       doFlat: false
+      doDeferredCharge: false
+      doBootstrap: true
+      doApplyGains: false
+      doSuspect: false
+      defaultSaturationSource: CAMERAMODEL
+
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
