@@ -252,6 +252,7 @@
     "fgcm_Cycle5_Zeropoints": "fgcm_Cycle5_Zeropoints",
     "fgcm_Cycle5_Zeropoints_Plot": "fgcm_Cycle5_Zeropoints_Plot",
     "fgcmPhotoCalibCatalog": "fgcmPhotoCalibCatalog",
+    "fgcm_standard_star": "fgcm_standard_star",
     "transmission_atmosphere_fgcm": "transmission_atmosphere_fgcm",
     "gbdesAstrometricFitSkyWcsCatalog": "gbdesAstrometricFitSkyWcsCatalog",
     "gbdesAstrometricFit_fitStars": "gbdesAstrometricFit_fitStars",
