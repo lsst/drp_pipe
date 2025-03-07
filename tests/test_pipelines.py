@@ -184,6 +184,7 @@ LATISS_OUTPUTS = {
     "fgcm_reference_stars",
     "fgcm_star_ids",
     "fgcm_star_observations",
+    "fgcm_standard_star",
     "forcedSourceOnDiaObjectTable",
     "forcedSourceOnDiaObjectTable_tract",
     "forcedSourceTable",
@@ -404,6 +405,7 @@ class PipelineTestCase(unittest.TestCase):
                 "fgcm_star_observations",
                 "fgcm_Cycle6_Zeropoints",
                 "transmission_atmosphere_fgcm",
+                "fgcm_standard_star",
             },
         )
         tester.run(butler, self)
@@ -447,6 +449,7 @@ class PipelineTestCase(unittest.TestCase):
                 "fgcm_star_ids",
                 "fgcm_star_observations",
                 "fgcm_Cycle4_Zeropoints",
+                "fgcm_standard_star",
                 "forcedSourceOnDiaObjectTable",
                 "forcedSourceOnDiaObjectTable_tract",
                 "forcedSourceTable",
@@ -508,6 +511,7 @@ class PipelineTestCase(unittest.TestCase):
                 "fgcm_star_observations",
                 "fgcm_Cycle4_Zeropoints",
                 "transmission_atmosphere_fgcm",
+                "fgcm_standard_star",
             },
         )
         tester.run(butler, self)
