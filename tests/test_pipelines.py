@@ -145,7 +145,6 @@ COMMON_OUTPUTS = {
     "calexp",
     "calexpBackground",
     "src",
-    "source",
     "objectTable",
     "objectTable_tract",
     "postISRCCD",
