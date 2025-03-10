@@ -113,10 +113,6 @@ tasks:
     config:
       python:
         config.band_order += ["N708", "N540"]
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      connections.outputCatalog: source
   jointcal:
     class: lsst.jointcal.JointcalTask
     config:
