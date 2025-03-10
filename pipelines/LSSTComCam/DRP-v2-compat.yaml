@@ -1,0 +1,19 @@
+description: |
+  ComCam specialization of the DRP pipeline, with backwards compatibility for
+  data repositories with the old 'source' dataset type definition.
+instrument: lsst.obs.lsst.LsstComCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/LSSTComCam/DRP-v2.yaml
+tasks:
+  consolidateSource:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.outputCatalog: source2
+  associateAnalysisSource:
+    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
+    config:
+      connections.source_table_visit: source2
+  analyzeSourceAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      connections.sourceCatalogs: source2
