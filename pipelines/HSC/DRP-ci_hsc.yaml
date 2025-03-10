@@ -39,10 +39,6 @@ tasks:
     config:
       # Only run the deblender on a small subset of blended parents
       star_deblend.useCiLimits: true
-  writeRecalibratedSourceTable:
-    class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
-    config:
-      connections.outputCatalog: source
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
