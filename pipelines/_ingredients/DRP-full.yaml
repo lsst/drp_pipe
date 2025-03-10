@@ -46,10 +46,6 @@ tasks:
       functorFile: $PIPE_TASKS_DIR/schemas/PreSource.yaml
       connections.inputCatalog: preSource
       connections.outputCatalog: preSourceTable
-  transformSourceTable:
-    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
-    config:
-      functorFile: $PIPE_TASKS_DIR/schemas/Source.yaml
   consolidatePreSourceTable:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
     config:
@@ -58,7 +54,16 @@ tasks:
   writeRecalibratedSourceTable:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask
     config:
-      connections.outputCatalog: source
+      # Use v2 name instead of old v1 name ('source') to avoid clash with v2
+      # final data product name.
+      connections.outputCatalog: recalibrated_star_unstandardized
+  transformSourceTable:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      # Use v2 name instead of old v1 name ('source') to avoid clash with v2
+      # final data product name.
+      connections.inputCatalog: recalibrated_star_unstandardized
+      functorFile: $PIPE_TASKS_DIR/schemas/Source.yaml
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:

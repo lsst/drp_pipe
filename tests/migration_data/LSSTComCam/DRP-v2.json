@@ -263,7 +263,7 @@
     "refit_psf_models": "finalized_psf_ap_corr_catalog",
     "refit_psf_star": "finalized_src_table",
     "visit_summary": "finalVisitSummary",
-    "recalibrated_star_unstandardized": "source",
+    "recalibrated_star_unstandardized": "recalibrated_star_unstandardized",
     "recalibrated_star_detector": "sourceTable",
     "recalibrated_star": "sourceTable_visit",
     "recalibrated_star_association_metrics": "matchedVisitCore_metrics",
