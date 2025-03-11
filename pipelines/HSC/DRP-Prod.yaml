@@ -68,7 +68,8 @@ subsets:
       and CcdVisits.
   step2d:
     subset:
-      - finalizeCharacterization
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable

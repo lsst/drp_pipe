@@ -128,7 +128,8 @@ subsets:
       functionality.  It may be removed in the future.
   step2cde:
     subset:
-      - finalizeCharacterization
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts

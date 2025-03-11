@@ -90,14 +90,21 @@ tasks:
       connections.inputCatalogRefs: single_visit_star
       connections.inputVisitSummaries: preliminary_visit_summary
       fitProperMotion: true
-  refitPsfModel:
-    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+  refitPsfModelDetector:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationDetectorTask
     config:
-      connections.srcs: single_visit_star_footprints
+      connections.src: single_visit_star_footprints
       connections.src_schema: single_visit_star_schema
-      connections.calexps: preliminary_visit_image
+      connections.calexp: preliminary_visit_image
       connections.isolated_star_cats: isolated_star_association
       connections.isolated_star_sources: isolated_star
+      connections.finalized_src_detector_table: refit_psf_star_detector
+      connections.finalized_psf_ap_corr_detector_cat: refit_psf_models_detector
+  consolidateRefitPsfModelDetector:
+    class: lsst.pipe.tasks.finalizeCharacterization.ConsolidateFinalizeCharacterizationDetectorTask
+    config:
+      connections.finalized_src_detector_tables: refit_psf_star_detector
+      connections.finalized_psf_ap_corr_detector_cats: refit_psf_models_detector
       connections.finalized_src_table: refit_psf_star
       connections.finalized_psf_ap_corr_cat: refit_psf_models
   updateVisitSummary:
@@ -558,7 +565,8 @@ subsets:
 
   step2c-recalibrate-visits:
     subset:
-      - refitPsfModel
+      - refitPsfModelDetector
+      - consolidateRefitPsfModelDetector
       - updateVisitSummary
       - recalibrateSingleVisitStar
       - standardizeRecalibratedStar
@@ -755,7 +763,8 @@ subsets:
     # 2b
     - gbdesAstrometricFit
     # 2c
-    - refitPsfModel
+    - refitPsfModelDetector
+    - consolidateRefitPsfModelDetector
     - updateVisitSummary
     - recalibrateSingleVisitStar
     - standardizeRecalibratedStar

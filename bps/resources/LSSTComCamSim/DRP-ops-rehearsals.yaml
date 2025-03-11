@@ -48,7 +48,7 @@ pipetask:
     requestMemory: 4059
   fgcmFitCycle:
     requestMemory: 7867
-  finalizeCharacterization:
+  consolidateFinalizeCharacterization:
     requestMemory: 7956
   forcedPhotCcd:
     requestMemory: 2310

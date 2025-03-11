@@ -64,7 +64,8 @@ subsets:
       tract.
   step2d:
     subset:
-      - finalizeCharacterization
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
