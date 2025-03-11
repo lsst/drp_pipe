@@ -142,7 +142,8 @@ subsets:
       - consolidateSourceTable
       - consolidateVisitSummary
       - isolatedStarAssociation
-      - finalizeCharacterization
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
       - makeCcdVisitTable
       - makeVisitTable
       - updateVisitSummary
@@ -160,7 +161,7 @@ subsets:
       data repository.
 
       Visit-level tasks include consolidateSourceTable, consolidateVisitSummary,
-      finalizeCharacterization, updateVisitSummary.
+      finalizeCharacterizationDetector, consolidateFinalizeCharacterization, updateVisitSummary.
       Tract-level tasks include: isolatedStarAssociation
       Full collection-level tasks include: makeCcdVisitTable, makeVisitTable
   step3:

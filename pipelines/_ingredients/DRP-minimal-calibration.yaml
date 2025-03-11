@@ -32,7 +32,8 @@ tasks:
       # introduced to the imSim pipelines
       # presource are the default catalog to match on
       connections.source_table_visit: sourceTable_visit
-  finalizeCharacterization: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationTask
+  finalizeCharacterizationDetector: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationDetectorTask
+  consolidateFinalizeCharacterization: lsst.pipe.tasks.finalizeCharacterization.ConsolidateFinalizeCharacterizationDetectorTask
   updateVisitSummary: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask

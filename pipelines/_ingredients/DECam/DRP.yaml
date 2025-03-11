@@ -173,7 +173,8 @@ subsets:
       per-tract, per-visit.
   step2d:
     subset:
-      - finalizeCharacterization
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
       - writeRecalibratedSourceTable
       - transformSourceTable
       - consolidateSourceTable
