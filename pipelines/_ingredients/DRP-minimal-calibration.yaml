@@ -209,6 +209,8 @@ tasks:
     config:
       connections.inputCatalogs: forcedSourceOnDiaObjectTable
       connections.outputCatalog: forcedSourceOnDiaObjectTable_tract
+  consolidateSsTables:
+    class: lsst.pipe.tasks.consolidateSsTables.ConsolidateSsTablesTask
 subsets:
   # This pipeline file only defines subsets that have a consistent or
   # near-consistent definition as a set of tasks, for use by downstream

@@ -455,6 +455,12 @@ tasks:
       connections.inputCatalogs: dia_object_forced_source_unstandardized
       connections.outputCatalog: dia_object_forced_source
       connections.referenceCatalog: dia_object_patch
+  consolidateSsTables:
+    class: lsst.pipe.tasks.consolidateSsTables.ConsolidateSsTablesTask
+    config:
+      connections.inputCatalogs: ss_source_associated
+      connections.ssSourceTable: ss_source
+      connections.ssObjectTable: ss_object
 
 subsets:
   step1a-single-visit-detectors:
@@ -714,6 +720,7 @@ subsets:
     subset:
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
+      - consolidateSsTables
 
   # Subsets below are the checkpoints for humans, AKA stages.  These
   # unfortunately can't be declared in terms of other subsets yet; we have to
@@ -842,6 +849,7 @@ subsets:
     # 4c
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot
+    - consolidateSsTables
 
 steps:
   - label: step1a-single-visit-detectors
