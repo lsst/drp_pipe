@@ -1,5 +1,5 @@
 description: Match tract-level injected_deepCoadd_catalog datasets to injected_objectTable_tract datasets.
-instrument: lsst.obs.subaru.HyperSuprimeCam
+instrument: lsst.obs.lsst.LsstComCam
 imports:
   - location: $SOURCE_INJECTION_DIR/pipelines/match_injected_tract_catalog.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedInjectedCore.yaml
@@ -9,26 +9,27 @@ tasks:
     config:
       connections.name_input_cat_ref: injected_deepCoadd_catalog_tract
       connections.name_input_cat_target: injected_objectTable_tract
+      column_matched_prefix_ref: ref_
 
       # TODO: Remove as part of DM-44139
-      columns_ref_mag_to_nJy: {r_mag: "r_flux", i_mag: "i_flux"}
+      columns_ref_mag_to_nJy: {u_mag: "u_flux", g_mag: "g_flux", r_mag: "r_flux", i_mag: "i_flux", z_mag: "z_flux", y_mag: "y_flux"}
       columns_ref_copy: [
         "injected_id", "source_type",
-        "r_mag", "i_mag",
+        "u_mag", "g_mag", "r_mag", "i_mag", "z_mag", "y_mag",
         "injection_flag", "injected_isPatchInner",
       ]
       columns_target_coord_err: ["coord_raErr", "coord_decErr"]
       columns_target_copy: [
-        "r_psfFlux", "i_psfFlux",
-        "r_psfFluxErr", "i_psfFluxErr",
-        "r_psfFlux_flag", "i_psfFlux_flag",
+        "objectId",
+        "u_psfFlux", "g_psfFlux", "r_psfFlux", "i_psfFlux", "z_psfFlux", "y_psfFlux",
+        "u_psfFluxErr", "g_psfFluxErr", "r_psfFluxErr", "i_psfFluxErr", "z_psfFluxErr", "y_psfFluxErr",
+        "u_psfFlux_flag", "g_psfFlux_flag", "r_psfFlux_flag", "i_psfFlux_flag", "z_psfFlux_flag", "y_psfFlux_flag",
         "patch", "detect_isDeblendedSource", "detect_isPatchInner", "detect_isPrimary", "merge_peak_sky",
         "refExtendedness", "refSizeExtendedness",
       ]
   analyze_matched_injected:
     class: lsst.analysis.tools.tasks.DiffMatchedAnalysisTask
     config:
-      bands: ["r", "i"]
       python: |
         from lsst.analysis.tools.atools.diffMatched import reconfigure_diff_matched_defaults
 
@@ -36,7 +37,6 @@ tasks:
           config=config,
           context="injection",
           key_flux_meas="psf",
-          bands_color = {"r": "i"},
           use_any=False,
           use_galaxies=False,
         )
