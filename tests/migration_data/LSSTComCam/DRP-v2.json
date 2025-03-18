@@ -72,7 +72,8 @@
     "writeDiaObjectForcedSource": "writeForcedSourceOnDiaObjectTable",
     "standardizeDiaObjectForcedSource": "transformForcedSourceOnDiaObjectTable",
     "writeObjectForcedSource": "writeForcedSourceTable",
-    "standardizeObjectForcedSource": "transformForcedSourceTable"
+    "standardizeObjectForcedSource": "transformForcedSourceTable",
+    "makeSsTables": "makeSsTables"
   },
   "dataset_types_new_to_old": {
     "bfk": "bfk",
@@ -651,7 +652,9 @@
     "dia_object_forced_source_unstandardized": "mergedForcedSourceOnDiaObject",
     "dia_object_forced_source": "forcedSourceOnDiaObjectTable",
     "object_forced_source_unstandardized": "mergedForcedSource",
-    "object_forced_source": "forcedSourceTable"
+    "object_forced_source": "forcedSourceTable",
+    "ss_object": "goodSeeingDiff_ssObjTable",
+    "ss_source": "goodSeeingDiff_ssSrcTable"
   },
   "unmappable_new_tasks": {
     "makeAnalysisSingleVisitStarAssociationMetricTable": "No final sources in v1.",
