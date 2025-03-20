@@ -1,0 +1,290 @@
+description: DRP specialized for LATISS surveys
+instrument: lsst.obs.lsst.Latiss
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+    exclude:
+      - skyCorr
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
+    exclude:
+      - analyzeObjectTableCore
+
+tasks:
+  isr: lsst.ip.isr.IsrTaskLSST
+
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+      connections.stars: preSource
+      connections.exposure: calexp
+      connections.background: calexpBackground
+      python: |
+        config.star_measurement.plugins["base_CompensatedTophatFlux"].apertures = [35]
+
+  fgcmFitCycle:
+    class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
+    config:
+      doMultipleCycles: true
+      multipleCyclesFinalCycleNumber: 6
+
+  fgcmOutputProducts:
+    class: lsst.fgcmcal.fgcmOutputProducts.FgcmOutputProductsTask
+    config:
+      connections.cycleNumber: 6
+
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      wcs_provider: "input_summary"
+      photo_calib_provider: "global"
+      background_provider: "input_summary"
+
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: false
+
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      # This is the maximum seeing that can be used with the default 71 pixel
+      # psf kernel size.
+      maxPsfFwhm: 1.9
+
+  # Defining analyzeObjectTableCore here to omit plots that require z and/or
+  # y band data.
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      connections.outputName: objectTableCore
+      atools.shapeSizeFractionalDiff: ShapeSizeFractionalDiffScatter
+      atools.e1Diff: E1DiffScatter
+      atools.e2Diff: E2DiffScatter
+      atools.skyFluxStatisticMetric: SkyFluxStatisticMetric
+      atools.skyFluxStatisticMetric.applyContext: CoaddContext
+      atools.wPerpPSF: WPerpPSF
+      atools.wPerpCModel: WPerpCModel
+      atools.xPerpPSF: XPerpPSF
+      atools.xPerpCModel: XPerpCModel
+      atools.skyObjectSky: SkyObjectSkyPlot
+      atools.skyObjectFlux: SkyObjectHistPlot
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import *
+
+  photometricCatalogMatch:
+    class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchTask
+    config:
+      connections.refCatalog: atlas_refcat2_20220201
+
+  photometricRefCatObjectTract:
+    class: lsst.analysis.tools.tasks.refCatObjectPhotometricAnalysis.RefCatObjectPhotometricAnalysisTask
+    config:
+      connections.refCatalog: atlas_refcat2_20220201
+      connections.outputName: objectTable_tract_atlas_refcat2_20220201_match_photom
+
+  # Defining analyzematchedVisitCore here to change the nBins config and omit
+  # plots currently not relevant for LATISS imaging.
+  analyzeMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      connections.outputName: matchedVisitCore
+      atools.stellarPhotometricRepeatability: StellarPhotometricRepeatability
+      atools.stellarPhotometricResiduals: StellarPhotometricResidualsFocalPlane
+      atools.stellarPhotometricResiduals.produce.plot.nBins: 80
+      atools.stellarAstrometricResidualsRA: StellarAstrometricResidualsRAFocalPlanePlot
+      atools.stellarAstrometricResidualsRA.produce.nBins: 80
+      atools.stellarAstrometricResidualsDec: StellarAstrometricResidualsDecFocalPlanePlot
+      atools.stellarAstrometricResidualsDec.produce.nBins: 80
+      atools.stellarAstrometricResidualStdDevRA: StellarAstrometricResidualStdDevRAFocalPlanePlot
+      atools.stellarAstrometricResidualStdDevRA.produce.nBins: 80
+      atools.stellarAstrometricResidualStdDevDec: StellarAstrometricResidualStdDevDecFocalPlanePlot
+      atools.stellarAstrometricResidualStdDevDec.produce.nBins: 80
+      # The following are the AMX metrics: median relative astrometric measurement
+      # error on N arc minute scales from single visit images shall be less than
+      # this value, where N = 5, 20, 200 arcmin for X = 1, 2, 3, respectivley.
+      # Given the current distribution of visits/field, one X = 1 is included for
+      # now (the others just pollute the repo with empty plots). The others can/should
+      # be added if the observing strategy changes to warrant it.
+      atools.stellarAstrometricRepeatability1: AstrometricRelativeRepeatability
+      atools.stellarAstrometricRepeatability1.xValue: 1
+      atools.stellarAstrometricRepeatability1.process.calculateActions.rms.annulus: 5
+      python: |
+        from lsst.analysis.tools.atools import *
+
+subsets:
+  step1:
+    subset:
+      - isr
+      - calibrateImage
+      - transformPreSourceTable
+    description: |
+      Per-detector tasks that can be run together to start the DRP pipeline.
+      These should never be run with 'tract' or 'patch' as part of the data ID
+      expression if any later steps will also be run, because downstream steps
+      require full visits and 'tract' and 'patch' constraints will always
+      select partial visits that overlap that region (also noting that while
+      this may be moot for a single-detector camera, we would still like to
+      follow best practices envisioned for the full LSST survey).
+
+  step2a:
+    subset:
+      - consolidatePreSourceTable
+      - consolidateVisitSummary
+      - isolatedStarAssociation
+    description: |
+      Global tasks: This is a mix of visit-level and tract-level tasks that
+      must be run with a skymap data query constraint only (an instrument
+      constraint is fine, but generally unnecessary). For example, running
+      with 'tract' (and 'patch') constraints will select partial visits that
+      overlap that region. A skymap constraint is necessary to prevent
+      isolatedStarAssociation from producing results for all skymaps in the
+      data repository.
+
+      Visit-level: consolidatePreSourceTable, consolidateVisitSummary
+      Tract-level: isolatedStarAssociation
+
+  step2bcde:
+    subset:
+      - finalizeCharacterizationDetector
+      - consolidateFinalizeCharacterization
+      - fgcmBuildFromIsolatedStars
+      - fgcmFitCycle
+      - fgcmOutputProducts
+      - writeRecalibratedSourceTable
+      - transformSourceTable
+      - consolidateSourceTable
+      - updateVisitSummary
+      - makeCcdVisitTable
+      - makeVisitTable
+    description: |
+      Per-visit and per-collection tasks that can be run together after step2a.
+      This step should be run with an instrument and skymap data query
+      constraint only.
+
+      FGCM requires full visits and 'tract' and 'patch' constraints will
+      always select partial visits that overlap that region.
+
+      This includes FGCM because it's configured here to run in "global" mode,
+      which means one should not use a 'tract' expression to constrain it, and
+      if one _did_ run it with a tract constraint (which would be a common
+      occurrence if it was included in any later step).
+
+  step3a:
+    subset:
+      - makeDirectWarp
+      - makePsfMatchedWarp
+      - selectDeepCoaddVisits
+      - assembleCoadd
+      - detection
+      - mergeDetections
+      - deblend
+      - measure
+      - mergeMeasurements
+      - forcedPhotCoadd
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
+      - writeObjectTable
+      - transformObjectTable
+      - selectGoodSeeingVisits
+      - templateGen
+    description: |
+      Tract-level coaddition tasks.
+      Allowed data query constraints: instrument, skymap, tract.
+      Tasks that can be run together, but only after the 'step1' and 'step2'
+      subsets. A skymap constraint must always be provided. If you do not
+      include tract in the data query, you will get tracts with only partial
+      coverage.
+
+      This subset is considered a workaround for missing middleware and task
+      functionality. It may be removed in the future.
+
+  step3b:
+    subset:
+      - consolidateObjectTable
+    description: |
+      Tract-level tasks.
+      Allowed data query constraints: skymap, tract.
+      Tasks that can be run together, but only after the 'step1', 'step2', and
+      'step3a' subsets (separation into step3a and step3b is necessary for now
+      as otherwise failures in upstream tasks will cause these to fail. This
+      is hoped to be a temporary limitation).
+
+  step3c:
+    subset:
+      - healSparsePropertyMaps
+      - analyzeObjectTableCore
+      - analyzeObjectTableSurveyCore
+      - catalogMatchTract
+      - refCatObjectTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - validateObjectTableCore
+      - analyzeMatchedVisitCore
+      - analyzeAmpOffsetMetadata
+    description: |
+      Healsparse maps and "core" (most important), coadd-level plots/metrics
+      from analysis_tools.
+
+      Needs to be run after 'step3b'. Must be be run with only instrument and
+      skymap dataquery constraints if analyzeObjectTableSurveyCore is included,
+      and optionally with these if analyzeObjectTableSurveyCore is excluded.
+
+  step4:
+    subset:
+      - reprocessVisitImage
+      - forcedPhotCcd
+      - forcedPhotDiffim
+      - getTemplate
+      - subtractImages
+      - detectAndMeasureDiaSources
+      - rbClassify
+      - transformDiaSourceCat
+      - writeForcedSourceTable
+    description: |
+      Tasks that be run together, but only after the 'step1', 'step2', and
+      'step3' subsets.
+
+      A skymap data query constraint is always required for this step.
+      These detector-level tasks should not be run with 'tract' or 'patch' as
+      part of the data ID expression if all reference catalogs are desired,
+      and to ensure that consolidateSourceTable contains complete visits.
+
+  step5:
+    subset:
+      - drpAssociation
+      - drpDiaCalculation
+      - forcedPhotCcdOnDiaObjects
+      - forcedPhotDiffOnDiaObjects
+      - transformForcedSourceTable
+      - consolidateForcedSourceTable
+      - consolidateAssocDiaSourceTable
+      - consolidateFullDiaObjectTable
+      - writeForcedSourceOnDiaObjectTable
+      - transformForcedSourceOnDiaObjectTable
+      - consolidateForcedSourceOnDiaObjectTable
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2',
+      'step3', and 'step4' subsets.
+
+      This step includes patch-level aggregation Tasks.
+      'consolidateForcedSourceTable' is a tract-level task that aggregates
+      patches and should be rerun if any of the patches fail.
+
+  step6:
+    subset:
+      - consolidateDiaSourceTable
+    description: |
+      Tasks that can be run together, but only after the 'step1', 'step2',
+      'step3', 'step4', and 'step5' subsets.
+
+      This step includes visit-level aggregation tasks. Running without tract
+      or patch in the data query is recommended, otherwise the outputs of
+      consolidateDiaSourceTable will not contain complete visits.
+
+      This subset is separate from step4 to signal to operators to pause to
+      assess unexpected image differencing failures before these aggregation
+      steps. Otherwise, if run in the same quantum graph, aggregated data
+      products (e.g. diaObjects) would not be created if one or more of the
+      expected inputs is missing.
