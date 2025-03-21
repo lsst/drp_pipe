@@ -202,6 +202,7 @@ subsets:
   step3b:
     subset:
       - consolidateObjectTable
+      - splitPrimaryObject
     description: |
       Tract-level tasks.
       Allowed data query constraints: skymap, tract.

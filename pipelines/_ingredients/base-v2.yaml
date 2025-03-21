@@ -289,7 +289,14 @@ tasks:
     class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
     config:
       connections.inputCatalogs: object_patch
-      connections.outputCatalog: object
+      connections.outputCatalog: object_all
+  splitPrimaryObject:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["tract"]
+      connections.full: object_all
+      connections.primary: object
+      connections.nonprimary: object_nonprimary
   consolidateHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
 
@@ -651,6 +658,7 @@ subsets:
       - rewriteObject
       - standardizeObject
       - consolidateObject
+      - splitPrimaryObject
       - analyzeObjectTableCore
       - catalogMatchTract
       - refCatObjectTract
@@ -808,6 +816,7 @@ subsets:
     - rewriteObject
     - standardizeObject
     - consolidateObject
+    - splitPrimaryObject
     - analyzeObjectTableCore
     - catalogMatchTract
     - refCatObjectTract

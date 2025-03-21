@@ -69,6 +69,13 @@ tasks:
   writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
   transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
   consolidateObjectTable: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
+  splitPrimaryObject:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["tract"]
+      connections.full: objectTable_tract
+      connections.primary: objectTable_primary
+      connections.nonprimary: objectTable_nonprimary
   forcedPhotCcd:
     class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
     config:

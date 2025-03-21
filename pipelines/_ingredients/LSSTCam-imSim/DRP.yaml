@@ -186,6 +186,7 @@ subsets:
       - templateGen
       # Per-tract Tasks
       - consolidateObjectTable
+      - splitPrimaryObject
       - healSparsePropertyMaps
       - matchObjectToTruth
       - compareObjectToTruth
