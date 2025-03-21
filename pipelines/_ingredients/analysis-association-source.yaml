@@ -9,14 +9,14 @@ tasks:
   associateAnalysisSource:
     class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
     config:
-      connections.source_table_visit: source
+      connections.source_table_visit: source_all
       connections.isolated_star_sources: isolated_analysis_source
       connections.isolated_star_cat: isolated_analysis_source_association
   analyzeSourceAssociation:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
       file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
-      connections.sourceCatalogs: source
+      connections.sourceCatalogs: source_all
       connections.associatedSources: isolated_analysis_source
       connections.outputName: analysis_source_association
       connections.visitTable: visit_table
