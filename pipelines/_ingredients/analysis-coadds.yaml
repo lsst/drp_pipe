@@ -15,7 +15,7 @@ tasks:
   analyzeObjectTableCore:
     class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
     config:
-      connections.data: object
+      connections.data: object_all
       connections.inputName: object
       connections.outputName: object
   makeMetricTableObjectTableCore:
@@ -31,13 +31,13 @@ tasks:
   analyzeObjectTableSurveyCore:
     class: lsst.analysis.tools.tasks.ObjectTableSurveyAnalysisTask
     config:
-      connections.data: object
+      connections.data: object_all
       connections.input: deep
       connections.outputName: object_survey
   catalogMatchTract:
     class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchTask
     config:
-      connections.catalog: object
+      connections.catalog: object_all
       connections.targetCatalog: object
       # Drop explicit refcat name from template to avoid needing to set it in
       # downstream task configs.
@@ -62,7 +62,7 @@ tasks:
   photometricCatalogMatch:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchTask
     config:
-      connections.catalog: object
+      connections.catalog: object_all
       connections.targetCatalog: object
       # Drop explicit refcat name from template to avoid needing to set it in
       # downstream task configs.
@@ -81,7 +81,7 @@ tasks:
   validateObjectTableCore:
     class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
     config:
-      connections.data: object
+      connections.data: object_all
       connections.outputName: object_column_validate
   computeObjectMeanEpochs:
     class: lsst.analysis.tools.tasks.ObjectEpochTableTask
