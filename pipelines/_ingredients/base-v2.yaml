@@ -323,7 +323,14 @@ tasks:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
     config:
       connections.inputCatalogs: source_detector
-      connections.outputCatalog: source
+      connections.outputCatalog: source_all
+  splitPrimarySource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["visit"]
+      connections.full: source_all
+      connections.primary: source
+      connections.nonprimary: source_nonprimary
   rewarpTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
@@ -703,6 +710,7 @@ subsets:
       - reprocessVisitImage
       - standardizeSource
       - consolidateSource
+      - splitPrimarySource
       - rewarpTemplate
       - subtractImages
       - detectAndMeasureDiaSource
@@ -838,6 +846,7 @@ subsets:
     - reprocessVisitImage
     - standardizeSource
     - consolidateSource
+    - splitPrimarySource
     - rewarpTemplate
     - subtractImages
     - detectAndMeasureDiaSource
