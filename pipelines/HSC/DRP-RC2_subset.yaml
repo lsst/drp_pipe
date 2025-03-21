@@ -153,6 +153,7 @@ subsets:
       - transformObjectTable
       - writeObjectTable
       - consolidateObjectTable
+      - splitPrimaryObject
       - healSparsePropertyMaps
       - objectEpochTable
     description: |

@@ -93,6 +93,7 @@ subsets:
       - transformObjectTable
       - writeObjectTable
       - consolidateObjectTable
+      - splitPrimaryObject
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
