@@ -446,7 +446,14 @@ tasks:
     config:
       connections.inputCatalogs: object_forced_source_unstandardized
       connections.referenceCatalog: object_patch
-      connections.outputCatalog: object_forced_source
+      connections.outputCatalog: object_forced_source_all
+  splitPrimaryObjectForcedSource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["patch"]
+      connections.full: object_forced_source_all
+      connections.primary: object_forced_source
+      connections.nonprimary: object_forced_source_nonprimary
   forcedPhotDiaObjectDirect:
     class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
     config:
@@ -735,6 +742,7 @@ subsets:
       - forcedPhotObjectDifference
       - writeObjectForcedSource
       - standardizeObjectForcedSource
+      - splitPrimaryObjectForcedSource
       - forcedPhotDiaObjectDirect
       - forcedPhotDiaObjectDifference
       - writeDiaObjectForcedSource
@@ -869,6 +877,7 @@ subsets:
     - forcedPhotObjectDifference
     - writeObjectForcedSource
     - standardizeObjectForcedSource
+    - splitPrimaryObjectForcedSource
     - forcedPhotDiaObjectDirect
     - forcedPhotDiaObjectDifference
     - writeDiaObjectForcedSource

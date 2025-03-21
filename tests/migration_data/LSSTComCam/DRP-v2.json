@@ -74,7 +74,8 @@
     "standardizeDiaObjectForcedSource": "transformForcedSourceOnDiaObjectTable",
     "writeObjectForcedSource": "writeForcedSourceTable",
     "standardizeObjectForcedSource": "transformForcedSourceTable",
-    "consolidateSsTables": "consolidateSsTables"
+    "consolidateSsTables": "consolidateSsTables",
+    "splitPrimaryObjectForcedSource": "splitPrimaryObjectForcedSource"
   },
   "dataset_types_new_to_old": {
     "bfk": "bfk",
@@ -655,7 +656,9 @@
     "dia_object_forced_source_unstandardized": "mergedForcedSourceOnDiaObject",
     "dia_object_forced_source": "forcedSourceOnDiaObjectTable",
     "object_forced_source_unstandardized": "mergedForcedSource",
-    "object_forced_source": "forcedSourceTable",
+    "object_forced_source_all": "forcedSourceTable",
+    "object_forced_source": "forcedSourceTable_primary",
+    "object_forced_source_nonprimary": "forcedSourceTable_nonprimary",
     "ss_object": "goodSeeingDiff_ssObjTable",
     "ss_source": "goodSeeingDiff_ssSrcTable"
   },

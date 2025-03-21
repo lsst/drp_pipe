@@ -184,6 +184,13 @@ tasks:
       useVisitSummary: false  # difference image already has final calibrations
   writeForcedSourceTable: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
   transformForcedSourceTable: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
+  splitPrimaryObjectForcedSource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["patch"]
+      connections.full: forcedSourceTable
+      connections.primary: forcedSourceTable_primary
+      connections.nonprimary: forcedSourceTable_nonprimary
   consolidateForcedSourceTable:
     class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
     config:
