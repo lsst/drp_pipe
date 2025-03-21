@@ -71,7 +71,6 @@ RC2_injected_deepCoadd_stars = env.Command(
     ),
 )
 LSSTComCam_excluded_tasks = ','.join([
-    "jointcal",
     "gbdesAstrometricFit",
     "fgcmBuildFromIsolatedStars",
     "fgcmFitCycle",
@@ -84,19 +83,19 @@ subset_name = "injected_{suffix}_coadd_analysis"
 LSSTComCam_injected = [
     env.Command(
         target=os.path.join(
-            PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_deepCoadd_stars.yaml"
+            PKG_ROOT, "pipelines", "LSSTComCam", f"DRP+injected_deep_coadd_{suffix}.yaml"
         ),
-        source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP.yaml"),
+        source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP-v2-compat.yaml"),
         action=" ".join(
             [
                 libraryLoaderEnvironment(),
-                f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {pipeline} "
+                f"make_injection_pipeline -t deep_coadd_predetection -r $SOURCE -f $TARGET -a {pipeline_post} "
                 f"-s {subset_name.format(suffix=suffix)} -d '{injection_descriptions[suffix]}' "
                 f"-x {LSSTComCam_excluded_tasks} --overwrite",
             ]
         ),
     )
-    for suffix, pipeline in injected_pipelines_LSSTComCam.items()
+    for suffix, pipeline_post in injected_pipelines_LSSTComCam.items()
 ]
 Default(
     [
