@@ -142,6 +142,7 @@ subsets:
       - forcedPhotCcdOnDiaObjects
       - forcedPhotDiffOnDiaObjects
       - transformForcedSourceTable
+      - splitPrimaryObjectForcedSource
       - consolidateAssocDiaSourceTable
       - consolidateFullDiaObjectTable
       - writeForcedSourceOnDiaObjectTable
