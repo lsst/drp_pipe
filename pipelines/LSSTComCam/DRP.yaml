@@ -188,7 +188,7 @@ subsets:
       - makeMetricTableObjectTableCore
       - matchedVisitCoreWholeSkyPlot
       - objectTableCoreWholeSkyPlot
-      - makeSsTables
+      - consolidateSsTables
     description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.

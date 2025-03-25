@@ -12,7 +12,7 @@ imports:
       - skyCorr
       - fgcm
       - gbdesAstrometricFit
-      - makeSsTables
+      - consolidateSsTables
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask

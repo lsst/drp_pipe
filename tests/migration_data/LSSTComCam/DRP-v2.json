@@ -73,7 +73,7 @@
     "standardizeDiaObjectForcedSource": "transformForcedSourceOnDiaObjectTable",
     "writeObjectForcedSource": "writeForcedSourceTable",
     "standardizeObjectForcedSource": "transformForcedSourceTable",
-    "makeSsTables": "makeSsTables"
+    "consolidateSsTables": "consolidateSsTables"
   },
   "dataset_types_new_to_old": {
     "bfk": "bfk",
