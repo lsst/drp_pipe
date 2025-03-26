@@ -353,6 +353,15 @@ tasks:
       connections.subtractedMeasuredExposure: difference_image
       connections.maskedStreaks: difference_streaks
       doSkySources: true
+  filterDiaSource:
+    class: lsst.ap.association.FilterDiaSourceCatalogTask
+    config:
+      connections.diaSourceCat: dia_source_unstandardized
+      connections.filteredDiaSourceCat: filtered_dia_source_unstandardized
+      connections.rejectedDiaSources: rejected_dia_source
+      connections.diffImVisitInfo: difference_image.visitInfo
+      connections.longTrailedSources: long_trailed_dia_source
+      doRemoveSkySources: true
   computeReliability:
     class: lsst.meas.transiNet.RBTransiNetTask
     config:
@@ -360,7 +369,7 @@ tasks:
       connections.science: visit_image
       connections.template: template_detector
       connections.difference: difference_image_predetection
-      connections.diaSources: dia_source_unstandardized
+      connections.diaSources: filtered_dia_source_unstandardized
       connections.classifications: dia_source_reliability
   standardizeDiaSource:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
@@ -368,7 +377,7 @@ tasks:
       doRemoveSkySources: true
       doIncludeReliability: true
       connections.diaSourceSchema: dia_source_schema
-      connections.diaSourceCat: dia_source_unstandardized
+      connections.diaSourceCat: filtered_dia_source_unstandardized
       connections.diffIm: difference_image
       connections.reliability: dia_source_reliability
       connections.diaSourceTable: dia_source_detector
@@ -698,6 +707,7 @@ subsets:
       - rewarpTemplate
       - subtractImages
       - detectAndMeasureDiaSource
+      - filterDiaSource
       - computeReliability
       - standardizeDiaSource
       - consolidateVisitDiaSource
@@ -832,6 +842,7 @@ subsets:
     - rewarpTemplate
     - subtractImages
     - detectAndMeasureDiaSource
+    - filterDiaSource
     - computeReliability
     - standardizeDiaSource
     - consolidateVisitDiaSource
@@ -901,6 +912,7 @@ contracts:
   - rewarpTemplate.connections.template == subtractImages.connections.template
   - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSource.connections.matchedTemplate
   - subtractImages.connections.difference == detectAndMeasureDiaSource.connections.difference
+  - detectAndMeasureDiaSource.connections.diaSources == filterDiaSource.connections.diaSourceCat
   - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == standardizeDiaSource.connections.diffIm
   - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotObjectDifference.connections.exposure
   - standardizeDiaSource.connections.diaSourceTable == consolidateVisitDiaSource.connections.inputCatalogs

@@ -134,6 +134,7 @@ subsets:
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
+      - filterDiaSrcCat
       - rbClassify
       - transformDiaSourceCat
       - writeForcedSourceTable
