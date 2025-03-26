@@ -3,7 +3,7 @@ instrument: lsst.obs.subaru.HyperSuprimeCam
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
     exclude:
-      - makeSsTables
+      - consolidateSsTables
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
