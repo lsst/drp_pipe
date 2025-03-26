@@ -349,10 +349,19 @@ tasks:
       connections.matchedTemplate: template_matched
       connections.difference: difference_image_predetection
       connections.outputSchema: dia_source_schema
-      connections.diaSources: dia_source_unstandardized
+      connections.diaSources: dia_source_unfiltered
       connections.subtractedMeasuredExposure: difference_image
       connections.maskedStreaks: difference_streaks
       doSkySources: true
+  filterDiaSource:
+    class: lsst.ap.association.FilterDiaSourceCatalogTask
+    config:
+      connections.diaSourceCat: dia_source_unfiltered
+      connections.filteredDiaSourceCat: dia_source_unstandardized
+      connections.rejectedDiaSources: rejected_dia_source
+      connections.diffImVisitInfo: difference_image.visitInfo
+      connections.longTrailedSources: long_trailed_dia_source
+      doRemoveSkySources: true
   computeReliability:
     class: lsst.meas.transiNet.RBTransiNetTask
     config:
@@ -698,6 +707,7 @@ subsets:
       - rewarpTemplate
       - subtractImages
       - detectAndMeasureDiaSource
+      - filterDiaSource
       - computeReliability
       - standardizeDiaSource
       - consolidateVisitDiaSource
@@ -832,6 +842,7 @@ subsets:
     - rewarpTemplate
     - subtractImages
     - detectAndMeasureDiaSource
+    - filterDiaSource
     - computeReliability
     - standardizeDiaSource
     - consolidateVisitDiaSource
@@ -901,6 +912,7 @@ contracts:
   - rewarpTemplate.connections.template == subtractImages.connections.template
   - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSource.connections.matchedTemplate
   - subtractImages.connections.difference == detectAndMeasureDiaSource.connections.difference
+  - detectAndMeasureDiaSource.connections.diaSources == filterDiaSource.connections.diaSourceCat
   - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == standardizeDiaSource.connections.diffIm
   - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotObjectDifference.connections.exposure
   - standardizeDiaSource.connections.diaSourceTable == consolidateVisitDiaSource.connections.inputCatalogs
