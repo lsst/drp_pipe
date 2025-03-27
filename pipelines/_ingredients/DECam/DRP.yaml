@@ -211,6 +211,8 @@ subsets:
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
       - fitDeblendedObjectsSersic
+      - healSparsePropertyMaps
+      - computeObjectEpochs
       - transformObjectTable
       - consolidateObjectTable
       - splitPrimaryObject

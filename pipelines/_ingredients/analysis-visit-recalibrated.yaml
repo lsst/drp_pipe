@@ -1,7 +1,6 @@
 # The v2 version of matchedVisitCore.
 #
-# This pipeline has almost of the same tasks (objectEpochTable is now
-# computeObjectMeanEpochs in analysis-coadds.yaml) but renames them and changes
+# This pipeline has almost of the same tasks but renames them and changes
 # dataset type names.
 description: |
   Plots and metrics to assess visit quality after joint calibration steps, with

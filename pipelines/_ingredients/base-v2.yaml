@@ -202,6 +202,12 @@ tasks:
       connections.input_maps: deep_coadd_input_map
       connections.coadd_exposures: deep_coadd_predetection
       connections.visit_summaries: visit_summary
+  computeObjectEpochs:
+    class: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
+    config:
+      connections.objectCat: object_unstandardized
+      # TODO[DM-49227]: switch this to the new name when possible.
+      connections.epochMap: deepCoadd_epoch_map_mean
   detectCoaddPeaks:
     class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
     config:
@@ -680,7 +686,7 @@ subsets:
       - photometricRefCatObjectTract
       - plotPropertyMapTract
       - validateObjectTableCore
-      - computeObjectMeanEpochs
+      - computeObjectEpochs
     description: |
       A step that runs patch- and tract-level production and analysis tasks.
 
@@ -840,7 +846,7 @@ subsets:
     - photometricRefCatObjectTract
     - plotPropertyMapTract
     - validateObjectTableCore
-    - computeObjectMeanEpochs
+    - computeObjectEpochs
     # 3b
     - consolidateHealSparsePropertyMaps
     - analyzeObjectTableSurveyCore
