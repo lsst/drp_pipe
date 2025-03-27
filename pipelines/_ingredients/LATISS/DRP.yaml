@@ -177,6 +177,8 @@ subsets:
       - makePsfMatchedWarp
       - selectDeepCoaddVisits
       - assembleCoadd
+      - healSparsePropertyMaps
+      - computeObjectEpochs
       - detection
       - mergeDetections
       - deblend
@@ -214,7 +216,6 @@ subsets:
 
   step3c:
     subset:
-      - healSparsePropertyMaps
       - analyzeObjectTableCore
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
@@ -225,8 +226,7 @@ subsets:
       - analyzeMatchedVisitCore
       - analyzeAmpOffsetMetadata
     description: |
-      Healsparse maps and "core" (most important), coadd-level plots/metrics
-      from analysis_tools.
+      "Core" (most important), coadd-level plots/metrics from analysis_tools.
 
       Needs to be run after 'step3b'. Must be be run with only instrument and
       skymap dataquery constraints if analyzeObjectTableSurveyCore is included,
