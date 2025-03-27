@@ -296,7 +296,14 @@ tasks:
     class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
     config:
       connections.inputCatalogs: object_patch
-      connections.outputCatalog: object
+      connections.outputCatalog: object_all
+  splitPrimaryObject:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["tract"]
+      connections.full: object_all
+      connections.primary: object
+      connections.nonprimary: object_nonprimary
   consolidateHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
 
@@ -323,7 +330,14 @@ tasks:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
     config:
       connections.inputCatalogs: source_detector
-      connections.outputCatalog: source
+      connections.outputCatalog: source_all
+  splitPrimarySource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["visit"]
+      connections.full: source_all
+      connections.primary: source
+      connections.nonprimary: source_nonprimary
   rewarpTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
@@ -440,7 +454,14 @@ tasks:
     config:
       connections.inputCatalogs: object_forced_source_unstandardized
       connections.referenceCatalog: object_patch
-      connections.outputCatalog: object_forced_source
+      connections.outputCatalog: object_forced_source_all
+  splitPrimaryObjectForcedSource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["patch"]
+      connections.full: object_forced_source_all
+      connections.primary: object_forced_source
+      connections.nonprimary: object_forced_source_nonprimary
   forcedPhotDiaObjectDirect:
     class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
     config:
@@ -660,6 +681,7 @@ subsets:
       - rewriteObject
       - standardizeObject
       - consolidateObject
+      - splitPrimaryObject
       - analyzeObjectTableCore
       - catalogMatchTract
       - refCatObjectTract
@@ -704,6 +726,7 @@ subsets:
       - reprocessVisitImage
       - standardizeSource
       - consolidateSource
+      - splitPrimarySource
       - rewarpTemplate
       - subtractImages
       - detectAndMeasureDiaSource
@@ -728,6 +751,7 @@ subsets:
       - forcedPhotObjectDifference
       - writeObjectForcedSource
       - standardizeObjectForcedSource
+      - splitPrimaryObjectForcedSource
       - forcedPhotDiaObjectDirect
       - forcedPhotDiaObjectDifference
       - writeDiaObjectForcedSource
@@ -818,6 +842,7 @@ subsets:
     - rewriteObject
     - standardizeObject
     - consolidateObject
+    - splitPrimaryObject
     - analyzeObjectTableCore
     - catalogMatchTract
     - refCatObjectTract
@@ -839,6 +864,7 @@ subsets:
     - reprocessVisitImage
     - standardizeSource
     - consolidateSource
+    - splitPrimarySource
     - rewarpTemplate
     - subtractImages
     - detectAndMeasureDiaSource
@@ -861,6 +887,7 @@ subsets:
     - forcedPhotObjectDifference
     - writeObjectForcedSource
     - standardizeObjectForcedSource
+    - splitPrimaryObjectForcedSource
     - forcedPhotDiaObjectDirect
     - forcedPhotDiaObjectDifference
     - writeDiaObjectForcedSource

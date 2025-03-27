@@ -104,6 +104,7 @@ subsets:
       - transformObjectTable
       - writeObjectTable
       - consolidateObjectTable
+      - splitPrimaryObject
       - healSparsePropertyMaps
       # analysis_tools tasks
       - analyzeAmpOffsetMetadata

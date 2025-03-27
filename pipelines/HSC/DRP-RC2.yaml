@@ -178,6 +178,7 @@ subsets:
       - fitDeblendedObjectsSersic
       # per-tract Tasks
       - consolidateObjectTable
+      - splitPrimaryObject
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
@@ -224,6 +225,7 @@ subsets:
       - forcedPhotCcdOnDiaObjects
       - forcedPhotDiffOnDiaObjects
       - transformForcedSourceTable
+      - splitPrimaryObjectForcedSource
       - consolidateForcedSourceTable
       - consolidateAssocDiaSourceTable
       - consolidateFullDiaObjectTable

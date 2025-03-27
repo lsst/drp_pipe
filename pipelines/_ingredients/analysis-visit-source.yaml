@@ -11,11 +11,12 @@ tasks:
     class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
     config:
       file: $ANALYSIS_TOOLS_DIR/config/sourceTableCore.py
-      connections.data: source
+      connections.data: source_all
       connections.outputName: source
   makeAnalysisSourceAstrometricRefMatch:
     class: lsst.analysis.tools.tasks.astrometricCatalogMatch.AstrometricCatalogMatchVisitTask
     config:
+      connections.catalog: source_all
       connections.targetCatalog: source
       connections.visitSummaryTable: visit_summary
       # Drop explicit refcat name from template to avoid needing to set it in
@@ -32,6 +33,7 @@ tasks:
   makeAnalysisSourcePhotometricRefMatch:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
     config:
+      connections.catalog: source_all
       connections.targetCatalog: source
       connections.visitSummaryTable: visit_summary
       # Drop explicit refcat name from template to avoid needing to set it in

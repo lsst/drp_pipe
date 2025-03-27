@@ -187,6 +187,7 @@ subsets:
       - templateGen
       # Per-tract Tasks
       - consolidateObjectTable
+      - splitPrimaryObject
       - healSparsePropertyMaps
       - matchObjectToTruth
       - compareObjectToTruth
@@ -239,6 +240,7 @@ subsets:
       - forcedPhotCcdOnDiaObjects
       - forcedPhotDiffOnDiaObjects
       - transformForcedSourceTable
+      - splitPrimaryObjectForcedSource
       - consolidateForcedSourceTable
       - consolidateAssocDiaSourceTable
       - consolidateFullDiaObjectTable

@@ -113,6 +113,7 @@ subsets:
     subset:
       - healSparsePropertyMaps
       - consolidateObjectTable
+      - splitPrimaryObject
       # analysis_tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
@@ -152,6 +153,7 @@ subsets:
       - forcedPhotCcdOnDiaObjects
       - forcedPhotDiffOnDiaObjects
       - transformForcedSourceTable
+      - splitPrimaryObjectForcedSource
       - consolidateAssocDiaSourceTable
       - consolidateFullDiaObjectTable
       - writeForcedSourceOnDiaObjectTable
