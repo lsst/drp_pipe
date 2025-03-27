@@ -189,6 +189,7 @@ subsets:
       - consolidateObjectTable
       - splitPrimaryObject
       - healSparsePropertyMaps
+      - computeObjectMeanEpochs
       - matchObjectToTruth
       - compareObjectToTruth
       - analyzeMatchedVisitCore

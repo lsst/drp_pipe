@@ -83,9 +83,3 @@ tasks:
     config:
       connections.data: object_all
       connections.outputName: object_column_validate
-  computeObjectMeanEpochs:
-    class: lsst.analysis.tools.tasks.ObjectEpochTableTask
-    config:
-      connections.objectCat: object_patch
-      # TODO[DM-49227]: switch this to the new name when possible.
-      connections.epochMap: deepCoadd_epoch_map_mean
