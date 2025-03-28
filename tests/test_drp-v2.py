@@ -294,3 +294,26 @@ class DrpV2TestCase(unittest.TestCase):
                 raise AssertionError(
                     f"Differences detected in configs for task {new_label!r} (previously {old_label!r})."
                 )
+
+    def test_comcam_compat(self) -> None:
+        """Test the LSSTComCam/DRP-v2-compat pipeline, which should be
+        identical to DRP-v2 aside from replacing 'source' -> 'source2'
+        throughout.
+        """
+        butler = self.make_butler(writeable=True)
+        self.register_refcat(butler, COMCAM_REFCAT)
+        pipeline = Pipeline.from_uri(
+            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml")
+        )
+        pipeline_graph = pipeline.to_graph(registry=butler.registry)
+        pipeline_compat = Pipeline.from_uri(
+            os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2-compat.yaml")
+        )
+        pipeline_graph_compat = pipeline_compat.to_graph(registry=butler.registry)
+        self.assertFalse(
+            Correspondence(
+                dataset_types_new_to_old={"source2": "source"},
+            ).find_matches(pipeline_graph_compat, pipeline_graph).check(
+                pipeline_graph_compat, pipeline_graph, "DRP-v2-compat", "DRP-v2"
+            )
+        )
