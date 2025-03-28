@@ -147,8 +147,7 @@ subsets:
 
   step2bcde:
     subset:
-      - finalizeCharacterizationDetector
-      - consolidateFinalizeCharacterization
+      - finalizeCharacterization
       - fgcmBuildFromIsolatedStars
       - fgcmFitCycle
       - fgcmOutputProducts
