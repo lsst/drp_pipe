@@ -95,6 +95,7 @@ subsets:
       - consolidateObjectTable
       - splitPrimaryObject
       - healSparsePropertyMaps
+      - computeObjectMeanEpochs
       - selectGoodSeeingVisits
       - templateGen
       # analysis_tools tasks
