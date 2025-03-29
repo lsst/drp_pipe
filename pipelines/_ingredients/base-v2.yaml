@@ -192,8 +192,13 @@ tasks:
       assembleStaticSkyModel.doSelectVisits: true
   assembleCellCoadd:
     class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+    config:
+      connections.inputWarps: direct_warp
+      connections.visitSummaryList: visit_summary
   convertToExposure:
     class: lsst.drp.tasks.assemble_cell_coadd.ConvertMultipleCellCoaddToExposureTask
+    config:
+      connections.stitchedCoaddExposure: deep_coadd
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
