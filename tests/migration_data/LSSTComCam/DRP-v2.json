@@ -26,6 +26,8 @@
     "makePsfMatchedWarp": "makePsfMatchedWarp",
     "selectDeepCoaddVisits": "selectDeepCoaddVisits",
     "assembleDeepCoadd": "assembleCoadd",
+    "assembleCellCoadd": "assembleCellCoadd",
+    "convertToExposure": "convertToExposure",
     "detectCoaddPeaks": "detection",
     "makeHealSparsePropertyMaps": "healSparsePropertyMaps",
     "mergeObjectDetection": "mergeDetections",
@@ -75,8 +77,8 @@
     "standardizeDiaObjectForcedSource": "transformForcedSourceOnDiaObjectTable",
     "writeObjectForcedSource": "writeForcedSourceTable",
     "standardizeObjectForcedSource": "transformForcedSourceTable",
-    "consolidateSsTables": "consolidateSsTables",
-    "splitPrimaryObjectForcedSource": "splitPrimaryObjectForcedSource"
+    "splitPrimaryObjectForcedSource": "splitPrimaryObjectForcedSource",
+    "consolidateSsTables": "consolidateSsTables"
   },
   "dataset_types_new_to_old": {
     "bfk": "bfk",
@@ -634,10 +636,10 @@
     "difference_kernel_sources": "goodSeeingDiff_psfMatchSources",
     "template_matched": "goodSeeingDiff_matchedExp",
     "dia_source_unfiltered": "goodSeeingDiff_diaSrc",
-    "dia_source_unstandardized": "goodSeeingDiff_candidateDiaSrc",
-    "rejected_dia_source": "goodSeeingDiff_rejectedDiaSrc",
-    "long_trailed_dia_source": "goodSeeingDiff_longTrailedSrc",
     "difference_image": "goodSeeingDiff_differenceExp",
+    "dia_source_unstandardized": "goodSeeingDiff_candidateDiaSrc",
+    "long_trailed_dia_source": "goodSeeingDiff_longTrailedSrc",
+    "rejected_dia_source": "goodSeeingDiff_rejectedDiaSrc",
     "dia_source_reliability": "goodSeeingRealBogusSources",
     "dia_source_detector": "goodSeeingDiff_diaSrcTable",
     "dia_source_visit": "diaSourceTable",
