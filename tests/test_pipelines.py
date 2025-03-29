@@ -123,6 +123,8 @@ COMMON_OUTPUTS = {
     "compare_warp_artifact_mask",
     "deepCoaddVisits",
     "deepCoadd",
+    "deeCoaddCell",
+    "deepCoaddCell_stitched",
     "deepCoadd_calexp",
     "deepCoadd_calexp_background",
     "deepCoadd_det",
