@@ -397,6 +397,8 @@
     "deep_coadd_input_map": "deepCoadd_inputMap",
     "deep_coadd_n_image": "deepCoadd_nImage",
     "deep_coadd_predetection": "deepCoadd",
+    "deepCoaddCell": "deepCoaddCell",
+    "deep_coadd_cell_stitched": "deepCoaddCell_stitched",
     "deep_coadd": "deepCoadd_calexp",
     "deep_coadd_background": "deepCoadd_calexp_background",
     "object_detection": "deepCoadd_det",
