@@ -678,7 +678,7 @@ subsets:
       - selectTemplateCoaddVisits
       - assembleDeepCoadd
       - assembleTemplateCoadd
-      - aseembleCellCoadd
+      - assembleCellCoadd
       - convertToExposure
       - makeHealSparsePropertyMaps
       - detectCoaddPeaks
