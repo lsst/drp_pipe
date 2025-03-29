@@ -209,6 +209,8 @@ subsets:
       - measure
       - mergeMeasurements
       - assembleCoadd
+      - assembleCellCoadd
+      - convertToExposure
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
       - fitDeblendedObjectsSersic
