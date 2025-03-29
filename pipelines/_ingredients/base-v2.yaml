@@ -190,6 +190,10 @@ tasks:
       doSelectVisits: true
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
+  assembleCellCoadd:
+    class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+  convertToExposure:
+    class: lsst.drp.tasks.assemble_cell_coadd.ConvertMultipleCellCoaddToExposureTask
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
