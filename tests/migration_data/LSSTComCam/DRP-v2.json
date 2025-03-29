@@ -636,7 +636,7 @@
     "dia_source_unfiltered": "goodSeeingDiff_diaSrc",
     "dia_source_unstandardized": "goodSeeingDiff_candidateDiaSrc",
     "rejected_dia_source": "goodSeeingDiff_rejectedDiaSrc",
-    "long_trailed_dia_source": "goodSeeingDiff_longTrailedSrc", 
+    "long_trailed_dia_source": "goodSeeingDiff_longTrailedSrc",
     "difference_image": "goodSeeingDiff_differenceExp",
     "dia_source_reliability": "goodSeeingRealBogusSources",
     "dia_source_detector": "goodSeeingDiff_diaSrcTable",
