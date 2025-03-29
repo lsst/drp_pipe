@@ -260,6 +260,8 @@ subsets:
       - makeDirectWarp
       - makePsfMatchedWarp
       - assembleCoadd
+      - assembleCellCoadd
+      - convertToExposure
       - healSparsePropertyMaps
     description: >
       A set of tasks to run when coadding images.

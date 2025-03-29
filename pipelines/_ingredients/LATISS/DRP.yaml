@@ -177,6 +177,8 @@ subsets:
       - makePsfMatchedWarp
       - selectDeepCoaddVisits
       - assembleCoadd
+      - assembleCellCoadd
+      - convertToExposure
       - detection
       - mergeDetections
       - deblend
