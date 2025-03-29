@@ -198,7 +198,7 @@ tasks:
   convertToExposure:
     class: lsst.drp.tasks.assemble_cell_coadd.ConvertMultipleCellCoaddToExposureTask
     config:
-      connections.stitchedCoaddExposure: deep_coadd
+      connections.stitchedCoaddExposure: deep_coadd_cell_stitched
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
@@ -228,7 +228,7 @@ tasks:
     class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
     config:
       connections.detectionSchema: object_detection_schema
-      connections.exposure: deep_coadd_predetection
+      connections.exposure: deep_coadd_cell_stitched
       connections.outputBackgrounds: deep_coadd_background
       connections.outputSources: object_detection
       connections.outputExposure: deep_coadd
