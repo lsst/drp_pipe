@@ -104,6 +104,8 @@ subsets:
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
       - fitDeblendedObjectsSersic
+      - healSparsePropertyMaps
+      - computeObjectEpochs
       - transformObjectTable
       - writeObjectTable
     description: |
@@ -111,7 +113,6 @@ subsets:
       subsets.
   step3b:
     subset:
-      - healSparsePropertyMaps
       - consolidateObjectTable
       - splitPrimaryObject
       # analysis_tools tasks

@@ -62,6 +62,7 @@ tasks:
       connections.selectedVisits: deepCoaddVisits
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
+  computeObjectEpochs: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
   detection: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
   mergeDetections: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
   deblend: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
@@ -273,6 +274,7 @@ subsets:
       A set of tasks to run when making measurements on coadds.
   objectTable:
     subset:
+      - computeObjectEpochs
       - writeObjectTable
       - transformObjectTable
       - consolidateObjectTable
