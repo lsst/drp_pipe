@@ -1,0 +1,47 @@
+# This BPS configuration snippet adds updated requestMemory values for
+# 800 visits in DDF configuration expected for OR5 nightly validation
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/resources/LSSTCam-imSim/nightly-validation-OR5-DDF.yaml
+#
+# (with no outer indentation) to your BPS config file.
+#
+pipetask:
+  makeCcdVisitTable:
+    requestMemory: 29281
+  makeVisitTable:
+    requestMemory: 29072
+  consolidateObjectTable:
+    requestMemory: 10778
+  deblend:
+    requestMemory: 5666
+  healSparsePropertyMaps:
+    requestMemory: 9000
+  writeObjectTable:
+    requestMemory: 6882
+  getTemplate:
+    requestMemory: 5469
+  isolatedStarAssociation:
+    requestMemory: 11025
+  templateGen:
+    requestMemory: 24813
+  assembleCoadd:
+    requestMemory: 64000
+  # based on LSSTComCam/runs/DRP/DP1/w_2025_09/DM-49235.
+  # One tract has 200+ r-band visits and estimates
+  analyzeMatchedPreVisitCore:
+    requestMemory: 31841
+  analyzeMatchedVisitCore:
+    requestMemory: 31870
+  analyzeObjectTableCore:
+    requestMemory: 5807
+  finalizeCharacterization:
+    requestMemory: 5783
+  fitDeblendedObjectsSersic:
+    requestMemory: 5706
+  objectTableCoreWholeSkyPlot:
+    requestMemory: 4389
+  transformObjectTable:
+    requestMemory: 7382
