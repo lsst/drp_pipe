@@ -115,6 +115,12 @@ tasks:
       connections.matchedTemplate: goodSeeingDiff_matchedExp
       connections.difference: goodSeeingDiff_differenceTempExp
       connections.subtractedMeasuredExposure: goodSeeingDiff_differenceExp
+      doSkySources: true
+  filterDiaSrcCat:
+    class: lsst.ap.association.FilterDiaSourceCatalogTask
+    config:
+      doRemoveSkySources: true
+      connections.coaddName: goodSeeing
   rbClassify:
     class: lsst.meas.transiNet.RBTransiNetTask
     config:
@@ -123,14 +129,14 @@ tasks:
       connections.coaddName: goodSeeing
       connections.template: goodSeeingDiff_templateExp
       connections.difference: goodSeeingDiff_differenceTempExp
-      connections.diaSources: goodSeeingDiff_diaSrc
+      connections.diaSources: goodSeeingDiff_candidateDiaSrc
   transformDiaSourceCat:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
       doIncludeReliability: true
       connections.coaddName: goodSeeing
       connections.diaSourceSchema: goodSeeingDiff_diaSrc_schema
-      connections.diaSourceCat: goodSeeingDiff_diaSrc
+      connections.diaSourceCat: goodSeeingDiff_candidateDiaSrc
       connections.diffIm: goodSeeingDiff_differenceExp
       connections.diaSourceTable: goodSeeingDiff_diaSrcTable
   consolidateDiaSourceTable:
@@ -270,6 +276,7 @@ subsets:
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
+      - filterDiaSrcCat
       - rbClassify
       - transformDiaSourceCat
       - consolidateDiaSourceTable
@@ -289,6 +296,7 @@ contracts:
   - getTemplate.connections.template == subtractImages.connections.template
   - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSources.connections.matchedTemplate
   - subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
+  - detectAndMeasureDiaSources.connections.diaSources == filterDiaSrcCat.connections.diaSourceCat
   - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == transformDiaSourceCat.connections.diffIm
   - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotDiffim.connections.exposure
   - transformDiaSourceCat.connections.diaSourceTable == consolidateDiaSourceTable.connections.inputCatalogs
