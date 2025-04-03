@@ -5,15 +5,10 @@ instrument: lsst.obs.lsst.LsstComCam
 imports:
   - location: $DRP_PIPE_DIR/pipelines/LSSTComCam/DRP-v2.yaml
 tasks:
-  consolidateSource:
-    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+  splitPrimarySource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
     config:
-      connections.outputCatalog: source2
-  associateAnalysisSource:
-    class: lsst.pipe.tasks.isolatedStarAssociation.IsolatedStarAssociationTask
-    config:
-      connections.source_table_visit: source2
-  analyzeSourceAssociation:
-    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
-    config:
-      connections.sourceCatalogs: source2
+      dimensions: ["visit"]
+      connections.full: source_all
+      connections.primary: source2
+      connections.nonprimary: source_nonprimary

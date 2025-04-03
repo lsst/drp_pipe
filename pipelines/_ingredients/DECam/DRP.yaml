@@ -213,6 +213,7 @@ subsets:
       - fitDeblendedObjectsSersic
       - transformObjectTable
       - consolidateObjectTable
+      - splitPrimaryObject
       - mergeDetections
     description: |
       Tract-level tasks that can be run together, but only after the 'step1'

@@ -114,6 +114,7 @@ subsets:
       - fitDeblendedObjectsSersic
       # per tract tasks
       - consolidateObjectTable
+      - splitPrimaryObject
       - healSparsePropertyMaps
       - analyzeObjectTableCore
       - catalogMatchTract

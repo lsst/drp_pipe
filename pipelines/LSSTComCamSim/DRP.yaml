@@ -92,6 +92,7 @@ subsets:
       - transformObjectTable
       - writeObjectTable
       - consolidateObjectTable
+      - splitPrimaryObject
       - healSparsePropertyMaps
       - selectGoodSeeingVisits
       - templateGen
@@ -141,6 +142,7 @@ subsets:
       - forcedPhotCcdOnDiaObjects
       - forcedPhotDiffOnDiaObjects
       - transformForcedSourceTable
+      - splitPrimaryObjectForcedSource
       - consolidateAssocDiaSourceTable
       - consolidateFullDiaObjectTable
       - writeForcedSourceOnDiaObjectTable
