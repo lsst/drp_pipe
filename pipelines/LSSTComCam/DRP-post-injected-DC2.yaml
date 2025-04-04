@@ -1,0 +1,176 @@
+description: Match tract-level injected_deep_coadd_predetection_catalog datasets to injected_object datasets.
+imports:
+  - location: $SOURCE_INJECTION_DIR/pipelines/match_injected_tract_catalog.yaml
+tasks:
+  consolidate_injected_catalogs:
+    class: lsst.source.injection.utils.ConsolidateInjectedCatalogsTask
+    config:
+      connections.input_catalogs: injected_deep_coadd_predetection_catalog
+      connections.output_catalog: injected_deep_coadd_predetection_catalog_tract
+      columns_extra: ["n", "half_light_radius", "q", "beta"]
+      groupIdKey: group_id
+      pixel_match_radius: -1
+  match_object_to_injected:
+    class: lsst.pipe.tasks.match_tract_catalog.MatchTractCatalogTask
+    config:
+      connections.name_input_cat_ref: injected_deep_coadd_predetection_catalog_tract
+      connections.name_input_cat_target: injected_object
+  compare_object_to_injected:
+    class: lsst.pipe.tasks.diff_matched_tract_catalog.DiffMatchedTractCatalogTask
+    config:
+      connections.name_input_cat_ref: injected_deep_coadd_predetection_catalog_tract
+      connections.name_input_cat_target: injected_object
+
+      column_matched_prefix_ref: "ref_"
+      # TODO: Remove as part of DM-44139
+      columns_ref_mag_to_nJy: {
+        u_mag: "u_flux", g_mag: "g_flux", r_mag: "r_flux", i_mag: "i_flux", z_mag: "z_flux", y_mag: "y_flux",
+      }
+      columns_ref_copy: [
+        "injected_id", "r_comp1_source_type",
+        "u_injection_flag", "g_injection_flag", "r_injection_flag",
+        "i_injection_flag", "z_injection_flag", "y_injection_flag",
+        "u_mag", "g_mag", "r_mag", "i_mag", "z_mag", "y_mag",
+        "injection_flag", "injected_isPatchInner", "injected_isTractInner", "injected_isPrimary",
+      ]
+      columns_target_coord_err: ["coord_raErr", "coord_decErr"]
+
+      python: |
+        from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
+        columns_flux = {}
+        fluxes_meas = []
+        models_other = ("cModel", "gaap1p0", "gaap3p0", "kron", "psf", "sersic",)
+        for band in ("u", "g", "r", "i", "z", "y"):
+            # Can't use a list comp here for weird scoping reasons
+            for model in models_other:
+                fluxes_meas.append(f"{band}_{model}Flux")
+        # Extendedness columns are needed for downstream plots/metrics/etc.
+        columns_target_copy = [
+          "objectId", "patch",
+          "detect_isDeblendedSource", "detect_isPatchInner", "detect_isPrimary", "merge_peak_sky",
+          "refExtendedness", "refSizeExtendedness",
+        ]
+        columns_target_copy.extend(fluxes_meas)
+        columns_target_copy.extend([f"{col}Err" for col in fluxes_meas])
+        columns_target_copy.extend(["x", "y", "xErr", "yErr"])
+        if "sersic" in models_other:
+          columns_target_copy.extend([
+            "sersic_x", "sersic_y", "sersic_xErr", "sersic_yErr",
+            "sersic_ra", "sersic_dec", "sersic_raErr", "sersic_decErr",
+            "sersic_index", "sersic_indexErr", "sersic_rho", "sersic_rhoErr",
+            "sersic_reff_x", "sersic_reff_xErr", "sersic_reff_y", "sersic_reff_yErr",
+          ])
+        config.columns_target_copy = columns_target_copy
+
+  diff_matched_analysis:
+    class: lsst.analysis.tools.tasks.DiffMatchedAnalysisTask
+    config:
+      connections.inputName: matched_injected_deep_coadd_predetection_catalog_tract_injected_object
+      connections.outputName: matched_injected_deep_coadd_predetection_catalog_tract_injected_object
+
+      atools.matchedRefCompleteness: MatchedRefCoaddCompurityTool
+      atools.matchedRefAngularSeparationDiff: MatchedRefCoaddDiffDistanceTool
+      atools.matchedRefAngularSeparationDiffZoom: MatchedRefCoaddDiffDistanceZoomTool
+      atools.matchedRefAngularSeparationChi: MatchedRefCoaddChiDistanceTool
+      atools.matchedRefCModelColorDiff: MatchedRefCoaddDiffColorTool
+      atools.matchedRefCModelColorDiffZoom: MatchedRefCoaddDiffColorZoomTool
+      atools.matchedRefCModelColorChi: MatchedRefCoaddChiColorTool
+      atools.matchedRefCModelMagDiff: MatchedRefCoaddDiffMagTool
+      atools.matchedRefCModelMagDiffZoom: MatchedRefCoaddDiffMagZoomTool
+      atools.matchedRefCModelMagChi: MatchedRefCoaddChiMagTool
+      atools.matchedRefGaap1p0ColorDiff: MatchedRefCoaddDiffColorTool
+      atools.matchedRefGaap1p0ColorDiff.mag_y1: gaap1p0_err
+      atools.matchedRefGaap1p0ColorDiffZoom: MatchedRefCoaddDiffColorZoomTool
+      atools.matchedRefGaap1p0ColorDiffZoom.mag_y1: gaap1p0_err
+      atools.matchedRefGaap1p0ColorChi: MatchedRefCoaddChiColorTool
+      atools.matchedRefGaap1p0ColorChi.mag_y1: gaap1p0_err
+      atools.matchedRefGaap1p0MagDiff: MatchedRefCoaddDiffMagTool
+      atools.matchedRefGaap1p0MagDiff.mag_y: gaap1p0_err
+      atools.matchedRefGaap1p0MagDiffZoom: MatchedRefCoaddDiffMagZoomTool
+      atools.matchedRefGaap1p0MagDiffZoom.mag_y: gaap1p0_err
+      atools.matchedRefGaap1p0MagChi: MatchedRefCoaddChiMagTool
+      atools.matchedRefGaap1p0MagChi.mag_y: gaap1p0_err
+      atools.matchedRefGaap3p0ColorDiff: MatchedRefCoaddDiffColorTool
+      atools.matchedRefGaap3p0ColorDiff.mag_y1: gaap3p0_err
+      atools.matchedRefGaap3p0ColorDiffZoom: MatchedRefCoaddDiffColorZoomTool
+      atools.matchedRefGaap3p0ColorDiffZoom.mag_y1: gaap3p0_err
+      atools.matchedRefGaap3p0ColorChi: MatchedRefCoaddChiColorTool
+      atools.matchedRefGaap3p0ColorChi.mag_y1: gaap3p0_err
+      atools.matchedRefGaap3p0MagDiff: MatchedRefCoaddDiffMagTool
+      atools.matchedRefGaap3p0MagDiff.mag_y: gaap3p0_err
+      atools.matchedRefGaap3p0MagDiffZoom: MatchedRefCoaddDiffMagZoomTool
+      atools.matchedRefGaap3p0MagDiffZoom.mag_y: gaap3p0_err
+      atools.matchedRefGaap3p0MagChi: MatchedRefCoaddChiMagTool
+      atools.matchedRefGaap3p0MagChi.mag_y: gaap3p0_err
+      atools.matchedRefKronColorDiff: MatchedRefCoaddDiffColorTool
+      atools.matchedRefKronColorDiff.mag_y1: kron_err
+      atools.matchedRefKronColorDiffZoom: MatchedRefCoaddDiffColorZoomTool
+      atools.matchedRefKronColorDiffZoom.mag_y1: kron_err
+      atools.matchedRefKronColorChi: MatchedRefCoaddChiColorTool
+      atools.matchedRefKronColorChi.mag_y1: kron_err
+      atools.matchedRefKronMagDiff: MatchedRefCoaddDiffMagTool
+      atools.matchedRefKronMagDiff.mag_y: kron_err
+      atools.matchedRefKronMagDiffZoom: MatchedRefCoaddDiffMagZoomTool
+      atools.matchedRefKronMagDiffZoom.mag_y: kron_err
+      atools.matchedRefKronMagChi: MatchedRefCoaddChiMagTool
+      atools.matchedRefKronMagChi.mag_y: kron_err
+      atools.matchedRefPsfColorDiff: MatchedRefCoaddDiffColorTool
+      atools.matchedRefPsfColorDiff.mag_y1: psf_err
+      atools.matchedRefPsfColorDiffZoom: MatchedRefCoaddDiffColorZoomTool
+      atools.matchedRefPsfColorDiffZoom.mag_y1: psf_err
+      atools.matchedRefPsfColorChi: MatchedRefCoaddChiColorTool
+      atools.matchedRefPsfColorChi.mag_y1: psf_err
+      atools.matchedRefPsfMagDiff: MatchedRefCoaddDiffMagTool
+      atools.matchedRefPsfMagDiff.mag_y: psf_err
+      atools.matchedRefPsfMagDiffZoom: MatchedRefCoaddDiffMagZoomTool
+      atools.matchedRefPsfMagDiffZoom.mag_y: psf_err
+      atools.matchedRefPsfMagChi: MatchedRefCoaddChiMagTool
+      atools.matchedRefPsfMagChi.mag_y: psf_err
+      atools.matchedRefSersicColorDiff: MatchedRefCoaddDiffColorTool
+      atools.matchedRefSersicColorDiff.mag_y1: sersic_err
+      atools.matchedRefSersicColorDiffZoom: MatchedRefCoaddDiffColorZoomTool
+      atools.matchedRefSersicColorDiffZoom.mag_y1: sersic_err
+      atools.matchedRefSersicColorChi: MatchedRefCoaddChiColorTool
+      atools.matchedRefSersicColorChi.mag_y1: sersic_err
+      atools.matchedRefSersicMagDiff: MatchedRefCoaddDiffMagTool
+      atools.matchedRefSersicMagDiff.mag_y: sersic_err
+      atools.matchedRefSersicMagDiffZoom: MatchedRefCoaddDiffMagZoomTool
+      atools.matchedRefSersicMagDiffZoom.mag_y: sersic_err
+      atools.matchedRefSersicMagChi: MatchedRefCoaddChiMagTool
+      atools.matchedRefSersicMagChi.mag_y: sersic_err
+
+      atools.matchedRefPositionRaDiff: MatchedRefCoaddDiffCoordRaTool
+      atools.matchedRefPositionRaDiffZoom: MatchedRefCoaddDiffCoordRaZoomTool
+      atools.matchedRefPositionRaChi: MatchedRefCoaddChiCoordRaTool
+      atools.matchedRefPositionDecDiff: MatchedRefCoaddDiffCoordDecTool
+      atools.matchedRefPositionDecDiffZoom: MatchedRefCoaddDiffCoordDecZoomTool
+      atools.matchedRefPositionDecChi: MatchedRefCoaddChiCoordDecTool
+
+      atools.matchedRefPositionSersicRaDiff: MatchedRefCoaddDiffCoordRaTool
+      atools.matchedRefPositionSersicRaDiff.coord_meas: sersic_ra
+      atools.matchedRefPositionSersicRaDiffZoom: MatchedRefCoaddDiffCoordRaZoomTool
+      atools.matchedRefPositionSersicRaDiffZoom.coord_meas: sersic_ra
+      atools.matchedRefPositionSersicRaChi: MatchedRefCoaddChiCoordRaTool
+      atools.matchedRefPositionSersicRaChi.coord_meas: sersic_ra
+      atools.matchedRefPositionSersicDecDiff: MatchedRefCoaddDiffCoordDecTool
+      atools.matchedRefPositionSersicDecDiff.coord_meas: sersic_dec
+      atools.matchedRefPositionSersicDecDiffZoom: MatchedRefCoaddDiffCoordDecZoomTool
+      atools.matchedRefPositionSersicDecDiffZoom.coord_meas: sersic_dec
+      atools.matchedRefPositionSersicDecChi: MatchedRefCoaddChiCoordDecTool
+      atools.matchedRefPositionSersicDecChi.coord_meas: sersic_dec
+
+      python: |
+        from lsst.analysis.tools.atools.diffMatched import *
+        from lsst.analysis.tools.actions.vector.selectors import InjectedGalaxySelector, InjectedStarSelector
+
+        InjectedGalaxySelector.key_class.default = "ref_r_comp1_source_type"
+        InjectedStarSelector.key_class.default = "ref_r_comp1_source_type"
+
+        reconfigure_diff_matched_defaults(
+          config=config,
+          context="injection",
+          key_flux_meas="cmodel_err",
+          use_any=True,
+          use_galaxies=True,
+          use_stars=True,
+        )
