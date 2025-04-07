@@ -16,7 +16,8 @@ tasks:
       columns_ref_copy: [
         "injected_id", "source_type",
         "g_mag", "r_mag", "i_mag", "z_mag", "y_mag",
-        "injection_flag", "injected_isPatchInner",
+        "g_injection_flag", "r_injection_flag", "i_injection_flag", "z_injection_flag", "y_injection_flag",
+        "injection_flag", "injected_isPatchInner", "injected_isTractInner", "injected_isPrimary",
       ]
       columns_target_coord_err: ["coord_raErr", "coord_decErr"]
       columns_target_copy: [
