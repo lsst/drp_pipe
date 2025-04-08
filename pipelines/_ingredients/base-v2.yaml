@@ -228,7 +228,7 @@ tasks:
     class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
     config:
       connections.detectionSchema: object_detection_schema
-      connections.exposure: deep_coadd_cell_stitched
+      connections.exposure: deepCoaddCell
       connections.outputBackgrounds: deep_coadd_background
       connections.outputSources: object_detection
       connections.outputExposure: deep_coadd
@@ -246,7 +246,8 @@ tasks:
       connections.inputSchema: object_detection_merged_schema
       connections.peakSchema: object_detection_peak_schema
       connections.mergedDetections: object_detection_merged
-      connections.coadds: deep_coadd
+      connections.coadds: deepCoaddCell
+      connections.backgrounds: deep_coadd_background
       connections.outputSchema: object_deblend_schema
       connections.deblendedCatalog: object_deblend
       connections.scarletModelData: object_scarlet_models
@@ -260,7 +261,8 @@ tasks:
       connections.finalizedSourceTableHandles: refit_psf_star
       connections.outputSchema: object_unforced_measurement_schema
       connections.outputSources: object_unforced_measurement
-      connections.exposure: deep_coadd
+      connections.exposure: deepCoaddCell
+      connections.background: deep_coadd_background
   mergeObjectMeasurement:
     class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
     config:
