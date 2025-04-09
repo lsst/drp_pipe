@@ -41,9 +41,6 @@ cluster:
     pipetasks: forcedPhotDiffOnDiaObjects, forcedPhotCcdOnDiaObjects, writeForcedSourceOnDiaObjectTable
     dimensions: visit,detector,tract
 
-
-# removing this cluster pending fix of DM-48222
-# finalizeSourceTable:
-#   pipetasks: finalizeCharacterization,updateVisitSummary,writeRecalibratedSourceTable,transformSourceTable,consolidateSourceTable
-#   dimensions: visit
-#   equalDimensions: visit:exposure
+  recalibratedSourceTable:
+    pipetasks: writeRecalibratedSourceTable,transformSourceTable
+    dimensions: visit,detector
