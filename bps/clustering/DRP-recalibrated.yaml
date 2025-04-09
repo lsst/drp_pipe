@@ -14,7 +14,9 @@ cluster:
     pipetasks: isr,inject_exposure,calibrateImage,inject_visit,transformPreSourceTable
     dimensions: visit,detector
     equalDimensions: visit:exposure
-
+  makeWarpTract:
+    pipetasks: makeDirectWarp,makePsfMatchedWarp
+    dimensions: tract,visit
   coadd:
     pipetasks: assembleCoadd,inject_coadd,templateGen,detection
     dimensions: tract,patch,band
