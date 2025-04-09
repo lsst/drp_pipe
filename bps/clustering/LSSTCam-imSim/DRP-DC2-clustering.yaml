@@ -19,11 +19,11 @@ cluster:
     dimensions: tract,patch,band
 
   objectTable:
-    pipetasks: writeObjectTable,transformObjectTable
+    pipetasks: computeObjectEpochs,writeObjectTable,transformObjectTable
     dimensions: tract,patch
 
   diffim:
-    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
+    pipetasks: getTemplate,subtractImages,filterDiaSrcCat,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
     dimensions: visit,detector
 
   association:
