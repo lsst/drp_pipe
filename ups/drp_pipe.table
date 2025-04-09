@@ -23,6 +23,7 @@ setupRequired(drp_tasks)
 setupRequired(ap_association)
 setupRequired(source_injection)
 setupRequired(meas_extensions_multiprofit)
+setupRequired(ctrl_bps)
 
 # The following is boilerplate for all packages.
 # See https://dmtn-001.lsst.io for details on LSST_LIBRARY_PATH.
