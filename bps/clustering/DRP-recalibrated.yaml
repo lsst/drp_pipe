@@ -15,7 +15,7 @@ cluster:
     dimensions: visit,detector
     equalDimensions: visit:exposure
   makeWarpTract:
-    pipetaks: makeDirectWarp,makePsfMatchedWarp
+    pipetasks: makeDirectWarp,makePsfMatchedWarp
     dimensions: tract,visit
   coadd:
     pipetasks: assembleCoadd,inject_coadd,templateGen,detection
