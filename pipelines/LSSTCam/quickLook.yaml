@@ -19,19 +19,7 @@ tasks:
     config:
       # Turn off slow steps in ISR
       doBrighterFatter: false
-
-      # turn off things we don't correct while LSSTCam is in the cleanroom
-      doBias: false
-      doLinearize: false
-      doCrosstalk: false
-      doDefect: false
-      doDark: false
-      doFlat: false
-      doDeferredCharge: false
-      doBootstrap: true
-      doApplyGains: false
-      doSuspect: false
-      defaultSaturationSource: CAMERAMODEL
+      doAmpOffset: false
 
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
