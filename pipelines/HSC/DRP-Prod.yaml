@@ -116,6 +116,7 @@ subsets:
       - consolidateObjectTable
       - splitPrimaryObject
       - healSparsePropertyMaps
+      - computeObjectEpochs
       - analyzeObjectTableCore
       - catalogMatchTract
       - refCatObjectTract

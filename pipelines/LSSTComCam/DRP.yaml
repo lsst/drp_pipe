@@ -93,6 +93,8 @@ subsets:
       - makePsfMatchedWarp
       - selectDeepCoaddVisits
       - assembleCoadd
+      - healSparsePropertyMaps
+      - computeObjectEpochs
       - detection
       - mergeDetections
       - deblend
@@ -110,7 +112,6 @@ subsets:
       subsets.
   step3b:
     subset:
-      - healSparsePropertyMaps
       - consolidateObjectTable
       - splitPrimaryObject
       # analysis_tools tasks
@@ -122,7 +123,6 @@ subsets:
       - plotPropertyMapTract
       - refCatObjectTract
       - validateObjectTableCore
-      - objectEpochTable
     description: |
       Tract-level tasks that can be run together after the 'step3a'
       subsets.

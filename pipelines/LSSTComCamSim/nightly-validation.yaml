@@ -105,6 +105,7 @@ subsets:
       - consolidateObjectTable
       - splitPrimaryObject
       - healSparsePropertyMaps
+      - computeObjectEpochs
       # analysis_tools tasks
       - analyzeAmpOffsetMetadata
       - analyzeMatchedVisitCore
