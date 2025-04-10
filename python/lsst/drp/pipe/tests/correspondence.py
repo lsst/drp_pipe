@@ -446,7 +446,7 @@ class Correspondence(pydantic.BaseModel):
         # We'll do a diff of the config strings (in config-override-file form),
         # but excise all of the config.connections lines that we know will have
         # differences, as well as all of the comments and blank lines.
-        ignore_prefixes = ["connections."]
+        ignore_prefixes = ["connections.", "idGenerator.release_id", "id_generator.release_id"]
         ignore_prefixes.extend(self.config_ignores.get(new.label, []))
         messages: list[str] = []
 
