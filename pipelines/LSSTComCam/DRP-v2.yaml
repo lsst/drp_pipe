@@ -7,6 +7,8 @@ imports:
       - analysis-visit-initial
       - analysis-visit-recalibrated
       - analysis-visit-source
+parameters:
+  release_id: 4
 tasks:
   isr:
     class: lsst.ip.isr.IsrTaskLSST
