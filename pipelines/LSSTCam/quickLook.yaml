@@ -21,6 +21,8 @@ tasks:
       doBrighterFatter: false
       doAmpOffset: false
 
+      doFlat: false
+
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
