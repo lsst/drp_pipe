@@ -19,6 +19,9 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-dia.yaml
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
 
+parameters:
+  release_id: 0
+
 tasks:
   # stage1-single-visit production tasks
   isr:
@@ -37,6 +40,7 @@ tasks:
       connections.stars: single_visit_star_unstandardized
       connections.exposure: preliminary_visit_image
       connections.background: preliminary_visit_image_background
+      id_generator.release_id: parameters.release_id
   standardizeSingleVisitStar:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
@@ -65,6 +69,7 @@ tasks:
     config:
       connections.visitSummaryRefs: preliminary_visit_summary
       connections.outputCatalog: preliminary_visit_detector_table
+      idGenerator.release_id: parameters.release_id
   makeInitialVisitTable:
     class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
     config:
@@ -136,6 +141,7 @@ tasks:
     config:
       connections.visitSummaryRefs: visit_summary
       connections.outputCatalog: visit_detector_table
+      idGenerator.release_id: parameters.release_id
   makeVisitTable:
     class: lsst.pipe.tasks.postprocess.MakeVisitTableTask
     config:
@@ -150,6 +156,7 @@ tasks:
       connections.visit_summary: visit_summary
       connections.warp: direct_warp
       connections.masked_fraction_warp: direct_warp_masked_fraction
+      idGenerator.release_id: parameters.release_id
   makePsfMatchedWarp:
     class: lsst.drp.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
     config:
@@ -216,6 +223,7 @@ tasks:
       connections.outputBackgrounds: deep_coadd_background
       connections.outputSources: object_detection
       connections.outputExposure: deep_coadd
+      idGenerator.release_id: parameters.release_id
   mergeObjectDetection:
     class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
     config:
@@ -224,6 +232,7 @@ tasks:
       connections.outputSchema: object_detection_merged_schema
       connections.outputPeakSchema: object_detection_peak_schema
       connections.outputCatalog: object_detection_merged
+      idGenerator.release_id: parameters.release_id
   deblendCoaddFootprints:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     config:
@@ -234,6 +243,7 @@ tasks:
       connections.outputSchema: object_deblend_schema
       connections.deblendedCatalog: object_deblend
       connections.scarletModelData: object_scarlet_models
+      idGenerator.release_id: parameters.release_id
   measureObjectUnforced:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
@@ -245,6 +255,7 @@ tasks:
       connections.outputSchema: object_unforced_measurement_schema
       connections.outputSources: object_unforced_measurement
       connections.exposure: deep_coadd
+      idGenerator.release_id: parameters.release_id
   mergeObjectMeasurement:
     class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
     config:
@@ -262,12 +273,14 @@ tasks:
       connections.scarletModels: object_scarlet_models
       connections.refWcs: deep_coadd.wcs
       connections.measCat: object_forced_measurement
+      idGenerator.release_id: parameters.release_id
   fitDeepCoaddPsfGaussians:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
     config:
       connections.coadd: deep_coadd
       connections.cat_meas: object_unforced_measurement
       connections.cat_output: object_psf_multiprofit
+      idGenerator.release_id: parameters.release_id
   fitDeblendedObjectsSersic:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
     config:
@@ -277,6 +290,7 @@ tasks:
       connections.models_psf: object_psf_multiprofit
       connections.models_scarlet: object_scarlet_models
       connections.cat_output: object_sersic_multiprofit
+      idGenerator.release_id: parameters.release_id
   rewriteObject:
     class: lsst.pipe.tasks.postprocess.WriteObjectTableTask
     config:
@@ -319,6 +333,7 @@ tasks:
       connections.sources_footprints: source_footprints
       connections.visit_summary: visit_summary
       remove_initial_photo_calib: false
+      id_generator.release_id: parameters.release_id
   standardizeSource:
     class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
     config:
@@ -366,6 +381,7 @@ tasks:
       connections.subtractedMeasuredExposure: difference_image
       connections.maskedStreaks: difference_streaks
       doSkySources: true
+      idGenerator.release_id: parameters.release_id
   filterDiaSource:
     class: lsst.ap.association.FilterDiaSourceCatalogTask
     config:
@@ -407,6 +423,7 @@ tasks:
       connections.diaObjectTable: dia_object_pre_calc
       connections.associatedSsSources: ss_source_associated
       connections.unassociatedSsObjects: ss_object_unassociated
+      idGenerator.release_id: parameters.release_id
   calculateDiaObject:
     class: lsst.pipe.tasks.drpDiaCalculationPipe.DrpDiaCalculationPipeTask
     config:
@@ -432,6 +449,7 @@ tasks:
       connections.outputSchema: object_forced_source_direct_schema
       connections.measCat: object_forced_source_direct
       useVisitSummary: false
+      idGenerator.release_id: parameters.release_id
   forcedPhotObjectDifference:
     class: lsst.meas.base.ForcedPhotCcdTask
     config:
@@ -441,6 +459,7 @@ tasks:
       connections.outputSchema: object_forced_source_difference_schema
       connections.measCat: object_forced_source_difference
       useVisitSummary: false
+      idGenerator.release_id: parameters.release_id
   writeObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
     config:
@@ -468,6 +487,7 @@ tasks:
       connections.measCat: dia_object_forced_source_direct
       connections.outputSchema: dia_object_forced_source_direct_schema
       useVisitSummary: false
+      idGenerator.release_id: parameters.release_id
   forcedPhotDiaObjectDifference:
     class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
     config:
@@ -476,6 +496,7 @@ tasks:
       connections.measCat: dia_object_forced_source_difference
       connections.outputSchema: dia_object_forced_source_difference_schema
       useVisitSummary: false
+      idGenerator.release_id: parameters.release_id
   writeDiaObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
     config:
