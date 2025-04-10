@@ -21,7 +21,9 @@
 
 from __future__ import annotations
 
+import logging
 import os
+import re
 import tempfile
 import unittest
 from collections.abc import Set
@@ -32,6 +34,8 @@ from lsst.daf.butler.tests.utils import makeTestTempDir, removeTestTempDir
 from lsst.pipe.base import Pipeline, PipelineGraph
 
 from lsst.drp.pipe.tests.correspondence import Correspondence
+
+_LOG = logging.getLogger(__name__)
 
 
 PIPELINES_DIR = os.path.join(os.path.dirname(__file__), "..", "pipelines")
@@ -317,3 +321,38 @@ class DrpV2TestCase(unittest.TestCase):
                 pipeline_graph_compat, pipeline_graph, "DRP-v2-compat", "DRP-v2"
             )
         )
+
+    def test_comcam_release_id_parameter(self) -> None:
+        """Test that changing the release_id parameter affects all appropriate
+        config options in the pipeline.
+        """
+        pipeline = Pipeline.fromString(
+            """
+            description: test pipeline
+            imports:
+                - $DRP_PIPE_DIR/pipelines/LSSTComCam/DRP-v2.yaml
+            parameters:
+                release_id: 52
+            """
+        )
+        pipeline_graph = pipeline.to_graph()
+        regex = re.compile(r"config\.(.+)\.release_id\=")
+        release_id_options = []
+        for task_node in pipeline_graph.tasks.values():
+            for match_string in regex.findall(task_node.get_config_str()):
+                attribute_path: list[str] = match_string.split(".")
+                if any(not term.isidentifier() for term in attribute_path):
+                    _LOG.warning(
+                        f"Not checking config option {task_node.label}:{match_string}.release_id "
+                        "because the test code is not sophisticated enough.  Please improve it."
+                    )
+                    continue
+                config_attribute = task_node.config
+                for term in attribute_path:
+                    config_attribute = getattr(config_attribute, term)
+                self.assertEqual(config_attribute.release_id, 52)
+                release_id_options.append((task_node.label, attribute_path))
+        # Spot check a few expected entries to make sure a logic bug or bad
+        # regex isn't preventing this test from doing anything.
+        self.assertIn(("calibrateImage", ["id_generator"]), release_id_options)
+        self.assertIn(("detectCoaddPeaks", ["idGenerator"]), release_id_options)
