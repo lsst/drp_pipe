@@ -1,0 +1,29 @@
+description: LSSTCam specialization of the DRP pipeline
+instrument: lsst.obs.lsst.LsstCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/base-v2.yaml
+    labeledSubsetModifyMode: EDIT
+    exclude:
+      - analysis-visit-initial
+      - analysis-visit-recalibrated
+      - analysis-visit-source
+      - fgcmBuildFromIsolatedStar
+      - fgcmFitCycle
+      - fgcmOutputProducts
+      - gbdesAstrometricFit
+tasks:
+  isr:
+    class: lsst.ip.isr.IsrTaskLSST
+    config:
+      connections.outputExposure: post_isr_image
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    # SkyCorr, GBDES, FGCM start turned off
+    config:
+      wcs_provider: input_summary
+      photo_calib_provider: input_summary
+      background_provider: input_summary
+  selectTemplateCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    config:
+      nVisitsMin: 12
