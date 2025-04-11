@@ -13,17 +13,19 @@ cluster:
     pipetasks: isr,inject_exposure,calibrateImage,inject_visit,transformSourceTable
     dimensions: visit,detector
     equalDimensions: visit:exposure
-
+  makeWarpTract:
+    pipetasks: makeDirectWarp,makePsfMatchedWarp
+    dimensions: tract,visit
   coadd:
     pipetasks: assembleCoadd,inject_coadd,templateGen,detection
     dimensions: tract,patch,band
 
   objectTable:
-    pipetasks: writeObjectTable,transformObjectTable
+    pipetasks: computeObjectEpochs,writeObjectTable,transformObjectTable
     dimensions: tract,patch
 
   diffim:
-    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
+    pipetasks: getTemplate,subtractImages,filterDiaSrcCat,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
     dimensions: visit,detector
 
   association:

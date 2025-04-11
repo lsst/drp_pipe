@@ -14,17 +14,19 @@ cluster:
     pipetasks: isr,inject_exposure,calibrateImage,inject_visit,transformPreSourceTable
     dimensions: visit,detector
     equalDimensions: visit:exposure
-
+  makeWarpTract:
+    pipetasks: makeDirectWarp,makePsfMatchedWarp
+    dimensions: tract,visit
   coadd:
     pipetasks: assembleCoadd,inject_coadd,templateGen,detection
     dimensions: tract,patch,band
 
   objectTable:
-    pipetasks: writeObjectTable,transformObjectTable
+    pipetasks: computeObjectEpochs,writeObjectTable,transformObjectTable
     dimensions: tract,patch
 
   diffim:
-    pipetasks: getTemplate,subtractImages,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
+    pipetasks: getTemplate,subtractImages,filterDiaSrcCat,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
     dimensions: visit,detector
 
   association:
@@ -39,9 +41,6 @@ cluster:
     pipetasks: forcedPhotDiffOnDiaObjects, forcedPhotCcdOnDiaObjects, writeForcedSourceOnDiaObjectTable
     dimensions: visit,detector,tract
 
-
-# removing this cluster pending fix of DM-48222
-# finalizeSourceTable:
-#   pipetasks: finalizeCharacterization,updateVisitSummary,writeRecalibratedSourceTable,transformSourceTable,consolidateSourceTable
-#   dimensions: visit
-#   equalDimensions: visit:exposure
+  recalibratedSourceTable:
+    pipetasks: writeRecalibratedSourceTable,transformSourceTable
+    dimensions: visit,detector
