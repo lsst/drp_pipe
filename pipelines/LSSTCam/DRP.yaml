@@ -1,0 +1,47 @@
+description: LSSTCam specialization of the DRP pipeline
+instrument: lsst.obs.lsst.LsstCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/base-v2.yaml
+    labeledSubsetModifyMode: EDIT
+    exclude:
+      - analysis-visit-initial
+      - analysis-visit-recalibrated
+      - analysis-visit-source
+      # TODO: DM-50154. FGCM starts turned off
+      - fgcmBuildFromIsolatedStar
+      - fgcmFitCycle
+      - fgcmOutputProducts
+      # TODO: DM-50120. GBDES starts turned off
+      - gbdesAstrometricFit
+tasks:
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      # TODO: DM-50120. GBDES starts turned off
+      wcs_provider: input_summary
+      # TODO: DM-50154. FGCM starts turned off
+      photo_calib_provider: input_summary
+      # TODO: DM-50115. Skycorr starts turned off
+      background_provider: input_summary
+  # TODO: DM-50120 remove astrometriCorrections=false overrides for
+  # all three analyze tasks:
+  analyzeRecalibratedStarAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  analyzeRecalibratedStarObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  analyzeSourceAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  selectTemplateCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    config:
+      nVisitsMin: 12
+  splitPrimarySource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      connections.primary: source2
