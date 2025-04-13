@@ -276,6 +276,11 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "mergedForcedSourceOnDiaObject",
 }
 
+# v2 outputs common to all "quickLook" pipelines, which only include
+QUICKLOOK_V2_OUTPUTS = {
+    "preliminary_visit_image", "preliminary_visit_summary"
+}
+
 # Outputs common to all "quickLook" pipelines, which only iclude
 QUICKLOOK_OUTPUTS = {
     "calexp", "visitSummary"
@@ -580,13 +585,13 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam", "quickLook.yaml"),
             [
-                "#step1",
-                "#step2a",
-                "#nightlyRollup",
+                "#step1a-single-visit-detectors",
+                "#step1b-single-visit-visits",
+                "#step1d-single-visit-global",
             ],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
-            expected_outputs=QUICKLOOK_OUTPUTS,
+            expected_outputs=QUICKLOOK_V2_OUTPUTS,
         )
         tester.run(butler, self)
 
