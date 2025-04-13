@@ -12,6 +12,10 @@ imports:
     include: analyzeCalibrateImageMetadata
   - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
 tasks:
+  analyzeAmpInterfaceOffsetMetadata:
+    class: lsst.analysis.tools.tasks.DatasetMetadataAnalysisTask
+    config:
+      connections.inputName: post_isr_image
   analyzeInitialSummaryStats:
     class: lsst.analysis.tools.tasks.CalexpSummaryAnalysisTask
     config:
