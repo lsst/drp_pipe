@@ -95,6 +95,7 @@ LSSTCAM_INPUTS = {
     "bfk",
     "linearizer",
     "defects",
+    "cti",
     "the_monster_20250219",
     "gaia_dr3_20230707",
 }
@@ -153,6 +154,44 @@ COMMON_OUTPUTS = {
     "visitTable",
     "isolated_star_presource_associations",
     "isolated_star_presources",
+}
+
+# Translated COMMON_OUTPUTS
+COMMON_V2_OUTPUTS = {
+    'visit_detector_table',
+    'compare_warp_artifact_mask',
+    'deep_coadd_visit_selection',
+    'deep_coadd_predetection',
+    'deep_coadd',
+    'deep_coadd_background',
+    'object_detection',
+    'direct_warp',
+    'object_forced_measurement',
+    'deep_coadd_input_map',
+    'object_unforced_measurement',
+    'object_detection_merged',
+    'deep_coadd_n_image',
+    'object_unstandardized',
+    'psf_matched_warp',
+    'object_ref_measurement',
+    'object_scarlet_models',
+    'refit_psf_star',
+    'visit_summary',
+    'initial_astrometry_match_detector',
+    'initial_photometry_match_detector',
+    'single_visit_psf_star_footprints',
+    'single_visit_psf_star',
+    'preliminary_visit_image',
+    'preliminary_visit_image_background',
+    'single_visit_star_footprints',
+    'object_patch',
+    'object_all',
+    'post_isr_image',
+    'recalibrated_star',
+    'preliminary_visit_summary',
+    'visit_table',
+    'isolated_star_association',
+    'isolated_star'
 }
 
 # HSC common outputs, in addition to COMMON_OUTPUTS
@@ -235,6 +274,11 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "goodSeeingVisits",
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
+}
+
+# v2 outputs common to all "quickLook" pipelines, which only include
+QUICKLOOK_V2_OUTPUTS = {
+    "preliminary_visit_image", "preliminary_visit_summary"
 }
 
 # Outputs common to all "quickLook" pipelines, which only iclude
@@ -541,13 +585,53 @@ class PipelineTestCase(unittest.TestCase):
         tester = PipelineStepTester(
             os.path.join(PIPELINES_DIR, "LSSTCam", "quickLook.yaml"),
             [
-                "#step1",
-                "#step2a",
-                "#nightlyRollup",
+                "#step1a-single-visit-detectors",
+                "#step1b-single-visit-visits",
+                "#step1d-single-visit-global",
             ],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
-            expected_outputs=QUICKLOOK_OUTPUTS,
+            expected_outputs=QUICKLOOK_V2_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_nightly_validation(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "nightly-validation.yaml"),
+            [
+                "#step1a-single-visit-detectors",
+                "#step1b-single-visit-visits",
+                "#step1c-single-visit-tracts",
+                "#step1d-single-visit-global",
+                "#stage3-coadd"
+
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            # Check for some basic stage 1 outputs
+            expected_outputs={"preliminary_visit_image",
+                              "preliminary_visit_summary",
+                              "preliminary_visit_table",
+                              "preliminary_visit_detector_table",
+                              "single_visit_star_association_metrics",
+                              "deep_coadd"}
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_drp(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "DRP.yaml"),
+            [
+                "#stage1-single-visit",
+                "#stage2-recalibrate",
+                "#stage3-coadd",
+                "#stage4-measure-variability",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_outputs=COMMON_V2_OUTPUTS,
         )
         tester.run(butler, self)
 

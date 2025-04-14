@@ -8,10 +8,6 @@ imports:
       - analysis-visit-recalibrated
       - analysis-visit-source
 tasks:
-  isr:
-    class: lsst.ip.isr.IsrTaskLSST
-    config:
-      connections.outputExposure: post_isr_image
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:

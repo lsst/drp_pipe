@@ -1,69 +1,37 @@
 description: |
     A fast pipeline to be run on the rapid analysis framework at
     the summit which feeds RubinTV for realtime observer feedback
+    specialized for LSSTCam.
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
-    exclude:
-      - fgcmBuildFromIsolatedStars
-      - fgcmFitCycle
-      - fgcmOutputProducts
-      # We exclude calibrateImage here because we don't want the default DRP
-      # configs for quickLook; instead we want something much closer to the
-      # task defaults (basically the AP configuration), and we get that by not
-      # importing the task and instead just redeclaring it below.
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/base-v2.yaml
+    include:
+      - isr
       - calibrateImage
+      - consolidateVisitSummary
+      - makeInitialVisitDetectorTable
+      - makeInitialVisitTable
+
 tasks:
   isr:
     class: lsst.ip.isr.IsrTaskLSST
     config:
       # Turn off slow steps in ISR
       doBrighterFatter: false
+      doAmpOffset: false
 
-      # turn off things we don't correct while LSSTCam is in the cleanroom
-      doBias: false
-      doLinearize: false
-      doCrosstalk: false
-      doDefect: false
-      doDark: false
-      doFlat: false
-      doDeferredCharge: false
-      doBootstrap: true
-      doApplyGains: false
-      doSuspect: false
-      defaultSaturationSource: CAMERAMODEL
-
-  calibrateImage:
-    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
-    config:
-      # In DRP not calibrating the pixels (or the backgrounds) until we have
-      # our final photometric calibration makes everything downstream much
-      # simpler.
-      do_calibrate_pixels: false
-      connections.initial_stars_schema: src_schema
-      connections.stars_footprints: src
-      connections.stars: preSource
-      connections.exposure: calexp
-      connections.background: calexpBackground
-    # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
 subsets:
-  step1:
+  # formerly step1
+  step1a-single-visit-detectors:
     subset:
       - isr
       - calibrateImage
-      # TO DO: configure and add writePreSourceTable, transformPreSourceTable
-    description: |
-      Per-detector tasks that can be run together
-  step2a:
+  # formerly step2
+  step1b-single-visit-visits:
     subset:
       - consolidateVisitSummary
-      # TO DO: configure and add consolidatePreSourceTable
-  nightlyRollup:
-    # can be run at end of night or on a timer
-    # Need to either clobber OR use a chained collection of timestamped runs
+  # formerly nightlyRollup. Ths is redundant with consDB now
+  step1d-single-visit-global:
     subset:
-      - makePreliminaryCcdVisitTable
-      - makePreliminaryVisitTable
-      - preliminaryVisitCoverageAnalysis
-    description: |
-      Global-level tasks
+      - makeInitialVisitDetectorTable
+      - makeInitialVisitTable

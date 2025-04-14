@@ -1,0 +1,65 @@
+description: >
+  LSSTCam specialization of the Nightly Validation Pipeline.
+  Run overnight: step1a-single-visit-detectors, step1b-single-visit-visits
+  Run in morning: step1c-single-visit-tracts,step1d-single-visit-global,stage3-coadd
+
+  This is the cheapest possible version of a Nightly Validation pipeline.
+  It excludes PIFF and Object Table generation.
+instrument: lsst.obs.lsst.LsstCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/base-v2.yaml
+    labeledSubsetModifyMode: EDIT
+    exclude:
+      # unlike DRP.yaml, do run all analysis-visit-initial tasks, but remove:
+      - analysis-visit-recalibrated
+      - analysis-visit-source
+      # Remove entire recalibration stage including PIFF
+      - stage2-recalibrate
+      - stage4-measure-variability
+      # Remove template generation
+      - selectTemplateCoaddVisits
+      - assembleTemplateCoadd
+      # Remove object table generation
+      - mergeObjectDetection
+      - deblendCoaddFootprints
+      - measureObjectUnforced
+      - mergeObjectMeasurement
+      - measureObjectForced
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
+      - rewriteObject
+      - standardizeObject
+      - consolidateObject
+      - splitPrimaryObject
+      - analyzeObjectTableCore
+      - catalogMatchTract
+      - refCatObjectTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
+      - validateObjectTableCore
+      - computeObjectEpochs
+      - analyzeObjectTableSurveyCore
+      - makeMetricTableObjectTableCore
+      - objectTableCoreWholeSkyPlot
+      - makeMetricTableObjectTableCoreRefCatMatch
+      - objectTableCoreRefCatMatchWholeSkyPlot
+# If you add any config overrides that overlap with LSSTCam/DRP.yaml,
+# please create a pipelines/_ingredients/LSSTCam/DRP.yaml they both share
+tasks:
+  analyzeAmpInterfaceOffsetMetadata:
+    class: lsst.analysis.tools.tasks.DatasetMetadataAnalysisTask
+    config:
+      connections.inputName: post_isr_image
+  makeDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+    config:
+      connections.visit_summary: preliminary_visit_summary
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      connections.visitSummaries: preliminary_visit_summary
+  makeHealSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
+    config:
+      connections.visit_summaries: preliminary_visit_summary

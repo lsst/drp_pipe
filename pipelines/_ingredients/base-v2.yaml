@@ -25,7 +25,7 @@ parameters:
 tasks:
   # stage1-single-visit production tasks
   isr:
-    class: lsst.ip.isr.IsrTask
+    class: lsst.ip.isr.IsrTaskLSST
     config:
       connections.outputExposure: post_isr_image
   calibrateImage:
