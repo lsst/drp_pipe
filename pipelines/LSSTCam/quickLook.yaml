@@ -33,6 +33,8 @@ tasks:
       connections.stars: preSource
       connections.exposure: calexp
       connections.background: calexpBackground
+      python: |
+        config.star_measurement.plugins.names.add("base_FPPosition")
     # TO DO: DM-41189 Get pipeline that will attach an atool here from lauren
 subsets:
   step1:
