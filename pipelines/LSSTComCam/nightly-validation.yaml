@@ -21,6 +21,11 @@ tasks:
       wcs_provider: "input_summary"
       photo_calib_provider: "input_summary"
       background_provider: "input_summary"
+  finalizeCharacterizationDetector:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationDetectorTask
+    config:
+      python: |
+        config.psf_determiner['piff'].useColor = False
 subsets:
   # These 3 steps can be run in real time by Rapid Analysis Framework at USDF
   step1:
