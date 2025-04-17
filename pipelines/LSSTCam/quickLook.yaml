@@ -7,7 +7,10 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/base-v2.yaml
     include:
       - isr
-      - calibrateImage
+      # We do not include calibrateImage in order to reset its configuration
+      # to the task defaults, which essentially correspond to AP's more
+      # performance-oriented setup.  We then override a few connections to
+      # restore compatibility with the DRP configurations of other tasks.
       - consolidateVisitSummary
       - makeInitialVisitDetectorTable
       - makeInitialVisitTable
@@ -19,7 +22,23 @@ tasks:
       # Turn off slow steps in ISR
       doBrighterFatter: false
       doAmpOffset: false
-
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+      connections.exposures: post_isr_image
+      connections.stars_footprints: single_visit_star_footprints
+      connections.psf_stars_footprints: single_visit_psf_star_footprints
+      connections.psf_stars: single_visit_psf_star
+      connections.initial_stars_schema: single_visit_star_schema
+      connections.stars: single_visit_star_unstandardized
+      connections.exposure: preliminary_visit_image
+      connections.background: preliminary_visit_image_background
+      id_generator.release_id: parameters.release_id
+      # Don't calibrate pixels to nJy, since we assume quickLook consumers are
+      # prefer e- units and that's what they'd get if PhotoCal fails anyway.
+      do_calibrate_pixels: False
+      python: |
+        config.star_measurement.plugins.names.add("base_FPPosition")
 subsets:
   # formerly step1
   step1a-single-visit-detectors:
