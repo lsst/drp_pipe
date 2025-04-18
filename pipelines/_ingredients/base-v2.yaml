@@ -283,7 +283,7 @@ tasks:
   fitDeepCoaddPsfGaussians:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
     config:
-      connections.coadd: deep_coadd
+      connections.coadd: deepCoaddCell
       connections.cat_meas: object_unforced_measurement
       connections.cat_output: object_psf_multiprofit
   fitDeblendedObjectsSersic:
