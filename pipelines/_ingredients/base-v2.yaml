@@ -274,7 +274,8 @@ tasks:
     class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
     config:
       connections.inputSchema: object_ref_measurement_schema
-      connections.exposure: deep_coadd
+      connections.exposure: deepCoaddCell
+      connections.background: deep_coadd_background
       connections.refCat: object_ref_measurement
       connections.refCatInBand: object_unforced_measurement
       connections.scarletModels: object_scarlet_models
