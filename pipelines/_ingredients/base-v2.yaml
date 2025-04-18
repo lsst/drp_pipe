@@ -291,7 +291,7 @@ tasks:
     config:
       connections.cat_ref: object_ref_measurement
       connections.cats_meas: object_unforced_measurement
-      connections.coadds: deep_coadd
+      connections.coadds: deepCoaddCell
       connections.models_psf: object_psf_multiprofit
       connections.models_scarlet: object_scarlet_models
       connections.cat_output: object_sersic_multiprofit
