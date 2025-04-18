@@ -47,6 +47,10 @@ imports:
 # If you add any config overrides that overlap with LSSTCam/DRP.yaml,
 # please create a pipelines/_ingredients/LSSTCam/DRP.yaml they both share
 tasks:
+  consolidateVisitSummary:
+    class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
+    config:
+      full: true
   analyzeAmpInterfaceOffsetMetadata:
     class: lsst.analysis.tools.tasks.DatasetMetadataAnalysisTask
     config:
