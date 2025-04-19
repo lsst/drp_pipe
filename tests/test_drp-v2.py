@@ -98,6 +98,17 @@ class DrpV2TestCase(unittest.TestCase):
             )
         )
 
+    def register_dataset(self, butler: Butler, name: str, dimensions: set(str), storageClass: str) -> None:
+        butler.registry.registerDatasetType(
+            DatasetType(
+                name,
+                dimensions,
+                storageClass,
+                isCalibration=False,
+                universe=butler.dimensions,
+            )
+        )
+
     def test_comcam_full_load(self) -> None:
         """Test the LSSTComCam/DRP-v2 pipeline after reading the full pipeline
         at once.
@@ -136,6 +147,9 @@ class DrpV2TestCase(unittest.TestCase):
         """
         butler = self.make_butler(writeable=True)
         self.register_refcat(butler, COMCAM_REFCAT)
+        # Pre-define visit_table.
+        # It is stored as ArrowAstropy but read as a DataFrame.
+        self.register_dataset(butler, "visit_table", {"instrument"}, "ArrowAstropy")
         pipeline_graph_1 = Pipeline.from_uri(
             os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage1-single-visit")
         ).to_graph(registry=butler.registry)
