@@ -450,6 +450,8 @@
     "object_e2Diff_ScatterPlotWithTwoHists": "objectTableCore_e2Diff_ScatterPlotWithTwoHists",
     "object_metrics": "objectTableCore_metrics",
     "object_psfCModelScatter_ScatterPlotWithTwoHists": "objectTableCore_psfCModelScatter_ScatterPlotWithTwoHists",
+    "object_sersicIndexVsSersicMag_ScatterPlotWithTwoHists": "objectTableCore_sersicIndexVsSersicMag_ScatterPlotWithTwoHists",
+    "object_sersicSizeVsSersicMag_ScatterPlotWithTwoHists": "objectTableCore_sersicSizeVsSersicMag_ScatterPlotWithTwoHists",
     "object_shapeSizeDetRadiusVsCmodelMag_ScatterPlotWithTwoHists": "objectTableCore_shapeSizeDetRadiusVsCmodelMag_ScatterPlotWithTwoHists",
     "object_shapeSizeDetRadiusVsPsfMag_ScatterPlotWithTwoHists": "objectTableCore_shapeSizeDetRadiusVsPsfMag_ScatterPlotWithTwoHists",
     "object_shapeSizeFractionalDiff_ScatterPlotWithTwoHists": "objectTableCore_shapeSizeFractionalDiff_ScatterPlotWithTwoHists",
