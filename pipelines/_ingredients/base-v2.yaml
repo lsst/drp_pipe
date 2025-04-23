@@ -259,6 +259,7 @@ tasks:
       connections.scarletModels: object_scarlet_models
       connections.sourceTableHandles: recalibrated_star
       connections.finalizedSourceTableHandles: refit_psf_star
+      connections.finalVisitSummaryHandles: visit_summary
       connections.outputSchema: object_unforced_measurement_schema
       connections.outputSources: object_unforced_measurement
       connections.exposure: deep_coadd
