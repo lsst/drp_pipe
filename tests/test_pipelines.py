@@ -287,15 +287,15 @@ QUICKLOOK_OUTPUTS = {
 }
 
 QUICKLOOK_BIAS_OUTPUTS = {
-    "verifyBiasIsrExp",
+    "post_isr_image",
 }
 
 QUICKLOOK_DARK_OUTPUTS = {
-    "verifyDarkIsrExp",
+    "post_isr_image",
 }
 
 QUICKLOOK_FLAT_OUTPUTS = {
-    "verifyFlatIsrExp",
+    "post_isr_image",
 }
 
 # All refcats used by any pipelines, for inclusion as the initial_dataset_types

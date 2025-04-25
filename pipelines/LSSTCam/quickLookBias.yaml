@@ -12,5 +12,6 @@ tasks:
   verifyBiasIsr:
     class: lsst.ip.isr.IsrTaskLSST
     config:
+      connections.outputExposure: post_isr_image
       # Make sure interpolation is on.
       doInterpolate: true

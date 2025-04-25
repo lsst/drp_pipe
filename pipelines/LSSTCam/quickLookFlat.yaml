@@ -12,6 +12,7 @@ tasks:
   verifyFlatIsr:
     class: lsst.ip.isr.IsrTaskLSST
     config:
+      connections.outputExposure: post_isr_image
       # Make sure brighter-fatter is off.
       doBrighterFatter: false
       # Make sure interpolation is on.
