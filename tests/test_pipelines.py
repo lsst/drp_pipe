@@ -286,6 +286,18 @@ QUICKLOOK_OUTPUTS = {
     "calexp", "visitSummary"
 }
 
+QUICKLOOK_BIAS_OUTPUTS = {
+    "post_isr_image",
+}
+
+QUICKLOOK_DARK_OUTPUTS = {
+    "post_isr_image",
+}
+
+QUICKLOOK_FLAT_OUTPUTS = {
+    "post_isr_image",
+}
+
 # All refcats used by any pipelines, for inclusion as the initial_dataset_types
 # argument to PipelineStepTester; the intent is just to allow the 'skypix'
 # dimension placeholder used in these connections to be resolved.
@@ -592,6 +604,45 @@ class PipelineTestCase(unittest.TestCase):
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
             expected_outputs=QUICKLOOK_V2_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_quickLook_bias(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "quickLookBias.yaml"),
+            [
+                "#verifyBiasIsr",
+            ],
+            initial_dataset_types=[],
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_outputs=QUICKLOOK_BIAS_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_quickLook_dark(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "quickLookDark.yaml"),
+            [
+                "#verifyDarkIsr",
+            ],
+            initial_dataset_types=[],
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_outputs=QUICKLOOK_DARK_OUTPUTS,
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_quickLook_flat(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "quickLookFlat.yaml"),
+            [
+                "#verifyFlatIsr",
+            ],
+            initial_dataset_types=[],
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_outputs=QUICKLOOK_FLAT_OUTPUTS,
         )
         tester.run(butler, self)
 
