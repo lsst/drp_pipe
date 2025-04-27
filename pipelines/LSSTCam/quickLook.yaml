@@ -34,6 +34,9 @@ tasks:
       connections.exposure: preliminary_visit_image
       connections.background: preliminary_visit_image_background
       id_generator.release_id: parameters.release_id
+      # Downsample astrometry for faster performance.
+      astrometry.doRandomDownsample: true
+      astrometry.randomDownsampleMaxObjects: 1024
       # Don't calibrate pixels to nJy, since we assume quickLook consumers are
       # prefer e- units and that's what they'd get if PhotoCal fails anyway.
       do_calibrate_pixels: false
