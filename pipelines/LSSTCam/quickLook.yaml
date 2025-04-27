@@ -37,6 +37,7 @@ tasks:
       # Don't calibrate pixels to nJy, since we assume quickLook consumers are
       # prefer e- units and that's what they'd get if PhotoCal fails anyway.
       do_calibrate_pixels: false
+      astrometry.matcher.maxRefObjects: 2048
       python: |
         config.star_measurement.plugins.names.add("base_FPPosition")
 subsets:
