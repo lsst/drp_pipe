@@ -1,1 +1,81 @@
+# This BPS configuration snippet adds requestMemory values for DRP
+# and tasks.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/resources/LSSTCam/DRP.yaml
+#
+# (with no outer indentation) to your BPS config file.
 
+pipetask:
+  isr:
+    requestMemory: 8000
+  step1a_detectors:
+    requestMemory: 8000
+  analyzeSingleVisitStarAssociation:
+    requestMemory: 50000
+  fgcmBuildFromIsolatedStar:
+    requestMemory: 16000
+  fgcmFitCycle:
+    requestMemory: 32000
+    #  The following need DM-48156 before they can be implemented in USDF PanDA:
+    #  queue: SLAC_Rubin_Extra_Himem_32Cores
+    #  requestCpus: 16
+    #  extraRunQuantumOptions: "-j 1 -n 16"
+  gbdesAstrometricFit:
+    requestMemory: 8000
+  refitPsfModelDetector:
+    requestMemory: 7000
+  refitPsfModel:
+    requestMemory: 7000
+  makeVisitDetectorTable:
+    requestMemory: 7000
+  makeVisitTable:
+    requestMemory: 7000
+  analyzeRecalibratedStarAssociation:
+    requestMemory: 50000
+  patch_coaddition:
+    requestMemory: 20000
+  patch_deep_coadd:
+    requestMemory: 20000
+  assembleDeepCoadd:
+    requestMemory: 20000
+  patch_template_coadd:
+    requestMemory: 20000
+  assembleTemplateCoadd:
+    requestMemory: 20000
+  property_maps:
+    requestMemory: 14000
+  makeHealSparsePropertyMaps:
+    requestMemory: 14000
+  patch_detect_deblend:
+    requestMemory: 50000
+  deblendCoaddFootprints:
+    requestMemory: 50000
+  measureObjectUnforced:
+    requestMemory: 7000
+  measureObjectForced:
+    requestMemory: 7000
+  patch_postprocess:
+    requestMemory: 7000
+  rewriteObject:
+    requestMemory: 7000
+  objectTableCoreWholeSkyPlot:
+    requestMemory: 7000
+  diffim:
+    request_memory: 7000
+  rewarpTemplate:
+    requestMemory: 7000
+  standardizeDiaObjectForcedSource:
+    requestMemory: 7000
+  analyzeSourceAssociation:
+    requestMemory: 30000
+  consolidateForcedSourceOnDiaObjectTable:
+    requestMemory: 17000
+  consolidateForcedSourceTable:
+    requestMemory: 7000
+  analyzeMultiprofitCore:
+    requestMemory: 8000
+  mergeMultiprofit:
+    requestMemory: 8000
