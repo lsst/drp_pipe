@@ -1,1 +1,80 @@
+# This is a prescription for quantum clustering with BPS with LSSTComCam DRP.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-clustering.yaml
+#
+# (with no outer indentation) to your BPS config file.
 
+clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
+cluster:
+    step1a_detectors:
+        pipetasks: isr,calibrateImage,standardizeSingleVisitStar
+        dimensions: detector
+        equalDimensions: visit:exposure
+        partitionDimensions: exposure
+        partitionMaxClusters: 3000
+    step1b_visits:
+        pipetasks: consolidateSingleVisitStar,consolidateVisitSummary
+        dimensions: visit
+    step2c_refitpsf:
+        pipetasks: refitPsfModelDetector
+        dimensions: detector
+        partitionDimensions: visit
+        partitionMaxClusters: 3000
+    step2c_visits:
+        pipetasks: recalibrateSingleVisitStar,standardizeRecalibratedStar
+        dimensions: detector
+        partitionDimensions: visit
+        partitionMaxClusters: 3000
+    warps:
+        pipetasks: makeDirectWarp,makePsfMatchedWarp
+#        dimensions: tract,patch,band,visit
+        dimensions: tract,visit
+#        partitionDimensions: tract,patch
+#        partitionMaxClusters: 3000
+#    patch_coaddition:
+#        pipetasks: assembleDeepCoadd,detectCoaddPeaks
+#        dimensions: tract,patch,band
+    patch_deep_coadd:
+        pipetasks: selectDeepCoaddVisits,assembleDeepCoadd
+        dimensions: tract,patch,band
+    patch_template_coadd:
+        pipetasks: selectTemplateCoaddVisits,assembleTemplateCoadd
+        dimensions: tract,patch,band
+    patch_detect_deblend:
+        pipetasks: mergeObjectDetection,deblendCoaddFootprints
+        dimensions: tract,patch
+    patch_postprocess:
+        pipetasks: rewriteObject,computeObjectEpochs,standardizeObject
+        dimensions: tract,patch
+    property_maps:
+        pipetasks: makeHealSparsePropertyMaps
+        dimensions: tract,band
+    step4a_reprocess_standardize:
+        pipetasks: reprocessVisitImage,standardizeSource
+        dimensions: detector
+        partitionDimensions: visit
+        partitionMaxClusters: 3000
+    diffim:
+        pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,standardizeDiaSource
+        dimensions: detector
+        partitionDimensions: visit
+        partitionMaxClusters: 3000
+    association:
+        pipetasks: associateDiaSource,calculateDiaObject
+        dimensions: tract,patch
+    step4b_forced_phot:
+        pipetasks: forcedPhotObjectDirect,forcedPhotObjectDifference,writeObjectForcedSource
+        dimensions: visit,detector
+#    The following step4b_forced_phot partitioning needs to be changed as it leads to a tail
+#    of very long running jobs (~24 hours)
+#        dimensions: detector
+#        partitionDimensions: visit
+#        partitionMaxClusters: 3000
+    step4b_forced_phot_dia:
+        pipetasks: forcedPhotDiaObjectDifference,forcedPhotDiaObjectDirect,writeDiaObjectForcedSource
+        dimensions: detector
+        partitionDimensions: visit
+        partitionMaxClusters: 3000
