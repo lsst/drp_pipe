@@ -14,9 +14,6 @@ subDirTemplate: "{label}/{detector}"
 
 cluster:
   step1detector:
-    equalDimensions: exposure:visit
-    partitionDimensions: exposure
-    partitionMaxClusters: 10000
     environment:
       DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config/step1:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: size=1_000_000_000_000
