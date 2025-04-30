@@ -11,7 +11,7 @@
 pipetask:
   isr:
     requestMemory: 8000
-  step1a_detectors:
+  step1detector:
     requestMemory: 8000
   analyzeSingleVisitStarAssociation:
     requestMemory: 50000
@@ -37,7 +37,7 @@ pipetask:
     requestMemory: 50000
   patch_coaddition:
     requestMemory: 20000
-  patch_deep_coadd:
+  coadd:
     requestMemory: 20000
   assembleDeepCoadd:
     requestMemory: 20000
