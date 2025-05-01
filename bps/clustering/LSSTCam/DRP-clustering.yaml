@@ -1,0 +1,70 @@
+# This is a prescription for quantum clustering with BPS with LSSTComCam DRP.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-clustering.yaml
+#
+# (with no outer indentation) to your BPS config file.
+
+clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
+cluster:
+  step1detector:
+    # shared with NV
+    pipetasks: isr,calibrateImage,analyzeAmpOffsetMetadata,analyzeAmpInterfaceOffsetMetadata,analyzeInitialSummaryStats,analyzeCalibrateImageMetadata,standardizeSingleVisitStar
+    dimensions: detector
+    equalDimensions: visit:exposure
+    partitionDimensions: exposure
+    partitionMaxClusters: 3000
+  step1b_visits:
+    pipetasks: consolidateSingleVisitStar,consolidateVisitSummary
+    dimensions: visit
+  step2c_refitpsf:
+    pipetasks: refitPsfModelDetector
+    dimensions: detector
+    partitionDimensions: visit
+    partitionMaxClusters: 3000
+  step2c_visits:
+    pipetasks: recalibrateSingleVisitStar,standardizeRecalibratedStar
+    dimensions: detector
+    partitionDimensions: visit
+    partitionMaxClusters: 3000
+  makeWarpTract:
+    # shared with NV
+    pipetasks: makeDirectWarp,makePsfMatchedWarp
+    dimensions: tract,visit
+  coadd:
+    # shared with NV
+    pipetasks: selectDeepCoaddVisits,assembleDeepCoadd,detectCoaddPeaks
+    dimensions: tract,patch,band
+  patch_template_coadd:
+    pipetasks: selectTemplateCoaddVisits,assembleTemplateCoadd
+    dimensions: tract,patch,band
+  patch_detect_deblend:
+    pipetasks: mergeObjectDetection,deblendCoaddFootprints
+    dimensions: tract,patch
+  patch_postprocess:
+    pipetasks: rewriteObject,computeObjectEpochs,standardizeObject
+    dimensions: tract,patch
+  property_maps:
+    pipetasks: makeHealSparsePropertyMaps
+    dimensions: tract,band
+  step4a_reprocess_standardize:
+    pipetasks: reprocessVisitImage,standardizeSource
+    dimensions: detector
+    partitionDimensions: visit
+    partitionMaxClusters: 3000
+  diffim:
+    pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,standardizeDiaSource
+    dimensions: detector
+    partitionDimensions: visit
+    partitionMaxClusters: 3000
+  association:
+    pipetasks: associateDiaSource,calculateDiaObject
+    dimensions: tract,patch
+  step4b_forced_phot:
+    pipetasks: forcedPhotObjectDirect,forcedPhotObjectDifference,writeObjectForcedSource
+    dimensions: visit,detector
+  step4b_forced_phot_dia:
+    pipetasks: forcedPhotDiaObjectDifference,forcedPhotDiaObjectDirect,writeDiaObjectForcedSource
+    dimensions: visit,detector

@@ -32,6 +32,7 @@ from lsst.pipe.base import Pipeline
 # But for testing purposes, choose a pipeline that the clustering is
 # expected to work with. Keys are clustering yamls. Values are pipelines.
 CLUSTERING_PIPELINE_MAPPING = {
+    'LSSTCam/DRP-clustering.yaml': 'LSSTCam/DRP.yaml',
     'HSC/DRP-RC2-clustering.yaml': 'HSC/DRP-RC2.yaml',
     'LSSTCam-imSim/DRP-DC2-clustering.yaml': 'LSSTCam-imSim/DRP-test-med-1.yaml',
     'LSSTCam-imSim/DRP-OR5-clustering.yaml': 'LSSTCam-imSim/DRP.yaml',
