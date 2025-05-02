@@ -998,3 +998,4 @@ contracts:
   - reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
   - fgcmBuildFromIsolatedStar.doApplyWcsJacobian == False if calibrateImage.do_illumination_correction else True
   - fgcmBuildFromIsolatedStar.doApplyWcsJacobian == fgcmOutputProducts.doComposeWcsJacobian
+  - detectCoaddPeaks.useCellCoadds == deblendCoaddFootprints.useCellCoadds == measureObjectForced.useCellCoadds == measureObjectForced.useCellCoadds == fitDeepCoaddPsfGaussians.use_cell_coadds == fitDeblendedObjectsSersic.use_cell_coadds
