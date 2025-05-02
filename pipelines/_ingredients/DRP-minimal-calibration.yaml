@@ -61,6 +61,7 @@ tasks:
       assembleStaticSkyModel.doSelectVisits: true
       connections.selectedVisits: deepCoaddVisits
       doOnlineForMean: true
+  assembleCellCoadd: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   computeObjectEpochs: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
@@ -261,6 +262,7 @@ subsets:
       - makeDirectWarp
       - makePsfMatchedWarp
       - assembleCoadd
+      - assembleCellCoadd
       - healSparsePropertyMaps
     description: >
       A set of tasks to run when coadding images.
