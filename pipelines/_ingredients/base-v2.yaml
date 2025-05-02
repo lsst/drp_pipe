@@ -990,3 +990,10 @@ contracts:
   - reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
   - fgcmBuildFromIsolatedStar.doApplyWcsJacobian == False if calibrateImage.do_illumination_correction else True
   - fgcmBuildFromIsolatedStar.doApplyWcsJacobian == fgcmOutputProducts.doComposeWcsJacobian
+  # List of constraints checking the cell-coadds are consistently used.
+  - detectCoaddPeaks.useCellCoadds == deblendCoaddFootprints.useCellCoadds
+  - detectCoaddPeaks.useCellCoadds == measureObjectUnforced.useCellCoadds
+  - detectCoaddPeaks.useCellCoadds == measureObjectForced.useCellCoadds
+  - detectCoaddPeaks.useCellCoadds == fitDeepCoaddPsfGaussians.use_cell_coadds
+  - detectCoaddPeaks.useCellCoadds == fitDeblendedObjectsSersic.use_cell_coadds
+  # End of constraints for cell-coadds.
