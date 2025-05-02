@@ -30,6 +30,7 @@ datastore:
 
       # selectDeepCoaddVisits
       preliminary_visit_summary: true
+      visit_summary: true
 
       # make[Direct,PsfMatched]Warp
       preliminary_visit_image: true
