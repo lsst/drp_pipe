@@ -14,12 +14,12 @@ tasks:
     class: lsst.pipe.tasks.match_tract_catalog.MatchTractCatalogTask
     config:
       connections.name_input_cat_ref: injected_deep_coadd_predetection_catalog_tract
-      connections.name_input_cat_target: injected_object
+      connections.name_input_cat_target: injected_object_all
   compare_object_to_injected:
     class: lsst.pipe.tasks.diff_matched_tract_catalog.DiffMatchedTractCatalogTask
     config:
       connections.name_input_cat_ref: injected_deep_coadd_predetection_catalog_tract
-      connections.name_input_cat_target: injected_object
+      connections.name_input_cat_target: injected_object_all
 
       column_matched_prefix_ref: "ref_"
       # TODO: Remove as part of DM-44139
@@ -46,9 +46,7 @@ tasks:
                 fluxes_meas.append(f"{band}_{model}Flux")
         # Extendedness columns are needed for downstream plots/metrics/etc.
         columns_target_copy = [
-          "objectId", "patch",
-          "detect_isDeblendedSource", "detect_isPatchInner", "detect_isPrimary", "merge_peak_sky",
-          "refExtendedness", "refSizeExtendedness",
+          "objectId", "patch", "refExtendedness", "refSizeExtendedness", "detect_isPrimary",
         ]
         columns_target_copy.extend(fluxes_meas)
         columns_target_copy.extend([f"{col}Err" for col in fluxes_meas])
@@ -65,8 +63,8 @@ tasks:
   diff_matched_analysis:
     class: lsst.analysis.tools.tasks.DiffMatchedAnalysisTask
     config:
-      connections.inputName: matched_injected_deep_coadd_predetection_catalog_tract_injected_object
-      connections.outputName: matched_injected_deep_coadd_predetection_catalog_tract_injected_object
+      connections.inputName: matched_injected_deep_coadd_predetection_catalog_tract_injected_object_all
+      connections.outputName: matched_injected_deep_coadd_predetection_catalog_tract_injected_object_all
 
       atools.matchedRefCompleteness: MatchedRefCoaddCompurityTool
       atools.matchedRefAngularSeparationDiff: MatchedRefCoaddDiffDistanceTool
