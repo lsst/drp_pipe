@@ -197,6 +197,11 @@ tasks:
       doSelectVisits: true
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
+  assembleCellCoadd:
+    class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+    config:
+      connections.inputWarps: direct_warp
+      connections.visitSummaryList: visit_summary
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
@@ -697,6 +702,7 @@ subsets:
       - selectTemplateCoaddVisits
       - assembleDeepCoadd
       - assembleTemplateCoadd
+      - assembleCellCoadd
       - makeHealSparsePropertyMaps
       - detectCoaddPeaks
       - mergeObjectDetection
@@ -858,6 +864,7 @@ subsets:
     - selectTemplateCoaddVisits
     - assembleDeepCoadd
     - assembleTemplateCoadd
+    - assembleCellCoadd
     - makeHealSparsePropertyMaps
     - detectCoaddPeaks
     - mergeObjectDetection
