@@ -370,3 +370,7 @@ class DrpV2TestCase(unittest.TestCase):
         # regex isn't preventing this test from doing anything.
         self.assertIn(("calibrateImage", ["id_generator"]), release_id_options)
         self.assertIn(("detectCoaddPeaks", ["idGenerator"]), release_id_options)
+
+
+if __name__ == "__main__":
+    unittest.main()
