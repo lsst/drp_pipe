@@ -13,6 +13,8 @@ imports:
       - fgcmOutputProducts
       # TODO: DM-50120. GBDES starts turned off
       - gbdesAstrometricFit
+      # remove analyzeRecalibratedStarObjectMatch to preceed with 4a as soon as templates are made
+      - analyzeRecalibratedStarObjectMatch
 tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
