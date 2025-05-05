@@ -44,6 +44,8 @@ imports:
       - objectTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
+      # Temporarily disable AmpOffsets due to DM-50671
+      - analyzeAmpOffsetMetadata
 # If you add any config overrides that overlap with LSSTCam/DRP.yaml,
 # please create a pipelines/_ingredients/LSSTCam/DRP.yaml they both share
 tasks:
