@@ -30,3 +30,7 @@ cluster:
     environment:
       DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config/step3:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
+  diffim:
+    environment:
+      DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config/step3:${DAF_BUTLER_CONFIG_PATH}
+      DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500

@@ -39,3 +39,6 @@ datastore:
       direct_warp: true
       psf_matched_warp: true
       deep_coadd_visit_selection: true
+
+      # diffim
+      template_coadd: true
