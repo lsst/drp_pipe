@@ -38,7 +38,7 @@ cluster:
     dimensions: tract,visit
   coadd:
     # shared with NV
-    pipetasks: selectDeepCoaddVisits,assembleDeepCoadd,detectCoaddPeaks,selectTemplateCoaddVisits,assembleTemplateCoadd
+    pipetasks: selectDeepCoaddVisits,assembleDeepCoadd,assembleCellCoadd,detectCoaddPeaks,selectTemplateCoaddVisits,assembleTemplateCoadd
     dimensions: tract,patch,band
   patch_detect_deblend:
     pipetasks: mergeObjectDetection,deblendCoaddFootprints
