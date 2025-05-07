@@ -24,6 +24,9 @@ cluster:
     dimensions: detector
     partitionDimensions: visit
     partitionMaxClusters: 3000
+  step2c_visit_summary:
+    pipetasks: consolidateRefitPsfModelDetector,updateVisitSummary
+    dimensions: visit
   step2c_visits:
     pipetasks: recalibrateSingleVisitStar,standardizeRecalibratedStar
     dimensions: detector
