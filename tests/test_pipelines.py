@@ -124,6 +124,8 @@ COMMON_OUTPUTS = {
     "compare_warp_artifact_mask",
     "deepCoaddVisits",
     "deepCoadd",
+    "deepCoaddCell",
+    "deepCoaddCell_stitched",
     "deepCoadd_calexp",
     "deepCoadd_calexp_background",
     "deepCoadd_det",
@@ -160,6 +162,7 @@ COMMON_OUTPUTS = {
 COMMON_V2_OUTPUTS = {
     'visit_detector_table',
     'compare_warp_artifact_mask',
+    'deep_coadd_predetection_cell',
     'deep_coadd_visit_selection',
     'deep_coadd_predetection',
     'deep_coadd',
@@ -249,6 +252,7 @@ LATISS_OUTPUTS = {
 
 # LSSTCam-imSim common outputs, in addition to COMMON_OUTPUTS
 LSSTCAM_IMSIM_OUTPUTS = {
+    "deepCoaddCell",
     "diaObjectTable_tract",
     "diaSourceTable",
     "diaSourceTable_tract",
@@ -274,6 +278,11 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "goodSeeingVisits",
     "mergedForcedSource",
     "mergedForcedSourceOnDiaObject",
+}
+
+# LSSTCam common outputs, in addition to COMMON_OUTPUTS
+LSSTCAM_OUTPUTS = {
+    "deepCoaddCell",
 }
 
 # v2 outputs common to all "quickLook" pipelines, which only include
