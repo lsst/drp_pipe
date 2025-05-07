@@ -64,7 +64,10 @@ tasks:
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   computeObjectEpochs: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
-  detection: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+  detection:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      useCellCoadds: true
   mergeDetections: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
   deblend: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
   measure: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
