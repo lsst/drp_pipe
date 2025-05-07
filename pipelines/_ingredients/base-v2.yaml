@@ -240,6 +240,7 @@ tasks:
       connections.outputSources: object_detection
       connections.outputExposure: deep_coadd
       idGenerator.release_id: parameters.release_id
+      useCellCoadds: true
   mergeObjectDetection:
     class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
     config:
@@ -262,6 +263,7 @@ tasks:
       connections.deblendedCatalog: object_deblend
       connections.scarletModelData: object_scarlet_models
       idGenerator.release_id: parameters.release_id
+      useCellCoadds: true
   measureObjectUnforced:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
@@ -277,6 +279,7 @@ tasks:
       connections.exposure_cells: deep_coadd_predetection_cell
       connections.background: deep_coadd_background
       idGenerator.release_id: parameters.release_id
+      useCellCoadds: true
   mergeObjectMeasurement:
     class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
     config:
@@ -297,6 +300,7 @@ tasks:
       connections.refWcs: deep_coadd.wcs
       connections.measCat: object_forced_measurement
       idGenerator.release_id: parameters.release_id
+      useCellCoadds: true
   fitDeepCoaddPsfGaussians:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
     config:
@@ -306,6 +310,7 @@ tasks:
       connections.cat_meas: object_unforced_measurement
       connections.cat_output: object_psf_multiprofit
       idGenerator.release_id: parameters.release_id
+      use_cell_coadds: true
   fitDeblendedObjectsSersic:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
     config:
@@ -318,6 +323,7 @@ tasks:
       connections.models_scarlet: object_scarlet_models
       connections.cat_output: object_sersic_multiprofit
       idGenerator.release_id: parameters.release_id
+      use_cell_coadds: true
   rewriteObject:
     class: lsst.pipe.tasks.postprocess.WriteObjectTableTask
     config:
