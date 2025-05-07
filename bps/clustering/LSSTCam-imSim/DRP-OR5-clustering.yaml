@@ -16,7 +16,7 @@ cluster:
     pipetasks: makeDirectWarp,makePsfMatchedWarp
     dimensions: tract,visit
   coadd:
-    pipetasks: assembleCoadd,inject_coadd,detection
+    pipetasks: assembleCoadd,assembleCellCoadd,inject_coadd,detection
     dimensions: tract,patch,band
 
   objectTable:
