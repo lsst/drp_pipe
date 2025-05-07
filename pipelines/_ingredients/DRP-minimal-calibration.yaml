@@ -60,6 +60,7 @@ tasks:
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
       connections.selectedVisits: deepCoaddVisits
+  assembleCellCoadd: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   computeObjectEpochs: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
@@ -184,7 +185,7 @@ tasks:
       connections.measCat: forced_diff
       connections.outputSchema: forced_diff_schema
       connections.exposure: goodSeeingDiff_differenceExp
-      useVisitSummary: false  # difference image already has final calibrations
+      useVisitSummary: false # difference image already has final calibrations
   writeForcedSourceTable: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
   transformForcedSourceTable: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
   splitPrimaryObjectForcedSource:
@@ -210,7 +211,7 @@ tasks:
       connections.measCat: forced_diff_diaObject
       connections.outputSchema: forced_diff_diaObject_schema
       connections.exposure: goodSeeingDiff_differenceExp
-      useVisitSummary: false  # difference image already has final calibrations
+      useVisitSummary: false # difference image already has final calibrations
   writeForcedSourceOnDiaObjectTable:
     class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
     config:
@@ -259,6 +260,7 @@ subsets:
       - makeDirectWarp
       - makePsfMatchedWarp
       - assembleCoadd
+      - assembleCellCoadd
       - healSparsePropertyMaps
     description: >
       A set of tasks to run when coadding images.
@@ -332,3 +334,6 @@ contracts:
   - isr.doFlat == True if calibrateImage.do_illumination_correction == True else True
   - makeDirectWarp.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
   - reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
+  - (deblend.useCellCoadds == detection.useCellCoadds == measure.useCellCoadds == forcedPhotCoadd.useCellCoadds
+     == fitDeepCoaddPsfGaussians.use_cell_coadds == fitDeblendedObjectsSersic.use_cell_coadds
+     )
