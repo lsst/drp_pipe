@@ -186,7 +186,7 @@ tasks:
       connections.measCat: forced_diff
       connections.outputSchema: forced_diff_schema
       connections.exposure: goodSeeingDiff_differenceExp
-      useVisitSummary: false  # difference image already has final calibrations
+      useVisitSummary: false # difference image already has final calibrations
   writeForcedSourceTable: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
   transformForcedSourceTable: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
   splitPrimaryObjectForcedSource:
@@ -212,7 +212,7 @@ tasks:
       connections.measCat: forced_diff_diaObject
       connections.outputSchema: forced_diff_diaObject_schema
       connections.exposure: goodSeeingDiff_differenceExp
-      useVisitSummary: false  # difference image already has final calibrations
+      useVisitSummary: false # difference image already has final calibrations
   writeForcedSourceOnDiaObjectTable:
     class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
     config:
