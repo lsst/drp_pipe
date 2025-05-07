@@ -15,7 +15,7 @@ cluster:
     equalDimensions: visit:exposure
 
   coadd:
-    pipetasks: assembleCoadd,inject_coadd,templateGen,detection
+    pipetasks: assembleCoadd,assembleCellCoadd,inject_coadd,templateGen,detection
     dimensions: tract,patch,band
 
   objectTable:
