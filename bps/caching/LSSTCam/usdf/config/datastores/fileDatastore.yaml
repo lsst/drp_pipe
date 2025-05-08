@@ -29,6 +29,8 @@ datastore:
     # For per-pipetask cache areas, caching is useful when
     #  * the input dataset types have dataset dimensions along
     #    the clustered dimensions,
+    #  * the input dataset types have dimensions that can be transformed
+    #    to clustered dimensions, e.g., detector -> patch
     #  * output datasets are passed directly to a downstream pipetask
     #    in the same cluster
     # Caching of dataset types that only have dimensions that overlap the
@@ -91,3 +93,21 @@ datastore:
       dia_source_unstandardized: true
       pretrainedModelPackage: true
       dia_source_reliability: true
+
+      # association (associateDiaSource, calculateDiaObject)
+      preloaded_DRP_SsObjects: true
+      dia_source_detector: true
+      dia_object_pre_calc: true
+      dia_source_patch: true
+
+      # step4b_forced_phot (forcedPhotObjectDirect, forcedPhotObjectDifference,
+      # writeObjectForcedSource)
+      object_ref_measurement: true
+      object_forced_source_difference: true
+      object_forced_source_direct: true
+
+      # step4b_forced_phot_dia (forcedPhotDiaObjectDifference,
+      # forcedPhotDiaObjectDirect, writeDiaObjectForcedSource)
+      dia_object_patch: true
+      dia_object_forced_source_difference: true
+      dia_object_forced_source_direct: true
