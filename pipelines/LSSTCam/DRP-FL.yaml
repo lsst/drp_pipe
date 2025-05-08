@@ -1,0 +1,137 @@
+description: >
+  DRP pipeline specialize for processing FL data
+
+  This pipeline is optimized for getting to deep_coadds and DIASources
+  as quickly as possible. No PIFF, no object table generation.
+  It uses SkyCorr for aesthetic coadds.
+instrument: lsst.obs.lsst.LsstCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/base-v2.yaml
+    labeledSubsetModifyMode: EDIT
+    exclude:
+      - analysis-visit-initial
+      - analysis-visit-recalibrated
+      - analysis-visit-source
+      - associateIsolatedStar
+      - analyzeSingleVisitStarAssociation
+      - makeAnalysisSingleVisitStarAssociationMetricTable
+      - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+      # Remove entire recalibration stage including PIFF
+      - stage2-recalibrate
+      # remove step4 Object dependencies
+      - analyzeRecalibratedStarObjectMatch
+      - forcedPhotObjectDifference
+      - forcedPhotObjectDirect
+      - writeObjectForcedSource
+      - standardizeObjectForcedSource
+      - splitPrimaryObjectForcedSource
+      - analyzeSourceAssociation
+      - makeAnalysisSourceAssociationMetricTable
+      - makeAnalysisSourceAssociationWholeSkyPlot
+      # Remove object table generation
+      - mergeObjectDetection
+      - deblendCoaddFootprints
+      - measureObjectUnforced
+      - mergeObjectMeasurement
+      - measureObjectForced
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsSersic
+      - rewriteObject
+      - standardizeObject
+      - consolidateObject
+      - splitPrimaryObject
+      - analyzeObjectTableCore
+      - catalogMatchTract
+      - refCatObjectTract
+      - photometricCatalogMatch
+      - photometricRefCatObjectTract
+      - plotPropertyMapTract
+      - validateObjectTableCore
+      - computeObjectEpochs
+      - analyzeObjectTableSurveyCore
+      - makeMetricTableObjectTableCore
+      - objectTableCoreWholeSkyPlot
+      - makeMetricTableObjectTableCoreRefCatMatch
+      - objectTableCoreRefCatMatchWholeSkyPlot
+# If you add any config overrides that overlap with LSSTCam/DRP.yaml,
+# please create a pipelines/_ingredients/LSSTCam/DRP.yaml they both share
+tasks:
+  consolidateVisitSummary:
+    class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
+    config:
+      full: true
+  makeDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+    config:
+      doApplySkyCorr: true
+      connections.visit_summary: preliminary_visit_summary
+      connections.background_revert_list: preliminary_visit_image_background
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      maxPsfFwhm: 1.6
+      connections.visitSummaries: preliminary_visit_summary
+  selectTemplateCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    config:
+      connections.visitSummaries: preliminary_visit_summary
+      nVisitsMin: 12
+  makeHealSparsePropertyMaps:
+    class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
+    config:
+      connections.visit_summaries: preliminary_visit_summary
+  assembleDeepCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      # Preliminary aggressive adjustment to accomodate FL cadence
+      maxFractionEpochsHigh: 0.2
+      # Shrink regions protected from clipping conservatively
+      detectTemplate.nSigmaToGrow: 1.2
+      detectTemplate.thresholdValue: 100
+  assembleTemplateCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      # Preliminary aggressive adjustment to accomodate FL cadence
+      maxFractionEpochsHigh: 0.2
+      # Shrink regions protected from clipping conservatively
+      detectTemplate.nSigmaToGrow: 1.2
+      detectTemplate.thresholdValue: 100
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      connections.visit_summary: preliminary_visit_summary
+      connections.calib_sources: single_visit_star
+  splitPrimarySource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      connections.primary: source2
+  associateDiaSource:
+    class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
+    config:
+      connections.finalVisitSummaryRefs: preliminary_visit_summary
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+    config:
+      doSky: false
+      doBgModel2: false
+      maskObjects.detection.isotropicGrow: false
+      maskObjects.detection.thresholdType: stdev
+      bgModel1.xSize: 81.92  # 8192 pixels
+      bgModel1.ySize: 81.92
+      bgModel1.pixelSize: 0.01
+      connections.calExps: preliminary_visit_image
+      connections.calBkgs: preliminary_visit_image_background
+      connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic
+      connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic
+
+subsets:
+  step2c-recalibrate-visits:
+    subset:
+      - skyCorr
+    description: >
+      A step that runs visit-level per-visit background estimation
+  stage2-recalibrate:
+    subset:
+      - skyCorr
+    description: >
+      A one step stage
