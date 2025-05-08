@@ -197,6 +197,7 @@ tasks:
       doSelectVisits: true
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
+      doOnlineForMean: true
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
@@ -210,6 +211,7 @@ tasks:
       doSelectVisits: true
       assembleStaticSkyModel.doSelectVisits: true
       doNImage: true
+      doOnlineForMean: true
   makeHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:

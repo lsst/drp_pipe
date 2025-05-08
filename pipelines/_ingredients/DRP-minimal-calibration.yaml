@@ -60,6 +60,7 @@ tasks:
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
       connections.selectedVisits: deepCoaddVisits
+      doOnlineForMean: true
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   computeObjectEpochs: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
@@ -99,6 +100,7 @@ tasks:
       # Setting template 'outputCoaddName' to goodSeeing is not sufficient to
       # convince contract checker that coaddExposure == goodSeeingCoadd
       connections.coaddExposure: goodSeeingCoadd
+      doOnlineForMean: true
   getTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
