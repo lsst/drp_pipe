@@ -63,7 +63,9 @@ tasks:
   makeDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
+      doApplySkyCorr: true
       connections.visit_summary: preliminary_visit_summary
+      connections.background_revert_list: preliminary_visit_image_background
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
@@ -107,3 +109,29 @@ tasks:
     class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
     config:
       connections.finalVisitSummaryRefs: preliminary_visit_summary
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+    config:
+      doSky: false
+      doBgModel2: false
+      maskObjects.detection.isotropicGrow: false
+      maskObjects.detection.thresholdType: stdev
+      bgModel1.xSize: 81.92  # 8192 pixels
+      bgModel1.ySize: 81.92
+      bgModel1.pixelSize: 0.01
+      connections.calExps: preliminary_visit_image
+      connections.calBkgs: preliminary_visit_image_background
+      connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic
+      connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic
+
+subsets:
+  step2c-recalibrate-visits:
+    subset:
+      - skyCorr
+    description: >
+      A step that runs visit-level per-visit background estimation
+  stage2-recalibrate:
+    subset:
+      - skyCorr
+    description: >
+      A one step stage
