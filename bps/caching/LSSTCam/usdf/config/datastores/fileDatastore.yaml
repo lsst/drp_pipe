@@ -79,7 +79,8 @@ datastore:
       preliminary_visit_image_background: true
       source_unstandardized: true
 
-      # diffim (rewarpTemplate, subtractImages, detectAndMeasureDiaSource, filterDiaSource, computeReliability, standardizeDiaSource)
+      # diffim (rewarpTemplate, subtractImages, detectAndMeasureDiaSource,
+      # filterDiaSource, computeReliability, standardizeDiaSource)
       template_coadd: true
       visit_image: true
       template_detector: true
