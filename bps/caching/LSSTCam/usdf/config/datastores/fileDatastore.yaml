@@ -23,14 +23,16 @@ datastore:
     # match is found in the "cacheable" section later on.
     default: false
 
-    # For the datatypes to target for caching, we consider the
+    # For the dataset types to target for caching, we consider the
     # pipetasks/clusters that have the largest numbers of butler put
     # operations.
-    # Caching is useful when
-    #  * the input dataset types have dataset dimensions not in
-    #    the pipetask dimensions, or
-    #  * datasets are passed directly to a downstream pipetask in the
-    #    same cluster
+    # For per-pipetask cache areas, caching is useful when
+    #  * the input dataset types have dataset dimensions along
+    #    the clustered dimensions,
+    #  * output datasets are passed directly to a downstream pipetask
+    #    in the same cluster
+    # Caching of dataset types that only have dimensions that overlap the
+    # partition dimension of a cluster isn't needed.
     # Use a dict over list to simplify merging logic.
     cacheable:
       # Disable generic storage classes
@@ -52,7 +54,7 @@ datastore:
       isolated_star_association: true
 
       # step2c_visits (recalibrateSingleVisitStar, standardizeRecalibratedStar)
-      # recalibrated_star_footprints already added above
+      # single_visit_star_footprints already added above
       recalibrated_star_unstandardized: true
 
       # step2c_visit_summary (consolidateRefitPsfModelDetector, updateVisitSummary)
@@ -60,7 +62,6 @@ datastore:
       refit_psf_star_detector: true
       refit_psf_models: true
       refit_psf_star: true
-
 
       # makeWarpTract (makeDirectWarp, makePsfMatchedWarp)
       preliminary_visit_image: true
@@ -74,5 +75,18 @@ datastore:
       template_coadd_visit_selection: true
       deep_coadd_predetection: true
 
-      # diffim
+      # step4a_reprocess_standardize (reprocessVisitImage, standardizeSource)
+      preliminary_visit_image_background: true
+      source_unstandardized: true
+
+      # diffim (rewarpTemplate, subtractImages, detectAndMeasureDiaSource, filterDiaSource, computeReliability, standardizeDiaSource)
       template_coadd: true
+      visit_image: true
+      template_detector: true
+      difference_image_predetection: true
+      template_matched: true
+      difference_image: true
+      dia_source_unfiltered: true
+      dia_source_unstandardized: true
+      pretrainedModelPackage: true
+      dia_source_reliability: true
