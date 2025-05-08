@@ -27,6 +27,7 @@ imports:
       - splitPrimaryObjectForcedSource
       - analyzeSourceAssociation
       - makeAnalysisSourceAssociationMetricTable
+      - makeAnalysisSourceAssociationWholeSkyPlot
       # Remove object table generation
       - mergeObjectDetection
       - deblendCoaddFootprints
