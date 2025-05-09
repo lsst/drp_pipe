@@ -122,30 +122,6 @@ tasks:
     class: lsst.analysis.tools.tasks.refCatObjectPhotometricAnalysis.RefCatObjectPhotometricAnalysisTask
     config:
       connections.data: objectTable_tract_cal_ref_cat_2_2_photoMatch
-  detection:
-    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
-    config:
-      useCellCoadds: true
-  deblend:
-    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
-    config:
-      useCellCoadds: true
-  measure:
-    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
-    config:
-      useCellCoadds: true
-  forcedPhotCoadd:
-    class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
-    config:
-      useCellCoadds: true
-  fitDeepCoaddPsfGaussians:
-    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
-    config:
-      use_cell_coadds: true
-  fitDeblendedObjectsSersic:
-    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
-    config:
-      use_cell_coadds: true
 subsets:
   step1:
     subset:
