@@ -9,12 +9,115 @@
 # (with no outer indentation) to your BPS config file.
 
 pipetask:
-  isr:
-    requestMemory: 8000
-  step1detector:
-    requestMemory: 8000
+  # 95th percentile memory usage from 20250415-20250422 drp
+  analyzeObjectTableCore:
+    requestMemory: 3432
+  analyzeObjectTableSurveyCore:
+    requestMemory: 6693
+  analyzeRecalibratedStarAssociation:
+    requestMemory: 18634
   analyzeSingleVisitStarAssociation:
-    requestMemory: 50000
+    requestMemory: 21555
+  analyzeSourceAssociation:
+    requestMemory: 27637
+  associateAnalysisSource:
+    requestMemory: 5265
+  calibrateImage:
+    requestMemory: 4000
+  catalogMatchTract:
+    requestMemory: 2942
+  computeObjectEpochs:
+    requestMemory: 2425
+  computeReliability:
+    requestMemory: 18321
+  consolidateHealSparsePropertyMaps:
+    requestMemory: 2195
+  consolidateObject:
+    requestMemory: 5921
+  deblendCoaddFootprints:
+    requestMemory: 2646
+  detectAndMeasureDiaSource:
+    requestMemory: 16170
+  detectCoaddPeaks:
+    requestMemory: 1986
+  filterDiaSource:
+    requestMemory: 15940
+  fitDeblendedObjectsSersic:
+    requestMemory: 2454
+  forcedPhotObjectDifference:
+    requestMemory: 2315
+  forcedPhotObjectDirect:
+    requestMemory: 2316
+  isr:
+    requestMemory: 4000
+  makeAnalysisRecalibratedStarAssociationWholeSkyPlot:
+    requestMemory: 3739
+  makeAnalysisSingleVisitStarAssociationWholeSkyPlot:
+    requestMemory: 3653
+  makeAnalysisSourceAssociationWholeSkyPlot:
+    requestMemory: 3654
+  makeDirectWarp:
+    requestMemory: 5752
+  makeHealSparsePropertyMaps:
+    requestMemory: 13231
+  makePsfMatchedWarp:
+    requestMemory: 7652
+  measureObjectForced:
+    requestMemory: 2175
+  measureObjectUnforced:
+    requestMemory: 2434
+  objectTableCoreWholeSkyPlot:
+    requestMemory: 4000
+  photometricCatalogMatch:
+    requestMemory: 2918
+  plotPropertyMapSurvey:
+    requestMemory: 12661
+  plotPropertyMapTract:
+    requestMemory: 3781
+  recalibrateSingleVisitStar:
+    requestMemory: 1859
+  refitPsfModelDetector:
+    requestMemory: 4000
+  reprocessVisitImage:
+    requestMemory: 4000
+  rewarpTemplate:
+    requestMemory: 8499
+  rewriteObject:
+    requestMemory: 2425
+  selectDeepCoaddVisits:
+    requestMemory: 4000
+  selectTemplateCoaddVisits:
+    requestMemory: 4000
+  splitPrimaryObject:
+    requestMemory: 15023
+  splitPrimarySource:
+    requestMemory: 2560
+  standardizeDiaSource:
+    requestMemory: 21253
+  standardizeObject:
+    requestMemory: 2425
+  standardizeRecalibratedStar:
+    requestMemory: 2379
+  standardizeSource:
+    requestMemory: 4000
+  subtractImages:
+    requestMemory: 14408
+  writeObjectForcedSource:
+    requestMemory: 2368
+  # Known to grow with number of visits
+  makeVisitDetectorTable:
+    requestMemory: 24000
+  makeVisitTable:
+    requestMemory: 24000
+  makeInitialVisitTable:
+    requestMemory: 32000
+  assembleDeepCoadd:
+    requestMemory: 24000
+  assembleTemplateCoadd:
+    requestMemory: 18000
+  associateIsolatedStar:
+    requestMemory: 8000
+  # Not yet in DRP pipeline
   fgcmBuildFromIsolatedStar:
     requestMemory: 16000
   fgcmFitCycle:
@@ -25,57 +128,5 @@ pipetask:
     #  extraRunQuantumOptions: "-j 1 -n 16"
   gbdesAstrometricFit:
     requestMemory: 8000
-  refitPsfModelDetector:
-    requestMemory: 7000
   refitPsfModel:
     requestMemory: 7000
-  makeVisitDetectorTable:
-    requestMemory: 7000
-  makeVisitTable:
-    requestMemory: 7000
-  analyzeRecalibratedStarAssociation:
-    requestMemory: 50000
-  patch_coaddition:
-    requestMemory: 20000
-  coadd:
-    requestMemory: 20000
-  assembleDeepCoadd:
-    requestMemory: 20000
-  patch_template_coadd:
-    requestMemory: 20000
-  assembleTemplateCoadd:
-    requestMemory: 20000
-  property_maps:
-    requestMemory: 14000
-  makeHealSparsePropertyMaps:
-    requestMemory: 14000
-  patch_detect_deblend:
-    requestMemory: 50000
-  deblendCoaddFootprints:
-    requestMemory: 50000
-  measureObjectUnforced:
-    requestMemory: 7000
-  measureObjectForced:
-    requestMemory: 7000
-  patch_postprocess:
-    requestMemory: 7000
-  rewriteObject:
-    requestMemory: 7000
-  objectTableCoreWholeSkyPlot:
-    requestMemory: 7000
-  diffim:
-    request_memory: 7000
-  rewarpTemplate:
-    requestMemory: 7000
-  standardizeDiaObjectForcedSource:
-    requestMemory: 7000
-  analyzeSourceAssociation:
-    requestMemory: 30000
-  consolidateForcedSourceOnDiaObjectTable:
-    requestMemory: 17000
-  consolidateForcedSourceTable:
-    requestMemory: 7000
-  analyzeMultiprofitCore:
-    requestMemory: 8000
-  mergeMultiprofit:
-    requestMemory: 8000
