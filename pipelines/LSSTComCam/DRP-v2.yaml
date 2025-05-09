@@ -7,6 +7,8 @@ imports:
       - analysis-visit-initial
       - analysis-visit-recalibrated
       - analysis-visit-source
+parameters:
+  use_cell_coadds: true
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
@@ -28,33 +30,4 @@ tasks:
   assembleCellCoadd:
     class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
     config:
-      connections.multipleCellCoadd: deepCoaddCell
-  detectCoaddPeaks:
-    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
-    config:
-      useCellCoadds: true
-  deblendCoaddFootprints:
-    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
-    config:
-      connections.coadds_cell: deepCoaddCell
-      useCellCoadds: true
-  measureObjectUnforced:
-    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
-    config:
-      connections.exposure_cells: deepCoaddCell
-      useCellCoadds: true
-  measureObjectForced:
-    class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
-    config:
-      connections.exposure_cell: deepCoaddCell
-      useCellCoadds: true
-  fitDeepCoaddPsfGaussians:
-    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
-    config:
-      connections.coadd_cell: deepCoaddCell
-      use_cell_coadds: true
-  fitDeblendedObjectsSersic:
-    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
-    config:
-      connections.coadds_cell: deepCoaddCell
-      use_cell_coadds: true
+      connections.multipleCellCoadd: deepCoaddCell  # TEMP, till we decide on the new dataset type name.
