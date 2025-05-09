@@ -13,20 +13,16 @@
 subDirTemplate: "{label}/{detector}"
 
 cluster:
+  environment:
+    # These are the defaults for all clustered pipetasks.  Each
+    # pipetask creates its own local cache folder,
+    # $TMPDIR/butler-cache-dir-*
+    DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config:${DAF_BUTLER_CONFIG_PATH}
+    DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
   step1detector:
+    # For step1, the pipetasks for a given detector will use the same
+    # calibs, so specify a single shared cache directory with 1TB
+    # size.
     environment:
-      DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config/step1:${DAF_BUTLER_CONFIG_PATH}
       DAF_BUTLER_CACHE_EXPIRATION_MODE: size=1_000_000_000_000
       DAF_BUTLER_CACHE_DIRECTORY: /lscratch/${USER}/step1_cache
-  makeWarpTract:
-    environment:
-      DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config/step3:${DAF_BUTLER_CONFIG_PATH}
-      DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
-  coadd:
-    environment:
-      DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config/step3:${DAF_BUTLER_CONFIG_PATH}
-      DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
-  skyCorr:
-    environment:
-      DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config/step3:${DAF_BUTLER_CONFIG_PATH}
-      DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500

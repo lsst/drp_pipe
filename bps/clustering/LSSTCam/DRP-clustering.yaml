@@ -24,6 +24,9 @@ cluster:
     dimensions: detector
     partitionDimensions: visit
     partitionMaxClusters: 3000
+  step2c_visit_summary:
+    pipetasks: consolidateRefitPsfModelDetector,updateVisitSummary
+    dimensions: visit
   step2c_visits:
     pipetasks: recalibrateSingleVisitStar,standardizeRecalibratedStar
     dimensions: detector
@@ -35,10 +38,7 @@ cluster:
     dimensions: tract,visit
   coadd:
     # shared with NV
-    pipetasks: selectDeepCoaddVisits,assembleDeepCoadd,detectCoaddPeaks
-    dimensions: tract,patch,band
-  patch_template_coadd:
-    pipetasks: selectTemplateCoaddVisits,assembleTemplateCoadd
+    pipetasks: selectDeepCoaddVisits,assembleDeepCoadd,detectCoaddPeaks,selectTemplateCoaddVisits,assembleTemplateCoadd
     dimensions: tract,patch,band
   patch_detect_deblend:
     pipetasks: mergeObjectDetection,deblendCoaddFootprints
@@ -56,8 +56,8 @@ cluster:
     partitionMaxClusters: 3000
   diffim:
     pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,standardizeDiaSource
-    dimensions: detector
-    partitionDimensions: visit
+    dimensions: visit
+    partitionDimensions: detector
     partitionMaxClusters: 3000
   association:
     pipetasks: associateDiaSource,calculateDiaObject
