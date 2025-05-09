@@ -32,20 +32,25 @@ tasks:
   deblendCoaddFootprints:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     config:
+      connections.coadd_cell: deepCoaddCell
       useCellCoadds: true
   measureObjectUnforced:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
+      connections.exposure_cells: deepCoaddCell
       useCellCoadds: true
   measureObjectForced:
     class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
     config:
+      connections.exposure_cell: deepCoaddCell
       useCellCoadds: true
   fitDeepCoaddPsfGaussians:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
     config:
+      connections.coadds_cell: deepCoaddCell
       use_cell_coadds: true
   fitDeblendedObjectsSersic:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
     config:
+      connections.coadds_cell: deepCoaddCell
       use_cell_coadds: true
