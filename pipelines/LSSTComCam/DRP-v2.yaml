@@ -32,7 +32,7 @@ tasks:
   deblendCoaddFootprints:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     config:
-      connections.coadd_cell: deepCoaddCell
+      connections.coadds_cell: deepCoaddCell
       useCellCoadds: true
   measureObjectUnforced:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
