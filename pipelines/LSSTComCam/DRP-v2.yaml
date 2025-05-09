@@ -25,6 +25,10 @@ tasks:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
       nVisitsMin: 12
+  assembleCellCoadd:
+    class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+    config:
+      connections.multipleCellCoadd: deepCoaddCell
   detectCoaddPeaks:
     class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
     config:
