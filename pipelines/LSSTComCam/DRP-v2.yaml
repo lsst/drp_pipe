@@ -25,3 +25,27 @@ tasks:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
       nVisitsMin: 12
+  detectCoaddPeaks:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      useCellCoadds: true
+  deblendCoaddFootprints:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    config:
+      useCellCoadds: true
+  measureObjectUnforced:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      useCellCoadds: true
+  measureObjectForced:
+    class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+    config:
+      useCellCoadds: true
+  fitDeepCoaddPsfGaussians:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
+    config:
+      use_cell_coadds: true
+  fitDeblendedObjectsSersic:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
+    config:
+      use_cell_coadds: true
