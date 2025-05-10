@@ -11,6 +11,8 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+parameters:
+  use_cell_coadds: true
 tasks:
   isr: lsst.ip.isr.IsrTaskLSST
   gbdesAstrometricFit:
