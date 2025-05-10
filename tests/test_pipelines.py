@@ -125,7 +125,6 @@ COMMON_OUTPUTS = {
     "deepCoaddVisits",
     "deepCoadd",
     "deepCoaddCell",
-    "deepCoaddCell_stitched",
     "deepCoadd_calexp",
     "deepCoadd_calexp_background",
     "deepCoadd_det",
