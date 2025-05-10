@@ -75,11 +75,11 @@ tasks:
   deblend:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     config:
-      useCellCoadds: parameter.use_cell_coadds
+      useCellCoadds: parameters.use_cell_coadds
   measure:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
-      useCellCoadds: parameter.use_cell_coadds
+      useCellCoadds: parameters.use_cell_coadds
   mergeMeasurements: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
   writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
   transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
@@ -99,7 +99,7 @@ tasks:
   forcedPhotCoadd:
     class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
     config:
-      useCellCoadds: parameter.use_cell_coadds
+      useCellCoadds: parameters.use_cell_coadds
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
