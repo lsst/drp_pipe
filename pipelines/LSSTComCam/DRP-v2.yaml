@@ -8,7 +8,7 @@ imports:
       - analysis-visit-recalibrated
       - analysis-visit-source
 parameters:
-  use_cell_coadds: true
+  use_cell_coadds: 1
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
