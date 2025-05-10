@@ -119,6 +119,8 @@ tasks:
       bgModel1.xSize: 81.92  # 8192 pixels
       bgModel1.ySize: 81.92
       bgModel1.pixelSize: 0.01
+      bgModel1.doSmooth: true
+      bgModel1.smoothScale: 2.0
       connections.calExps: preliminary_visit_image
       connections.calBkgs: preliminary_visit_image_background
       connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic
