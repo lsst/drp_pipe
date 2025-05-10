@@ -30,7 +30,7 @@ parameters:
   # default is for highest S/N bands to avoid giving equal weight
   # to aperture fluxes vs CModel (which should be better for galaxies)
   bands_match_fallback: ["r", "i"]
-  use_cell_coadds: 1
+  use_cell_coadds: true
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask
