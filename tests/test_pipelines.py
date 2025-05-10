@@ -705,6 +705,24 @@ class PipelineTestCase(unittest.TestCase):
         )
         tester.run(butler, self)
 
+    def test_lsstcam_nv_fl(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "nightly-validation-FL.yaml"),
+            [
+                "#stage1-single-visit",
+                "#stage2-recalibrate",
+                "#stage3-coadd",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            # Check for some basic outputs
+            expected_outputs={"preliminary_visit_image",
+                              "preliminary_visit_summary",
+                              "deep_coadd_predetection"}
+        )
+        tester.run(butler, self)
+
     def test_lsstcam_imsim_drp_ci_imsim(self):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(

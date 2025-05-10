@@ -12,13 +12,14 @@
 
 subDirTemplate: "{label}/{detector}"
 
+environment:
+  # Default caching config
+  # Each pipetask creates its own local cache folder,
+  # $TMPDIR/butler-cache-dir-*
+  DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config:${DAF_BUTLER_CONFIG_PATH}
+  DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
+
 cluster:
-  environment:
-    # These are the defaults for all clustered pipetasks.  Each
-    # pipetask creates its own local cache folder,
-    # $TMPDIR/butler-cache-dir-*
-    DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config:${DAF_BUTLER_CONFIG_PATH}
-    DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
   step1detector:
     # For step1, the pipetasks for a given detector will use the same
     # calibs, so specify a single shared cache directory with 1TB

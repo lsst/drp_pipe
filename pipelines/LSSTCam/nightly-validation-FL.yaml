@@ -1,0 +1,21 @@
+description: >
+  Temporary pipeline for validating FL data on a daily cadence
+  To be deleted after May 2025
+imports:
+  # We are only supposed to import from ingredients
+  # but this pipeline only serves to validate and inform changes
+  # to the DRP-FL pipeline
+  - location: $DRP_PIPE_DIR/pipelines/LSSTCam/DRP-FL.yaml
+    labeledSubsetModifyMode: EDIT
+    exclude:
+      - standardizeSingleVisitStar
+      - consolidateSingleVisitStar
+      - selectTemplateCoaddVisits
+      - assembleTemplateCoadd
+      - detectCoaddPeaks
+      - stage4-measure-variability
+tasks:
+  assembleDeepCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      doPreserveContainedBySource: false
