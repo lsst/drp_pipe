@@ -65,7 +65,6 @@ tasks:
     config:
       doApplySkyCorr: true
       connections.visit_summary: preliminary_visit_summary
-      connections.background_revert_list: preliminary_visit_image_background
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
