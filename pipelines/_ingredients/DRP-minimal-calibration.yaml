@@ -9,7 +9,7 @@ imports:
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
 
 parameters:
-  use_cell_coadds: false
+  use_cell_coadds: 0
 
 tasks:
   isr: lsst.ip.isr.IsrTask
