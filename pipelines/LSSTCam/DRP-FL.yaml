@@ -122,15 +122,18 @@ tasks:
       connections.calBkgs: preliminary_visit_image_background
       connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic
       connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic
-
+  fitVisitBackground:
+    class: lsst.drp.tasks.fit_visit_background.FitVisitBackgroundTask
 subsets:
   step2c-recalibrate-visits:
     subset:
       - skyCorr
+      - fitVisitBackground
     description: >
       A step that runs visit-level per-visit background estimation
   stage2-recalibrate:
     subset:
       - skyCorr
+      - fitVisitBackground
     description: >
       A one step stage
