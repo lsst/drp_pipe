@@ -251,7 +251,6 @@ LATISS_OUTPUTS = {
 
 # LSSTCam-imSim common outputs, in addition to COMMON_OUTPUTS
 LSSTCAM_IMSIM_OUTPUTS = {
-    "deepCoaddCell",
     "diaObjectTable_tract",
     "diaSourceTable",
     "diaSourceTable_tract",
