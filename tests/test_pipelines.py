@@ -278,11 +278,6 @@ LSSTCAM_IMSIM_OUTPUTS = {
     "mergedForcedSourceOnDiaObject",
 }
 
-# LSSTCam common outputs, in addition to COMMON_OUTPUTS
-LSSTCAM_OUTPUTS = {
-    "deepCoaddCell",
-}
-
 # v2 outputs common to all "quickLook" pipelines, which only include
 QUICKLOOK_V2_OUTPUTS = {
     "preliminary_visit_image", "preliminary_visit_summary"
