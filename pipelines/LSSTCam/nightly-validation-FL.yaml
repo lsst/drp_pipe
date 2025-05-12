@@ -23,3 +23,10 @@ tasks:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
       connections.background_apply_list: visit_background_diff
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+    config:
+      doBgModel2: true
+      bgModel2.xSize: 20.48  # 2048 * 0.01 mm
+      bgModel2.ySize: 20.48  # 2048 * 0.01 mm
+      bgModel2.pixelSize: 0.01  # mm per pixel
