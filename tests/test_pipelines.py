@@ -54,6 +54,7 @@ COMMON_INPUTS = {
     "pretrainedModelPackage",
     # Optional preloaded solar system objects.
     "preloaded_DRP_SsObjects",
+    "isolated_star_presource_associations",
 }
 
 # HSC common inputs, in addition to COMMON_INPUTS
