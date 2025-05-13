@@ -28,6 +28,7 @@ imports:
       - analyzeSourceAssociation
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
+      - assembleCellCoadd
       # Remove object table generation
       - mergeObjectDetection
       - deblendCoaddFootprints
