@@ -21,7 +21,7 @@ imports:
 
 parameters:
   release_id: 0
-  use_cell_coadds: true
+  use_cell_coadds: false
 
 tasks:
   # stage1-single-visit production tasks
