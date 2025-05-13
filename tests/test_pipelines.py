@@ -160,7 +160,6 @@ COMMON_OUTPUTS = {
 COMMON_V2_OUTPUTS = {
     'visit_detector_table',
     'compare_warp_artifact_mask',
-    'deep_coadd_predetection_cell',
     'deep_coadd_visit_selection',
     'deep_coadd_predetection',
     'deep_coadd',
