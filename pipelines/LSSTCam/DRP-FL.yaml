@@ -83,6 +83,7 @@ tasks:
       # Shrink regions protected from clipping conservatively
       detectTemplate.nSigmaToGrow: 1.2
       detectTemplate.thresholdValue: 100
+      doPreserveContainedBySource: false
   assembleTemplateCoadd:
     # we are hijacking this task to make a secondary coadd with asteroids
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
@@ -94,6 +95,7 @@ tasks:
       # Shrink regions protected from clipping conservatively
       detectTemplate.nSigmaToGrow: 1.2
       detectTemplate.thresholdValue: 100
+      doPreserveContainedBySource: false
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:

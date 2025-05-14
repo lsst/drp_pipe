@@ -13,8 +13,3 @@ imports:
       - selectTemplateCoaddVisits
       - detectCoaddPeaks
       - stage4-measure-variability
-tasks:
-  assembleDeepCoadd:
-    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
-    config:
-      doFilterMorphological: true
