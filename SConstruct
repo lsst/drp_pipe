@@ -97,9 +97,67 @@ LSSTComCam_injected = [
     )
     for suffix, pipeline_post in injected_pipelines_LSSTComCam.items()
 ]
+
+#diffim injection pipeline creation
+subset_names = "injected_diffim_analysis"
+subset_description = "Analysis tasks for source injection for diffim catalogs"
+
+diffim_post_injected = os.path.join(
+    PKG_ROOT,
+    "pipelines",
+    "_ingredients",
+    "DRP-post-injected-diffim.yaml",
+)
+diffim_wfakes_LSSTComCam_path = os.path.join(
+        PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_diffim.yaml"
+    ),
+LSSTComCam_diffim_injected = env.Command(
+    target=diffim_wfakes_LSSTComCam_path,
+    source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP-v2-compat.yaml"),
+    action=" ".join(
+        [
+            libraryLoaderEnvironment(),
+            f"make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET "
+            f"-a {diffim_post_injected} -s {subset_names} "
+            f"--overwrite --prefix 'fakes_'",
+        ]
+    )
+)
+diffim_wfakes_LSSTCam_path = os.path.join(
+        PKG_ROOT, "pipelines", "LSSTCam", "DRP+injected_diffim.yaml"
+    ),
+LSSTCam_diffim_injected = env.Command(
+    target=diffim_wfakes_LSSTCam_path,
+    source=os.path.join(PKG_ROOT, "pipelines", "LSSTCam", "DRP.yaml"),
+    action=" ".join(
+        [
+            libraryLoaderEnvironment(),
+            f"make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET "
+            f"-a {diffim_post_injected} -s {subset_names} "
+            f"--overwrite --prefix 'fakes_'",
+        ]
+    )
+)
+
 Default(
     [
         rc2_subset_injected_deepCoadd_stars,
         RC2_injected_deepCoadd_stars,
+        LSSTComCam_diffim_injected,
+        LSSTCam_diffim_injected,
     ] + LSSTComCam_injected
 )
+
+targetList = (
+    "version",
+    "shebang",
+    "policy",
+) + scripts.DEFAULT_TARGETS
+scripts.BasicSConstruct(
+    "drp_pipe", disableCc=True, noCfgFile=True, defaultTargets=targetList
+)
+
+env.Depends(diffim_wfakes_LSSTCam_path, "version")
+env.Depends(diffim_wfakes_LSSTComCam_path, "version")
+env.Depends("tests", diffim_wfakes_LSSTCam_path)
+env.Depends("tests", diffim_wfakes_LSSTComCam_path)
