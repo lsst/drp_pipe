@@ -98,6 +98,7 @@ LSSTCAM_INPUTS = {
     "cti",
     "the_monster_20250219",
     "gaia_dr3_20230707",
+    "sky",
 }
 
 # LSSTComCam common inputs, in addition to COMMON_INPUTS
