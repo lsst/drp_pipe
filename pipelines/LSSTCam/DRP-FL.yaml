@@ -84,6 +84,8 @@ tasks:
       detectTemplate.nSigmaToGrow: 1.2
       detectTemplate.thresholdValue: 100
       doPreserveContainedBySource: false
+      python: >
+         config.prefilterArtifactsMaskPlanes = ["NO_DATA", "BAD", "SUSPECT"]
   assembleTemplateCoadd:
     # we are hijacking this task to make a secondary coadd with asteroids
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
