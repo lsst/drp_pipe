@@ -19,7 +19,3 @@ tasks:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
       doFilterMorphological: true
-  makeDirectWarp:
-    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
-    config:
-      connections.background_apply_list: visit_background_diff
