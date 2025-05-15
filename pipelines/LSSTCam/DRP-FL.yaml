@@ -16,6 +16,7 @@ imports:
       - analyzeSingleVisitStarAssociation
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+      - selectTemplateCoaddVisits  # not making real templates in FL DRP
       # Remove entire recalibration stage including PIFF
       - stage2-recalibrate
       # remove step4 Object dependencies
@@ -70,11 +71,6 @@ tasks:
     config:
       maxPsfFwhm: 1.6
       connections.visitSummaries: preliminary_visit_summary
-  selectTemplateCoaddVisits:
-    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
-    config:
-      connections.visitSummaries: preliminary_visit_summary
-      nVisitsMin: 12
   makeHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:
@@ -87,14 +83,21 @@ tasks:
       # Shrink regions protected from clipping conservatively
       detectTemplate.nSigmaToGrow: 1.2
       detectTemplate.thresholdValue: 100
+      doPreserveContainedBySource: false
+      python: >
+         config.prefilterArtifactsMaskPlanes = ["NO_DATA", "BAD", "SUSPECT"]
   assembleTemplateCoadd:
+    # we are hijacking this task to make a secondary coadd with asteroids
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
-      # Preliminary aggressive adjustment to accomodate FL cadence
-      maxFractionEpochsHigh: 0.2
+      # Use selection of deep coadd visits
+      connections.selectedVisits: deep_coadd_visit_selection
+      # Use default maxFractionEpochsHigh which left asteroids in
+      maxFractionEpochsHigh: 0.03
       # Shrink regions protected from clipping conservatively
       detectTemplate.nSigmaToGrow: 1.2
       detectTemplate.thresholdValue: 100
+      doPreserveContainedBySource: false
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
