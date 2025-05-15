@@ -68,3 +68,6 @@ cluster:
   step4b_forced_phot_dia:
     pipetasks: forcedPhotDiaObjectDifference,forcedPhotDiaObjectDirect,writeDiaObjectForcedSource
     dimensions: visit,detector
+  skyCorrCluster:
+    pipetasks: skyCorr,skyCorrExperimental
+    dimensions: visit
