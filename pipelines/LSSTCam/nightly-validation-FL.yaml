@@ -12,3 +12,4 @@ imports:
       - consolidateSingleVisitStar
       - detectCoaddPeaks
       - stage4-measure-variability
+      - skyCorrExperimental
