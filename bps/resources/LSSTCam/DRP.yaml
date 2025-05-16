@@ -130,3 +130,7 @@ pipetask:
     requestMemory: 8000
   refitPsfModel:
     requestMemory: 7000
+  skyCorr:
+    requestMemory: 17000
+  skyCorrExperimental:
+    requestMemory: 17000
