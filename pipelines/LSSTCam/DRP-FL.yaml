@@ -103,6 +103,8 @@ tasks:
       detectTemplate.nSigmaToGrow: 1.2
       detectTemplate.thresholdValue: 100
       doPreserveContainedBySource: false
+      python: >
+         config.prefilterArtifactsMaskPlanes = ["NO_DATA", "BAD", "SUSPECT"]
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
