@@ -80,12 +80,7 @@ tasks:
     config:
       # Preliminary aggressive adjustment to accomodate FL cadence
       maxFractionEpochsHigh: 0.2
-      # Shrink regions protected from clipping conservatively
-      detectTemplate.nSigmaToGrow: 1.2
-      detectTemplate.thresholdValue: 100
       doPreserveContainedBySource: false
-      python: >
-         config.prefilterArtifactsMaskPlanes = ["NO_DATA", "BAD", "SUSPECT"]
   assembleTemplateCoadd:
     # we are hijacking this task to make a secondary coadd with asteroids
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
@@ -93,12 +88,7 @@ tasks:
       # Use selection of deep coadd visits
       connections.selectedVisits: deep_coadd_visit_selection
       maxFractionEpochsHigh: 0.025
-      # Shrink regions protected from clipping conservatively
-      detectTemplate.nSigmaToGrow: 1.2
-      detectTemplate.thresholdValue: 100
       doPreserveContainedBySource: false
-      python: >
-         config.prefilterArtifactsMaskPlanes = ["NO_DATA", "BAD", "SUSPECT"]
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
