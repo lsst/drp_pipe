@@ -20,6 +20,7 @@ tasks:
       connections.associatedSources: isolated_analysis_source
       connections.outputName: analysis_source_association
       connections.visitTable: visit_table
+      connections.associatedSourceIds: isolated_star_association
       applyAstrometricCorrections: true
   makeAnalysisSourceAssociationMetricTable:
     class: lsst.analysis.tools.tasks.MakeMetricTableTask
