@@ -105,6 +105,7 @@ tasks:
   skyCorr:
     class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
     config:
+      # If you change any of these, consider changing it back in DRP-FL
       maskObjects.detection.isotropicGrow: false
       maskObjects.detection.thresholdType: stdev
       bgModel1.xSize: 81.92  # 8192 pixels
@@ -122,27 +123,6 @@ tasks:
       connections.calBkgs: preliminary_visit_image_background
       connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic
       connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic
-  skyCorrExperimental:
-    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
-    config:
-      maskObjects.detection.isotropicGrow: false
-      maskObjects.detection.thresholdType: stdev
-      bgModel1.xSize: 81.92  # 8192 pixels
-      bgModel1.ySize: 81.92
-      bgModel1.pixelSize: 0.01  # mm per pixel
-      bgModel1.doSmooth: false
-      doSky: true
-      doBgModel2: false
-      bgModel2.xSize: 40.96  # 4096 pixels
-      bgModel2.ySize: 40.96
-      bgModel2.pixelSize: 0.01  # mm per pixel
-      bgModel2.doSmooth: true
-      bgModel2.smoothScale: 1.0
-      connections.calExps: preliminary_visit_image
-      connections.calBkgs: preliminary_visit_image_background
-      connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic_experimental
-      connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic_experimental
-      connections.skyCorr: skyCorr_experimental
   fitVisitBackground:
     class: lsst.drp.tasks.fit_visit_background.FitVisitBackgroundTask
 subsets:
@@ -150,13 +130,11 @@ subsets:
     subset:
       - skyCorr
       - fitVisitBackground
-      - skyCorrExperimental
     description: >
       A step that runs visit-level per-visit background estimation
   stage2-recalibrate:
     subset:
       - skyCorr
       - fitVisitBackground
-      - skyCorrExperimental
     description: >
       A one step stage

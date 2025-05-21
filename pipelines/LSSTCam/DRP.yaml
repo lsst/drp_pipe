@@ -14,6 +14,10 @@ imports:
       # TODO: DM-50120. GBDES starts turned off
       - gbdesAstrometricFit
 tasks:
+  makeDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+    config:
+      doApplySkyCorr: true
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -21,8 +25,9 @@ tasks:
       wcs_provider: input_summary
       # TODO: DM-50154. FGCM starts turned off
       photo_calib_provider: input_summary
-      # TODO: DM-50115. Skycorr starts turned off
-      background_provider: input_summary
+      background_provider: replacement
+      connections.background_originals: preliminary_visit_image_background
+
   # TODO: DM-50120 remove astrometriCorrections=false overrides for
   # all three analyze tasks:
   analyzeRecalibratedStarAssociation:
@@ -45,3 +50,86 @@ tasks:
     class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
     config:
       connections.primary: source2
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+    config:
+      maskObjects.detection.isotropicGrow: false
+      maskObjects.detection.thresholdType: stdev
+      bgModel1.xSize: 81.92  # 8192 pixels
+      bgModel1.ySize: 81.92
+      bgModel1.pixelSize: 0.01  # mm per pixel
+      bgModel1.doSmooth: false
+      doSky: true
+      doBgModel2: true
+      bgModel2.xSize: 40.96  # 4096 pixels
+      bgModel2.ySize: 40.96
+      bgModel2.pixelSize: 0.01  # mm per pixel
+      bgModel2.doSmooth: true
+      bgModel2.smoothScale: 1.0
+      connections.calExps: preliminary_visit_image
+      connections.calBkgs: preliminary_visit_image_background
+      connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic
+      connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic
+  detectCoaddPeaks:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      # Start with HSC configs and then refine
+      detection.doTempWideBackground: true
+      detection.tempWideBackground.binSize: 128
+      detection.tempWideBackground.useApprox: false
+      detection.reEstimateBackground: true
+      detection.background.binSize: 128
+      detection.background.useApprox: false
+  assembleDeepCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      # Preliminary aggressive adjustment to accomodate early commissioning
+      maxFractionEpochsHigh: 0.1
+      # Shrink regions protected from clipping conservatively
+      detectTemplate.nSigmaToGrow: 1.2
+      detectTemplate.thresholdValue: 100
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: true
+
+subsets:
+  step2c-recalibrate-visits:
+    subset:
+      - skyCorr
+      - refitPsfModelDetector
+      - consolidateRefitPsfModelDetector
+      - updateVisitSummary
+      - recalibrateSingleVisitStar
+      - standardizeRecalibratedStar
+      - consolidateRecalibratedStar
+    description: |
+      A step that runs visit-level multi-detector calibration tasks and then
+      recalibrates the initial stars catalog and runs visit-level analysis on
+      it.
+
+      A visit constraint may be used for sharding and may be useful in speeding
+      up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+      A skymap constraint is generally redundant but recommended.
+  stage2-recalibrate:
+    # 2c
+    - skyCorr
+    - refitPsfModelDetector
+    - consolidateRefitPsfModelDetector
+    - updateVisitSummary
+    - recalibrateSingleVisitStar
+    - standardizeRecalibratedStar
+    - consolidateRecalibratedStar
+    # 2d
+    - analyzeRecalibratedStarAssociation
+    # 2e
+    - makeVisitDetectorTable
+    - makeVisitTable
+    - makeAnalysisRecalibratedStarAssociationMetricTable
+    - makeAnalysisRecalibratedStarAssociationWholeSkyPlot
+
+contracts:
+  - skyCorr.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
