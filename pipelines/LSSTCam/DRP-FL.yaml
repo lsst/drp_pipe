@@ -16,6 +16,7 @@ imports:
       - analyzeSingleVisitStarAssociation
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+      - selectTemplateCoaddVisits
       # Remove entire recalibration stage including PIFF
       - stage2-recalibrate
       # remove step4 Object dependencies
@@ -70,15 +71,6 @@ tasks:
     config:
       maxPsfFwhm: 1.6
       connections.visitSummaries: preliminary_visit_summary
-  selectTemplateCoaddVisits:
-    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
-    config:
-      connections.visitSummaries: preliminary_visit_summary
-      nVisitsMin: 12
-      qMax: 0.8
-      # 20250502 and 20250503 were good nights
-      minMJD: 60798.0
-      maxMJD: 60799.5
   makeHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:
@@ -88,20 +80,14 @@ tasks:
     config:
       # Preliminary aggressive adjustment to accomodate FL cadence
       maxFractionEpochsHigh: 0.2
-      # Shrink regions protected from clipping conservatively
-      detectTemplate.nSigmaToGrow: 1.2
-      detectTemplate.thresholdValue: 100
       doPreserveContainedBySource: false
-      python: >
-         config.prefilterArtifactsMaskPlanes = ["NO_DATA", "BAD", "SUSPECT"]
   assembleTemplateCoadd:
     # we are hijacking this task to make a secondary coadd with asteroids
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
+      # Use selection of deep coadd visits
+      connections.selectedVisits: deep_coadd_visit_selection
       maxFractionEpochsHigh: 0.025
-      # Shrink regions protected from clipping conservatively
-      detectTemplate.nSigmaToGrow: 1.2
-      detectTemplate.thresholdValue: 100
       doPreserveContainedBySource: false
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
@@ -119,6 +105,7 @@ tasks:
   skyCorr:
     class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
     config:
+      # If you change any of these, consider changing it back in DRP-FL
       maskObjects.detection.isotropicGrow: false
       maskObjects.detection.thresholdType: stdev
       bgModel1.xSize: 81.92  # 8192 pixels
@@ -136,27 +123,6 @@ tasks:
       connections.calBkgs: preliminary_visit_image_background
       connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic
       connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic
-  skyCorrExperimental:
-    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
-    config:
-      maskObjects.detection.isotropicGrow: false
-      maskObjects.detection.thresholdType: stdev
-      bgModel1.xSize: 81.92  # 8192 pixels
-      bgModel1.ySize: 81.92
-      bgModel1.pixelSize: 0.01  # mm per pixel
-      bgModel1.doSmooth: false
-      doSky: true
-      doBgModel2: false
-      bgModel2.xSize: 40.96  # 4096 pixels
-      bgModel2.ySize: 40.96
-      bgModel2.pixelSize: 0.01  # mm per pixel
-      bgModel2.doSmooth: true
-      bgModel2.smoothScale: 1.0
-      connections.calExps: preliminary_visit_image
-      connections.calBkgs: preliminary_visit_image_background
-      connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic_experimental
-      connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic_experimental
-      connections.skyCorr: skyCorr_experimental
   fitVisitBackground:
     class: lsst.drp.tasks.fit_visit_background.FitVisitBackgroundTask
 subsets:
@@ -164,13 +130,11 @@ subsets:
     subset:
       - skyCorr
       - fitVisitBackground
-      - skyCorrExperimental
     description: >
       A step that runs visit-level per-visit background estimation
   stage2-recalibrate:
     subset:
       - skyCorr
       - fitVisitBackground
-      - skyCorrExperimental
     description: >
       A one step stage
