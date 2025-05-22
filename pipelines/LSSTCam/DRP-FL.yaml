@@ -105,7 +105,6 @@ tasks:
   skyCorr:
     class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
     config:
-      # If you change any of these, consider changing it back in DRP-FL
       maskObjects.detection.isotropicGrow: false
       maskObjects.detection.thresholdType: stdev
       bgModel1.xSize: 81.92  # 8192 pixels

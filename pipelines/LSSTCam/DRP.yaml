@@ -80,14 +80,6 @@ tasks:
       detection.reEstimateBackground: true
       detection.background.binSize: 128
       detection.background.useApprox: false
-  assembleDeepCoadd:
-    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
-    config:
-      # Preliminary aggressive adjustment to accomodate early commissioning
-      maxFractionEpochsHigh: 0.1
-      # Shrink regions protected from clipping conservatively
-      detectTemplate.nSigmaToGrow: 1.2
-      detectTemplate.thresholdValue: 100
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
