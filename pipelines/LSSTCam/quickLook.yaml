@@ -42,6 +42,8 @@ tasks:
       psf_detection.thresholdValue: 50
       do_downsample_footprints: True
       do_include_astrometric_errors: False
+      astrometry.maxIter: 2
+      compute_summary_stats.psfGridSampling: 250
       python: |
         config.star_measurement.plugins.names.add("base_FPPosition")
 subsets:
