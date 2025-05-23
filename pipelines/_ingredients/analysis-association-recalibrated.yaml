@@ -14,6 +14,7 @@ tasks:
       # visit_table.  Using the initial one here avoids adding another global
       # gather/scatter to stage 2.
       connections.visitTable: preliminary_visit_table
+      connections.associatedSourceIds: isolated_star_association
       applyAstrometricCorrections: true
   makeAnalysisRecalibratedStarAssociationMetricTable:
     class: lsst.analysis.tools.tasks.MakeMetricTableTask
