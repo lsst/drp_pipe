@@ -282,7 +282,7 @@ QUICKLOOK_V2_OUTPUTS = {
     "preliminary_visit_image", "preliminary_visit_summary"
 }
 
-# Outputs common to all "quickLook" pipelines, which only iclude
+# Outputs common to all "quickLook" pipelines, which only include
 QUICKLOOK_OUTPUTS = {
     "calexp", "visitSummary"
 }

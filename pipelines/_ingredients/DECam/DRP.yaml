@@ -209,6 +209,7 @@ subsets:
       - measure
       - mergeMeasurements
       - assembleCoadd
+      - assembleCellCoadd
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
       - fitDeblendedObjectsSersic
