@@ -698,7 +698,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#stage4-measure-variability",
             ],
             initial_dataset_types=REFCATS,
-            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS | {"sky_frame_background"},
             # Check for some basic outputs
             expected_outputs={"preliminary_visit_image",
                               "preliminary_visit_summary",
@@ -716,7 +716,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#stage3-coadd",
             ],
             initial_dataset_types=REFCATS,
-            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS | {"sky_frame_background"},
             # Check for some basic outputs
             expected_outputs={"preliminary_visit_image",
                               "preliminary_visit_summary",
