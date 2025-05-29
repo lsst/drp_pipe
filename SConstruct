@@ -3,20 +3,12 @@ import os
 
 from lsst.sconsUtils import scripts
 from lsst.sconsUtils.state import env
+from lsst.sconsUtils import targets
 from lsst.sconsUtils.utils import libraryLoaderEnvironment
 from SCons.Script import Default
 
-# Python-only package
-# Force shebang and policy to come first so the file first appears in the bin
-# directory before it is used. This is required to run on macos.
-targetList = (
-    "version",
-    "shebang",
-    "policy",
-) + scripts.DEFAULT_TARGETS
-scripts.BasicSConstruct(
-    "drp_pipe", disableCc=True, noCfgFile=True, defaultTargets=targetList
-)
+
+
 PKG_ROOT = env.ProductDir("drp_pipe")
 
 injected_pipeline_RC2 = os.path.join(
@@ -98,8 +90,8 @@ LSSTComCam_injected = [
     for suffix, pipeline_post in injected_pipelines_LSSTComCam.items()
 ]
 
-#diffim injection pipeline creation
-subset_names = "injected_diffim_analysis"
+# diffim injection pipeline creation
+subset_names = "injected_diffim_analysis,injected_stage4-measure-variability"
 subset_description = "Analysis tasks for source injection for diffim catalogs"
 
 diffim_post_injected = os.path.join(
@@ -110,30 +102,36 @@ diffim_post_injected = os.path.join(
 )
 diffim_wfakes_LSSTComCam_path = os.path.join(
         PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_diffim.yaml"
-    ),
+    )
 LSSTComCam_diffim_injected = env.Command(
     target=diffim_wfakes_LSSTComCam_path,
     source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP-v2-compat.yaml"),
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            f"make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET "
-            f"-a {diffim_post_injected} -s {subset_names} "
+            f"make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET ",
+            f"-a {diffim_post_injected} -s {subset_names} ",
+            f"--config inject_visit:external_psf=False ",
+            f"--config inject_visit:external_photo_calib=False ",
+            f"--config inject_visit:external_wcs=False ",
             f"--overwrite --prefix 'fakes_'",
         ]
     )
 )
 diffim_wfakes_LSSTCam_path = os.path.join(
         PKG_ROOT, "pipelines", "LSSTCam", "DRP+injected_diffim.yaml"
-    ),
+    )
 LSSTCam_diffim_injected = env.Command(
     target=diffim_wfakes_LSSTCam_path,
     source=os.path.join(PKG_ROOT, "pipelines", "LSSTCam", "DRP.yaml"),
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            f"make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET "
-            f"-a {diffim_post_injected} -s {subset_names} "
+            f"make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET ",
+            f"-a {diffim_post_injected} -s {subset_names} ",
+            f"--config inject_visit:external_psf=False ",
+            f"--config inject_visit:external_photo_calib=False ",
+            f"--config inject_visit:external_wcs=False ",
             f"--overwrite --prefix 'fakes_'",
         ]
     )
@@ -148,6 +146,9 @@ Default(
     ] + LSSTComCam_injected
 )
 
+# Python-only package
+# Force shebang and policy to come first so the file first appears in the bin
+# directory before it is used. This is required to run on macos.
 targetList = (
     "version",
     "shebang",
@@ -157,7 +158,7 @@ scripts.BasicSConstruct(
     "drp_pipe", disableCc=True, noCfgFile=True, defaultTargets=targetList
 )
 
-env.Depends(diffim_wfakes_LSSTCam_path, "version")
-env.Depends(diffim_wfakes_LSSTComCam_path, "version")
-env.Depends("tests", diffim_wfakes_LSSTCam_path)
-env.Depends("tests", diffim_wfakes_LSSTComCam_path)
+env.Depends(diffim_wfakes_LSSTCam_path, targets["version"])
+env.Depends(diffim_wfakes_LSSTComCam_path, targets["version"])
+env.Depends(targets["tests"], diffim_wfakes_LSSTCam_path)
+env.Depends(targets["tests"], diffim_wfakes_LSSTComCam_path)
