@@ -175,6 +175,7 @@ subsets:
       - assembleCoadd
       - detection
       - mergeDetections
+      - deconvolve
       - deblend
       - measure
       - mergeMeasurements

@@ -66,6 +66,7 @@ subsets:
     subset:
       - detection
       - mergeDetections
+      - deconvolve
       - deblend
       - measure
       - mergeMeasurements
@@ -144,6 +145,7 @@ subsets:
       - assembleCoadd
       - detection
       - mergeDetections
+      - deconvolve
       - deblend
       - measure
       - mergeMeasurements
