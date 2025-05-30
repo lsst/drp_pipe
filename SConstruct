@@ -157,7 +157,7 @@ targetList = (
 scripts.BasicSConstruct(
     "drp_pipe", disableCc=True, noCfgFile=True, defaultTargets=targetList
 )
-breakpoint()
+
 env.Depends(diffim_wfakes_LSSTCam_path, targets["version"])
 env.Depends(diffim_wfakes_LSSTComCam_path, targets["version"])
 env.Depends(targets["tests"], diffim_wfakes_LSSTCam_path)
