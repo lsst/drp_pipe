@@ -3,6 +3,7 @@ import os
 
 from lsst.sconsUtils import scripts
 from lsst.sconsUtils.state import env
+from lsst.sconsUtils import targets
 from lsst.sconsUtils.utils import libraryLoaderEnvironment
 from SCons.Script import Default
 
@@ -156,8 +157,8 @@ targetList = (
 scripts.BasicSConstruct(
     "drp_pipe", disableCc=True, noCfgFile=True, defaultTargets=targetList
 )
-
-env.Depends(diffim_wfakes_LSSTCam_path, "version")
-env.Depends(diffim_wfakes_LSSTComCam_path, "version")
-env.Depends("tests", diffim_wfakes_LSSTCam_path)
-env.Depends("tests", diffim_wfakes_LSSTComCam_path)
+breakpoint()
+env.Depends(diffim_wfakes_LSSTCam_path, targets["version"])
+env.Depends(diffim_wfakes_LSSTComCam_path, targets["version"])
+env.Depends(targets["tests"], diffim_wfakes_LSSTCam_path)
+env.Depends(targets["tests"], diffim_wfakes_LSSTComCam_path)
