@@ -6,17 +6,8 @@ from lsst.sconsUtils.state import env
 from lsst.sconsUtils.utils import libraryLoaderEnvironment
 from SCons.Script import Default
 
-# Python-only package
-# Force shebang and policy to come first so the file first appears in the bin
-# directory before it is used. This is required to run on macos.
-targetList = (
-    "version",
-    "shebang",
-    "policy",
-) + scripts.DEFAULT_TARGETS
-scripts.BasicSConstruct(
-    "drp_pipe", disableCc=True, noCfgFile=True, defaultTargets=targetList
-)
+
+
 PKG_ROOT = env.ProductDir("drp_pipe")
 
 injected_pipeline_RC2 = os.path.join(
@@ -154,6 +145,9 @@ Default(
     ] + LSSTComCam_injected
 )
 
+# Python-only package
+# Force shebang and policy to come first so the file first appears in the bin
+# directory before it is used. This is required to run on macos.
 targetList = (
     "version",
     "shebang",
