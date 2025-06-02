@@ -46,6 +46,13 @@ tasks:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
       nVisitsMin: 12
+      python: |
+        config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.75}
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      python: |
+        config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.75}
   splitPrimarySource:
     class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
     config:
