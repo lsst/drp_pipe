@@ -71,3 +71,7 @@ class ClusteringTestCase(unittest.TestCase):
                 for required_key in ["pipetasks", "dimensions"]:
                     self.assertIn(required_key, cluster_info,
                                   f"Missing '{required_key}' in {clustering_path} for {cluster_name}")
+
+
+if __name__ == "__main__":
+    unittest.main()
