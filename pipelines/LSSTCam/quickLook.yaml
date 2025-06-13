@@ -46,6 +46,10 @@ tasks:
       compute_summary_stats.psfGridSampling: 250
       python: |
         config.star_measurement.plugins.names.add("base_FPPosition")
+        config.psf_measure_psf.starSelector["objectSize"].widthMax = 20.0
+        if "slot_Centroid_flag" in config.psf_measure_psf.starSelector["objectSize"].badFlags:
+            config.psf_measure_psf.starSelector["objectSize"].badFlags.remove("slot_Centroid_flag")
+        config.psf_measure_psf.psfDeterminer["psfex"].rejectFlaggedCentroids = False
 subsets:
   # formerly step1
   step1a-single-visit-detectors:
