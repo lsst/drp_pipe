@@ -67,3 +67,7 @@ tasks:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:
       connections.visit_summaries: preliminary_visit_summary
+  assembleCellCoadd:
+    class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+    config:
+      connections.visitSummaryList: preliminary_visit_summary

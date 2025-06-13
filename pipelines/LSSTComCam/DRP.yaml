@@ -96,6 +96,7 @@ subsets:
       - assembleCoadd
       - healSparsePropertyMaps
       - computeObjectEpochs
+      - assembleCellCoadd
       - detection
       - mergeDetections
       - deblend
