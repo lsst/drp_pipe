@@ -22,6 +22,7 @@ tasks:
       # Turn off slow steps in ISR
       doBrighterFatter: false
       doAmpOffset: false
+      bssVoltageMinimum: 0.0
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
@@ -37,8 +38,18 @@ tasks:
       # Don't calibrate pixels to nJy, since we assume quickLook consumers are
       # prefer e- units and that's what they'd get if PhotoCal fails anyway.
       do_calibrate_pixels: false
+      astrometry.matcher.maxRefObjects: 2048
+      psf_detection.thresholdValue: 50
+      do_downsample_footprints: true
+      do_include_astrometric_errors: false
+      astrometry.maxIter: 2
+      compute_summary_stats.psfGridSampling: 250
       python: |
         config.star_measurement.plugins.names.add("base_FPPosition")
+        config.psf_measure_psf.starSelector["objectSize"].widthMax = 20.0
+        if "slot_Centroid_flag" in config.psf_measure_psf.starSelector["objectSize"].badFlags:
+            config.psf_measure_psf.starSelector["objectSize"].badFlags.remove("slot_Centroid_flag")
+        config.psf_measure_psf.psfDeterminer["psfex"].rejectFlaggedCentroids = False
 subsets:
   # formerly step1
   step1a-single-visit-detectors:
