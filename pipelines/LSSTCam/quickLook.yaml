@@ -40,8 +40,8 @@ tasks:
       do_calibrate_pixels: false
       astrometry.matcher.maxRefObjects: 2048
       psf_detection.thresholdValue: 50
-      do_downsample_footprints: True
-      do_include_astrometric_errors: False
+      do_downsample_footprints: true
+      do_include_astrometric_errors: false
       astrometry.maxIter: 2
       compute_summary_stats.psfGridSampling: 250
       python: |
