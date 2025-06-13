@@ -386,6 +386,7 @@ tasks:
       connections.science: visit_image
       connections.matchedTemplate: template_matched
       connections.difference: difference_image_predetection
+      connections.kernelSources: difference_kernel_sources
       connections.outputSchema: dia_source_schema
       connections.diaSources: dia_source_unfiltered
       connections.subtractedMeasuredExposure: difference_image
