@@ -21,6 +21,7 @@ imports:
 
 parameters:
   release_id: 0
+  use_cell_coadds: false
 
 tasks:
   # stage1-single-visit production tasks
@@ -198,6 +199,12 @@ tasks:
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
       doOnlineForMean: true
+  assembleCellCoadd:
+    class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+    config:
+      connections.inputWarps: direct_warp
+      connections.visitSummaryList: visit_summary
+      connections.multipleCellCoadd: deep_coadd_predetection_cell
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
@@ -229,10 +236,12 @@ tasks:
     config:
       connections.detectionSchema: object_detection_schema
       connections.exposure: deep_coadd_predetection
+      connections.exposure_cells: deep_coadd_predetection_cell
       connections.outputBackgrounds: deep_coadd_background
       connections.outputSources: object_detection
       connections.outputExposure: deep_coadd
       idGenerator.release_id: parameters.release_id
+      useCellCoadds: parameters.use_cell_coadds
   mergeObjectDetection:
     class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
     config:
@@ -249,10 +258,13 @@ tasks:
       connections.peakSchema: object_detection_peak_schema
       connections.mergedDetections: object_detection_merged
       connections.coadds: deep_coadd
+      connections.coadds_cell: deep_coadd_predetection_cell
+      connections.backgrounds: deep_coadd_background
       connections.outputSchema: object_deblend_schema
       connections.deblendedCatalog: object_deblend
       connections.scarletModelData: object_scarlet_models
       idGenerator.release_id: parameters.release_id
+      useCellCoadds: parameters.use_cell_coadds
   measureObjectUnforced:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
@@ -265,7 +277,10 @@ tasks:
       connections.outputSchema: object_unforced_measurement_schema
       connections.outputSources: object_unforced_measurement
       connections.exposure: deep_coadd
+      connections.exposure_cells: deep_coadd_predetection_cell
+      connections.background: deep_coadd_background
       idGenerator.release_id: parameters.release_id
+      useCellCoadds: parameters.use_cell_coadds
   mergeObjectMeasurement:
     class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
     config:
@@ -278,29 +293,38 @@ tasks:
     config:
       connections.inputSchema: object_ref_measurement_schema
       connections.exposure: deep_coadd
+      connections.exposure_cell: deep_coadd_predetection_cell
+      connections.background: deep_coadd_background
       connections.refCat: object_ref_measurement
       connections.refCatInBand: object_unforced_measurement
       connections.scarletModels: object_scarlet_models
       connections.refWcs: deep_coadd.wcs
       connections.measCat: object_forced_measurement
       idGenerator.release_id: parameters.release_id
+      useCellCoadds: parameters.use_cell_coadds
   fitDeepCoaddPsfGaussians:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
     config:
       connections.coadd: deep_coadd
+      connections.coadd_cell: deep_coadd_predetection_cell
+      connections.background: deep_coadd_background
       connections.cat_meas: object_unforced_measurement
       connections.cat_output: object_psf_multiprofit
       idGenerator.release_id: parameters.release_id
+      use_cell_coadds: parameters.use_cell_coadds
   fitDeblendedObjectsSersic:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
     config:
       connections.cat_ref: object_ref_measurement
       connections.cats_meas: object_unforced_measurement
       connections.coadds: deep_coadd
+      connections.coadds_cell: deep_coadd_predetection_cell
+      connections.backgrounds: deep_coadd_background
       connections.models_psf: object_psf_multiprofit
       connections.models_scarlet: object_scarlet_models
       connections.cat_output: object_sersic_multiprofit
       idGenerator.release_id: parameters.release_id
+      use_cell_coadds: parameters.use_cell_coadds
   rewriteObject:
     class: lsst.pipe.tasks.postprocess.WriteObjectTableTask
     config:
@@ -700,6 +724,7 @@ subsets:
       - selectTemplateCoaddVisits
       - assembleDeepCoadd
       - assembleTemplateCoadd
+      - assembleCellCoadd
       - makeHealSparsePropertyMaps
       - detectCoaddPeaks
       - mergeObjectDetection
@@ -861,6 +886,7 @@ subsets:
     - selectTemplateCoaddVisits
     - assembleDeepCoadd
     - assembleTemplateCoadd
+    - assembleCellCoadd
     - makeHealSparsePropertyMaps
     - detectCoaddPeaks
     - mergeObjectDetection
@@ -990,3 +1016,10 @@ contracts:
   - reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
   - fgcmBuildFromIsolatedStar.doApplyWcsJacobian == False if calibrateImage.do_illumination_correction else True
   - fgcmBuildFromIsolatedStar.doApplyWcsJacobian == fgcmOutputProducts.doComposeWcsJacobian
+  # List of constraints checking the cell-coadds are consistently used.
+  - detectCoaddPeaks.useCellCoadds == deblendCoaddFootprints.useCellCoadds
+  - detectCoaddPeaks.useCellCoadds == measureObjectUnforced.useCellCoadds
+  - detectCoaddPeaks.useCellCoadds == measureObjectForced.useCellCoadds
+  - detectCoaddPeaks.useCellCoadds == fitDeepCoaddPsfGaussians.use_cell_coadds
+  - detectCoaddPeaks.useCellCoadds == fitDeblendedObjectsSersic.use_cell_coadds
+  # End of constraints for cell-coadds.

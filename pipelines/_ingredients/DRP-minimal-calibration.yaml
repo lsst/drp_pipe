@@ -8,6 +8,9 @@ description: |
 imports:
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
 
+parameters:
+  use_cell_coadds: false
+
 tasks:
   isr: lsst.ip.isr.IsrTask
   calibrateImage:
@@ -61,13 +64,23 @@ tasks:
       assembleStaticSkyModel.doSelectVisits: true
       connections.selectedVisits: deepCoaddVisits
       doOnlineForMean: true
+  assembleCellCoadd: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   computeObjectEpochs: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
-  detection: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+  detection:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
   mergeDetections: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
-  deblend: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
-  measure: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+  deblend:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
   mergeMeasurements: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
   writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
   transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
@@ -84,7 +97,10 @@ tasks:
     config:
       connections.exposure: pvi
       useVisitSummary: false
-  forcedPhotCoadd: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+  forcedPhotCoadd:
+    class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
@@ -186,7 +202,7 @@ tasks:
       connections.measCat: forced_diff
       connections.outputSchema: forced_diff_schema
       connections.exposure: goodSeeingDiff_differenceExp
-      useVisitSummary: false  # difference image already has final calibrations
+      useVisitSummary: false # difference image already has final calibrations
   writeForcedSourceTable: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
   transformForcedSourceTable: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
   splitPrimaryObjectForcedSource:
@@ -212,7 +228,7 @@ tasks:
       connections.measCat: forced_diff_diaObject
       connections.outputSchema: forced_diff_diaObject_schema
       connections.exposure: goodSeeingDiff_differenceExp
-      useVisitSummary: false  # difference image already has final calibrations
+      useVisitSummary: false # difference image already has final calibrations
   writeForcedSourceOnDiaObjectTable:
     class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
     config:
@@ -261,6 +277,7 @@ subsets:
       - makeDirectWarp
       - makePsfMatchedWarp
       - assembleCoadd
+      - assembleCellCoadd
       - healSparsePropertyMaps
     description: >
       A set of tasks to run when coadding images.
@@ -334,3 +351,10 @@ contracts:
   - isr.doFlat == True if calibrateImage.do_illumination_correction == True else True
   - makeDirectWarp.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
   - reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
+  # List of constraints checking that the cell-coadds are consistently used.
+  - detection.useCellCoadds == deblend.useCellCoadds
+  - detection.useCellCoadds == measure.useCellCoadds
+  - detection.useCellCoadds == forcedPhotCoadd.useCellCoadds
+  - detection.useCellCoadds == fitDeepCoaddPsfGaussians.use_cell_coadds
+  - detection.useCellCoadds == fitDeblendedObjectsSersic.use_cell_coadds
+  # End of constraints for cell-coadds.
