@@ -205,7 +205,6 @@ tasks:
       connections.inputWarps: direct_warp
       connections.visitSummaryList: visit_summary
       connections.multipleCellCoadd: deep_coadd_predetection_cell
-      do_write_multiple_cell_coadd: parameters.use_cell_coadds
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
