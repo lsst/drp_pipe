@@ -17,3 +17,4 @@ tasks:
       doBrighterFatter: false
       # Make sure interpolation is on.
       doInterpolate: true
+      doFlat: false
