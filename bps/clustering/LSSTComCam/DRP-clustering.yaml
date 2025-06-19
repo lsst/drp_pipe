@@ -1,0 +1,48 @@
+# This is a prescription for quantum clustering with BPS with LSSTComCam DRP.
+#
+# Use it by adding:
+#
+#   includeConfigs:
+#     - ${DRP_PIPE_DIR}/bps/clustering/LSSTComCam/DRP-clustering.yaml
+#
+# (with no outer indentation) to your BPS config file.
+
+clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
+cluster:
+    step1a_detectors:
+        pipetasks: isr,calibrateImage,standardizeSingleVisitStar
+        dimensions: visit,detector
+        equalDimensions: visit:exposure
+    step1b_visits:
+        pipetasks: consolidateSingleVisitStar,consolidateVisitSummary
+        dimensions: visit
+    step2c_visits:
+        pipetasks: recalibrateSingleVisitStar,standardizeRecalibratedStar
+        dimensions: visit,detector
+    warps:
+        pipetasks: makeDirectWarp,makePsfMatchedWarp
+        dimensions: tract,patch,band,visit
+    patch_coaddition:
+        pipetasks: assembleDeepCoadd,detectCoaddPeaks
+        dimensions: tract,patch,band
+    patch_template_coadd:
+        pipetasks: selectTemplateCoaddVisits,assembleTemplateCoadd
+        dimensions: tract,patch,band
+    patch_detect_deblend:
+        pipetasks: mergeObjectDetection,deblendCoaddFootprints
+        dimensions: tract,patch
+#    patch_postprocess:
+#        pipetasks: rewriteObject,standardizeObject
+#        dimensions: tract,patch
+    property_maps:
+        pipetasks: makeHealSparsePropertyMaps
+        dimensions: tract,band
+    diffim:
+        pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,standardizeDiaSource
+        dimensions: visit,detector
+    association:
+        pipetasks: associateDiaSource,calculateDiaObject
+        dimensions: tract,patch
+    step4b_forced_phot:
+        pipetasks: forcedPhotDiaObjectDifference,forcedPhotDiaObjectDirect,writeDiaObjectForcedSource
+        dimensions: visit,detector
