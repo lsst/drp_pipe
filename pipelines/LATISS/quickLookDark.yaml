@@ -15,3 +15,4 @@ tasks:
       connections.outputExposure: post_isr_image
       # Make sure interpolation is on.
       doInterpolate: true
+      doDeferredCharge: false
