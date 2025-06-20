@@ -8,6 +8,9 @@ description: |
 imports:
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
 
+parameters:
+  use_cell_coadds: false
+
 tasks:
   isr: lsst.ip.isr.IsrTask
   calibrateImage:
@@ -65,10 +68,19 @@ tasks:
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   computeObjectEpochs: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
-  detection: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+  detection:
+    class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
   mergeDetections: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
-  deblend: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
-  measure: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+  deblend:
+    class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
+  measure:
+    class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
   mergeMeasurements: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
   writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
   transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
@@ -85,7 +97,10 @@ tasks:
     config:
       connections.exposure: pvi
       useVisitSummary: false
-  forcedPhotCoadd: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+  forcedPhotCoadd:
+    class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
+    config:
+      useCellCoadds: parameters.use_cell_coadds
   selectGoodSeeingVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
