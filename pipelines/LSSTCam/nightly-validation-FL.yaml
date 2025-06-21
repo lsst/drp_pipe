@@ -10,6 +10,7 @@ imports:
     exclude:
       - standardizeSingleVisitStar
       - consolidateSingleVisitStar
+      - assembleCellCoadd
       - detectCoaddPeaks
       - stage4-measure-variability
       - skyCorrExperimental
