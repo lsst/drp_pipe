@@ -6,6 +6,10 @@ description: >
   This is the cheapest possible version of a Nightly Validation pipeline.
   It excludes PIFF and Object Table generation.
 instrument: lsst.obs.lsst.LsstCam
+parameters:
+  use_cell_coadds: false
+  # Setting it to true is not sufficient to use cell coadds.
+  # assembleCellCoadd needs to be removed from the exclude list below.
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/base-v2.yaml
     labeledSubsetModifyMode: EDIT
@@ -16,6 +20,8 @@ imports:
       # Remove entire recalibration stage including PIFF
       - stage2-recalibrate
       - stage4-measure-variability
+      # Remove cell-based coadds
+      - assembleCellCoadd
       # Remove template generation
       - selectTemplateCoaddVisits
       - assembleTemplateCoadd
@@ -67,3 +73,7 @@ tasks:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:
       connections.visit_summaries: preliminary_visit_summary
+  assembleCellCoadd:
+    class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+    config:
+      connections.visitSummaryList: preliminary_visit_summary
