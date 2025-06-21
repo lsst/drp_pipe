@@ -20,18 +20,17 @@ cluster:
     pipetasks: consolidateSingleVisitStar,consolidateVisitSummary
     dimensions: visit
   step2c_refitpsf:
+    # These are detector-level tasks
     pipetasks: refitPsfModelDetector
-    dimensions: detector
-    partitionDimensions: visit
-    partitionMaxClusters: 3000
-  step2c_visit_summary:
-    pipetasks: consolidateRefitPsfModelDetector,updateVisitSummary
     dimensions: visit
+    partitionDimensions: detector
+    partitionMaxClusters: 6000
   step2c_visits:
+    # These are detector-level tasks
     pipetasks: recalibrateSingleVisitStar,standardizeRecalibratedStar
-    dimensions: detector
-    partitionDimensions: visit
-    partitionMaxClusters: 3000
+    dimensions: visit
+    partitionDimensions: detector
+    partitionMaxClusters: 6000
   makeWarpTract:
     # shared with NV
     pipetasks: makeDirectWarp,makePsfMatchedWarp
@@ -51,23 +50,27 @@ cluster:
     dimensions: tract,band
   step4a_reprocess_standardize:
     pipetasks: reprocessVisitImage,standardizeSource
-    dimensions: detector
-    partitionDimensions: visit
-    partitionMaxClusters: 3000
+    dimensions: visit
+    partitionDimensions: detector
+    partitionMaxClusters: 6000
   diffim:
     pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,standardizeDiaSource
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 3000
+    partitionMaxClusters: 6000
   association:
     pipetasks: associateDiaSource,calculateDiaObject
     dimensions: tract,patch
   step4b_forced_phot:
     pipetasks: forcedPhotObjectDirect,forcedPhotObjectDifference,writeObjectForcedSource
-    dimensions: visit,detector
+    dimensions: visit
+    partitionDimensions: detector
+    partitionMaxClusters: 6000
   step4b_forced_phot_dia:
     pipetasks: forcedPhotDiaObjectDifference,forcedPhotDiaObjectDirect,writeDiaObjectForcedSource
-    dimensions: visit,detector
+    dimensions: visit
+    partitionDimensions: detector
+    partitionMaxClusters: 6000
   skyCorrCluster:
     pipetasks: skyCorr,skyCorrExperimental
     dimensions: visit
