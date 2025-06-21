@@ -16,6 +16,7 @@ imports:
       - analyzeSingleVisitStarAssociation
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+      - assembleCellCoadd
       - selectTemplateCoaddVisits
       # Remove entire recalibration stage including PIFF
       - stage2-recalibrate
