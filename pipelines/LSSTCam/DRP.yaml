@@ -11,8 +11,6 @@ imports:
       - fgcmBuildFromIsolatedStar
       - fgcmFitCycle
       - fgcmOutputProducts
-      # TODO: DM-50120. GBDES starts turned off
-      - gbdesAstrometricFit
 tasks:
   makeDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
@@ -21,27 +19,10 @@ tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
-      # TODO: DM-50120. GBDES starts turned off
-      wcs_provider: input_summary
       # TODO: DM-50154. FGCM starts turned off
       photo_calib_provider: input_summary
       background_provider: replacement
       connections.background_originals: preliminary_visit_image_background
-
-  # TODO: DM-50120 remove astrometriCorrections=false overrides for
-  # all three analyze tasks:
-  analyzeRecalibratedStarAssociation:
-    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
-    config:
-      applyAstrometricCorrections: false
-  analyzeRecalibratedStarObjectMatch:
-    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
-    config:
-      applyAstrometricCorrections: false
-  analyzeSourceAssociation:
-    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
-    config:
-      applyAstrometricCorrections: false
   selectTemplateCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
@@ -114,6 +95,8 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
   stage2-recalibrate:
+    # 2b
+    - gbdesAstrometricFit
     # 2c
     - skyCorr
     - refitPsfModelDetector
