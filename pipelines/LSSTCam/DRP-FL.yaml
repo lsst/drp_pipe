@@ -32,6 +32,7 @@ imports:
       - makeAnalysisSourceAssociationWholeSkyPlot
       # Remove object table generation
       - mergeObjectDetection
+      - deconvolve
       - deblendCoaddFootprints
       - measureObjectUnforced
       - mergeObjectMeasurement
