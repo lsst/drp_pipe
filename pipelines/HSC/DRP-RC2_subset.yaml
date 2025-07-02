@@ -143,7 +143,6 @@ subsets:
       - makePsfMatchedWarp
       - selectDeepCoaddVisits
       - assembleCoadd
-      - assembleCellCoadd
       - detection
       - mergeDetections
       - deconvolve
