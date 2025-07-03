@@ -16,6 +16,7 @@ bin/
 
 # Pytest
 tests/.tests
+tests/tmp*
 pytest_session.txt
 .cache/
 .pytest_cache

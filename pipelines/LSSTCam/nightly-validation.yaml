@@ -27,6 +27,7 @@ imports:
       - assembleTemplateCoadd
       # Remove object table generation
       - mergeObjectDetection
+      - deconvolve
       - deblendCoaddFootprints
       - measureObjectUnforced
       - mergeObjectMeasurement
