@@ -8,13 +8,13 @@ tasks:
       file: $ANALYSIS_TOOLS_DIR/config/matchedVisitCore.py
       connections.sourceCatalogs: recalibrated_star
       connections.associatedSources: isolated_star
+      connections.associatedSourceIds: isolated_star_association
       connections.outputName: recalibrated_star_association
       # This task only needs a visit table to get MJDs, which are not changed
       # when we go from preliminary_visit_table to [final/recalibrated]
       # visit_table.  Using the initial one here avoids adding another global
       # gather/scatter to stage 2.
       connections.visitTable: preliminary_visit_table
-      connections.associatedSourceIds: isolated_star_association
       applyAstrometricCorrections: true
   makeAnalysisRecalibratedStarAssociationMetricTable:
     class: lsst.analysis.tools.tasks.MakeMetricTableTask
