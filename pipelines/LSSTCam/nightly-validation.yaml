@@ -77,3 +77,7 @@ tasks:
     class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
     config:
       connections.visitSummaryList: preliminary_visit_summary
+  isr:
+    class: lsst.ip.isr.IsrTaskLSST
+    python: |
+        config.doSerialOverscanMedianShiftSigmaCheck = float('inf')
