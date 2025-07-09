@@ -1095,4 +1095,5 @@ contracts:
   - detectCoaddPeaks.useCellCoadds == measureObjectForced.useCellCoadds
   - detectCoaddPeaks.useCellCoadds == fitDeepCoaddPsfGaussians.use_cell_coadds
   - detectCoaddPeaks.useCellCoadds == fitDeblendedObjectsSersic.use_cell_coadds
+  - detectCoaddPeaks.useCellCoadds == deconvolve.useCellCoadds
   # End of constraints for cell-coadds.
