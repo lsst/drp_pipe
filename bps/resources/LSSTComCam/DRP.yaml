@@ -77,3 +77,9 @@ pipetask:
     requestMemory: 8000
   mergeMultiprofit:
     requestMemory: 8000
+  splitPrimaryObject:
+    requestMemory: 20254
+  splitPrimaryObjectForcedSource:
+    requestMemory: 4000
+  splitPrimarySource:
+    requestMemory: 4000
