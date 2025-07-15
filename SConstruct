@@ -1,13 +1,10 @@
 # -*- python -*-
 import os
 
-from lsst.sconsUtils import scripts
+from lsst.sconsUtils import scripts, targets
 from lsst.sconsUtils.state import env
-from lsst.sconsUtils import targets
 from lsst.sconsUtils.utils import libraryLoaderEnvironment
 from SCons.Script import Default
-
-
 
 PKG_ROOT = env.ProductDir("drp_pipe")
 
@@ -45,7 +42,7 @@ rc2_subset_injected_deepCoadd_stars = env.Command(
         [
             libraryLoaderEnvironment(),
             f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {injected_pipeline_RC2} "
-            f"-s {subset_name} -d '{subset_description}' --overwrite",
+            f"-s '{subset_name}:{subset_description}' --overwrite",
         ]
     ),
 )
@@ -58,31 +55,36 @@ RC2_injected_deepCoadd_stars = env.Command(
         [
             libraryLoaderEnvironment(),
             f"make_injection_pipeline -t deepCoadd -r $SOURCE -f $TARGET -a {injected_pipeline_RC2} "
-            f"-s {subset_name} -d '{subset_description}' --overwrite",
+            f"-s '{subset_name}:{subset_description}' --overwrite",
         ]
     ),
 )
-LSSTComCam_excluded_tasks = ','.join([
-    "gbdesAstrometricFit",
-    "fgcmBuildFromIsolatedStars",
-    "fgcmFitCycle",
-    "fgcmOutputProducts",
-    "skyCorr",
-])
+LSSTComCam_excluded_tasks = ",".join(
+    [
+        "gbdesAstrometricFit",
+        "fgcmBuildFromIsolatedStars",
+        "fgcmFitCycle",
+        "fgcmOutputProducts",
+        "skyCorr",
+    ]
+)
 
 subset_name = "injected_{suffix}_coadd_analysis"
 
 LSSTComCam_injected = [
     env.Command(
         target=os.path.join(
-            PKG_ROOT, "pipelines", "LSSTComCam", f"DRP+injected_deep_coadd_{suffix}.yaml"
+            PKG_ROOT,
+            "pipelines",
+            "LSSTComCam",
+            f"DRP+injected_deep_coadd_{suffix}.yaml",
         ),
         source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP-v2-compat.yaml"),
         action=" ".join(
             [
                 libraryLoaderEnvironment(),
                 f"make_injection_pipeline -t deep_coadd_predetection -r $SOURCE -f $TARGET -a {pipeline_post} "
-                f"-s {subset_name.format(suffix=suffix)} -d '{injection_descriptions[suffix]}' "
+                f"-s '{subset_name.format(suffix=suffix)}:{injection_descriptions[suffix]}' "
                 f"-x {LSSTComCam_excluded_tasks} --overwrite",
             ]
         ),
@@ -91,8 +93,10 @@ LSSTComCam_injected = [
 ]
 
 # diffim injection pipeline creation
-subset_names = "injected_diffim_analysis,injected_stage4-measure-variability"
-subset_description = "Analysis tasks for source injection for diffim catalogs"
+subsets = [
+    "'injected_diffim_analysis:Analysis tasks for diffim source injection'",
+    "'injected_stage4-measure-variability:Analysis tasks for diffim source injection'",
+]
 
 diffim_post_injected = os.path.join(
     PKG_ROOT,
@@ -101,40 +105,40 @@ diffim_post_injected = os.path.join(
     "DRP-post-injected-diffim.yaml",
 )
 diffim_wfakes_LSSTComCam_path = os.path.join(
-        PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_diffim.yaml"
-    )
+    PKG_ROOT, "pipelines", "LSSTComCam", "DRP+injected_diffim.yaml"
+)
 LSSTComCam_diffim_injected = env.Command(
     target=diffim_wfakes_LSSTComCam_path,
     source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP-v2-compat.yaml"),
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            f"make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET ",
-            f"-a {diffim_post_injected} -s {subset_names} ",
-            f"--config inject_visit:external_psf=False ",
-            f"--config inject_visit:external_photo_calib=False ",
-            f"--config inject_visit:external_wcs=False ",
-            f"--overwrite --prefix 'fakes_'",
+            "make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET ",
+            f"-a {diffim_post_injected} -s " + " -s ".join(subsets),
+            "--config inject_visit:external_psf=False ",
+            "--config inject_visit:external_photo_calib=False ",
+            "--config inject_visit:external_wcs=False ",
+            "--overwrite --prefix 'fakes_'",
         ]
-    )
+    ),
 )
 diffim_wfakes_LSSTCam_path = os.path.join(
-        PKG_ROOT, "pipelines", "LSSTCam", "DRP+injected_diffim.yaml"
-    )
+    PKG_ROOT, "pipelines", "LSSTCam", "DRP+injected_diffim.yaml"
+)
 LSSTCam_diffim_injected = env.Command(
     target=diffim_wfakes_LSSTCam_path,
     source=os.path.join(PKG_ROOT, "pipelines", "LSSTCam", "DRP.yaml"),
     action=" ".join(
         [
             libraryLoaderEnvironment(),
-            f"make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET ",
-            f"-a {diffim_post_injected} -s {subset_names} ",
-            f"--config inject_visit:external_psf=False ",
-            f"--config inject_visit:external_photo_calib=False ",
-            f"--config inject_visit:external_wcs=False ",
-            f"--overwrite --prefix 'fakes_'",
+            "make_injection_pipeline -t visit_image -r $SOURCE -f $TARGET ",
+            f"-a {diffim_post_injected} -s " + " -s ".join(subsets),
+            "--config inject_visit:external_psf=False ",
+            "--config inject_visit:external_photo_calib=False ",
+            "--config inject_visit:external_wcs=False ",
+            "--overwrite --prefix 'fakes_'",
         ]
-    )
+    ),
 )
 
 Default(
@@ -143,7 +147,8 @@ Default(
         RC2_injected_deepCoadd_stars,
         LSSTComCam_diffim_injected,
         LSSTCam_diffim_injected,
-    ] + LSSTComCam_injected
+    ]
+    + LSSTComCam_injected
 )
 
 # Python-only package
