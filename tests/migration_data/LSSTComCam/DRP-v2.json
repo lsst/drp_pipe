@@ -640,6 +640,7 @@
     "template_matched": "goodSeeingDiff_matchedExp",
     "dia_source_unfiltered": "goodSeeingDiff_diaSrc",
     "difference_image": "goodSeeingDiff_differenceExp",
+    "trailed_glints": "trailed_glints",
     "dia_source_unstandardized": "goodSeeingDiff_candidateDiaSrc",
     "long_trailed_dia_source": "goodSeeingDiff_longTrailedSrc",
     "rejected_dia_source": "goodSeeingDiff_rejectedDiaSrc",
