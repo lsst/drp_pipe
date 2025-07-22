@@ -9,3 +9,19 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DECam/DRP.yaml
     exclude:
       - isrForCrosstalkSources
+tasks:
+  fitDeblendedObjectsSersic:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
+    config:
+      python: |
+        config.finalize(
+          add_point_source=parameters.add_point_source,
+          fix_centroid=parameters.fix_centroid,
+          use_shapelet_psf=parameters.use_shapelet_psf,
+        )
+        config.fit_coadd_multiband.bands_fit=['N540', 'N708']
+  computeObjectEpochs:
+    class: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
+    config:
+      python: |
+        config.bands=['N540', 'N708']
