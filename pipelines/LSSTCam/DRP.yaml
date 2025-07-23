@@ -24,9 +24,11 @@ tasks:
       background_provider: replacement
       connections.background_originals: preliminary_visit_image_background
   selectTemplateCoaddVisits:
-    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
-      nVisitsMin: 12
+      connections.visitSummaries: visit_summary
+      connections.goodVisits: template_coadd_visit_selection
+      maxPsfFwhm: 1.2
       python: |
         config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.75}
   selectDeepCoaddVisits:
