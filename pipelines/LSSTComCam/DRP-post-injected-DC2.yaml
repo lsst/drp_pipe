@@ -20,46 +20,6 @@ tasks:
     config:
       connections.name_input_cat_ref: injected_deep_coadd_predetection_catalog_tract
       connections.name_input_cat_target: injected_object_all
-
-      column_matched_prefix_ref: "ref_"
-      # TODO: Remove as part of DM-44139
-      columns_ref_mag_to_nJy: {
-        u_mag: "u_flux", g_mag: "g_flux", r_mag: "r_flux", i_mag: "i_flux", z_mag: "z_flux", y_mag: "y_flux",
-      }
-      columns_ref_copy: [
-        "injected_id", "r_comp1_source_type",
-        "u_injection_flag", "g_injection_flag", "r_injection_flag",
-        "i_injection_flag", "z_injection_flag", "y_injection_flag",
-        "u_mag", "g_mag", "r_mag", "i_mag", "z_mag", "y_mag",
-        "injection_flag", "injected_isPatchInner", "injected_isTractInner", "injected_isPrimary",
-      ]
-      columns_target_coord_err: ["coord_raErr", "coord_decErr"]
-
-      python: |
-        from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
-        columns_flux = {}
-        fluxes_meas = []
-        models_other = ("cModel", "gaap1p0", "gaap3p0", "kron", "psf", "sersic",)
-        for band in ("u", "g", "r", "i", "z", "y"):
-            # Can't use a list comp here for weird scoping reasons
-            for model in models_other:
-                fluxes_meas.append(f"{band}_{model}Flux")
-        # Extendedness columns are needed for downstream plots/metrics/etc.
-        columns_target_copy = [
-          "objectId", "patch", "refExtendedness", "refSizeExtendedness", "detect_isPrimary",
-        ]
-        columns_target_copy.extend(fluxes_meas)
-        columns_target_copy.extend([f"{col}Err" for col in fluxes_meas])
-        columns_target_copy.extend(["x", "y", "xErr", "yErr"])
-        if "sersic" in models_other:
-          columns_target_copy.extend([
-            "sersic_x", "sersic_y", "sersic_xErr", "sersic_yErr",
-            "sersic_ra", "sersic_dec", "sersic_raErr", "sersic_decErr",
-            "sersic_index", "sersic_indexErr", "sersic_rho", "sersic_rhoErr",
-            "sersic_reff_x", "sersic_reff_xErr", "sersic_reff_y", "sersic_reff_yErr",
-          ])
-        config.columns_target_copy = columns_target_copy
-
   diff_matched_analysis:
     class: lsst.analysis.tools.tasks.DiffMatchedAnalysisTask
     config:
@@ -149,8 +109,8 @@ tasks:
         from lsst.analysis.tools.atools.diffMatched import *
         from lsst.analysis.tools.actions.vector.selectors import InjectedGalaxySelector, InjectedStarSelector
 
-        InjectedGalaxySelector.key_class.default = "ref_r_comp1_source_type"
-        InjectedStarSelector.key_class.default = "ref_r_comp1_source_type"
+        InjectedGalaxySelector.key_class.default = parameters.source_type_column
+        InjectedStarSelector.key_class.default = parameters.source_type_column
 
         reconfigure_diff_matched_defaults(
           config=config,
@@ -159,4 +119,5 @@ tasks:
           use_any=True,
           use_galaxies=True,
           use_stars=True,
+          bands_color=list(parameters.bands_injected),
         )
