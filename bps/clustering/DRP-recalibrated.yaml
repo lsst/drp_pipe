@@ -26,7 +26,7 @@ cluster:
     dimensions: tract,patch
 
   diffim:
-    pipetasks: getTemplate,subtractImages,filterDiaSrcCat,detectAndMeasureDiaSources,rbClassify,transformDiaSourceCat
+    pipetasks: getTemplate,subtractImages,filterDiaSrcCat,detectAndMeasureDiaSources,rbClassify,filterDiaSourcePostReliability,transformDiaSourceCat
     dimensions: visit,detector
 
   association:

@@ -51,7 +51,7 @@ cluster:
     partitionDimensions: detector
     partitionMaxClusters: 6000
   diffim:
-    pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,standardizeDiaSource
+    pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,filterDiaSourcePostReliability,standardizeDiaSource
     dimensions: visit
     partitionDimensions: detector
     partitionMaxClusters: 6000
