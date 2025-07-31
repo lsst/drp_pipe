@@ -227,6 +227,7 @@ subsets:
       - detectAndMeasureDiaSources
       - filterDiaSrcCat
       - rbClassify
+      - filterDiaSourcePostReliability
       - transformDiaSourceCat
       - writeForcedSourceTable
     description: |

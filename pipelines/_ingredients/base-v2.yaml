@@ -437,15 +437,21 @@ tasks:
       connections.difference: difference_image_predetection
       connections.diaSources: dia_source_unstandardized
       connections.classifications: dia_source_reliability
+  filterDiaSourcePostReliability:
+    class: lsst.ap.association.FilterDiaSourceReliabilityTask
+    config:
+      connections.coaddName: parameters.coaddName
+      connections.fakesType: parameters.fakesType
+      connections.diaSourceCat: dia_source_unstandardized
+      connections.reliability: dia_source_reliability
+      connections.filteredDiaSources: dia_source_high_reliability
+      connections.rejectedDiaSources: dia_source_low_reliability
   standardizeDiaSource:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
-      doRemoveSkySources: true
-      doIncludeReliability: true
       connections.diaSourceSchema: dia_source_schema
-      connections.diaSourceCat: dia_source_unstandardized
+      connections.diaSourceCat: dia_source_high_reliability
       connections.diffIm: difference_image
-      connections.reliability: dia_source_reliability
       connections.diaSourceTable: dia_source_detector
   consolidateVisitDiaSource:
     class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
@@ -791,6 +797,7 @@ subsets:
       - detectAndMeasureDiaSource
       - filterDiaSource
       - computeReliability
+      - filterDiaSourcePostReliability
       - standardizeDiaSource
       - consolidateVisitDiaSource
       - analyzeRecalibratedStarObjectMatch
@@ -931,6 +938,7 @@ subsets:
     - detectAndMeasureDiaSource
     - filterDiaSource
     - computeReliability
+    - filterDiaSourcePostReliability
     - standardizeDiaSource
     - consolidateVisitDiaSource
     - analyzeRecalibratedStarObjectMatch
