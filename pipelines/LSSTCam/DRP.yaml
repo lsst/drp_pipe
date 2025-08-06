@@ -34,6 +34,7 @@ tasks:
   selectDeepCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
+      maxPsfFwhm: 1.7
       python: |
         config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.75}
   splitPrimarySource:
