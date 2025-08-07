@@ -64,6 +64,9 @@ tasks:
   detectCoaddPeaks:
     class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
     config:
+      # As of w_2025_30 DRP, lowest number of skyObjects seen is 9
+      # 9/0.02 = 450.
+      detection.skyObjects.nSources: 400
       # Start with HSC configs and then refine
       detection.doTempWideBackground: true
       detection.tempWideBackground.binSize: 128
