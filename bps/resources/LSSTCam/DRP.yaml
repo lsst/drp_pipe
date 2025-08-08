@@ -161,6 +161,8 @@ pipetask:
     #  extraRunQuantumOptions: "-j 1 -n 16"
   gbdesAstrometricFit:
     requestMemory: 40000
+    requestCpus: 10
+    extraRunQuantumOptions: "-j 1 -n 10"
   refitPsfModel:
     requestMemory: 7000
   skyCorrExperimental:
