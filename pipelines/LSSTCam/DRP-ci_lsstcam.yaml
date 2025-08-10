@@ -1,0 +1,48 @@
+description: LSSTCam specialization of the DRP pipeline
+instrument: lsst.obs.lsst.LsstCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
+    labeledSubsetModifyMode: EDIT
+    exclude:
+      - skyCorr
+      - gbdesAstrometricFit
+tasks:
+  # Config overrides for both missing skyCorr and gbdesAstrometricFit
+  updateVisitSummary:
+    class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
+    config:
+      background_provider: input_summary
+      wcs_provider: input_summary
+  # Config overrides for missing skyCorr
+  makeDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+    config:
+      doApplySkyCorr: false
+  reprocessVisitImage:
+    class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
+    config:
+      do_use_sky_corr: false
+  # Config overrides for missing gbdesAstrometricFit
+  analyzeRecalibratedStarAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  analyzeRecalibratedStarObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  analyzeSourceAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  # Be a little more permissive on number of visits allowed into coadds
+  selectTemplateCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      python: |
+        config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.5}
+  selectDeepCoaddVisits:
+    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    config:
+      python: |
+        config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.5}
