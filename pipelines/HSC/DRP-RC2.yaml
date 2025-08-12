@@ -203,7 +203,7 @@ subsets:
       functionality.  It may be removed in the future.
   step4:
     subset:
-      - forcedPhotObject
+      - forcedPhotDetector
       - reprocessVisitImage
       - getTemplate
       - subtractImages
@@ -223,7 +223,7 @@ subsets:
     subset:
       - drpAssociation
       - drpDiaCalculation
-      - forcedPhotDiaObject
+      - forcedPhotDiaDetector
       - transformForcedSourceTable
       - splitPrimaryObjectForcedSource
       - consolidateForcedSourceTable

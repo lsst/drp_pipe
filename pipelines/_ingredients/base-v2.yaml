@@ -492,7 +492,7 @@ tasks:
     config:
       connections.inputCatalogs: dia_object_patch
       connections.outputCatalog: dia_object
-  forcedPhotObject: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
+  forcedPhotDetector: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
   standardizeObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
     config:
@@ -506,7 +506,7 @@ tasks:
       connections.full: object_forced_source_all
       connections.primary: object_forced_source
       connections.nonprimary: object_forced_source_nonprimary
-  forcedPhotDiaObject:
+  forcedPhotDiaDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
       key: diaObjectId
@@ -788,10 +788,10 @@ subsets:
       - calculateDiaObject
       - consolidateDiaSource
       - consolidateDiaObject
-      - forcedPhotObject
+      - forcedPhotDetector
       - standardizeObjectForcedSource
       - splitPrimaryObjectForcedSource
-      - forcedPhotDiaObject
+      - forcedPhotDiaDetector
       - standardizeDiaObjectForcedSource
       - associateAnalysisSource
       - analyzeSourceAssociation
@@ -925,10 +925,10 @@ subsets:
     - calculateDiaObject
     - consolidateDiaSource
     - consolidateDiaObject
-    - forcedPhotObject
+    - forcedPhotDetector
     - standardizeObjectForcedSource
     - splitPrimaryObjectForcedSource
-    - forcedPhotDiaObject
+    - forcedPhotDiaDetector
     - standardizeDiaObjectForcedSource
     - associateAnalysisSource
     - analyzeSourceAssociation
@@ -981,7 +981,7 @@ contracts:
   - subtractImages.connections.difference == detectAndMeasureDiaSource.connections.difference
   - detectAndMeasureDiaSource.connections.diaSources == filterDiaSource.connections.diaSourceCat
   - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == standardizeDiaSource.connections.diffIm
-  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotObject.connections.diaExposure
+  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotDetector.connections.diaExposure
   - standardizeDiaSource.connections.diaSourceTable == consolidateVisitDiaSource.connections.inputCatalogs
   - standardizeDiaSource.connections.diaSourceTable == associateDiaSource.connections.diaSourceTables
   - associateDiaSource.connections.assocDiaSourceTable == calculateDiaObject.connections.assocDiaSourceTable

@@ -15,7 +15,7 @@ tasks:
   # run it, since that's what the testdata_ci_hsc repo is set up to have.
   # That's not realistic overall, but it does let us test the code paths
   # downstream of coaddition that we use most often.
-  # See also forcedPhotObject, forcedPhotDiaObeject
+  # See also forcedPhotDetector, forcedPhotDiaDetector
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:

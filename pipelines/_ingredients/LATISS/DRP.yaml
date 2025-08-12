@@ -237,7 +237,7 @@ subsets:
   step4:
     subset:
       - reprocessVisitImage
-      - forcedPhotObject
+      - forcedPhotDetector
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
@@ -258,7 +258,7 @@ subsets:
     subset:
       - drpAssociation
       - drpDiaCalculation
-      - forcedPhotDiaObject
+      - forcedPhotDiaDetector
       - transformForcedSourceTable
       - splitPrimaryObjectForcedSource
       - consolidateForcedSourceTable
