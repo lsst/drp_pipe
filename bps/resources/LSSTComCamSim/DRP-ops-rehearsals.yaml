@@ -50,10 +50,8 @@ pipetask:
     requestMemory: 7867
   consolidateFinalizeCharacterization:
     requestMemory: 7956
-  forcedPhotCcd:
-    requestMemory: 2310
-  forcedPhotDiffim:
-    requestMemory: 2310
+  forcedPhotObject:
+    requestMemory: 2317
   gbdesAstrometricFit:
     requestMemory: 3907
   getTemplate:
@@ -80,8 +78,6 @@ pipetask:
     requestMemory: 2448
   transformPreSourceTable:
     requestMemory: 7053
-  writeForcedSourceTable:
-    requestMemory: 2317
   writeObjectTable:
     requestMemory: 2448
   writePreSourceTable:

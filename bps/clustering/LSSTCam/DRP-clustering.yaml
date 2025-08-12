@@ -58,16 +58,6 @@ cluster:
   association:
     pipetasks: associateDiaSource,calculateDiaObject
     dimensions: tract,patch
-  step4b_forced_phot:
-    pipetasks: forcedPhotObjectDirect,forcedPhotObjectDifference,writeObjectForcedSource
-    dimensions: visit
-    partitionDimensions: detector
-    partitionMaxClusters: 10000
-  step4b_forced_phot_dia:
-    pipetasks: forcedPhotDiaObjectDifference,forcedPhotDiaObjectDirect,writeDiaObjectForcedSource
-    dimensions: visit
-    partitionDimensions: detector
-    partitionMaxClusters: 10000
   skyCorrCluster:
     pipetasks: skyCorr,skyCorrExperimental
     dimensions: visit

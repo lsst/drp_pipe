@@ -66,14 +66,10 @@ pipetask:
     requestMemory: 17111
   fitDeblendedObjectsSersic:
     requestMemory: 4000
-  forcedPhotDiaObjectDifference:
-    requestMemory: 2947
-  forcedPhotDiaObjectDirect:
-    requestMemory: 2947
-  forcedPhotObjectDifference:
-    requestMemory: 4000
-  forcedPhotObjectDirect:
-    requestMemory: 4000
+  forcedPhotDiaObject:
+    requestMemory: 5672
+  forcedPhotObject:
+    requestMemory: 5672
   isr:
     requestMemory: 4000
   makeAnalysisRecalibratedStarAssociationWholeSkyPlot:
@@ -146,10 +142,6 @@ pipetask:
     requestMemory: 15531
   updateVisitSummary:
     requestMemory: 2239
-  writeDiaObjectForcedSource:
-    requestMemory: 2947
-  writeObjectForcedSource:
-    requestMemory: 5672
   # Not in DRP pipeline
   fgcmBuildFromIsolatedStar:
     requestMemory: 16000
