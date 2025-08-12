@@ -43,6 +43,3 @@ cluster:
     association:
         pipetasks: associateDiaSource,calculateDiaObject
         dimensions: tract,patch
-    step4b_forced_phot:
-        pipetasks: forcedPhotDiaObjectDifference,forcedPhotDiaObjectDirect,writeDiaObjectForcedSource
-        dimensions: visit,detector

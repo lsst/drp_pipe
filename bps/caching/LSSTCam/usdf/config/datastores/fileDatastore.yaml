@@ -100,14 +100,10 @@ datastore:
       dia_object_pre_calc: true
       dia_source_patch: true
 
-      # step4b_forced_phot (forcedPhotObjectDirect, forcedPhotObjectDifference,
-      # writeObjectForcedSource)
-      object_ref_measurement: true
-      object_forced_source_difference: true
-      object_forced_source_direct: true
+      # step4b_forced_phot (forcedPhotObject)
+      object_patch: true
+      object_forced_source_unstandardized: true
 
-      # step4b_forced_phot_dia (forcedPhotDiaObjectDifference,
-      # forcedPhotDiaObjectDirect, writeDiaObjectForcedSource)
+      # step4b_forced_phot_dia (forcedPhotDiaObject)
       dia_object_patch: true
-      dia_object_forced_source_difference: true
-      dia_object_forced_source_direct: true
+      dia_object_forced_source_unstandardized: true

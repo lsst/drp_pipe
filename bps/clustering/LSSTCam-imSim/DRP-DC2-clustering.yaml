@@ -29,11 +29,3 @@ cluster:
   association:
     pipetasks: drpAssociation,drpDiaCalculation
     dimensions: tract,patch
-
-  forced_phot:
-    pipetasks: forcedPhotCcd, forcedPhotDiffim, writeForcedSourceTable
-    dimensions: visit,detector,tract
-
-  forced_phot_dia:
-    pipetasks: forcedPhotDiffOnDiaObjects, forcedPhotCcdOnDiaObjects, writeForcedSourceOnDiaObjectTable
-    dimensions: visit,detector,tract
