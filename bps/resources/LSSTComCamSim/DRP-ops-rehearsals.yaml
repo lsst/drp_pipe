@@ -50,7 +50,7 @@ pipetask:
     requestMemory: 7867
   consolidateFinalizeCharacterization:
     requestMemory: 7956
-  forcedPhotObject:
+  forcedPhotDetector:
     requestMemory: 2317
   gbdesAstrometricFit:
     requestMemory: 3907

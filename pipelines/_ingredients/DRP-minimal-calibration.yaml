@@ -96,7 +96,7 @@ tasks:
       connections.full: objectTable_tract
       connections.primary: objectTable_primary
       connections.nonprimary: objectTable_nonprimary
-  forcedPhotObject:
+  forcedPhotDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
       connections.exposure: pvi
@@ -222,7 +222,7 @@ tasks:
     config:
       connections.inputCatalogs: forcedSourceTable
       connections.outputCatalog: forcedSourceTable_tract
-  forcedPhotDiaObject:
+  forcedPhotDiaDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
       key: diaObjectId
@@ -297,7 +297,7 @@ subsets:
       table.
   forced:
     subset:
-      - forcedPhotObject
+      - forcedPhotDetector
       - forcedPhotCoadd
     description: >
       A set of tasks to run when doing forced measurements.
@@ -315,7 +315,7 @@ subsets:
       - consolidateDiaSourceTable
       - drpAssociation
       - drpDiaCalculation
-      - forcedPhotDiaObject
+      - forcedPhotDiaDetector
     description: >
       Subset for running image differencing branch of the DRP pipeline
 
@@ -329,7 +329,7 @@ contracts:
   - subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
   - detectAndMeasureDiaSources.connections.diaSources == filterDiaSrcCat.connections.diaSourceCat
   - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == transformDiaSourceCat.connections.diffIm
-  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotObject.connections.diaExposure
+  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotDetector.connections.diaExposure
   - transformDiaSourceCat.connections.diaSourceTable == consolidateDiaSourceTable.connections.inputCatalogs
   - transformDiaSourceCat.connections.diaSourceTable == drpAssociation.connections.diaSourceTables
   - drpAssociation.connections.assocDiaSourceTable == drpDiaCalculation.connections.assocDiaSourceTable

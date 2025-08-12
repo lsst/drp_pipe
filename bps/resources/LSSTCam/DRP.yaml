@@ -66,9 +66,9 @@ pipetask:
     requestMemory: 17111
   fitDeblendedObjectsSersic:
     requestMemory: 4000
-  forcedPhotDiaObject:
+  forcedPhotDiaDetector:
     requestMemory: 5672
-  forcedPhotObject:
+  forcedPhotDetector:
     requestMemory: 5672
   isr:
     requestMemory: 4000
