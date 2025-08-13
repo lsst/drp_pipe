@@ -15,7 +15,7 @@ cluster:
     dimensions: detector
     equalDimensions: visit:exposure
     partitionDimensions: exposure
-    partitionMaxClusters: 3000
+    partitionMaxClusters: 10000
   step1b_visits:
     pipetasks: consolidateSingleVisitStar,consolidateVisitSummary
     dimensions: visit
@@ -24,13 +24,13 @@ cluster:
     pipetasks: refitPsfModelDetector
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 6000
+    partitionMaxClusters: 10000
   step2c_visits:
     # These are detector-level tasks
     pipetasks: recalibrateSingleVisitStar,standardizeRecalibratedStar
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 6000
+    partitionMaxClusters: 10000
   makeWarpTract:
     # shared with NV
     pipetasks: makeDirectWarp,makePsfMatchedWarp
@@ -49,12 +49,12 @@ cluster:
     pipetasks: reprocessVisitImage,standardizeSource
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 6000
+    partitionMaxClusters: 10000
   diffim:
     pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,filterDiaSourcePostReliability,standardizeDiaSource
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 6000
+    partitionMaxClusters: 10000
   association:
     pipetasks: associateDiaSource,calculateDiaObject
     dimensions: tract,patch
@@ -62,12 +62,12 @@ cluster:
     pipetasks: forcedPhotObjectDirect,forcedPhotObjectDifference,writeObjectForcedSource
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 6000
+    partitionMaxClusters: 10000
   step4b_forced_phot_dia:
     pipetasks: forcedPhotDiaObjectDifference,forcedPhotDiaObjectDirect,writeDiaObjectForcedSource
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 6000
+    partitionMaxClusters: 10000
   skyCorrCluster:
     pipetasks: skyCorr,skyCorrExperimental
     dimensions: visit
