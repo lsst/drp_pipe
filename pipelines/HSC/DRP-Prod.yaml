@@ -140,7 +140,7 @@ subsets:
   step4:
     subset:
       - reprocessVisitImage
-      - forcedPhotCcd
+      - forcedPhotDetector
     description: |
       Detector-level tasks
       Allowed data query constraints: visit, detector
