@@ -95,6 +95,14 @@ tasks:
     config:
       connections.inputCatalogRefs: single_visit_star
       connections.inputVisitSummaries: preliminary_visit_summary
+      fitProperMotion: True
+  gbdesHealpix3AstrometricFit:
+    class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
+    config:
+      connections.inputCatalogRefs: single_visit_star
+      connections.inputVisitSummaries: preliminary_visit_summary
+      healpix: 3
+      connections.outputName: gbdesHealpix3AstrometricFit
       fitProperMotion: true
   refitPsfModelDetector:
     class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationDetectorTask
@@ -662,7 +670,18 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step2c-recalibrate-visits:
+  step2c-recalibrate-healpix:
+    subset:
+      - gbdesHealpix3AstrometricFit
+    description: |
+      A step that runs healpix-level multi-visit calibration tasks.
+
+      A pixel constraint may be used for sharding or avoiding partial-coverage
+      pixels, and may be helpful in speeding up QuantumGraph generation.
+
+      An instrument constraint is generally redundant but recommended.
+
+  step2d-recalibrate-visits:
     subset:
       - refitPsfModelDetector
       - consolidateRefitPsfModelDetector
@@ -687,7 +706,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step2d-recalibrate-tracts:
+  step2e-recalibrate-tracts:
     subset:
       - analyzeRecalibratedStarAssociation
     description: |
@@ -706,7 +725,7 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step2e-recalibrate-global:
+  step2f-recalibrate-global:
     subset:
       - makeVisitDetectorTable
       - makeVisitTable
@@ -870,6 +889,8 @@ subsets:
     # 2b
     - gbdesAstrometricFit
     # 2c
+    - gbdesHealpix3AstrometricFit
+    # 2d
     - refitPsfModelDetector
     - consolidateRefitPsfModelDetector
     - updateVisitSummary
@@ -881,9 +902,9 @@ subsets:
     - analyzeRecalibratedStarAstrometricRefMatch
     - makeAnalysisRecalibratedStarPhotometricRefMatch
     - analyzeRecalibratedStarPhotometricRefMatch
-    # 2d
-    - analyzeRecalibratedStarAssociation
     # 2e
+    - analyzeRecalibratedStarAssociation
+    # 2f
     - makeVisitDetectorTable
     - makeVisitTable
     - makeAnalysisRecalibratedStarAssociationMetricTable
@@ -982,11 +1003,13 @@ steps:
     dimensions: []
   - label: step2b-recalibrate-tracts
     dimensions: ["tract"]
-  - label: step2c-recalibrate-visits
+  - label: step2c-recalibrate-healpix
+    dimensions: ["healpix3"]
+  - label: step2d-recalibrate-visits
     dimensions: ["visit"]
-  - label: step2d-recalibrate-tracts
+  - label: step2e-recalibrate-tracts
     dimensions: ["tract"]
-  - label: step2e-recalibrate-global
+  - label: step2f-recalibrate-global
     dimensions: []
   - label: step3a-coadd-tracts
     dimensions: ["tract"]
