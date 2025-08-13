@@ -225,7 +225,7 @@ tasks:
   forcedPhotDiaDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
-      key: diaObjectId
+      measurement.refCatIdColumn: diaObjectId
       connections.exposure: pvi
       connections.diaExposure: goodSeeingDiff_differenceExp
       connections.refCat: goodSeeingDiff_fullDiaObjTable
