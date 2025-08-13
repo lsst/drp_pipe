@@ -509,7 +509,7 @@ tasks:
   forcedPhotDiaDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
-      key: diaObjectId
+      measurement.refCatIdColumn: diaObjectId
       connections.refCat: dia_object_patch
       connections.outputCatalog: dia_object_forced_source_unstandardized
   standardizeDiaObjectForcedSource:
