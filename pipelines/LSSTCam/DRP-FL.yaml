@@ -47,6 +47,8 @@ imports:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
+      - makeBinnedCoaddImage
+      - makeWholeTractImage
       - validateObjectTableCore
       - computeObjectEpochs
       - analyzeObjectTableSurveyCore

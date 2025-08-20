@@ -76,6 +76,16 @@ tasks:
       connections.outputName: "object_ref_match_photom"
   plotPropertyMapTract:
     class: lsst.analysis.tools.tasks.PerTractPropertyMapAnalysisTask
+  makeBinnedCoaddImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: deep_coadd
+      connections.binnedCoadd: deep_coadd_bin
+  makeWholeTractImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: deep_coadd_bin
+      connections.outputName: deep
   plotPropertyMapSurvey:
     class: lsst.analysis.tools.tasks.SurveyWidePropertyMapAnalysisTask
   validateObjectTableCore:
