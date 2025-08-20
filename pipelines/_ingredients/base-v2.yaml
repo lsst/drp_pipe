@@ -753,6 +753,8 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
+      - makeBinnedCoaddImage
+      - makeWholeTractImage
       - validateObjectTableCore
       - computeObjectEpochs
     description: |
@@ -917,6 +919,8 @@ subsets:
     - photometricCatalogMatch
     - photometricRefCatObjectTract
     - plotPropertyMapTract
+    - makeBinnedCoaddImage
+    - makeWholeTractImage
     - validateObjectTableCore
     - computeObjectEpochs
     # 3b
