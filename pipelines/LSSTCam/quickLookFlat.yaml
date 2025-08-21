@@ -7,14 +7,17 @@ imports:
   - location: $CP_VERIFY_DIR/pipelines/LSSTCam/verifyFlat.yaml
     include:
       - verifyFlatIsr
+      - verifyFlatDet
+      - verifyFlatExp
+      - verifyFlat
 
 tasks:
   verifyFlatIsr:
     class: lsst.ip.isr.IsrTaskLSST
     config:
       connections.outputExposure: post_isr_image
-      # Make sure brighter-fatter is off.
-      doBrighterFatter: false
-      # Make sure interpolation is on.
-      doInterpolate: true
       doFlat: false
+  verifyFlatDet:
+    class: lsst.cp.verify.CpVerifyFlatTask
+    config:
+      connections.inputExp: post_isr_image

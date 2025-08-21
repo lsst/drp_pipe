@@ -7,11 +7,16 @@ imports:
   - location: $CP_VERIFY_DIR/pipelines/LSSTCam/verifyBias.yaml
     include:
       - verifyBiasIsr
+      - verifyBiasDet
+      - verifyBiasExp
+      - verifyBias
 
 tasks:
   verifyBiasIsr:
     class: lsst.ip.isr.IsrTaskLSST
     config:
       connections.outputExposure: post_isr_image
-      # Make sure interpolation is on.
-      doInterpolate: true
+  verifyBiasDet:
+    class: lsst.cp.verify.CpVerifyBiasTask
+    config:
+      connections.inputExp: post_isr_image
