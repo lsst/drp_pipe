@@ -7,6 +7,7 @@ imports:
       - analysis-visit-initial
       - analysis-visit-recalibrated
       - analysis-visit-source
+      - step2b-recalibrate-tracts
       # TODO: DM-50154. FGCM starts turned off
       - fgcmBuildFromIsolatedStar
       - fgcmFitCycle
@@ -18,6 +19,7 @@ tasks:
       # TODO: DM-50154. FGCM starts turned off
       photo_calib_provider: input_summary
       background_provider: input_summary
+      wcs_provider: healpix3
       connections.background_originals: preliminary_visit_image_background
   selectTemplateCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
@@ -50,3 +52,17 @@ tasks:
       detection.reEstimateBackground: true
       detection.background.binSize: 128
       detection.background.useApprox: false
+  # TODO: DM-52176 Turn astrometric corrections back on when final version of
+  # proper motion and parallax catalog is available.
+  analyzeRecalibratedStarAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  analyzeRecalibratedStarObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  analyzeSourceAssociation:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyAstrometricCorrections: false

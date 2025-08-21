@@ -127,7 +127,7 @@ tasks:
   fitVisitBackground:
     class: lsst.drp.tasks.fit_visit_background.FitVisitBackgroundTask
 subsets:
-  step2c-recalibrate-visits:
+  step2d-recalibrate-visits:
     subset:
       - skyCorr
       - fitVisitBackground
