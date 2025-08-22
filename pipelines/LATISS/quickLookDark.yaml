@@ -7,6 +7,9 @@ imports:
   - location: $CP_VERIFY_DIR/pipelines/LATISS/verifyDark.yaml
     include:
       - verifyDarkIsr
+      - verifyDarkDet
+      - verifyDarkExp
+      - verifyDark
 
 tasks:
   verifyDarkIsr:
@@ -15,3 +18,7 @@ tasks:
       connections.outputExposure: post_isr_image
       # Make sure interpolation is on.
       doInterpolate: true
+  verifyDarkDet:
+    class: lsst.cp.verify.CpVerifyDarkTask
+    config:
+      connections.inputExp: post_isr_image
