@@ -20,7 +20,7 @@ tasks:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
     config:
       doMultipleCycles: true
-  forcedPhotDetector:
+  forcedPhotObjectDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
       doDirectPhotometry: true

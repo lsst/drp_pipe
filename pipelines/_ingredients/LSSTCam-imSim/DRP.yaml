@@ -209,10 +209,10 @@ subsets:
       time, because otherwise quanta will be created for jobs with only partial
       visit coverage.
 
-      It is expected that many forcedPhotDetector quanta will "normally" fail when
+      It is expected that many forcedPhotObjectDetector quanta will "normally" fail when
       running this subset, but this isn't a problem right now because there are
       no tasks downstream of it.  If other tasks regularly fail or we add tasks
-      downstream of forcedPhotDetector, these subsets or the tasks will need
+      downstream of forcedPhotObjectDetector, these subsets or the tasks will need
       additional changes.
 
       This subset is considered a workaround for missing middleware and task
@@ -220,7 +220,7 @@ subsets:
   step4:
     subset:
       - reprocessVisitImage
-      - forcedPhotDetector
+      - forcedPhotObjectDetector
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
@@ -239,7 +239,7 @@ subsets:
     subset:
       - drpAssociation
       - drpDiaCalculation
-      - forcedPhotDiaDetector
+      - forcedPhotDiaObjectDetector
       - transformForcedSourceTable
       - splitPrimaryObjectForcedSource
       - consolidateForcedSourceTable

@@ -22,7 +22,7 @@ imports:
       - stage2-recalibrate
       # remove step4 Object dependencies
       - analyzeRecalibratedStarObjectMatch
-      - forcedPhotDetector
+      - forcedPhotObjectDetector
       - standardizeObjectForcedSource
       - splitPrimaryObjectForcedSource
       - analyzeSourceAssociation

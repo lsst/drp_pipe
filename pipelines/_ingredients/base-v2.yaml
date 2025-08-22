@@ -492,7 +492,10 @@ tasks:
     config:
       connections.inputCatalogs: dia_object_patch
       connections.outputCatalog: dia_object
-  forcedPhotDetector: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
+  forcedPhotObjectDetector:
+    class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
+    config:
+      idGenerator.release_id: parameters.release_id
   standardizeObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
     config:
@@ -506,14 +509,15 @@ tasks:
       connections.full: object_forced_source_all
       connections.primary: object_forced_source
       connections.nonprimary: object_forced_source_nonprimary
-  forcedPhotDiaDetector:
+  forcedPhotDiaObjectDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
-      measurement.refCatIdColumn: diaObjectId
-      measurement.refCatRaColumn: ra
-      measurement.refCatDecColumn: dec
+      refCatIdColumn: diaObjectId
+      refCatRaColumn: ra
+      refCatDecColumn: dec
       connections.refCat: dia_object_patch
       connections.outputCatalog: dia_object_forced_source_unstandardized
+      idGenerator.release_id: parameters.release_id
   standardizeDiaObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
     config:
@@ -790,10 +794,10 @@ subsets:
       - calculateDiaObject
       - consolidateDiaSource
       - consolidateDiaObject
-      - forcedPhotDetector
+      - forcedPhotObjectDetector
       - standardizeObjectForcedSource
       - splitPrimaryObjectForcedSource
-      - forcedPhotDiaDetector
+      - forcedPhotDiaObjectDetector
       - standardizeDiaObjectForcedSource
       - associateAnalysisSource
       - analyzeSourceAssociation
@@ -927,10 +931,10 @@ subsets:
     - calculateDiaObject
     - consolidateDiaSource
     - consolidateDiaObject
-    - forcedPhotDetector
+    - forcedPhotObjectDetector
     - standardizeObjectForcedSource
     - splitPrimaryObjectForcedSource
-    - forcedPhotDiaDetector
+    - forcedPhotDiaObjectDetector
     - standardizeDiaObjectForcedSource
     - associateAnalysisSource
     - analyzeSourceAssociation
@@ -983,7 +987,7 @@ contracts:
   - subtractImages.connections.difference == detectAndMeasureDiaSource.connections.difference
   - detectAndMeasureDiaSource.connections.diaSources == filterDiaSource.connections.diaSourceCat
   - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == standardizeDiaSource.connections.diffIm
-  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotDetector.connections.diaExposure
+  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotObjectDetector.connections.diaExposure
   - standardizeDiaSource.connections.diaSourceTable == consolidateVisitDiaSource.connections.inputCatalogs
   - standardizeDiaSource.connections.diaSourceTable == associateDiaSource.connections.diaSourceTables
   - associateDiaSource.connections.assocDiaSourceTable == calculateDiaObject.connections.assocDiaSourceTable

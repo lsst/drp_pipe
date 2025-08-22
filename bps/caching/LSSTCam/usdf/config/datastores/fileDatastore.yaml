@@ -100,10 +100,10 @@ datastore:
       dia_object_pre_calc: true
       dia_source_patch: true
 
-      # step4b_forced_phot (forcedPhotDetector)
+      # step4b_forced_phot (forcedPhotObjectDetector)
       object_patch: true
       object_forced_source_unstandardized: true
 
-      # step4b_forced_phot_dia (forcedPhotDiaDetector)
+      # step4b_forced_phot_dia (forcedPhotDiaObjectDetector)
       dia_object_patch: true
       dia_object_forced_source_unstandardized: true

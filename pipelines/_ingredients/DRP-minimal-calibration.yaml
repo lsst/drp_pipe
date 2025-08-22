@@ -96,7 +96,7 @@ tasks:
       connections.full: objectTable_tract
       connections.primary: objectTable_primary
       connections.nonprimary: objectTable_nonprimary
-  forcedPhotDetector:
+  forcedPhotObjectDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
       connections.exposure: pvi
@@ -222,12 +222,12 @@ tasks:
     config:
       connections.inputCatalogs: forcedSourceTable
       connections.outputCatalog: forcedSourceTable_tract
-  forcedPhotDiaDetector:
+  forcedPhotDiaObjectDetector:
     class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
-      measurement.refCatIdColumn: diaObjectId
-      measurement.refCatRaColumn: ra
-      measurement.refCatDecColumn: dec
+      refCatIdColumn: diaObjectId
+      refCatRaColumn: ra
+      refCatDecColumn: dec
       connections.exposure: pvi
       connections.diaExposure: goodSeeingDiff_differenceExp
       connections.refCat: goodSeeingDiff_fullDiaObjTable
@@ -299,7 +299,7 @@ subsets:
       table.
   forced:
     subset:
-      - forcedPhotDetector
+      - forcedPhotObjectDetector
       - forcedPhotCoadd
     description: >
       A set of tasks to run when doing forced measurements.
@@ -317,7 +317,7 @@ subsets:
       - consolidateDiaSourceTable
       - drpAssociation
       - drpDiaCalculation
-      - forcedPhotDiaDetector
+      - forcedPhotDiaObjectDetector
     description: >
       Subset for running image differencing branch of the DRP pipeline
 
@@ -331,7 +331,7 @@ contracts:
   - subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
   - detectAndMeasureDiaSources.connections.diaSources == filterDiaSrcCat.connections.diaSourceCat
   - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == transformDiaSourceCat.connections.diffIm
-  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotDetector.connections.diaExposure
+  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotObjectDetector.connections.diaExposure
   - transformDiaSourceCat.connections.diaSourceTable == consolidateDiaSourceTable.connections.inputCatalogs
   - transformDiaSourceCat.connections.diaSourceTable == drpAssociation.connections.diaSourceTables
   - drpAssociation.connections.assocDiaSourceTable == drpDiaCalculation.connections.assocDiaSourceTable
