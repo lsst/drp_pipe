@@ -68,6 +68,7 @@ subsets:
       - transformSourceTable
       - consolidateSourceTable
       - updateVisitSummary
+      - gaussianProcessesTurbulenceFit
     description: |
       Visit-level tasks.
       Allowed data query constraints: visit

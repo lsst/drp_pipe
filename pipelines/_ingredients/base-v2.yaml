@@ -106,6 +106,8 @@ tasks:
       healpix: 3
       connections.outputName: gbdesHealpix3AstrometricFit
       fitProperMotion: true
+  gaussianProcessesTurbulenceFit:
+    class: lsst.drp.tasks.fit_turbulence.GaussianProcessesTurbulenceFitTask
   refitPsfModelDetector:
     class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationDetectorTask
     config:
@@ -718,6 +720,7 @@ subsets:
     subset:
       - refitPsfModelDetector
       - consolidateRefitPsfModelDetector
+      - gaussianProcessesTurbulenceFit
       - updateVisitSummary
       - recalibrateSingleVisitStar
       - standardizeRecalibratedStar
@@ -940,6 +943,7 @@ subsets:
     # 2d
     - refitPsfModelDetector
     - consolidateRefitPsfModelDetector
+    - gaussianProcessesTurbulenceFit
     - updateVisitSummary
     - recalibrateSingleVisitStar
     - standardizeRecalibratedStar
