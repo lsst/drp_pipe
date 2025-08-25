@@ -27,6 +27,7 @@ config.star_measurement.plugins.names |= [
     "base_Variance",
     "ext_shapeHSM_HsmPsfMomentsDebiased",
     "ext_shapeHSM_HsmShapeRegauss",
+    "ext_shapeHSM_HigherOrderMomentsSource",
     "base_Blendedness",
     "base_Jacobian",
 ]
@@ -35,3 +36,7 @@ config.star_measurement.plugins.names |= [
 # the local background
 config.star_measurement.plugins["base_CircularApertureFlux"].maxSincRadius = 12.0
 config.star_measurement.plugins["base_CompensatedTophatFlux"].apertures = [12, 17]
+
+config.psf_source_measurement.plugins.names |= [
+    "ext_shapeHSM_HigherOrderMomentsSource",
+]
