@@ -22,6 +22,7 @@ config.star_measurement.plugins["base_CircularApertureFlux"].radii = [
     3.0, 6.0, 9.0, 12.0, 17.0, 25.0, 35.0, 50.0, 70.0
 ]
 config.star_measurement.plugins.names |= [
+    "base_FPPosition",
     "base_LocalBackground",
     "base_Variance",
     "ext_shapeHSM_HsmPsfMomentsDebiased",
