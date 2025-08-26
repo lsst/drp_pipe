@@ -96,11 +96,13 @@ tasks:
       connections.full: objectTable_tract
       connections.primary: objectTable_primary
       connections.nonprimary: objectTable_nonprimary
-  forcedPhotCcd:
-    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+  forcedPhotObjectDetector:
+    class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
       connections.exposure: pvi
-      useVisitSummary: false
+      connections.diaExposure: goodSeeingDiff_differenceExp
+      connections.refCat: objectTable
+      connections.outputCatalog: mergedForcedSource
   forcedPhotCoadd:
     class: lsst.drp.tasks.forcedPhotCoadd.ForcedPhotCoaddTask
     config:
@@ -207,14 +209,6 @@ tasks:
     config:
       connections.inputCatalogs: goodSeeingDiff_fullDiaObjTable
       connections.outputCatalog: diaObjectTable_tract
-  forcedPhotDiffim:
-    class: lsst.meas.base.ForcedPhotCcdTask
-    config:
-      connections.measCat: forced_diff
-      connections.outputSchema: forced_diff_schema
-      connections.exposure: goodSeeingDiff_differenceExp
-      useVisitSummary: false # difference image already has final calibrations
-  writeForcedSourceTable: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
   transformForcedSourceTable: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
   splitPrimaryObjectForcedSource:
     class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
@@ -228,24 +222,15 @@ tasks:
     config:
       connections.inputCatalogs: forcedSourceTable
       connections.outputCatalog: forcedSourceTable_tract
-  forcedPhotCcdOnDiaObjects:
-    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+  forcedPhotDiaObjectDetector:
+    class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
+      refCatIdColumn: diaObjectId
+      refCatRaColumn: ra
+      refCatDecColumn: dec
       connections.exposure: pvi
-      useVisitSummary: false
-  forcedPhotDiffOnDiaObjects:
-    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
-    config:
-      connections.measCat: forced_diff_diaObject
-      connections.outputSchema: forced_diff_diaObject_schema
-      connections.exposure: goodSeeingDiff_differenceExp
-      useVisitSummary: false # difference image already has final calibrations
-  writeForcedSourceOnDiaObjectTable:
-    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
-    config:
-      key: diaObjectId
-      connections.inputCatalogDiff: forced_diff_diaObject
-      connections.inputCatalog: forced_src_diaObject
+      connections.diaExposure: goodSeeingDiff_differenceExp
+      connections.refCat: goodSeeingDiff_fullDiaObjTable
       connections.outputCatalog: mergedForcedSourceOnDiaObject
   transformForcedSourceOnDiaObjectTable:
     class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
@@ -314,7 +299,7 @@ subsets:
       table.
   forced:
     subset:
-      - forcedPhotCcd
+      - forcedPhotObjectDetector
       - forcedPhotCoadd
     description: >
       A set of tasks to run when doing forced measurements.
@@ -332,9 +317,7 @@ subsets:
       - consolidateDiaSourceTable
       - drpAssociation
       - drpDiaCalculation
-      - forcedPhotDiffim
-      - forcedPhotCcdOnDiaObjects
-      - forcedPhotDiffOnDiaObjects
+      - forcedPhotDiaObjectDetector
     description: >
       Subset for running image differencing branch of the DRP pipeline
 
@@ -348,12 +331,11 @@ contracts:
   - subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
   - detectAndMeasureDiaSources.connections.diaSources == filterDiaSrcCat.connections.diaSourceCat
   - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == transformDiaSourceCat.connections.diffIm
-  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotDiffim.connections.exposure
+  - detectAndMeasureDiaSources.connections.subtractedMeasuredExposure == forcedPhotObjectDetector.connections.diaExposure
   - transformDiaSourceCat.connections.diaSourceTable == consolidateDiaSourceTable.connections.inputCatalogs
   - transformDiaSourceCat.connections.diaSourceTable == drpAssociation.connections.diaSourceTables
   - drpAssociation.connections.assocDiaSourceTable == drpDiaCalculation.connections.assocDiaSourceTable
   - drpAssociation.connections.diaObjectTable == drpDiaCalculation.connections.diaObjectTable
-  - forcedPhotDiffim.connections.refCat == forcedPhotCcd.connections.refCat
   - consolidateHealSparsePropertyMaps.property_maps == healSparsePropertyMaps.property_maps
   - "'calib_psf_candidate' not in measure.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
   - "'calib_psf_used' not in measure.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"

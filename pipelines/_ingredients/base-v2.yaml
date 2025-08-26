@@ -492,32 +492,10 @@ tasks:
     config:
       connections.inputCatalogs: dia_object_patch
       connections.outputCatalog: dia_object
-  forcedPhotObjectDirect:
-    class: lsst.meas.base.forcedPhotCcd.ForcedPhotCcdTask
+  forcedPhotObjectDetector:
+    class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
-      connections.inputSchema: object_ref_measurement_schema
-      connections.exposure: visit_image
-      connections.refCat: object_ref_measurement
-      connections.outputSchema: object_forced_source_direct_schema
-      connections.measCat: object_forced_source_direct
-      useVisitSummary: false
       idGenerator.release_id: parameters.release_id
-  forcedPhotObjectDifference:
-    class: lsst.meas.base.ForcedPhotCcdTask
-    config:
-      connections.inputSchema: object_ref_measurement_schema
-      connections.exposure: difference_image
-      connections.refCat: object_ref_measurement
-      connections.outputSchema: object_forced_source_difference_schema
-      connections.measCat: object_forced_source_difference
-      useVisitSummary: false
-      idGenerator.release_id: parameters.release_id
-  writeObjectForcedSource:
-    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
-    config:
-      connections.inputCatalog: object_forced_source_direct
-      connections.inputCatalogDiff: object_forced_source_difference
-      connections.outputCatalog: object_forced_source_unstandardized
   standardizeObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
     config:
@@ -531,31 +509,15 @@ tasks:
       connections.full: object_forced_source_all
       connections.primary: object_forced_source
       connections.nonprimary: object_forced_source_nonprimary
-  forcedPhotDiaObjectDirect:
-    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
+  forcedPhotDiaObjectDetector:
+    class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
     config:
-      connections.exposure: visit_image
+      refCatIdColumn: diaObjectId
+      refCatRaColumn: ra
+      refCatDecColumn: dec
       connections.refCat: dia_object_patch
-      connections.measCat: dia_object_forced_source_direct
-      connections.outputSchema: dia_object_forced_source_direct_schema
-      useVisitSummary: false
-      idGenerator.release_id: parameters.release_id
-  forcedPhotDiaObjectDifference:
-    class: lsst.meas.base.ForcedPhotCcdFromDataFrameTask
-    config:
-      connections.exposure: difference_image
-      connections.refCat: dia_object_patch
-      connections.measCat: dia_object_forced_source_difference
-      connections.outputSchema: dia_object_forced_source_difference_schema
-      useVisitSummary: false
-      idGenerator.release_id: parameters.release_id
-  writeDiaObjectForcedSource:
-    class: lsst.pipe.tasks.postprocess.WriteForcedSourceTableTask
-    config:
-      key: diaObjectId
-      connections.inputCatalog: dia_object_forced_source_direct
-      connections.inputCatalogDiff: dia_object_forced_source_difference
       connections.outputCatalog: dia_object_forced_source_unstandardized
+      idGenerator.release_id: parameters.release_id
   standardizeDiaObjectForcedSource:
     class: lsst.pipe.tasks.postprocess.TransformForcedSourceTableTask
     config:
@@ -832,14 +794,10 @@ subsets:
       - calculateDiaObject
       - consolidateDiaSource
       - consolidateDiaObject
-      - forcedPhotObjectDirect
-      - forcedPhotObjectDifference
-      - writeObjectForcedSource
+      - forcedPhotObjectDetector
       - standardizeObjectForcedSource
       - splitPrimaryObjectForcedSource
-      - forcedPhotDiaObjectDirect
-      - forcedPhotDiaObjectDifference
-      - writeDiaObjectForcedSource
+      - forcedPhotDiaObjectDetector
       - standardizeDiaObjectForcedSource
       - associateAnalysisSource
       - analyzeSourceAssociation
@@ -973,14 +931,10 @@ subsets:
     - calculateDiaObject
     - consolidateDiaSource
     - consolidateDiaObject
-    - forcedPhotObjectDirect
-    - forcedPhotObjectDifference
-    - writeObjectForcedSource
+    - forcedPhotObjectDetector
     - standardizeObjectForcedSource
     - splitPrimaryObjectForcedSource
-    - forcedPhotDiaObjectDirect
-    - forcedPhotDiaObjectDifference
-    - writeDiaObjectForcedSource
+    - forcedPhotDiaObjectDetector
     - standardizeDiaObjectForcedSource
     - associateAnalysisSource
     - analyzeSourceAssociation
@@ -1033,12 +987,11 @@ contracts:
   - subtractImages.connections.difference == detectAndMeasureDiaSource.connections.difference
   - detectAndMeasureDiaSource.connections.diaSources == filterDiaSource.connections.diaSourceCat
   - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == standardizeDiaSource.connections.diffIm
-  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotObjectDifference.connections.exposure
+  - detectAndMeasureDiaSource.connections.subtractedMeasuredExposure == forcedPhotObjectDetector.connections.diaExposure
   - standardizeDiaSource.connections.diaSourceTable == consolidateVisitDiaSource.connections.inputCatalogs
   - standardizeDiaSource.connections.diaSourceTable == associateDiaSource.connections.diaSourceTables
   - associateDiaSource.connections.assocDiaSourceTable == calculateDiaObject.connections.assocDiaSourceTable
   - associateDiaSource.connections.diaObjectTable == calculateDiaObject.connections.diaObjectTable
-  - forcedPhotObjectDifference.connections.refCat == forcedPhotObjectDirect.connections.refCat
   - consolidateHealSparsePropertyMaps.property_maps == makeHealSparsePropertyMaps.property_maps
   - "'calib_psf_candidate' not in measureObjectUnforced.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"
   - "'calib_psf_used' not in measureObjectUnforced.propagateFlags.source_flags if makeDirectWarp.useVisitSummaryPsf else True"

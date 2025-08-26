@@ -153,16 +153,19 @@ class DrpV2TestCase(unittest.TestCase):
         pipeline_graph_1 = Pipeline.from_uri(
             os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage1-single-visit")
         ).to_graph(registry=butler.registry)
+        pipeline_graph_1.register_dataset_types(butler)
         self.check_stage(pipeline_graph_1, pipeline_graph_1.tasks.keys(), "")
         pipeline_graph_2 = Pipeline.from_uri(
             os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage2-recalibrate")
         ).to_graph(registry=butler.registry)
+        pipeline_graph_2.register_dataset_types(butler)
         self.check_stage(
             pipeline_graph_2, pipeline_graph_2.task_subsets["stage2-recalibrate"], ""
         )
         pipeline_graph_3 = Pipeline.from_uri(
             os.path.join(PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage3-coadd")
         ).to_graph(registry=butler.registry)
+        pipeline_graph_3.register_dataset_types(butler)
         self.check_stage(
             pipeline_graph_3, pipeline_graph_3.task_subsets["stage3-coadd"], ""
         )
@@ -171,6 +174,7 @@ class DrpV2TestCase(unittest.TestCase):
                 PIPELINES_DIR, "LSSTComCam/DRP-v2.yaml#stage4-measure-variability"
             )
         ).to_graph(registry=butler.registry)
+        pipeline_graph_4.register_dataset_types(butler)
         self.check_stage(
             pipeline_graph_4,
             pipeline_graph_4.task_subsets["stage4-measure-variability"],

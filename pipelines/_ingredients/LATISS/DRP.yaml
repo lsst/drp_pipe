@@ -237,8 +237,7 @@ subsets:
   step4:
     subset:
       - reprocessVisitImage
-      - forcedPhotCcd
-      - forcedPhotDiffim
+      - forcedPhotObjectDetector
       - getTemplate
       - subtractImages
       - detectAndMeasureDiaSources
@@ -246,7 +245,6 @@ subsets:
       - rbClassify
       - filterDiaSourcePostReliability
       - transformDiaSourceCat
-      - writeForcedSourceTable
     description: |
       Tasks that be run together, but only after the 'step1', 'step2', and
       'step3' subsets.
@@ -260,14 +258,12 @@ subsets:
     subset:
       - drpAssociation
       - drpDiaCalculation
-      - forcedPhotCcdOnDiaObjects
-      - forcedPhotDiffOnDiaObjects
+      - forcedPhotDiaObjectDetector
       - transformForcedSourceTable
       - splitPrimaryObjectForcedSource
       - consolidateForcedSourceTable
       - consolidateAssocDiaSourceTable
       - consolidateFullDiaObjectTable
-      - writeForcedSourceOnDiaObjectTable
       - transformForcedSourceOnDiaObjectTable
       - consolidateForcedSourceOnDiaObjectTable
     description: |
