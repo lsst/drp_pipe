@@ -44,7 +44,7 @@ tasks:
       connections.targetCatalog: single_visit_star
       connections.data: "{targetCatalog}_ref_match_astrom"
       # Can't use {targetCatalog} in outputName because it is a template.
-      connections.outputName: "single_visit_star_ref_match_photom"
+      connections.outputName: "single_visit_star_ref_match_astrom"
   makeAnalysisSingleVisitStarPhotometricRefMatch:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
     config:
