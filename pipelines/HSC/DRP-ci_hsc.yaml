@@ -75,6 +75,11 @@ tasks:
     class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
     config:
       doSolarSystemAssociation: false
+  forcedPhotObjectDetector:
+    class: lsst.pipe.tasks.forcedPhotDetector.ForcedPhotDetectorTask
+    config:
+      doDirectPhotometry: true
+      doDifferencePhotometry: true
 
 subsets:
   analysis_tools:
