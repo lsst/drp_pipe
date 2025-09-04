@@ -401,6 +401,7 @@
     "object_yPerpPSF_ColorColorFitPlot": "objectTableCore_yPerpPSF_ColorColorFitPlot",
     "object_ref_match_astrom": "objectTable_tract_the_monster_20250219_match_astrom",
     "object_ref_match_photom": "objectTable_tract_the_monster_20250219_match_photom",
+    "object_ref_match_photom_metrics": "objectTable_tract_the_monster_20250219_match_photom_metrics",
     "object_ref_match_photom_targetRefCatDeltaCModelScatterPlot_ScatterPlotWithTwoHists": "objectTable_tract_the_monster_20250219_match_photom_targetRefCatDeltaCModelScatterPlot_ScatterPlotWithTwoHists",
     "object_ref_match_photom_targetRefCatDeltaCModelSkyPlot_SkyPlot": "objectTable_tract_the_monster_20250219_match_photom_targetRefCatDeltaCModelSkyPlot_SkyPlot",
     "object_ref_match_photom_targetRefCatDeltaPsfScatterPlot_ScatterPlotWithTwoHists": "objectTable_tract_the_monster_20250219_match_photom_targetRefCatDeltaPsfScatterPlot_ScatterPlotWithTwoHists",
