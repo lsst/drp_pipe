@@ -86,6 +86,26 @@ tasks:
     config:
       connections.data: deep_coadd_bin
       connections.outputName: deep
+  makeBinnedTemplateNImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: "template_coadd_n_image"
+      connections.binnedCoadd: "template_coadd_n_image_bin"
+  makeWholeTractTemplateNImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: "template_coadd_n_image_bin"
+      connections.outputName: "template"
+  makeBinnedDeepNImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: "deep_coadd_n_image"
+      connections.binnedCoadd: "deep_coadd_n_image_bin"
+  makeWholeTractDeepNImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: "deep_coadd_n_image_bin"
+      connections.outputName: "deep"
   plotPropertyMapSurvey:
     class: lsst.analysis.tools.tasks.SurveyWidePropertyMapAnalysisTask
   validateObjectTableCore:

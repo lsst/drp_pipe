@@ -126,6 +126,10 @@ subsets:
       - plotPropertyMapTract
       - makeBinnedCoaddImage
       - makeWholeTractImage
+      - makeBinnedDeepNImage
+      - makeWholeTractDeepNImage
+      - makeBinnedTemplateNImage
+      - makeWholeTractTemplateNImage
       - refCatObjectTract
       - validateObjectTableCore
     description: |
