@@ -736,6 +736,10 @@ subsets:
       - plotPropertyMapTract
       - makeBinnedCoaddImage
       - makeWholeTractImage
+      - makeBinnedTemplateNImage
+      - makeWholeTractTemplateNImage
+      - makeBinnedDeepNImage
+      - makeWholeTractDeepNImage
       - validateObjectTableCore
       - computeObjectEpochs
     description: |
@@ -900,6 +904,10 @@ subsets:
     - plotPropertyMapTract
     - makeBinnedCoaddImage
     - makeWholeTractImage
+    - makeBinnedTemplateNImage
+    - makeWholeTractTemplateNImage
+    - makeBinnedDeepNImage
+    - makeWholeTractDeepNImage
     - validateObjectTableCore
     - computeObjectEpochs
     # 3b
