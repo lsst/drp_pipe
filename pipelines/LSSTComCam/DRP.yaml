@@ -124,6 +124,12 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
+      - makeBinnedCoaddImage
+      - makeWholeTractImage
+      - makeBinnedDeepNImage
+      - makeWholeTractDeepNImage
+      - makeBinnedTemplateNImage
+      - makeWholeTractTemplateNImage
       - refCatObjectTract
       - validateObjectTableCore
     description: |
