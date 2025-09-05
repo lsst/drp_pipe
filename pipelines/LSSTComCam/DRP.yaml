@@ -124,6 +124,8 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
+      - makeBinnedCoaddImage
+      - makeWholeTractImage
       - refCatObjectTract
       - validateObjectTableCore
     description: |
