@@ -41,15 +41,15 @@ tasks:
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric.bands: ["r", "i"]
+      bands: ["r", "i"]
   objectTableCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric.bands: ["r", "i"]
+      bands: ["r", "i"]
   objectTableCoreRefCatMatchWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric.bands: ["r", "i"]
+      bands: ["r", "i"]
       python: |
         from lsst.analysis.tools.atools import *
   analyzeMatchedVisitCore:

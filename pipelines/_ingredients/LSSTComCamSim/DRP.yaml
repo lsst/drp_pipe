@@ -12,6 +12,16 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+parameters:
+  objectTableCoreWholeSkyPlotKeys: [
+    "wPerpPSF_wPerp_psfFlux_median",
+    "wPerpPSF_wPerp_psfFlux_sigmaMAD",
+    "skippedDeblenderMetrics_numSkippedPeaks",
+    "skippedDeblenderMetrics_numSkippedBlends",
+    "skippedDeblenderMetrics_numBlendParentTooBig",
+    "skippedDeblenderMetrics_numBlendTooManyPeaks",
+    "skippedDeblenderMetrics_numBlendTooManyMasked",
+  ]
 tasks:
   isr: lsst.ip.isr.IsrTaskLSST
   fgcmFitCycle:
@@ -64,20 +74,11 @@ tasks:
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric.bands: ["g", "r", "i"]
+      bands: ["g", "r", "i"]
   objectTableCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric.bands: ["g", "r", "i"]
-      atools.wholeSkyMetric.plotKeys: [
-        "wPerpPSF_wPerp_psfFlux_median",
-        "wPerpPSF_wPerp_psfFlux_sigmaMAD",
-        "skippedDeblenderMetrics_numSkippedPeaks",
-        "skippedDeblenderMetrics_numSkippedBlends",
-        "skippedDeblenderMetrics_numBlendParentTooBig",
-        "skippedDeblenderMetrics_numBlendTooManyPeaks",
-        "skippedDeblenderMetrics_numBlendTooManyMasked",
-      ]
+      bands: ["g", "r", "i"]
   preliminaryVisitCoverageAnalysis:
     class: lsst.analysis.tools.tasks.CcdVisitTableAnalysisTask
     config:
