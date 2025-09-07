@@ -11,6 +11,16 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/matchedVisitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+parameters:
+  objectTableCoreWholeSkyPlotKeys: [
+    "wPerpPSF_wPerp_psfFlux_median",
+    "wPerpPSF_wPerp_psfFlux_sigmaMAD",
+    "skippedDeblenderMetrics_numSkippedPeaks",
+    "skippedDeblenderMetrics_numSkippedBlends",
+    "skippedDeblenderMetrics_numBlendParentTooBig",
+    "skippedDeblenderMetrics_numBlendTooManyPeaks",
+    "skippedDeblenderMetrics_numBlendTooManyMasked",
+  ]
 tasks:
   isr: lsst.ip.isr.IsrTaskLSST
   gbdesAstrometricFit:
@@ -70,16 +80,6 @@ tasks:
         from lsst.analysis.tools.contexts import *
   objectTableCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
-    config:
-      atools.wholeSkyMetric.plotKeys: [
-        "wPerpPSF_wPerp_psfFlux_median",
-        "wPerpPSF_wPerp_psfFlux_sigmaMAD",
-        "skippedDeblenderMetrics_numSkippedPeaks",
-        "skippedDeblenderMetrics_numSkippedBlends",
-        "skippedDeblenderMetrics_numBlendParentTooBig",
-        "skippedDeblenderMetrics_numBlendTooManyPeaks",
-        "skippedDeblenderMetrics_numBlendTooManyMasked",
-      ]
   preliminaryVisitCoverageAnalysis:
     class: lsst.analysis.tools.tasks.CcdVisitTableAnalysisTask
     config:

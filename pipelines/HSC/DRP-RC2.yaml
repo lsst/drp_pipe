@@ -68,15 +68,15 @@ tasks:
   matchedVisitCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      bands: ["g", "r", "i", "z", "y"]
   objectTableCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      bands: ["g", "r", "i", "z", "y"]
   objectTableCoreRefCatMatchWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
-      atools.wholeSkyMetric.bands: ["g", "r", "i", "z", "y"]
+      bands: ["g", "r", "i", "z", "y"]
 subsets:
   step1:
     subset:
