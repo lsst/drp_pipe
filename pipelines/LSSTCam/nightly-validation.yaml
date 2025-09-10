@@ -47,6 +47,12 @@ imports:
       - validateObjectTableCore
       - computeObjectEpochs
       - analyzeObjectTableSurveyCore
+      - makeBinnedCoaddImage
+      - makeWholeTractImage
+      - makeBinnedTemplateNImage
+      - makeWholeTractTemplateNImage
+      - makeBinnedDeepNImage
+      - makeWholeTractDeepNImage
       - makeMetricTableObjectTableCore
       - objectTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
