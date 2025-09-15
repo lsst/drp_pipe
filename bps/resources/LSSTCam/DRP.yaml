@@ -64,6 +64,8 @@ pipetask:
     requestMemory: 31979
   filterDiaSource:
     requestMemory: 17111
+  fitDeblendedObjectsExp:
+    requestMemory: 4000
   fitDeblendedObjectsSersic:
     requestMemory: 4000
   forcedPhotDiaObjectDetector:

@@ -39,6 +39,8 @@ pipetask:
     requestMemory: 5807
   finalizeCharacterization:
     requestMemory: 5783
+  fitDeblendedObjectsExp:
+    requestMemory: 5706
   fitDeblendedObjectsSersic:
     requestMemory: 5706
   objectTableCoreWholeSkyPlot:

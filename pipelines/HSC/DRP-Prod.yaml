@@ -110,11 +110,10 @@ subsets:
       - mergeMeasurements
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
       - fitDeblendedObjectsSersic
       - writeObjectTable
       - transformObjectTable
-      - fitDeepCoaddPsfGaussians
-      - fitDeblendedObjectsSersic
       # per tract tasks
       - consolidateObjectTable
       - splitPrimaryObject

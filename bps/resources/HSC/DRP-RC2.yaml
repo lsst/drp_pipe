@@ -72,6 +72,8 @@ pipetask:
     requestMemory: 8192
   diff_matched_analysis:
     requestMemory: 32000
+  fitDeblendedObjectsExp:
+    requestMemory: 8000
   fitDeblendedObjectsSersic:
     requestMemory: 8000
   splitPrimaryObject:
