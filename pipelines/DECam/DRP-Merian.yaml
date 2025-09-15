@@ -10,8 +10,8 @@ imports:
     exclude:
       - isrForCrosstalkSources
 tasks:
-  fitDeblendedObjectsSersic:
-    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
+  fitDeblendedObjectsExp:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddExpFitTask
     config:
       python: |
         config.finalize(
@@ -20,6 +20,24 @@ tasks:
           use_shapelet_psf=parameters.use_shapelet_psf,
         )
         config.fit_coadd_multiband.bands_fit=['N540', 'N708']
+  fitDeblendedObjectsSersic:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
+    config:
+      python: |
+        from lsst.meas.extensions.multiprofit.pipetasks_fit import MakeCachedChainedInitializerAction
+        config.finalize(
+          add_point_source=parameters.add_point_source,
+          fix_centroid=parameters.fix_centroid,
+          use_shapelet_psf=parameters.use_shapelet_psf,
+        )
+        if parameters.sersic_init_table:
+          config.inputs_init = {
+            parameters.sersic_init_table: InputConfig(
+              doc=f"{parameters.sersic_init_table} fit parameters",
+              is_multiband=True,
+            )
+          }
+          config.fit_coadd_multiband.action_initializer = MakeCachedChainedInitializerAction()
   computeObjectEpochs:
     class: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
     config:

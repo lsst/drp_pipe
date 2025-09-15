@@ -351,5 +351,6 @@ contracts:
   - detection.useCellCoadds == measure.useCellCoadds
   - detection.useCellCoadds == forcedPhotCoadd.useCellCoadds
   - detection.useCellCoadds == fitDeepCoaddPsfGaussians.use_cell_coadds
+  - detection.useCellCoadds == fitDeblendedObjectsExp.use_cell_coadds
   - detection.useCellCoadds == fitDeblendedObjectsSersic.use_cell_coadds
   # End of constraints for cell-coadds.

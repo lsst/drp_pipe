@@ -110,6 +110,7 @@ subsets:
       - mergeMeasurements
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
       - fitDeblendedObjectsSersic
       - healSparsePropertyMaps
       - computeObjectEpochs

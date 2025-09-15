@@ -213,6 +213,7 @@ subsets:
       - assembleCellCoadd
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
       - fitDeblendedObjectsSersic
       - healSparsePropertyMaps
       - computeObjectEpochs
