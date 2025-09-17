@@ -8,16 +8,11 @@ imports:
       - analysis-visit-recalibrated
       - analysis-visit-source
       - step2b-recalibrate-tracts
-      # TODO: DM-50154. FGCM starts turned off
-      - fgcmBuildFromIsolatedStar
-      - fgcmFitCycle
-      - fgcmOutputProducts
 tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
-      # TODO: DM-50154. FGCM starts turned off
-      photo_calib_provider: input_summary
+      photo_calib_provider: global
       background_provider: input_summary
       wcs_provider: healpix3
       connections.background_originals: preliminary_visit_image_background
