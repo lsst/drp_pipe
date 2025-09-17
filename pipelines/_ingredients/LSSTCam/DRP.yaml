@@ -66,3 +66,7 @@ tasks:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
       applyAstrometricCorrections: false
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+      useButlerCamera: True

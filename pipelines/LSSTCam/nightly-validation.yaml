@@ -81,6 +81,7 @@ tasks:
       do_include_astrometric_errors: false
       astrometry.maxIter: 2
       compute_summary_stats.psfGridSampling: 250
+      useButlerCamera: True
       python: |
         config.star_measurement.plugins.names.add("base_FPPosition")
         config.star_measurement.plugins.names.add("ext_shapeHSM_HigherOrderMomentsSource")
