@@ -60,6 +60,35 @@ imports:
 # If you add any config overrides that overlap with LSSTCam/DRP.yaml,
 # please create a pipelines/_ingredients/LSSTCam/DRP.yaml they both share
 tasks:
+  calibrateImage:
+    class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
+    config:
+      connections.exposures: post_isr_image
+      connections.stars_footprints: single_visit_star_footprints
+      connections.psf_stars_footprints: single_visit_psf_star_footprints
+      connections.psf_stars: single_visit_psf_star
+      connections.initial_stars_schema: single_visit_star_schema
+      connections.stars: single_visit_star_unstandardized
+      connections.exposure: preliminary_visit_image
+      connections.background: preliminary_visit_image_background
+      id_generator.release_id: parameters.release_id
+      # Don't calibrate pixels to nJy, since we assume quickLook consumers are
+      # prefer e- units and that's what they'd get if PhotoCal fails anyway.
+      do_calibrate_pixels: false
+      astrometry.matcher.maxRefObjects: 2048
+      psf_detection.thresholdValue: 50
+      do_downsample_footprints: true
+      do_include_astrometric_errors: false
+      astrometry.maxIter: 2
+      compute_summary_stats.psfGridSampling: 250
+      python: |
+        config.star_measurement.plugins.names.add("base_FPPosition")
+        config.star_measurement.plugins.names.add("ext_shapeHSM_HigherOrderMomentsSource")
+        config.psf_source_measurement.plugins.names.add("ext_shapeHSM_HigherOrderMomentsSource")
+        config.psf_measure_psf.starSelector["objectSize"].widthMax = 20.0
+        if "slot_Centroid_flag" in config.psf_measure_psf.starSelector["objectSize"].badFlags:
+            config.psf_measure_psf.starSelector["objectSize"].badFlags.remove("slot_Centroid_flag")
+        config.psf_measure_psf.psfDeterminer["psfex"].rejectFlaggedCentroids = False
   consolidateVisitSummary:
     class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
     config:
