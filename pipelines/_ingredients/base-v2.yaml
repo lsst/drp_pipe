@@ -212,6 +212,7 @@ tasks:
     class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
     config:
       connections.inputWarps: direct_warp
+      connections.maskedFractionWarps: direct_warp_masked_fraction
       connections.visitSummaryList: visit_summary
       connections.multipleCellCoadd: deep_coadd_cell_predetection
   assembleTemplateCoadd:
