@@ -1027,6 +1027,7 @@ contracts:
   - "makeDirectWarp.warper.cacheSize == assembleDeepCoadd.coaddPsf.cacheSize"
   - "makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellX"
   - "makeDirectWarp.border >= makePsfMatchedWarp.psfMatch.kernel.active.sizeCellY"
+  - "makeDirectWarp.numberOfNoiseRealizations >= assembleCellCoadd.num_noise_realizations"
   - isr.doFlat == True if calibrateImage.do_illumination_correction == True else True
   - makeDirectWarp.doApplyFlatBackgroundRatio == calibrateImage.do_illumination_correction
   - reprocessVisitImage.do_apply_flat_background_ratio == calibrateImage.do_illumination_correction
