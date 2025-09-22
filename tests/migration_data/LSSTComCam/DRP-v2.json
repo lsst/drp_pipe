@@ -320,6 +320,7 @@
     "deepCoadd_forced_src_schema": "deepCoadd_forced_src_schema",
     "direct_warp": "deepCoadd_directWarp",
     "psf_matched_warp": "deepCoadd_psfMatchedWarp",
+    "direct_warp_masked_fraction": "deepCoadd_directWarp_maskedFraction",
     "deep_coadd_visit_selection": "deepCoaddVisits",
     "compare_warp_artifact_mask": "compare_warp_artifact_mask",
     "deep_coadd_input_map": "deepCoadd_inputMap",
