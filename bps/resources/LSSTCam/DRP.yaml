@@ -144,15 +144,12 @@ pipetask:
     requestMemory: 15531
   updateVisitSummary:
     requestMemory: 2239
-  # Not in DRP pipeline
   fgcmBuildFromIsolatedStar:
-    requestMemory: 16000
+    requestMemory: 128000
   fgcmFitCycle:
-    requestMemory: 32000
-    #  The following need DM-48156 before they can be implemented in USDF PanDA:
-    #  queue: SLAC_Rubin_Extra_Himem_32Cores
-    #  requestCpus: 16
-    #  extraRunQuantumOptions: "-j 1 -n 16"
+    requestMemory: 256000
+    requestCpus: 64
+    extraRunQuantumOptions: "-j 1 -n 64"
   gbdesAstrometricFit:
     requestMemory: 40000
     requestCpus: 10
