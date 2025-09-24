@@ -154,11 +154,11 @@ pipetask:
   gbdesAstrometricFit:
     requestMemory: 40000
     requestCpus: 10
-    extraRunQuantumOptions: "-j 1 -n 10"
+    extraRunQuantumOptions: "-j 1 -n 10 --no-raise-on-partial-outputs"
   gbdesHealpix3AstrometricFit:
     requestMemory: 40000
     requestCpus: 10
-    extraRunQuantumOptions: "-j 1 -n 10"
+    extraRunQuantumOptions: "-j 1 -n 10 --no-raise-on-partial-outputs"
   refitPsfModel:
     requestMemory: 7000
   skyCorrExperimental:
