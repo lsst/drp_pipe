@@ -170,6 +170,7 @@ subsets:
       - mergeMeasurements
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
       - fitDeblendedObjectsSersic
       - transformObjectTable
       - writeObjectTable
@@ -177,8 +178,6 @@ subsets:
       - computeObjectEpochs
       - selectGoodSeeingVisits
       - templateGen
-      - fitDeepCoaddPsfGaussians
-      - fitDeblendedObjectsSersic
       # per-tract Tasks
       - consolidateObjectTable
       - splitPrimaryObject

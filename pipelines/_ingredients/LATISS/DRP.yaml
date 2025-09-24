@@ -188,6 +188,7 @@ subsets:
       - mergeMeasurements
       - forcedPhotCoadd
       - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
       - fitDeblendedObjectsSersic
       - writeObjectTable
       - transformObjectTable

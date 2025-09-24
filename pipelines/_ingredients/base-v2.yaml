@@ -21,6 +21,7 @@ imports:
 
 parameters:
   release_id: 0
+  sersic_init_table: object_exp_multiprofit
   use_cell_coadds: false
 
 tasks:
@@ -323,6 +324,18 @@ tasks:
       connections.cat_output: object_psf_multiprofit
       idGenerator.release_id: parameters.release_id
       use_cell_coadds: parameters.use_cell_coadds
+  fitDeblendedObjectsExp:
+    class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddExpFitTask
+    config:
+      connections.cat_ref: object_ref_measurement
+      connections.cats_meas: object_unforced_measurement
+      connections.coadds: deep_coadd
+      connections.backgrounds: deep_coadd_background
+      connections.models_psf: object_psf_multiprofit
+      connections.models_scarlet: object_scarlet_models
+      connections.cat_output: object_exp_multiprofit
+      idGenerator.release_id: parameters.release_id
+      use_cell_coadds: parameters.use_cell_coadds
   fitDeblendedObjectsSersic:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
     config:
@@ -348,6 +361,7 @@ tasks:
       connections.inputCatalog: object_unstandardized
       connections.outputCatalog: object_patch
       connections.inputCatalogRef: object_ref_measurement
+      connections.inputCatalogExpMultiprofit: object_exp_multiprofit
       connections.inputCatalogSersicMultiprofit: object_sersic_multiprofit
   consolidateObject:
     class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
@@ -723,6 +737,7 @@ subsets:
       - mergeObjectMeasurement
       - measureObjectForced
       - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
       - fitDeblendedObjectsSersic
       - rewriteObject
       - standardizeObject
@@ -891,6 +906,7 @@ subsets:
     - mergeObjectMeasurement
     - measureObjectForced
     - fitDeepCoaddPsfGaussians
+    - fitDeblendedObjectsExp
     - fitDeblendedObjectsSersic
     - rewriteObject
     - standardizeObject

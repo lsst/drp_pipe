@@ -33,6 +33,7 @@ imports:
       - mergeObjectMeasurement
       - measureObjectForced
       - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
       - fitDeblendedObjectsSersic
       - rewriteObject
       - standardizeObject
