@@ -667,7 +667,7 @@ class PipelineTestCase(unittest.TestCase):
                 "#stage4-measure-variability",
             ],
             initial_dataset_types=REFCATS,
-            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS | {"fgcmLookUpTable"},
             expected_outputs=COMMON_V2_OUTPUTS,
         )
         tester.run(butler, self)
