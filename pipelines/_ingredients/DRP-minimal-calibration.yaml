@@ -286,6 +286,9 @@ subsets:
       - measure
       - mergeMeasurements
       - forcedPhotCoadd
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
+      - fitDeblendedObjectsSersic
     description: >
       A set of tasks to run when making measurements on coadds.
   objectTable:
