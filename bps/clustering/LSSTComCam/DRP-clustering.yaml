@@ -28,9 +28,6 @@ cluster:
     patch_template_coadd:
         pipetasks: selectTemplateCoaddVisits,assembleTemplateCoadd
         dimensions: tract,patch,band
-    patch_detect_deblend:
-        pipetasks: mergeObjectDetection,deblendCoaddFootprints
-        dimensions: tract,patch
 #    patch_postprocess:
 #        pipetasks: rewriteObject,standardizeObject
 #        dimensions: tract,patch
