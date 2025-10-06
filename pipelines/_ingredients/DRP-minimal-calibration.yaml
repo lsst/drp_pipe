@@ -149,6 +149,8 @@ tasks:
       connections.difference: goodSeeingDiff_differenceTempExp
       connections.subtractedMeasuredExposure: goodSeeingDiff_differenceExp
       doSkySources: true
+      maskStreaks.saturatedDetectionsDilation: 250
+      maskStreaks.rhoBinSize: 40
   filterDiaSrcCat:
     class: lsst.ap.association.FilterDiaSourceCatalogTask
     config:

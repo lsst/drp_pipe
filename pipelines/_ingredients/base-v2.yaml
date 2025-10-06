@@ -208,6 +208,9 @@ tasks:
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
       doOnlineForMean: true
+      doFilterMorphological: true
+      maskStreaks.saturatedDetectionsDilation: 250
+      maskStreaks.rhoBinSize: 40
   assembleCellCoadd:
     class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
     config:
@@ -229,6 +232,9 @@ tasks:
       assembleStaticSkyModel.doSelectVisits: true
       doNImage: true
       doOnlineForMean: true
+      doFilterMorphological: true
+      maskStreaks.saturatedDetectionsDilation: 250
+      maskStreaks.rhoBinSize: 40
   makeHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:
@@ -442,6 +448,8 @@ tasks:
       connections.maskedStreaks: difference_streaks
       doSkySources: true
       idGenerator.release_id: parameters.release_id
+      maskStreaks.saturatedDetectionsDilation: 250
+      maskStreaks.rhoBinSize: 40
   filterDiaSource:
     class: lsst.ap.association.FilterDiaSourceCatalogTask
     config:
