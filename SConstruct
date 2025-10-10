@@ -19,15 +19,6 @@ injection_descriptions = {
     "stars": "Bright stars",
     "DC2": "DC2 stars and galaxies",
 }
-injected_pipelines_LSSTComCam = {
-    suffix: os.path.join(
-        PKG_ROOT,
-        "pipelines",
-        "LSSTComCam",
-        f"DRP-post-injected-{suffix}.yaml",
-    )
-    for suffix in injection_descriptions
-}
 
 subset_name = "injected_stars_coadd_analysis"
 subset_description = "Analysis tasks for object_table level injected catalogs."
@@ -68,29 +59,37 @@ LSSTComCam_excluded_tasks = ",".join(
         "skyCorr",
     ]
 )
+LSSTCam_excluded_tasks = LSSTComCam_excluded_tasks
 
 subset_name = "injected_{suffix}_coadd_analysis"
 
-LSSTComCam_injected = [
-    env.Command(
-        target=os.path.join(
-            PKG_ROOT,
-            "pipelines",
-            "LSSTComCam",
-            f"DRP+injected_deep_coadd_{suffix}.yaml",
-        ),
-        source=os.path.join(PKG_ROOT, "pipelines", "LSSTComCam", "DRP-v2-compat.yaml"),
-        action=" ".join(
-            [
-                libraryLoaderEnvironment(),
-                f"make_injection_pipeline -t deep_coadd_predetection -r $SOURCE -f $TARGET -a {pipeline_post} "
-                f"-s '{subset_name.format(suffix=suffix)}:{injection_descriptions[suffix]}' "
-                f"-x {LSSTComCam_excluded_tasks} --overwrite",
-            ]
-        ),
+LSSTCam_injected, LSSTComCam_injected = (
+    [
+        env.Command(
+            target=os.path.join(
+                PKG_ROOT,
+                "pipelines",
+                instrument,
+                f"DRP+injected_deep_coadd_{suffix}.yaml",
+            ),
+            source=os.path.join(PKG_ROOT, "pipelines", instrument, pipeline),
+            action=" ".join(
+                [
+                    libraryLoaderEnvironment(),
+                    f"make_injection_pipeline -t deep_coadd_predetection -r $SOURCE -f $TARGET"
+                    f" -a {os.path.join(PKG_ROOT, "pipelines", instrument, f'DRP-post-injected-{suffix}.yaml')}"
+                    f" -s '{subset_name.format(suffix=suffix)}:{injection_description}'"
+                    f" -x {excluded_tasks} --overwrite",
+                ]
+            ),
+        )
+        for suffix, injection_description in injection_descriptions.items()
+    ]
+    for instrument, pipeline, excluded_tasks in (
+        ("LSSTCam", "DRP.yaml", LSSTCam_excluded_tasks),
+        ("LSSTComCam", "DRP-v2-compat.yaml", LSSTComCam_excluded_tasks),
     )
-    for suffix, pipeline_post in injected_pipelines_LSSTComCam.items()
-]
+)
 
 # diffim injection pipeline creation
 subsets = [
@@ -147,8 +146,9 @@ Default(
         RC2_injected_deepCoadd_stars,
         LSSTComCam_diffim_injected,
         LSSTCam_diffim_injected,
+        LSSTComCam_injected,
+        LSSTCam_injected,
     ]
-    + LSSTComCam_injected
 )
 
 # Python-only package
