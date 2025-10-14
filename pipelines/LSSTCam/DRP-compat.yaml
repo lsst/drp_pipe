@@ -1,0 +1,12 @@
+description: >
+  LSSTCam specialization of the DRP pipeline
+  with backwards compatibility for data repositories with the old
+  'source' dataset type definition.
+instrument: lsst.obs.lsst.LsstCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
+tasks:
+  splitPrimarySource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      connections.primary: source2
