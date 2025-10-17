@@ -35,7 +35,7 @@ cluster:
         pipetasks: makeHealSparsePropertyMaps
         dimensions: tract,band
     diffim:
-        pipetasks: rewarpTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,filterDiaSourcePostReliability,standardizeDiaSource
+        pipetasks: buildTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,filterDiaSourcePostReliability,standardizeDiaSource
         dimensions: visit,detector
     association:
         pipetasks: associateDiaSource,calculateDiaObject

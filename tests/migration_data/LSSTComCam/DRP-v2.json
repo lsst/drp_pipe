@@ -64,7 +64,7 @@
     "objectTableCoreWholeSkyPlot": "objectTableCoreWholeSkyPlot",
     "analyzeRecalibratedStarObjectMatch": "sourceObjectMatch",
     "reprocessVisitImage": "reprocessVisitImage",
-    "rewarpTemplate": "getTemplate",
+    "buildTemplate": "getTemplate",
     "subtractImages": "subtractImages",
     "detectAndMeasureDiaSource": "detectAndMeasureDiaSources",
     "filterDiaSource": "filterDiaSrcCat",

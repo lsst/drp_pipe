@@ -411,7 +411,7 @@ tasks:
       connections.full: source_all
       connections.primary: source
       connections.nonprimary: source_nonprimary
-  rewarpTemplate:
+  buildTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
       connections.bbox: visit_image.bbox
@@ -795,7 +795,7 @@ subsets:
       - standardizeSource
       - consolidateSource
       - splitPrimarySource
-      - rewarpTemplate
+      - buildTemplate
       - subtractImages
       - detectAndMeasureDiaSource
       - filterDiaSource
@@ -941,7 +941,7 @@ subsets:
     - standardizeSource
     - consolidateSource
     - splitPrimarySource
-    - rewarpTemplate
+    - buildTemplate
     - subtractImages
     - detectAndMeasureDiaSource
     - filterDiaSource
@@ -1010,8 +1010,8 @@ contracts:
   # here to keep them in sync, until we complete the transition to the v2
   # pipelines.
   - selectTemplateCoaddVisits.connections.goodVisits == assembleTemplateCoadd.connections.selectedVisits
-  - assembleTemplateCoadd.connections.coaddExposure == rewarpTemplate.connections.coaddExposures
-  - rewarpTemplate.connections.template == subtractImages.connections.template
+  - assembleTemplateCoadd.connections.coaddExposure == buildTemplate.connections.coaddExposures
+  - buildTemplate.connections.template == subtractImages.connections.template
   - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSource.connections.matchedTemplate
   - subtractImages.connections.difference == detectAndMeasureDiaSource.connections.difference
   - detectAndMeasureDiaSource.connections.diaSources == filterDiaSource.connections.diaSourceCat

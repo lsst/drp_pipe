@@ -63,7 +63,7 @@ pipetask:
     requestMemory: 7000
   diffim:
     request_memory: 7000
-  rewarpTemplate:
+  buildTemplate:
     requestMemory: 7000
   standardizeDiaObjectForcedSource:
     requestMemory: 7000
