@@ -110,7 +110,7 @@ pipetask:
     requestMemory: 4000
   reprocessVisitImage:
     requestMemory: 4000
-  rewarpTemplate:
+  buildTemplate:
     requestMemory: 9530
   rewriteObject:
     requestMemory: 5481
