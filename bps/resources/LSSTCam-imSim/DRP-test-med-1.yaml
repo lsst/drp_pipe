@@ -33,7 +33,7 @@ pipetask:
     requestMemory: 100000
   consolidateForcedSourceOnDiaObjectTable:
     requestMemory: 18000
-  getTemplate:
+  buildTemplate:
     requestMemory: 8000
   subtractImages:
     requestMemory: 8000

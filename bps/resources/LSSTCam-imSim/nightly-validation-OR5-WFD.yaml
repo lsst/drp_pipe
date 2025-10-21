@@ -21,5 +21,5 @@ pipetask:
     requestMemory: 6273
   writeObjectTable:
     requestMemory: 6882
-  getTemplate:
+  buildTemplate:
     requestMemory: 5469
