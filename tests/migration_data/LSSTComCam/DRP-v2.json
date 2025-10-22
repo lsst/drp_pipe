@@ -196,11 +196,11 @@
     "fgcm_Cycle4_SigmaCal_Plot": "fgcm_Cycle4_SigmaCal_Plot",
     "fgcm_Cycle4_SigmaFgcmAllStars_Plot": "fgcm_Cycle4_SigmaFgcmAllStars_Plot",
     "fgcm_Cycle4_SigmaFgcmPullsAllStars_Plot": "fgcm_Cycle4_SigmaFgcmPullsAllStars_Plot",
-    "fgcm_Cycle4_SigmaFgcmPullsReservedStarsCrunched_Plot": "fgcm_Cycle4_SigmaFgcmPullsReservedStarsCrunched_Plot",
     "fgcm_Cycle4_SigmaFgcmPullsReservedStarsCrunchedNonPhotom_Plot": "fgcm_Cycle4_SigmaFgcmPullsReservedStarsCrunchedNonPhotom_Plot",
+    "fgcm_Cycle4_SigmaFgcmPullsReservedStarsCrunched_Plot": "fgcm_Cycle4_SigmaFgcmPullsReservedStarsCrunched_Plot",
     "fgcm_Cycle4_SigmaFgcmPullsReservedStars_Plot": "fgcm_Cycle4_SigmaFgcmPullsReservedStars_Plot",
-    "fgcm_Cycle4_SigmaFgcmReservedStarsCrunched_Plot": "fgcm_Cycle4_SigmaFgcmReservedStarsCrunched_Plot",
     "fgcm_Cycle4_SigmaFgcmReservedStarsCrunchedNonPhotom_Plot": "fgcm_Cycle4_SigmaFgcmReservedStarsCrunchedNonPhotom_Plot",
+    "fgcm_Cycle4_SigmaFgcmReservedStarsCrunched_Plot": "fgcm_Cycle4_SigmaFgcmReservedStarsCrunched_Plot",
     "fgcm_Cycle4_SigmaFgcmReservedStars_Plot": "fgcm_Cycle4_SigmaFgcmReservedStars_Plot",
     "fgcm_Cycle4_SigmaRef_Plot": "fgcm_Cycle4_SigmaRef_Plot",
     "fgcm_Cycle4_Superstar_epoch0_Plot": "fgcm_Cycle4_Superstar_epoch0_Plot",
@@ -255,11 +255,11 @@
     "fgcm_Cycle5_SigmaCal_Plot": "fgcm_Cycle5_SigmaCal_Plot",
     "fgcm_Cycle5_SigmaFgcmAllStars_Plot": "fgcm_Cycle5_SigmaFgcmAllStars_Plot",
     "fgcm_Cycle5_SigmaFgcmPullsAllStars_Plot": "fgcm_Cycle5_SigmaFgcmPullsAllStars_Plot",
-    "fgcm_Cycle5_SigmaFgcmPullsReservedStarsCrunched_Plot": "fgcm_Cycle5_SigmaFgcmPullsReservedStarsCrunched_Plot",
     "fgcm_Cycle5_SigmaFgcmPullsReservedStarsCrunchedNonPhotom_Plot": "fgcm_Cycle5_SigmaFgcmPullsReservedStarsCrunchedNonPhotom_Plot",
+    "fgcm_Cycle5_SigmaFgcmPullsReservedStarsCrunched_Plot": "fgcm_Cycle5_SigmaFgcmPullsReservedStarsCrunched_Plot",
     "fgcm_Cycle5_SigmaFgcmPullsReservedStars_Plot": "fgcm_Cycle5_SigmaFgcmPullsReservedStars_Plot",
-    "fgcm_Cycle5_SigmaFgcmReservedStarsCrunched_Plot": "fgcm_Cycle5_SigmaFgcmReservedStarsCrunched_Plot",
     "fgcm_Cycle5_SigmaFgcmReservedStarsCrunchedNonPhotom_Plot": "fgcm_Cycle5_SigmaFgcmReservedStarsCrunchedNonPhotom_Plot",
+    "fgcm_Cycle5_SigmaFgcmReservedStarsCrunched_Plot": "fgcm_Cycle5_SigmaFgcmReservedStarsCrunched_Plot",
     "fgcm_Cycle5_SigmaFgcmReservedStars_Plot": "fgcm_Cycle5_SigmaFgcmReservedStars_Plot",
     "fgcm_Cycle5_SigmaRef_Plot": "fgcm_Cycle5_SigmaRef_Plot",
     "fgcm_Cycle5_StandardStars": "fgcm_Cycle5_StandardStars",
@@ -323,8 +323,8 @@
     "object_ref_measurement_schema": "deepCoadd_ref_schema",
     "deepCoadd_forced_src_schema": "deepCoadd_forced_src_schema",
     "direct_warp": "deepCoadd_directWarp",
-    "psf_matched_warp": "deepCoadd_psfMatchedWarp",
     "direct_warp_masked_fraction": "deepCoadd_directWarp_maskedFraction",
+    "psf_matched_warp": "deepCoadd_psfMatchedWarp",
     "deep_coadd_visit_selection": "deepCoaddVisits",
     "compare_warp_artifact_mask": "compare_warp_artifact_mask",
     "deep_coadd_input_map": "deepCoadd_inputMap",
@@ -619,3 +619,4 @@
     ]
   }
 }
+
