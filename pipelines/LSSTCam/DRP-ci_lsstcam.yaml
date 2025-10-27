@@ -5,14 +5,18 @@ imports:
     labeledSubsetModifyMode: EDIT
     exclude:
       - skyCorr
-      - gbdesAstrometricFit
+      - gbdesHealpix3AstrometricFit
+      - fgcmBuildFromIsolatedStar
+      - fgcmFitCycle
+      - fgcmOutputProducts
 tasks:
-  # Config overrides for both missing skyCorr and gbdesAstrometricFit
+  # Config overrides for both missing skyCorr and gbdesHealpix3AstrometricFit
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
       background_provider: input_summary
       wcs_provider: input_summary
+      photo_calib_provider: input_summary
   # Config overrides for missing skyCorr
   makeDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
@@ -22,7 +26,7 @@ tasks:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
       do_use_sky_corr: false
-  # Config overrides for missing gbdesAstrometricFit
+  # Config overrides for missing gbdesHealpix3AstrometricFit
   analyzeRecalibratedStarAssociation:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:

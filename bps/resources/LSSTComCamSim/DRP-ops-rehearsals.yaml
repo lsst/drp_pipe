@@ -54,7 +54,7 @@ pipetask:
     requestMemory: 2317
   gbdesAstrometricFit:
     requestMemory: 3907
-  getTemplate:
+  buildTemplate:
     requestMemory: 9167
   healSparsePropertyMaps:
     requestMemory: 32008

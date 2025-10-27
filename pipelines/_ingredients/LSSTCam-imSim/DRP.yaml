@@ -222,7 +222,7 @@ subsets:
     subset:
       - reprocessVisitImage
       - forcedPhotObjectDetector
-      - getTemplate
+      - buildTemplate
       - subtractImages
       - detectAndMeasureDiaSources
       - filterDiaSrcCat

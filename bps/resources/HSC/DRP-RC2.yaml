@@ -40,7 +40,7 @@ pipetask:
     requestMemory: 5000
   healSparsePropertyMaps:
     requestMemory: 30000
-  getTemplate:
+  buildTemplate:
     requestMemory: 8000
   subtractImages:
     requestMemory: 8000

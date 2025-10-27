@@ -21,7 +21,7 @@ pipetask:
     requestMemory: 9000
   writeObjectTable:
     requestMemory: 6882
-  getTemplate:
+  buildTemplate:
     requestMemory: 5469
   isolatedStarAssociation:
     requestMemory: 11025

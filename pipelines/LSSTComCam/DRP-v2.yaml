@@ -8,6 +8,7 @@ imports:
       - analysis-visit-recalibrated
       - analysis-visit-source
       - step2c-recalibrate-healpix
+      - skyCorr
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask

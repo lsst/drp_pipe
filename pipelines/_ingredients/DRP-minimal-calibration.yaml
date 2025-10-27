@@ -123,7 +123,7 @@ tasks:
       # convince contract checker that coaddExposure == goodSeeingCoadd
       connections.coaddExposure: goodSeeingCoadd
       doOnlineForMean: true
-  getTemplate:
+  buildTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
       connections.bbox: pvi.bbox
@@ -286,6 +286,9 @@ subsets:
       - measure
       - mergeMeasurements
       - forcedPhotCoadd
+      - fitDeepCoaddPsfGaussians
+      - fitDeblendedObjectsExp
+      - fitDeblendedObjectsSersic
     description: >
       A set of tasks to run when making measurements on coadds.
   objectTable:
@@ -307,7 +310,7 @@ subsets:
     subset:
       - selectGoodSeeingVisits
       - templateGen
-      - getTemplate
+      - buildTemplate
       - subtractImages
       - detectAndMeasureDiaSources
       - filterDiaSrcCat
@@ -325,8 +328,8 @@ contracts:
   # Please modify base-v2.yaml whenever modifying the contracts here to keep
   # them in sync, until we complete the transition to the v2 pipelines.
   - selectGoodSeeingVisits.connections.goodVisits == templateGen.connections.selectedVisits
-  - templateGen.connections.coaddExposure == getTemplate.connections.coaddExposures
-  - getTemplate.connections.template == subtractImages.connections.template
+  - templateGen.connections.coaddExposure == buildTemplate.connections.coaddExposures
+  - buildTemplate.connections.template == subtractImages.connections.template
   - subtractImages.connections.matchedTemplate == detectAndMeasureDiaSources.connections.matchedTemplate
   - subtractImages.connections.difference == detectAndMeasureDiaSources.connections.difference
   - detectAndMeasureDiaSources.connections.diaSources == filterDiaSrcCat.connections.diaSourceCat
