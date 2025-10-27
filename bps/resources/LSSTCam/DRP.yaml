@@ -129,8 +129,8 @@ pipetask:
     requestMemory: 128000
   fgcmFitCycle:
     requestMemory: 256000
-    requestCpus: 64
-    extraRunQuantumOptions: "-j 1 -n 64"
+    requestCpus: 60
+    extraRunQuantumOptions: "-j 1 -n 60"
   gbdesAstrometricFit:
     requestMemory: 84900
     requestCpus: 10
