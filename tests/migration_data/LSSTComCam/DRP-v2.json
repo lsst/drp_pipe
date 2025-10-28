@@ -105,6 +105,7 @@
     "initial_astrometry_match_detector": "initial_astrometry_match_detector",
     "initial_photometry_match_detector": "initial_photometry_match_detector",
     "preliminary_visit_image": "calexp",
+    "preliminary_visit_mask": "preliminary_visit_mask",
     "preliminary_visit_image_background": "calexpBackground",
     "single_visit_psf_star": "initial_psf_stars_detector",
     "single_visit_psf_star_footprints": "initial_psf_stars_footprints_detector",

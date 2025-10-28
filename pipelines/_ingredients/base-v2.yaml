@@ -41,6 +41,7 @@ tasks:
       connections.initial_stars_schema: single_visit_star_schema
       connections.stars: single_visit_star_unstandardized
       connections.exposure: preliminary_visit_image
+      connections.mask: preliminary_visit_mask
       connections.background: preliminary_visit_image_background
       id_generator.release_id: parameters.release_id
   standardizeSingleVisitStar:
@@ -404,6 +405,7 @@ tasks:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
       connections.exposures: post_isr_image
+      connections.preliminary_mask: preliminary_visit_mask
       connections.background_1: preliminary_visit_image_background
       connections.exposure: visit_image
       connections.calib_sources: refit_psf_star
