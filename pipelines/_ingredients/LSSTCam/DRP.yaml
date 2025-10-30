@@ -65,3 +65,13 @@ tasks:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
       useButlerCamera: True
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      # atools not in config when obs_lsst overrides objectTableTractAnalysis
+      atools.wPerpPSF.process.buildActions.x.extinctionCoeffs: {"u": 4.75, "g": 3.66, "r": 2.70, "i": 2.05, "z": 1.59, "y": 1.31,}
+      atools.wPerpPSF.process.buildActions.y.extinctionCoeffs: {"u": 4.75, "g": 3.66, "r": 2.70, "i": 2.05, "z": 1.59, "y": 1.31,}
+      atools.xPerpPSF.process.buildActions.x.extinctionCoeffs: {"u": 4.75, "g": 3.66, "r": 2.70, "i": 2.05, "z": 1.59, "y": 1.31,}
+      atools.xPerpPSF.process.buildActions.y.extinctionCoeffs: {"u": 4.75, "g": 3.66, "r": 2.70, "i": 2.05, "z": 1.59, "y": 1.31,}
+      atools.yPerpPSF.process.buildActions.x.extinctionCoeffs: {"u": 4.75, "g": 3.66, "r": 2.70, "i": 2.05, "z": 1.59, "y": 1.31,}
+      atools.yPerpPSF.process.buildActions.y.extinctionCoeffs: {"u": 4.75, "g": 3.66, "r": 2.70, "i": 2.05, "z": 1.59, "y": 1.31,}
