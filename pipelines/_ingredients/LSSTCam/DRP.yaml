@@ -8,6 +8,8 @@ imports:
       - analysis-visit-recalibrated
       - analysis-visit-source
       - step2b-recalibrate-tracts
+parameters:
+  extinctionCoeffs: {"u": 4.75, "g": 3.66, "r": 2.70, "i": 2.05, "z": 1.59, "y": 1.31,}
 tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
@@ -65,3 +67,19 @@ tasks:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
       useButlerCamera: True
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      # atools not in config yet when obs_lsst overrides objectTableTractAnalysis
+      atools.wPerpPSF.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.wPerpPSF.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.xPerpPSF.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.xPerpPSF.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.yPerpPSF.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.yPerpPSF.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.wPerpCModel.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.wPerpCModel.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.xPerpCModel.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.xPerpCModel.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.yPerpCModel.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.yPerpCModel.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
