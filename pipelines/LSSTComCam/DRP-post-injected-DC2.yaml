@@ -88,18 +88,6 @@ tasks:
       atools.matchedRefGaap1p0MagDiffZoom.mag_y: gaap1p0_err
       atools.matchedRefGaap1p0MagChi: MatchedRefCoaddChiMagTool
       atools.matchedRefGaap1p0MagChi.mag_y: gaap1p0_err
-      atools.matchedRefGaap3p0ColorDiff: MatchedRefCoaddDiffColorTool
-      atools.matchedRefGaap3p0ColorDiff.mag_y1: gaap3p0_err
-      atools.matchedRefGaap3p0ColorDiffZoom: MatchedRefCoaddDiffColorZoomTool
-      atools.matchedRefGaap3p0ColorDiffZoom.mag_y1: gaap3p0_err
-      atools.matchedRefGaap3p0ColorChi: MatchedRefCoaddChiColorTool
-      atools.matchedRefGaap3p0ColorChi.mag_y1: gaap3p0_err
-      atools.matchedRefGaap3p0MagDiff: MatchedRefCoaddDiffMagTool
-      atools.matchedRefGaap3p0MagDiff.mag_y: gaap3p0_err
-      atools.matchedRefGaap3p0MagDiffZoom: MatchedRefCoaddDiffMagZoomTool
-      atools.matchedRefGaap3p0MagDiffZoom.mag_y: gaap3p0_err
-      atools.matchedRefGaap3p0MagChi: MatchedRefCoaddChiMagTool
-      atools.matchedRefGaap3p0MagChi.mag_y: gaap3p0_err
       atools.matchedRefKronColorDiff: MatchedRefCoaddDiffColorTool
       atools.matchedRefKronColorDiff.mag_y1: kron_err
       atools.matchedRefKronColorDiffZoom: MatchedRefCoaddDiffColorZoomTool

@@ -81,7 +81,7 @@ tasks:
         from lsst.pipe.tasks.diff_matched_tract_catalog import MatchedCatalogFluxesConfig
         columns_flux = {}
         fluxes_meas_other = []
-        models_other = ("psf", "gaap1p0", "gaap3p0", "kron", "sersic")
+        models_other = ("psf", "gaap1p0", "kron", "sersic")
         for band in parameters.filterMap:
             columns_flux[band] = MatchedCatalogFluxesConfig(
                 column_ref_flux=f"flux_{band}",
