@@ -72,7 +72,6 @@ tasks:
     config:
       columns_ref_copy: ["is_pointsource"]
       columns_target_coord_err: ["coord_raErr", "coord_decErr"]
-      coord_format.coords_ref_to_convert: {"ra": "x", "dec": "y"}
       # Convert ref ra/dec to x/y but do not measure distances from x/y
       coord_format.return_converted_coords: false
       include_unmatched: true
@@ -96,7 +95,6 @@ tasks:
         columns_target_copy = ["patch", "refExtendedness", "refSizeExtendedness"]
         columns_target_copy.extend(fluxes_meas_other)
         columns_target_copy.extend([f"{col}Err" for col in fluxes_meas_other])
-        columns_target_copy.extend(["x", "y", "xErr", "yErr"])
         if "sersic" in models_other:
           columns_target_copy.extend([
             "sersic_x", "sersic_y", "sersic_xErr", "sersic_yErr",
