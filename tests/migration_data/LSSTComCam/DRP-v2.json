@@ -105,8 +105,8 @@
     "initial_astrometry_match_detector": "initial_astrometry_match_detector",
     "initial_photometry_match_detector": "initial_photometry_match_detector",
     "preliminary_visit_image": "calexp",
-    "preliminary_visit_mask": "preliminary_visit_mask",
     "preliminary_visit_image_background": "calexpBackground",
+    "preliminary_visit_mask": "preliminary_visit_mask",
     "single_visit_psf_star": "initial_psf_stars_detector",
     "single_visit_psf_star_footprints": "initial_psf_stars_footprints_detector",
     "single_visit_star_footprints": "src",
@@ -496,7 +496,6 @@
     "dia_source_low_reliability": "dia_source_low_reliability",
     "dia_source_detector": "goodSeeingDiff_diaSrcTable",
     "dia_source_visit": "diaSourceTable",
-    "preloaded_DRP_SsObjects": "preloaded_DRP_SsObjects",
     "dia_object_pre_calc": "goodSeeingDiff_diaObjTable",
     "dia_source_patch": "goodSeeingDiff_assocDiaSrcTable",
     "ss_object_unassociated": "goodSeeingDiff_unassocSsObjTable",
@@ -513,13 +512,15 @@
     "object_forced_source": "forcedSourceTable_primary",
     "object_forced_source_nonprimary": "forcedSourceTable_nonprimary",
     "ss_object": "goodSeeingDiff_ssObjTable",
-    "ss_source": "goodSeeingDiff_ssSrcTable"
+    "ss_source": "goodSeeingDiff_ssSrcTable",
+    "preloaded_ss_object_visit": "preloaded_ss_object_visit"
   },
   "unmappable_new_tasks": {
     "makeAnalysisSingleVisitStarAssociationMetricTable": "No final sources in v1.",
     "makeAnalysisSingleVisitStarAssociationWholeSkyPlot": "No final sources in v1.",
     "makeInitialVisitDetectorTable": "No initial visit[, detector] tables in v1.",
     "makeInitialVisitTable": "No initial visit[, detector] tables in v1.",
+    "generateEphemerides": "No ephemeris generation in v1.",
     "makeMetricTableObjectTableCoreRefCatMatch": "Assumed to be an unintentional omission from v1.",
     "objectTableCoreRefCatMatchWholeSkyPlot": "Assumed to be an unintentional omission from v1.",
     "plotPropertyMapSurvey": "Accidentally omitted from v1 steps.",
@@ -533,6 +534,16 @@
   },
   "unmappable_old_tasks": {},
   "unmappable_new_dataset_types": {
+    "de440s": "no ephemeris generation in v1.",
+    "earth_2025_250826_2125_predict": "no ephemeris generation in v1.",
+    "earth_620120_250826": "no ephemeris generation in v1.",
+    "earth_latest_high_prec": "no ephemeris generation in v1.",
+    "linux_p1550p2650": "no ephemeris generation in v1.",
+    "mpcorb": "no ephemeris generation in v1.",
+    "naif0012": "no ephemeris generation in v1.",
+    "obscodes": "no ephemeris generation in v1.",
+    "pck00010": "no ephemeris generation in v1.",
+    "sb441_n16": "no ephemeris generation in v1.",
     "single_visit_star_association_metrics_table": "",
     "single_visit_star_association_whole_sky_stellarAstrometricRepeatability1_AD1_WholeSkyPlot": "",
     "single_visit_star_association_whole_sky_stellarAstrometricRepeatability1_AF1_WholeSkyPlot": "",
@@ -620,4 +631,3 @@
     ]
   }
 }
-

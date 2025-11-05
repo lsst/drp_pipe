@@ -570,7 +570,8 @@ tasks:
       connections.inputCatalogs: ss_source_associated
       connections.ssSourceTable: ss_source
       connections.ssObjectTable: ss_object
-
+  generateEphemerides:
+    class: lsst.pipe.tasks.generateEphemerides.GenerateEphemeridesTask
 subsets:
   step1a-single-visit-detectors:
     subset:
@@ -632,6 +633,7 @@ subsets:
       - makeInitialVisitTable
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+      - generateEphemerides
     description: |
       A step that consolidates visit[, detector] metadata and analysis into
       full-survey tables and plots.
@@ -884,6 +886,7 @@ subsets:
     - makeInitialVisitTable
     - makeAnalysisSingleVisitStarAssociationMetricTable
     - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+    - generateEphemerides
   stage2-recalibrate:
     # 2a
     - fgcmBuildFromIsolatedStar

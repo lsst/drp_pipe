@@ -59,8 +59,18 @@ COMCAM_INPUTS = {
     "skyMap",
     "fgcmLookUpTable",
     "pretrainedModelPackage",
-    "preloaded_DRP_SsObjects",
     "illuminationCorrection",
+    # Solar system state required to generateEphemerides
+    "mpcorb",
+    "de440s",
+    "sb441_n16",
+    "obscodes",
+    "linux_p1550p2650",
+    "pck00010",
+    "earth_latest_high_prec",
+    "earth_620120_250826",
+    "earth_2025_250826_2125_predict",
+    "naif0012",
 }
 
 
