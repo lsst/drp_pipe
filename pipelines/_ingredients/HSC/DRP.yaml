@@ -11,17 +11,17 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
 parameters:
-  extinctionCoeffs: {
-    "g": 3.240,
-    "r": 2.276,
-    "i": 1.633,
-    "z": 1.263,
-    "y": 1.075,
-    "N387": 4.007,
-    "N395": 3.929,
-    "N515": 2.939,
-    "N816": 1.458,
-    "N921": 1.187,}
+  extinctionCoeffs:
+    g: 3.240
+    r: 2.276
+    i: 1.633
+    z: 1.263
+    y: 1.075
+    N387: 4.007
+    N395: 3.929
+    N515: 2.939
+    N816: 1.458
+    N921: 1.187
 tasks:
   isr:
     class: lsst.ip.isr.IsrTask

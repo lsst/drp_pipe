@@ -13,6 +13,16 @@ imports:
       - fgcm
       - gbdesAstrometricFit
       - consolidateSsTables
+parameters:
+  extinctionCoeffs:
+    u: 3.994
+    g: 3.212
+    r: 2.164
+    i: 1.591
+    z: 1.211
+    y: 1.063
+    N540: 2.753
+    N708: 1.847
 tasks:
   isrForCrosstalkSources:
     class: lsst.ip.isr.IsrTask
@@ -118,6 +128,22 @@ tasks:
     class: lsst.jointcal.JointcalTask
     config:
       connections.inputSourceTableVisit: preSourceTable_visit
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      # atools not in config yet when obs_lsst overrides objectTableTractAnalysis
+      atools.wPerpPSF.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.wPerpPSF.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.xPerpPSF.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.xPerpPSF.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.yPerpPSF.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.yPerpPSF.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.wPerpCModel.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.wPerpCModel.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.xPerpCModel.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.xPerpCModel.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.yPerpCModel.process.buildActions.x.extinctionCoeffs: parameters.extinctionCoeffs
+      atools.yPerpCModel.process.buildActions.y.extinctionCoeffs: parameters.extinctionCoeffs
 subsets:
   step0:
     subset:
