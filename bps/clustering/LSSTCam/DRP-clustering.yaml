@@ -15,22 +15,22 @@ cluster:
     dimensions: detector
     equalDimensions: visit:exposure
     partitionDimensions: exposure
-    partitionMaxClusters: 10000
+    partitionMaxClusters: 50000
   step1b_visits:
     pipetasks: consolidateSingleVisitStar,consolidateVisitSummary
     dimensions: visit
-  step2c_refitpsf:
+  step2d_refitpsf:
     # These are detector-level tasks
     pipetasks: refitPsfModelDetector
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 10000
-  step2c_visits:
+    partitionMaxClusters: 50000
+  step2d_visits:
     # These are detector-level tasks
     pipetasks: recalibrateSingleVisitStar,standardizeRecalibratedStar
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 10000
+    partitionMaxClusters: 50000
   makeWarpTract:
     # shared with NV
     pipetasks: makeDirectWarp,makePsfMatchedWarp
@@ -39,6 +39,12 @@ cluster:
     # shared with NV
     pipetasks: selectDeepCoaddVisits,assembleDeepCoadd,assembleCellCoadd,detectCoaddPeaks,selectTemplateCoaddVisits,assembleTemplateCoadd
     dimensions: tract,patch,band
+  make_analysis_images:
+    pipetasks: makeBinnedTemplateNImage,makeBinnedDeepNImage,makeBinnedCoaddImage
+    dimensions: tract,band
+  make_tract_analysis_images:
+    pipetasks: makeWholeTractTemplateNImage,makeWholeTractDeepNImage,makeWholeTractImage
+    dimensions: tract,band
   patch_postprocess:
     pipetasks: rewriteObject,computeObjectEpochs,standardizeObject
     dimensions: tract,patch
@@ -49,15 +55,25 @@ cluster:
     pipetasks: reprocessVisitImage,standardizeSource
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 10000
+    partitionMaxClusters: 50000
   diffim:
     pipetasks: buildTemplate,subtractImages,detectAndMeasureDiaSource,filterDiaSource,computeReliability,filterDiaSourcePostReliability,standardizeDiaSource
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 10000
+    partitionMaxClusters: 50000
   association:
     pipetasks: associateDiaSource,calculateDiaObject
     dimensions: tract,patch
   skyCorrCluster:
     pipetasks: skyCorr,skyCorrExperimental
     dimensions: visit
+  step4b_forced_phot:
+    pipetasks: forcedPhotObjectDetector
+    dimensions: visit
+    partitionDimensions: detector
+    partitionMaxClusters: 50000
+  step4b_forced_phot_dia:
+    pipetasks: forcedPhotDiaObjectDetector
+    dimensions: visit
+    partitionDimensions: detector
+    partitionMaxClusters: 50000
