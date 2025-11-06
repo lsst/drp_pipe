@@ -133,6 +133,7 @@ subsets:
       - makeWholeTractTemplateNImage
       - refCatObjectTract
       - validateObjectTableCore
+      - fitStellarMotion
     description: |
       Tract-level tasks that can be run together after the 'step3a'
       subsets.
