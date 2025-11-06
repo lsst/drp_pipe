@@ -5,6 +5,10 @@ description: >
 
   This is the cheapest possible version of a Nightly Validation pipeline.
   It excludes PIFF and Object Table generation.
+
+  This pipeline does not produce sources and is compatible with
+  data repositories with either source and source2 dataset types.
+
 instrument: lsst.obs.lsst.LsstCam
 parameters:
   use_cell_coadds: false

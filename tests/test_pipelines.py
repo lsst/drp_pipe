@@ -682,7 +682,23 @@ class PipelineTestCase(unittest.TestCase):
             ],
             initial_dataset_types=REFCATS,
             expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS | {"fgcmLookUpTable"},
-            expected_outputs=COMMON_V2_OUTPUTS,
+            expected_outputs=COMMON_V2_OUTPUTS | {"source"}
+        )
+        tester.run(butler, self)
+
+    def test_lsstcam_drp_compat(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "DRP-compat.yaml"),
+            [
+                "#stage1-single-visit",
+                "#stage2-recalibrate",
+                "#stage3-coadd",
+                "#stage4-measure-variability",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS | {"fgcmLookUpTable"},
+            expected_outputs=COMMON_V2_OUTPUTS | {"source2"},
         )
         tester.run(butler, self)
 
