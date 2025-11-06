@@ -93,6 +93,7 @@
     "dark": "dark",
     "defects": "defects",
     "flat": "flat",
+    "gain_correction": "gain_correction",
     "illuminationCorrection": "illuminationCorrection",
     "linearizer": "linearizer",
     "ptc": "ptc",

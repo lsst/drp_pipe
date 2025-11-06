@@ -53,6 +53,7 @@ COMCAM_INPUTS = {
     "linearizer",
     "cti",
     "ptc",
+    "gain_correction",
     "crosstalk",
     "camera",
     "defects",
