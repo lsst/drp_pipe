@@ -50,3 +50,12 @@ tasks:
     config:
       python: |
         config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.5}
+  analyzeObjectTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      atools.wPerpPSF.prep.selectors.snSelector.threshold: 50
+      atools.xPerpPSF.prep.selectors.snSelector.threshold: 50
+      atools.yPerpPSF.prep.selectors.snSelector.threshold: 50
+      atools.wPerpCModel.prep.selectors.snSelector.threshold: 50
+      atools.xPerpCModel.prep.selectors.snSelector.threshold: 50
+      atools.yPerpCModel.prep.selectors.snSelector.threshold: 50
