@@ -3,7 +3,8 @@ instrument: lsst.obs.lsst.LsstCamImSim
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
   - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
-
+parameters:
+  use_cell_coadds: true
 tasks:
   deblend:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
