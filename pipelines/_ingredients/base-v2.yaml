@@ -229,6 +229,16 @@ tasks:
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
       doOnlineForMean: true
+  makeDeepCoaddInputSummaryTract:
+    class: lsst.drp.tasks.make_coadd_input_summary.MakeCoaddInputSummaryTract
+    config:
+      connections.coadd_inputs_handles: deep_coadd_predetection.coaddInputs
+      connections.coadd_input_summary_tract: deep_coadd_input_summary_tract
+  makeDeepCoaddInputSummary:
+    class: lsst.drp.tasks.make_coadd_input_summary.MakeCoaddInputSummary
+    config:
+      connections.coadd_input_summary_tract_handles: deep_coadd_input_summary_tract
+      connections.coadd_input_summary: deep_coadd_input_summary
   assembleCellCoadd:
     class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
     config:
@@ -250,6 +260,16 @@ tasks:
       assembleStaticSkyModel.doSelectVisits: true
       doNImage: true
       doOnlineForMean: true
+  makeTemplateCoaddInputSummaryTract:
+    class: lsst.drp.tasks.make_coadd_input_summary.MakeCoaddInputSummaryTract
+    config:
+      connections.coadd_inputs_handles: template_coadd.coaddInputs
+      connections.coadd_input_summary_tract: template_coadd_input_summary_tract
+  makeTemplateCoaddInputSummary:
+    class: lsst.drp.tasks.make_coadd_input_summary.MakeCoaddInputSummary
+    config:
+      connections.coadd_input_summary_tract_handles: template_coadd_input_summary_tract
+      connections.coadd_input_summary: template_coadd_input_summary
   makeHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:
@@ -754,6 +774,8 @@ subsets:
       - assembleDeepCoadd
       - assembleTemplateCoadd
       - assembleCellCoadd
+      - makeDeepCoaddInputSummaryTract
+      - makeTemplateCoaddInputSummaryTract
       - makeHealSparsePropertyMaps
       - detectCoaddPeaks
       - mergeObjectDetection
@@ -803,6 +825,8 @@ subsets:
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
       - plotPropertyMapSurvey
+      - makeDeepCoaddInputSummary
+      - makeTemplateCoaddInputSummary
     description: |
       A step that consolidates tract-level analysis into survey-level analysis.
 
@@ -925,6 +949,8 @@ subsets:
     - assembleDeepCoadd
     - assembleTemplateCoadd
     - assembleCellCoadd
+    - makeDeepCoaddInputSummaryTract
+    - makeTemplateCoaddInputSummaryTract
     - makeHealSparsePropertyMaps
     - detectCoaddPeaks
     - mergeObjectDetection
@@ -962,6 +988,8 @@ subsets:
     - makeMetricTableObjectTableCoreRefCatMatch
     - objectTableCoreRefCatMatchWholeSkyPlot
     - plotPropertyMapSurvey
+    - makeDeepCoaddInputSummary
+    - makeTemplateCoaddInputSummary
   stage4-measure-variability:
     # 4a:
     - reprocessVisitImage

@@ -29,6 +29,8 @@ imports:
       # Remove template generation
       - selectTemplateCoaddVisits
       - assembleTemplateCoadd
+      - makeTemplateCoaddInputSummaryTract
+      - makeTemplateCoaddInputSummary
       # Remove object table generation
       - mergeObjectDetection
       - deconvolve

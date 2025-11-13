@@ -530,7 +530,11 @@
     "associateAnalysisSource": "No final sources in v1.",
     "analyzeSourceAssociation": "No final sources in v1.",
     "makeAnalysisSourceAssociationMetricTable": "No final sources in v1.",
-    "makeAnalysisSourceAssociationWholeSkyPlot": "No final sources in v1."
+    "makeAnalysisSourceAssociationWholeSkyPlot": "No final sources in v1.",
+    "makeDeepCoaddInputSummaryTract": "Coadd input summaries are for v2.",
+    "makeDeepCoaddInputSummary": "Coadd input summaries are for v2.",
+    "makeTemplateCoaddInputSummaryTract": "Coadd input summaries are for v2.",
+    "makeTemplateCoaddInputSummary": "Coadd input summaries are for v2."
   },
   "unmappable_old_tasks": {},
   "unmappable_new_dataset_types": {
@@ -622,7 +626,11 @@
     "analysis_source_association_whole_sky_stellarPhotometricRepeatability_stellarPhotRepeatStdev_WholeSkyPlot": "",
     "analysis_source_association_whole_sky_stellarPhotometricResiduals_photResidTractMedian_WholeSkyPlot": "",
     "analysis_source_association_whole_sky_stellarPhotometricResiduals_photResidTractSigmaMad_WholeSkyPlot": "",
-    "analysis_source_association_whole_sky_stellarPhotometricResiduals_photResidTractStdev_WholeSkyPlot": ""
+    "analysis_source_association_whole_sky_stellarPhotometricResiduals_photResidTractStdev_WholeSkyPlot": "",
+    "deep_coadd_input_summary_tract": "",
+    "deep_coadd_input_summary": "",
+    "template_coadd_input_summary_tract": "",
+    "template_coadd_input_summary": ""
   },
   "unmappable_old_dataset_types": {},
   "config_ignores": {
