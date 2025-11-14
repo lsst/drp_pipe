@@ -92,6 +92,7 @@ LATISS_INPUTS = {
     "gaia_dr3_20230707",
     "sky",
     "transmission_atmosphere_fgcm",
+    "gain_correction",
 }
 
 # LSSTCam-imSim common inputs, in addition to COMMON_INPUTS
@@ -112,6 +113,7 @@ LSSTCAM_INPUTS = {
     "gaia_dr3_20230707",
     "sky",
     "astrometry_camera",
+    "gain_correction",
 }
 
 # LSSTComCam common inputs, in addition to COMMON_INPUTS
@@ -123,6 +125,7 @@ LSSTCOMCAM_INPUTS = {
     "cti",
     "the_monster_20250219",
     "illuminationCorrection",
+    "gain_correction",
 }
 
 # LSSTComCamSim common inputs, in addition to COMMON_INPUTS
@@ -130,6 +133,7 @@ LSSTCOMCAMSIM_INPUTS = {
     "uw_stars_20240524",
     "ptc",
     "bfk",
+    "gain_correction",
 }
 
 # a selection of mostly common outputs
