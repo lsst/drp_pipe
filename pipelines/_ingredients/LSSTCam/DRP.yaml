@@ -9,7 +9,7 @@ imports:
       - analysis-visit-source
       - step2b-recalibrate-tracts
 parameters:
-  use_cell_coadds: false
+  use_cell_coadds: true
 tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
