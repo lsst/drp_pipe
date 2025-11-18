@@ -44,8 +44,10 @@ imports:
       - rewriteObject
       - standardizeObject
       - consolidateObject
+      - consolidateParentTable
       - splitPrimaryObject
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - catalogMatchTract
       - refCatObjectTract
       - photometricCatalogMatch

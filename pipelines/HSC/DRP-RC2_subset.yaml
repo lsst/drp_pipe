@@ -77,6 +77,7 @@ subsets:
       - transformObjectTable
       - writeObjectTable
       - consolidateObjectTable
+      - consolidateParentTable
   nightlyStep1:
     subset:
       - isr
@@ -156,6 +157,7 @@ subsets:
       - transformObjectTable
       - writeObjectTable
       - consolidateObjectTable
+      - consolidateParentTable
       - splitPrimaryObject
       - healSparsePropertyMaps
       - computeObjectEpochs
@@ -190,6 +192,7 @@ subsets:
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
       - makeMetricTableMatchedVisitCore

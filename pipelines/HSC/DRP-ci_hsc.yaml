@@ -88,6 +88,7 @@ subsets:
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
       - analyzeSourceTableCore
