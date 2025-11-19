@@ -14,6 +14,7 @@ setupRequired(jointcal)
 setupRequired(fgcmcal)
 setupRequired(meas_transiNet)
 setupRequired(cp_verify)
+setupRequired(meas_photoz_base)
 
 # Faro is no longer included in any pipelines, but we're keeping it as a
 # dependency until all of its plots and metrics have analysis_tools
