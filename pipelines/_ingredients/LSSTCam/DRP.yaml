@@ -10,6 +10,7 @@ imports:
       - step2b-recalibrate-tracts
 parameters:
   use_cell_coadds: true
+  schemaFile: "lsstcam.yaml"
 tasks:
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
@@ -57,3 +58,13 @@ tasks:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
       useButlerCamera: True
+  standardizeDiaSource:
+    class: lsst.ap.association.TransformDiaSourceCatalogTask
+    config:
+      doUseSchema: True
+      schemaFile: parameters.schemaFile
+  associateDiaSource:
+    class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
+    config:
+      doUseSchema: True
+      schemaFile: parameters.schemaFile
