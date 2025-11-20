@@ -24,11 +24,11 @@ pipetask:
   analyzeSourceAssociation:
     requestMemory: 49153
   assembleCellCoadd:
-    requestMemory: 9409
+    requestMemory: 7000
   assembleDeepCoadd:
-    requestMemory: 9674
+    requestMemory: 7000
   assembleTemplateCoadd:
-    requestMemory: 9700
+    requestMemory: 7000
   associateAnalysisSource:
     requestMemory: 25270
   associateIsolatedStar:
