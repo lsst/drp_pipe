@@ -18,6 +18,10 @@ tasks:
       background_provider: input_summary
       wcs_provider: healpix3
       connections.background_originals: preliminary_visit_image_background
+  makeDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+    config:
+      numberOfNoiseRealizations: 1
   selectTemplateCoaddVisits:
     class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
     config:
@@ -32,6 +36,10 @@ tasks:
       maxPsfFwhm: 1.7
       python: |
         config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.75}
+  assembleCellCoadd:
+    class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+    config:
+      num_noise_realizations: 1
   detectCoaddPeaks:
     class: lsst.pipe.tasks.multiBand.DetectCoaddSourcesTask
     config:
