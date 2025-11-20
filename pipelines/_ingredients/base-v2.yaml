@@ -185,6 +185,8 @@ tasks:
       connections.calBkgs: preliminary_visit_image_background
       connections.calExpMosaic: preliminary_visit_image_skyCorr_visit_mosaic
       connections.calBkgMosaic: preliminary_visit_image_background_skyCorr_visit_mosaic
+  fitStellarMotion:
+    class: lsst.drp.tasks.fit_stellar_motion.FitStellarMotionTask
 
   # stage3-coadd production tasks
   makeDirectWarp:
@@ -739,6 +741,7 @@ subsets:
   step2e-recalibrate-tracts:
     subset:
       - analyzeRecalibratedStarAssociation
+      - fitStellarMotion
     description: |
       A step that runs tract-level analysis on associations between
       recalibrated stars (using the same associations originally computed on
@@ -943,6 +946,7 @@ subsets:
     - skyCorr
     # 2e
     - analyzeRecalibratedStarAssociation
+    - fitStellarMotion
     # 2f
     - makeVisitDetectorTable
     - makeVisitTable

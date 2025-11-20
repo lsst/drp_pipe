@@ -89,3 +89,11 @@ tasks:
       atools.raDecCoveragePlot.produce.plot.showExtremeOutliers: false
       atools.focalPlaneCoveragePlot: FocalPlaneMultiVisitCoveragePlot
       python: from lsst.analysis.tools.atools import *
+  fitStellarMotion:
+    class: lsst.drp.tasks.fit_stellar_motion.FitStellarMotionTask
+    config:
+      connections.visitSummaries: visitSummary
+      connections.starSourceRef: isolated_star_presources
+      connections.starCatalogRef: isolated_star_presource_associations
+      connections.inputSources: sourceTable_visit
+      connections.visitTable: visitTable
