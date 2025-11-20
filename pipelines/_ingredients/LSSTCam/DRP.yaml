@@ -71,3 +71,15 @@ tasks:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
       useButlerCamera: True
+  standardizeDiaSource:
+    class: lsst.ap.association.TransformDiaSourceCatalogTask
+    config:
+      doUseSchema: True
+      schemaFile: "lsstcam.yaml"
+      schemaName: lsstcam
+  associateDiaSource:
+    class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
+    config:
+      doUseSchema: True
+      schemaFile: "lsstcam.yaml"
+      schemaName: lsstcam
