@@ -122,10 +122,12 @@ subsets:
   step3b:
     subset:
       - consolidateObjectTable
+      - consolidateParentTable
       - splitPrimaryObject
       # analysis_tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - analyzeObjectTableExtended
       - catalogMatchTract
       - photometricCatalogMatch

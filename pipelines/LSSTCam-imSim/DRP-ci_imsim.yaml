@@ -46,6 +46,7 @@ subsets:
       - analyzeAmpOffsetMetadata
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
       - analyzeSourceTableCore

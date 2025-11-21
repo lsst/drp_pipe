@@ -89,6 +89,7 @@ tasks:
   writeObjectTable: lsst.pipe.tasks.postprocess.WriteObjectTableTask
   transformObjectTable: lsst.pipe.tasks.postprocess.TransformObjectCatalogTask
   consolidateObjectTable: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
+  consolidateParentTable: lsst.pipe.tasks.postprocess.ConsolidateParentTractTask
   splitPrimaryObject:
     class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
     config:
@@ -297,6 +298,7 @@ subsets:
       - writeObjectTable
       - transformObjectTable
       - consolidateObjectTable
+      - consolidateParentTable
     description: >
       A set of tasks to transform multiband outputs into a parquet object
       table.

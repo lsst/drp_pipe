@@ -180,10 +180,12 @@ subsets:
       - templateGen
       # per-tract Tasks
       - consolidateObjectTable
+      - consolidateParentTable
       - splitPrimaryObject
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - catalogMatchTract
       - photometricCatalogMatch
       - photometricRefCatObjectTract
