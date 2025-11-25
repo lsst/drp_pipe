@@ -44,8 +44,10 @@ imports:
       - rewriteObject
       - standardizeObject
       - consolidateObject
+      - consolidateParentTable
       - splitPrimaryObject
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - catalogMatchTract
       - refCatObjectTract
       - photometricCatalogMatch
@@ -62,6 +64,8 @@ imports:
       - makeWholeTractDeepNImage
       - makeMetricTableObjectTableCore
       - objectTableCoreWholeSkyPlot
+      - makeMetricTableObjectParentTableCore
+      - objectParentTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
 # If you add any config overrides that overlap with LSSTCam/DRP.yaml,

@@ -429,6 +429,8 @@ tasks:
       connections.nonprimary: object_nonprimary
   consolidateHealSparsePropertyMaps:
     class: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
+  consolidateParentTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateParentTractTask
 
   # 4-final production tasks
   reprocessVisitImage:
@@ -801,8 +803,10 @@ subsets:
       - rewriteObject
       - standardizeObject
       - consolidateObject
+      - consolidateParentTable
       - splitPrimaryObject
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - catalogMatchTract
       - refCatObjectTract
       - photometricCatalogMatch
@@ -833,6 +837,8 @@ subsets:
       - analyzeObjectTableSurveyCore
       - makeMetricTableObjectTableCore
       - objectTableCoreWholeSkyPlot
+      - makeMetricTableObjectParentTableCore
+      - objectParentTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
       - plotPropertyMapSurvey
@@ -977,8 +983,10 @@ subsets:
     - rewriteObject
     - standardizeObject
     - consolidateObject
+    - consolidateParentTable
     - splitPrimaryObject
     - analyzeObjectTableCore
+    - analyzeObjectParentTableCore
     - catalogMatchTract
     - refCatObjectTract
     - photometricCatalogMatch
@@ -997,6 +1005,8 @@ subsets:
     - analyzeObjectTableSurveyCore
     - makeMetricTableObjectTableCore
     - objectTableCoreWholeSkyPlot
+    - makeMetricTableObjectParentTableCore
+    - objectParentTableCoreWholeSkyPlot
     - makeMetricTableObjectTableCoreRefCatMatch
     - objectTableCoreRefCatMatchWholeSkyPlot
     - plotPropertyMapSurvey

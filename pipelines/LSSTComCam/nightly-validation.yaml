@@ -122,10 +122,12 @@ subsets:
   step3b:
     subset:
       - consolidateObjectTable
+      - consolidateParentTable
       - splitPrimaryObject
       # analysis_tools tasks
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - analyzeObjectTableExtended
       - catalogMatchTract
       - photometricCatalogMatch
@@ -142,8 +144,10 @@ subsets:
       - analyzeObjectTableSurveyCore
       - makeMetricTableMatchedVisitCore
       - makeMetricTableObjectTableCore
+      - makeMetricTableObjectParentTableCore
       - matchedVisitCoreWholeSkyPlot
       - objectTableCoreWholeSkyPlot
+      - objectParentTableCoreWholeSkyPlot
     description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.

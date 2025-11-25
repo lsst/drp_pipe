@@ -7,7 +7,9 @@ imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
     include:
       - makeMetricTableObjectTableCore
+      - makeMetricTableObjectParentTableCore
       - objectTableCoreWholeSkyPlot
+      - objectParentTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
   - location: $ANALYSIS_TOOLS_DIR/pipelines/surveyQualityCore.yaml
@@ -28,6 +30,22 @@ tasks:
     config:
       connections.inputName: "object_metrics_table"
       connections.outputName: "object_whole_sky"
+  analyzeObjectParentTableCore:
+    class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask
+    config:
+      connections.data: object_parent
+      connections.inputName: object_parent
+      connections.outputName: object_parent
+  makeMetricTableObjectParentTableCore:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "object_parent_metrics"
+      connections.metricTable: "object_parent_metrics_table"
+  objectParentTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "object_parent_metrics_table"
+      connections.outputName: "object_parent_whole_sky"
   analyzeObjectTableSurveyCore:
     class: lsst.analysis.tools.tasks.ObjectTableSurveyAnalysisTask
     config:
