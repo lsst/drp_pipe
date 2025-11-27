@@ -116,10 +116,12 @@ subsets:
       - transformObjectTable
       # per tract tasks
       - consolidateObjectTable
+      - consolidateParentTable
       - splitPrimaryObject
       - healSparsePropertyMaps
       - computeObjectEpochs
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - catalogMatchTract
       - refCatObjectTract
       - validateObjectTableCore

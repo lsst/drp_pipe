@@ -11,6 +11,12 @@ tasks:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
       bands: ["g", "r", "i", "z", "y"]
+  objectParentTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "objectParentTableCore_metricsTable"
+      connections.outputName: "objectParentTableCore_wholeSky"
+      bands: ["g", "r", "i", "z", "y"]
   objectTableCoreRefCatMatchWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
@@ -77,6 +83,7 @@ subsets:
       - transformObjectTable
       - writeObjectTable
       - consolidateObjectTable
+      - consolidateParentTable
   nightlyStep1:
     subset:
       - isr
@@ -156,6 +163,7 @@ subsets:
       - transformObjectTable
       - writeObjectTable
       - consolidateObjectTable
+      - consolidateParentTable
       - splitPrimaryObject
       - healSparsePropertyMaps
       - computeObjectEpochs
@@ -190,13 +198,16 @@ subsets:
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - analyzeObjectTableSurveyCore
       - catalogMatchTract
       - makeMetricTableMatchedVisitCore
       - makeMetricTableObjectTableCore
+      - makeMetricTableObjectParentTableCore
       - makeMetricTableObjectTableCoreRefCatMatch
       - matchedVisitCoreWholeSkyPlot
       - objectTableCoreWholeSkyPlot
+      - objectParentTableCoreWholeSkyPlot
       - objectTableCoreRefCatMatchWholeSkyPlot
       - photometricCatalogMatch
       - photometricRefCatObjectTract

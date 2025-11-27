@@ -73,6 +73,12 @@ tasks:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
       bands: ["g", "r", "i", "z", "y"]
+  objectParentTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.inputName: "objectParentTableCore_metricsTable"
+      connections.outputName: "objectParentTableCore_wholeSky"
+      bands: ["g", "r", "i", "z", "y"]
   objectTableCoreRefCatMatchWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
@@ -180,10 +186,12 @@ subsets:
       - templateGen
       # per-tract Tasks
       - consolidateObjectTable
+      - consolidateParentTable
       - splitPrimaryObject
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - catalogMatchTract
       - photometricCatalogMatch
       - photometricRefCatObjectTract
@@ -262,8 +270,10 @@ subsets:
       - consolidateHealSparsePropertyMaps
       - matchedVisitCoreWholeSkyPlot
       - objectTableCoreWholeSkyPlot
+      - objectParentTableCoreWholeSkyPlot
       - makeMetricTableMatchedVisitCore
       - makeMetricTableObjectTableCore
+      - makeMetricTableObjectParentTableCore
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
       - analyzeObjectTableSurveyCore

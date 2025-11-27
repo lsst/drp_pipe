@@ -52,6 +52,10 @@ tasks:
       bands: ["r", "i"]
       python: |
         from lsst.analysis.tools.atools import *
+  objectParentTableCoreWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      bands: ["r", "i"]
   analyzeMatchedVisitCore:
     class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
     config:
@@ -88,15 +92,18 @@ subsets:
       - analyzeMatchedVisitCore
       - analyzeMatchedPreVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - analyzeObjectTableExtended
       - analyzeObjectTableSurveyCore
       - analyzeSourceTableCore
       - catalogMatchTract
       - makeMetricTableMatchedVisitCore
       - makeMetricTableObjectTableCore
+      - makeMetricTableObjectParentTableCore
       - makeMetricTableObjectTableCoreRefCatMatch
       - matchedVisitCoreWholeSkyPlot
       - objectTableCoreWholeSkyPlot
+      - objectParentTableCoreWholeSkyPlot
       - objectTableCoreRefCatMatchWholeSkyPlot
       - photometricCatalogMatch
       - photometricRefCatObjectTract

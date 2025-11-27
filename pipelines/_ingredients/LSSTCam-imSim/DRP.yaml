@@ -188,6 +188,7 @@ subsets:
       - templateGen
       # Per-tract Tasks
       - consolidateObjectTable
+      - consolidateParentTable
       - splitPrimaryObject
       - healSparsePropertyMaps
       - computeObjectEpochs
@@ -195,6 +196,7 @@ subsets:
       - compareObjectToTruth
       - analyzeMatchedVisitCore
       - analyzeObjectTableCore
+      - analyzeObjectParentTableCore
       - catalogMatchTract
       - diff_matched_analysis
       - refCatObjectTract
@@ -280,6 +282,8 @@ subsets:
       - makeMetricTableObjectTableCore
       - matchedVisitCoreWholeSkyPlot
       - objectTableCoreWholeSkyPlot
+      - makeMetricTableObjectParentTableCore
+      - objectParentTableCoreWholeSkyPlot
     description: |
       Tasks that should be run as the final step that require global inputs,
       and can be run after the 'step3' subset.
