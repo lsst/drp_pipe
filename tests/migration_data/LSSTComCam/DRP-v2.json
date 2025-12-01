@@ -524,7 +524,8 @@
     "object_forced_source": "forcedSourceTable_primary",
     "object_forced_source_nonprimary": "forcedSourceTable_nonprimary",
     "ss_object": "goodSeeingDiff_ssObjTable",
-    "ss_source": "goodSeeingDiff_ssSrcTable"
+    "ss_source": "goodSeeingDiff_ssSrcTable",
+    "mpcorb": "mpcorb"
   },
   "unmappable_new_tasks": {
     "generateEphemerides": "No ephemeris generation in v1.",
@@ -554,7 +555,6 @@
     "earth_620120_250826": "no ephemeris generation in v1.",
     "earth_latest_high_prec": "no ephemeris generation in v1.",
     "linux_p1550p2650": "no ephemeris generation in v1.",
-    "mpcorb": "no ephemeris generation in v1.",
     "naif0012": "no ephemeris generation in v1.",
     "obscodes": "no ephemeris generation in v1.",
     "pck00010": "no ephemeris generation in v1.",
