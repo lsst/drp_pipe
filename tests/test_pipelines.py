@@ -106,6 +106,7 @@ LSSTCAM_IMSIM_INPUTS = {
 # LSSTCam common inputs, in addition to COMMON_INPUTS
 LSSTCAM_INPUTS = {
     "bfk",
+    "electroBfDistortionMatrix",
     "linearizer",
     "defects",
     "cti",
