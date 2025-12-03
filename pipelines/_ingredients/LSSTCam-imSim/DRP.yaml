@@ -121,6 +121,12 @@ tasks:
     class: lsst.analysis.tools.tasks.refCatObjectPhotometricAnalysis.RefCatObjectPhotometricAnalysisTask
     config:
       connections.data: objectTable_tract_cal_ref_cat_2_2_photoMatch
+  consolidateForcedSourceOnDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      doUseSchema: True
+      schemaFile: parameters.schemaFile
+      tableName: ForcedSourceOnDiaObject
   transformDiaSourceCat:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
@@ -131,6 +137,18 @@ tasks:
     config:
       doUseSchema: True
       schemaFile: parameters.schemaFile
+  consolidateAssocDiaSourceTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      doUseSchema: True
+      schemaFile: parameters.schemaFile
+      tableName: DiaSource
+  consolidateFullDiaObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateTractTask
+    config:
+      doUseSchema: True
+      schemaFile: parameters.schemaFile
+      tableName: DiaObject
 subsets:
   step1:
     subset:
