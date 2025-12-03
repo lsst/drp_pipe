@@ -22,6 +22,7 @@ tasks:
       photo_calib_provider: "tract"
       connections.photoCalibName: "jointcal"
       connections.skyWcsName: "jointcal"
+      wcs_consistency_threshold: null
   deblend:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     # Significantly limit the number of sources to deblend, which saves time
