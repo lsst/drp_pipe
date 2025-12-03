@@ -27,3 +27,9 @@ tasks:
     class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
       nVisitsMin: 12
+  gaussianProcessesTurbulenceFit:
+    class: lsst.drp.tasks.fit_turbulence.GaussianProcessesTurbulenceFitTask
+    config:
+      connections.inputPositions: gbdesAstrometricFit_fitStars
+      connections.inputWcs: gbdesAstrometricFitSkyWcsCatalog
+      healpix: False

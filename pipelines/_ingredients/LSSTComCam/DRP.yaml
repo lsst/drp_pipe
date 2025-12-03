@@ -104,3 +104,9 @@ tasks:
       connections.starCatalogRef: isolated_star_presource_associations
       connections.inputSources: sourceTable_visit
       connections.visitTable: visitTable
+  gaussianProcessesTurbulenceFit:
+    class: lsst.drp.tasks.fit_turbulence.GaussianProcessesTurbulenceFitTask
+    config:
+      connections.inputPositions: gbdesAstrometricFit_fitStars
+      connections.inputWcs: gbdesAstrometricFitSkyWcsCatalog
+      healpix: False
