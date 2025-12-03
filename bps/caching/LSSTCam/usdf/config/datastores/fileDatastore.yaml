@@ -107,3 +107,57 @@ datastore:
       # step4b_forced_phot_dia (forcedPhotDiaObjectDetector)
       dia_object_patch: true
       dia_object_forced_source_unstandardized: true
+
+formatters:
+  write_recipes:
+    lsst.obs.base.formatters.fitsExposure.StandardFitsImageFormatterBase: &StandardFitsImageFormatterBase
+      # No compression
+      noCompression:
+        null
+      # Lossless compression
+      lossless: &lossless
+        image: &losslessOptions
+          algorithm: GZIP_2
+        mask:
+          <<: *losslessOptions
+        variance:
+          <<: *losslessOptions
+      # Lossy (quantizing) compression with noise sigma subdivided into 16.
+      lossy16:
+        image: &lossy16Options
+          algorithm: RICE_1
+          quantization:
+            dither: SUBTRACTIVE_DITHER_2
+            scaling: STDEV_MASKED
+            mask_planes: ["NO_DATA", "INTRP"]
+            level: 16.0
+        mask:
+          <<: *losslessOptions
+        variance:
+          <<: *lossy16Options
+    lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter:
+      <<: *StandardFitsImageFormatterBase
+    lsst.obs.base.formatters.fitsExposure.FitsImageFormatter:
+      <<: *StandardFitsImageFormatterBase
+    lsst.obs.base.formatters.fitsExposure.FitsMaskFormatter:
+      <<: *StandardFitsImageFormatterBase
+    lsst.obs.base.formatters.fitsExposure.FitsMaskedImageFormatter:
+      <<: *StandardFitsImageFormatterBase
+  default:
+    <<: *lossless
+  preliminary_visit_image:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
+  visit_image:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
+  deep_coadd:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
+  template_coadd:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
