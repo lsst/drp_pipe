@@ -49,6 +49,7 @@ tasks:
     config:
       connections.data: recalibrated_star
       connections.associatedSources: isolated_star
+      connections.associatedSourceIds: isolated_star_association
       connections.refCat: object_patch
       connections.visitTable: visit_table
 

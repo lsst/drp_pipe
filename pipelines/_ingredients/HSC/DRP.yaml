@@ -25,3 +25,12 @@ tasks:
     config:
       doDirectPhotometry: true
       doDifferencePhotometry: false
+  # Turn off applyAstrometricCorrections unless fitStellarMotion is turned on.
+  analyzeMatchedVisitCore:
+    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
+    config:
+      applyAstrometricCorrections: false
+  sourceObjectMatch:
+    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
+    config:
+      applyAstrometricCorrections: false

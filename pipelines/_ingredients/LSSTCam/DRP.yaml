@@ -53,20 +53,6 @@ tasks:
       detection.reEstimateBackground: true
       detection.background.binSize: 128
       detection.background.useApprox: false
-  # TODO: DM-52176 Turn astrometric corrections back on when final version of
-  # proper motion and parallax catalog is available.
-  analyzeRecalibratedStarAssociation:
-    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
-    config:
-      applyAstrometricCorrections: false
-  analyzeRecalibratedStarObjectMatch:
-    class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
-    config:
-      applyAstrometricCorrections: false
-  analyzeSourceAssociation:
-    class: lsst.analysis.tools.tasks.AssociatedSourcesTractAnalysisTask
-    config:
-      applyAstrometricCorrections: false
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
