@@ -11,6 +11,12 @@ imports:
       - fgcmFitCycle
       - fgcmOutputProducts
 tasks:
+  # TODO DM-53523: This config override should be removed when the
+  # correct calibrations are added to the testdata packages.
+  isr:
+    class: lsst.ip.isr.IsrTaskLSST
+    config:
+      brighterFatterCorrectionMethod: "COULTON18"
   # Config overrides for both missing skyCorr and gbdesHealpix3AstrometricFit
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
