@@ -6,6 +6,7 @@ imports:
     exclude:
       - skyCorr
       - gbdesHealpix3AstrometricFit
+      - gaussianProcessesTurbulenceFit
       - fgcmBuildFromIsolatedStar
       - fgcmFitCycle
       - fgcmOutputProducts
