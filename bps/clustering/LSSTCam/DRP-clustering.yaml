@@ -67,12 +67,12 @@ cluster:
   skyCorrCluster:
     pipetasks: skyCorr,skyCorrExperimental
     dimensions: visit
-  step4b_forced_phot:
+  step4c_forced_phot:
     pipetasks: forcedPhotObjectDetector
     dimensions: visit
     partitionDimensions: detector
     partitionMaxClusters: 50000
-  step4b_forced_phot_dia:
+  step4c_forced_phot_dia:
     pipetasks: forcedPhotDiaObjectDetector
     dimensions: visit
     partitionDimensions: detector
