@@ -668,7 +668,6 @@ subsets:
       - makeInitialVisitTable
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
-      - generateEphemerides
     description: |
       A step that consolidates visit[, detector] metadata and analysis into
       full-survey tables and plots.
@@ -880,7 +879,11 @@ subsets:
       - makeAnalysisSourcePhotometricRefMatch
       - analyzeSourcePhotometricRefMatch
 
-  step4b-measure-variability-tracts:
+  step4b-generate-ephemerides:
+    subset:
+      - generateEphemerides
+
+  step4c-measure-variability-tracts:
     subset:
       - associateDiaSource
       - calculateDiaObject
@@ -895,7 +898,7 @@ subsets:
       - analyzeSourceAssociation
       - analyzeDiaSourceTableTract
 
-  step4c-measure-variability-global:
+  step4d-measure-variability-global:
     subset:
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
@@ -931,7 +934,6 @@ subsets:
     - makeInitialVisitTable
     - makeAnalysisSingleVisitStarAssociationMetricTable
     - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
-    - generateEphemerides
   stage2-recalibrate:
     # 2a
     - fgcmBuildFromIsolatedStar
@@ -1038,6 +1040,8 @@ subsets:
     - makeAnalysisSourcePhotometricRefMatch
     - analyzeSourcePhotometricRefMatch
     # 4b:
+    - generateEphemerides
+    # 4c:
     - associateDiaSource
     - calculateDiaObject
     - consolidateDiaSource
@@ -1050,7 +1054,7 @@ subsets:
     - associateAnalysisSource
     - analyzeSourceAssociation
     - analyzeDiaSourceTableTract
-    # 4c
+    # 4d
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot
     - consolidateSsTables
@@ -1082,9 +1086,11 @@ steps:
     dimensions: []
   - label: step4a-measure-variability-visits
     dimensions: ["visit"]
-  - label: step4b-measure-variability-tracts
+  - label: step4b-generate-ephemerides
+    dimensions: []
+  - label: step4c-measure-variability-tracts
     dimensions: ["tract"]
-  - label: step4c-measure-variability-global
+  - label: step4d-measure-variability-global
     dimensions: []
 
 contracts:
