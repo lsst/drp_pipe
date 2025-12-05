@@ -44,6 +44,9 @@ tasks:
       do_include_astrometric_errors: false
       astrometry.maxIter: 2
       compute_summary_stats.psfGridSampling: 250
+      do_adaptive_threshold_detection: false
+      psf_detection.reEstimateBackground: true
+      star_detection.reEstimateBackground: true
       useButlerCamera: True
       python: |
         config.star_measurement.plugins.names.add("base_FPPosition")
