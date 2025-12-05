@@ -139,6 +139,7 @@ tasks:
       connections.output_summary_schema: visit_summary_schema
       connections.output_summary_catalog: visit_summary
       wcs_provider: tract
+      wcs_consistency_threshold: 0.5
       photo_calib_provider: global
   recalibrateSingleVisitStar:
     class: lsst.pipe.tasks.postprocess.WriteRecalibratedSourceTableTask

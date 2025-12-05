@@ -23,6 +23,7 @@ tasks:
     config:
       background_provider: input_summary
       wcs_provider: input_summary
+      wcs_consistency_threshold: null
       photo_calib_provider: input_summary
   # Config overrides for missing skyCorr
   makeDirectWarp:

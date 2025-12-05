@@ -68,6 +68,7 @@ tasks:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
       wcs_provider: "tract"
+      wcs_consistency_threshold: 0.5
       photo_calib_provider: "global"
       background_provider: "replacement"
   reprocessVisitImage:
