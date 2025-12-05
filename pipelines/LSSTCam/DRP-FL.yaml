@@ -31,6 +31,8 @@ imports:
       - analyzeSourceAssociation
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
+      # Remove Solar System ephemerides loading, which was added after FL
+      - generateEphemerides
       # Remove object table generation
       - mergeObjectDetection
       - deconvolve
