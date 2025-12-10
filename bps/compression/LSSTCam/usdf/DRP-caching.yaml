@@ -1,0 +1,29 @@
+# There are recommended configs for caching data read from the S3
+# datastore used by the embargo rack at USDF.
+#
+# Use it by adding
+#
+#  includeConfigs:
+#    - ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/DRP-caching.yaml
+#
+# (with no outer indentation) to your BPS config file.  This is meant
+# to be used with the clustering definintions in
+# ${DRP_PIPE_DIR}/bps/clustering/LSSTCam
+
+subDirTemplate: "{label}/{detector}"
+
+environment:
+  # Default caching config
+  # Each pipetask creates its own local cache folder,
+  # $TMPDIR/butler-cache-dir-*
+  DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config:${DAF_BUTLER_CONFIG_PATH}
+  DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
+
+cluster:
+  step1detector:
+    # For step1, the pipetasks for a given detector will use the same
+    # calibs, so specify a single shared cache directory with 1TB
+    # size.
+    environment:
+      DAF_BUTLER_CACHE_EXPIRATION_MODE: size=1_000_000_000_000
+      DAF_BUTLER_CACHE_DIRECTORY: /lscratch/${USER}/step1_cache

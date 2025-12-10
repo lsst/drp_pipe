@@ -107,23 +107,3 @@ datastore:
       # step4b_forced_phot_dia (forcedPhotDiaObjectDetector)
       dia_object_patch: true
       dia_object_forced_source_unstandardized: true
-
-formatters:
-  default:
-    <<: *lossless
-  preliminary_visit_image:
-    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
-    parameters:
-      recipe: lossy16
-  visit_image:
-    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
-    parameters:
-      recipe: lossy16
-  deep_coadd:
-    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
-    parameters:
-      recipe: lossy16
-  template_coadd:
-    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
-    parameters:
-      recipe: lossy16
