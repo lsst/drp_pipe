@@ -51,3 +51,7 @@ formatters:
     formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
     parameters:
       recipe: lossy16
+  post_isr_image:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
