@@ -1,0 +1,21 @@
+formatters:
+  post_isr_image:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
+  preliminary_visit_image:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
+  visit_image:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
+  deep_coadd:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
+  template_coadd:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
