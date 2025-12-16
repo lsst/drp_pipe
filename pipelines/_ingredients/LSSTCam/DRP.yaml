@@ -12,6 +12,10 @@ parameters:
   use_cell_coadds: true
   schemaFile: "lsstcam.yaml"
 tasks:
+  isr:
+    class: lsst.ip.isr.IsrTaskLSST
+    config:
+      ampOffset.doApplyAmpOffset: true
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
