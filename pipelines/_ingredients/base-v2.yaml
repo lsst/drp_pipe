@@ -607,6 +607,8 @@ tasks:
       connections.ssObjectTable: ss_object
   generateEphemerides:
     class: lsst.pipe.tasks.generateEphemerides.GenerateEphemeridesTask
+    config:
+      connections.visitSummaries: visit_summary
 subsets:
   step1a-single-visit-detectors:
     subset:
@@ -668,7 +670,6 @@ subsets:
       - makeInitialVisitTable
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
-      - generateEphemerides
     description: |
       A step that consolidates visit[, detector] metadata and analysis into
       full-survey tables and plots.
@@ -880,7 +881,15 @@ subsets:
       - makeAnalysisSourcePhotometricRefMatch
       - analyzeSourcePhotometricRefMatch
 
-  step4b-measure-variability-tracts:
+  step4b-generate-ephemerides-global:
+    subset:
+      - generateEphemerides
+    description: |
+      The inputs for this step are ready after step1c. It is positioned here to
+      run as late in the pipeline as possible for DP2. It can run in parallel
+      with step4a, and in the future will move to stage 2 TODO DM-53596
+
+  step4c-measure-variability-tracts:
     subset:
       - associateDiaSource
       - calculateDiaObject
@@ -895,7 +904,7 @@ subsets:
       - analyzeSourceAssociation
       - analyzeDiaSourceTableTract
 
-  step4c-measure-variability-global:
+  step4d-measure-variability-global:
     subset:
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
@@ -931,7 +940,6 @@ subsets:
     - makeInitialVisitTable
     - makeAnalysisSingleVisitStarAssociationMetricTable
     - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
-    - generateEphemerides
   stage2-recalibrate:
     # 2a
     - fgcmBuildFromIsolatedStar
@@ -1038,6 +1046,8 @@ subsets:
     - makeAnalysisSourcePhotometricRefMatch
     - analyzeSourcePhotometricRefMatch
     # 4b:
+    - generateEphemerides
+    # 4c:
     - associateDiaSource
     - calculateDiaObject
     - consolidateDiaSource
@@ -1050,7 +1060,7 @@ subsets:
     - associateAnalysisSource
     - analyzeSourceAssociation
     - analyzeDiaSourceTableTract
-    # 4c
+    # 4d
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot
     - consolidateSsTables
@@ -1082,9 +1092,11 @@ steps:
     dimensions: []
   - label: step4a-measure-variability-visits
     dimensions: ["visit"]
-  - label: step4b-measure-variability-tracts
+  - label: step4b-generate-ephemerides-global
+    dimensions: []
+  - label: step4c-measure-variability-tracts
     dimensions: ["tract"]
-  - label: step4c-measure-variability-global
+  - label: step4d-measure-variability-global
     dimensions: []
 
 contracts:
