@@ -12,11 +12,15 @@
 
 subDirTemplate: "{label}/{detector}"
 
+includeConfigs:
+  # DAF_BUTLER_CONFIG_PATH is set here:
+  - ${DRP_PIPE_DIR}/bps/daf_butler_config_path/compose.yaml
+
 environment:
   # Default caching config
   # Each pipetask creates its own local cache folder,
   # $TMPDIR/butler-cache-dir-*
-  DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config:${DAF_BUTLER_CONFIG_PATH}
+  CACHING_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config
   DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
 
 cluster:
