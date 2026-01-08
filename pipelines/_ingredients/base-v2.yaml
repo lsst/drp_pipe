@@ -608,7 +608,7 @@ tasks:
   generateEphemerides:
     class: lsst.pipe.tasks.generateEphemerides.GenerateEphemeridesTask
     config:
-      connections.visitSummaries: visit_summary
+      connections.visitTable: preliminary_visit_table
 subsets:
   step1a-single-visit-detectors:
     subset:
