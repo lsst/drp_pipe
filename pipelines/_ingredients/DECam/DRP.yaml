@@ -9,7 +9,6 @@ instrument: lsst.obs.decam.DarkEnergyCamera
 imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
     exclude:
-      - skyCorr
       - fgcm
       - gbdesAstrometricFit
       - consolidateSsTables
@@ -118,6 +117,15 @@ tasks:
     class: lsst.jointcal.JointcalTask
     config:
       connections.inputSourceTableVisit: preSourceTable_visit
+  skyCorr:
+    class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
+    config:
+      bgModel1.xSize: 122.88
+      bgModel1.ySize: 122.88
+      bgModel1.pixelSize: 0.015
+      bgModel2.xSize: 3.84
+      bgModel2.ySize: 3.84
+      bgModel2.pixelSize: 0.015
 subsets:
   step0:
     subset:
