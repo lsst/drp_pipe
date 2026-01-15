@@ -4,7 +4,16 @@ imports:
   - location: $SOURCE_INJECTION_DIR/pipelines/match_injected_tract_catalog.yaml
   - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddDiffMatchedInjectedCore.yaml
 tasks:
-  compare_object_to_injected:
+  consolidateInjectedCatalogs:
+    class: lsst.source.injection.utils.ConsolidateInjectedCatalogsTask
+    config:
+      connections.input_catalogs: '{injected_prefix}deepCoadd_catalog'
+      connections.output_catalog: '{injected_prefix}deepCoadd_catalog_tract'
+  matchObjectToInjected:
+    class: lsst.pipe.tasks.match_tract_catalog.MatchTractCatalogTask
+    config:
+      connections.name_input_cat_ref: injected_deepCoadd_catalog_tract
+  compareObjectToInjected:
     class: lsst.pipe.tasks.diff_matched_tract_catalog.DiffMatchedTractCatalogTask
     config:
       connections.name_input_cat_ref: injected_deepCoadd_catalog_tract

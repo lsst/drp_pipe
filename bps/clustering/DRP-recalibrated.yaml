@@ -11,14 +11,14 @@
 clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
 cluster:
   visit_detector:
-    pipetasks: isr,inject_exposure,calibrateImage,inject_visit,transformPreSourceTable
+    pipetasks: isr,injectExposure,calibrateImage,injectVisit,transformPreSourceTable
     dimensions: visit,detector
     equalDimensions: visit:exposure
   makeWarpTract:
     pipetasks: makeDirectWarp,makePsfMatchedWarp
     dimensions: tract,visit
   coadd:
-    pipetasks: assembleCoadd,assembleCellCoadd,inject_coadd,templateGen,detection
+    pipetasks: assembleCoadd,assembleCellCoadd,injectCoadd,templateGen,detection
     dimensions: tract,patch,band
 
   objectTable:
