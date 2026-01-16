@@ -609,6 +609,44 @@ tasks:
     class: lsst.pipe.tasks.generateEphemerides.GenerateEphemeridesTask
     config:
       connections.visitTable: preliminary_visit_table
+  # Assembling pretty coadds would normally happen in stage 3,
+  # but SkyFrames will not be ready until stage4 for DP2 processing
+  # TODO DM-53870
+  makePrettyDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+    config:
+      # if we are running in step 4a, visit_images are available
+      connections.calexp_list: visit_image
+      connections.visit_summary: visit_summary
+      connections.warp: pretty_direct_warp
+      connections.masked_fraction_warp: pretty_direct_warp_masked_fraction
+      idGenerator.release_id: parameters.release_id
+      doApplySkyCorr: true
+  makePrettyPsfMatchedWarp:
+    class: lsst.drp.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
+    config:
+      connections.direct_warp: pretty_direct_warp
+      connections.psf_matched_warp: pretty_psf_matched_warp
+  assemblePrettyCoadd:
+    class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
+    config:
+      connections.inputWarps: pretty_direct_warp
+      connections.psfMatchedWarps: pretty_psf_matched_warp
+      connections.selectedVisits: deep_coadd_visit_selection
+      connections.coaddExposure: pretty_coadd
+      connections.nImage: pretty_coadd_n_image
+      # These two connections are not used in this configuration
+      connections.inputMap: pretty_coadd_input_map
+      connections.templateCoadd: pretty_coadd_compare_template
+      doInputMap: false
+      doSelectVisits: true
+      doWriteArtifactMasks: false
+      assembleStaticSkyModel.doSelectVisits: true
+      doOnlineForMean: true
+      doPreserveContainedBySource: false
+      python: |
+        if "SPIKE" in config.badMaskPlanes:
+            config.badMaskPlanes.remove("SPIKE")
 subsets:
   step1a-single-visit-detectors:
     subset:
@@ -732,7 +770,6 @@ subsets:
       - analyzeRecalibratedStarAstrometricRefMatch
       - makeAnalysisRecalibratedStarPhotometricRefMatch
       - analyzeRecalibratedStarPhotometricRefMatch
-      - skyCorr
     description: |
       A step that runs visit-level multi-detector calibration tasks and then
       recalibrates the initial stars catalog and runs visit-level analysis on
@@ -874,6 +911,8 @@ subsets:
       - filterDiaSourcePostReliability
       - standardizeDiaSource
       - consolidateVisitDiaSource
+      # TODO DM-53870: move skyCorr back to stage2
+      - skyCorr
       - analyzeRecalibratedStarObjectMatch
       - analyzeSource
       - makeAnalysisSourceAstrometricRefMatch
@@ -903,6 +942,11 @@ subsets:
       - associateAnalysisSource
       - analyzeSourceAssociation
       - analyzeDiaSourceTableTract
+      # TODO DM-53870 move makePrettyDirectWarp..makeBinnedPrettyNImage
+      # to stage3-coadd
+      - makePrettyDirectWarp
+      - makePrettyPsfMatchedWarp
+      - assemblePrettyCoadd
 
   step4d-measure-variability-global:
     subset:
@@ -962,7 +1006,6 @@ subsets:
     - analyzeRecalibratedStarAstrometricRefMatch
     - makeAnalysisRecalibratedStarPhotometricRefMatch
     - analyzeRecalibratedStarPhotometricRefMatch
-    - skyCorr
     # 2e
     - analyzeRecalibratedStarAssociation
     - fitStellarMotion
@@ -1039,6 +1082,7 @@ subsets:
     - filterDiaSourcePostReliability
     - standardizeDiaSource
     - consolidateVisitDiaSource
+    - skyCorr
     - analyzeRecalibratedStarObjectMatch
     - analyzeSource
     - makeAnalysisSourceAstrometricRefMatch
@@ -1060,6 +1104,9 @@ subsets:
     - associateAnalysisSource
     - analyzeSourceAssociation
     - analyzeDiaSourceTableTract
+    - makePrettyDirectWarp
+    - makePrettyPsfMatchedWarp
+    - assemblePrettyCoadd
     # 4d
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot
