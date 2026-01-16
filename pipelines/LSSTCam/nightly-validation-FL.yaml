@@ -13,4 +13,3 @@ imports:
       - assembleCellCoadd
       - detectCoaddPeaks
       - stage4-measure-variability
-      - skyCorrExperimental

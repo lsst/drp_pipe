@@ -31,6 +31,10 @@ imports:
       - analyzeSourceAssociation
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
+      - skyCorr
+      - makePrettyDirectWarp
+      - makePrettyPsfMatchedWarp
+      - assemblePrettyCoadd
       # Remove Solar System ephemerides loading, which was added after FL
       - generateEphemerides
       # Remove object table generation
@@ -114,7 +118,7 @@ tasks:
     class: lsst.pipe.tasks.drpAssociationPipe.DrpAssociationPipeTask
     config:
       connections.finalVisitSummaryRefs: preliminary_visit_summary
-  skyCorr:
+  skyCorrExperimental:
     class: lsst.pipe.tasks.skyCorrection.SkyCorrectionTask
     config:
       maskObjects.detection.isotropicGrow: false
@@ -139,13 +143,13 @@ tasks:
 subsets:
   step2d-recalibrate-visits:
     subset:
-      - skyCorr
+      - skyCorrExperimental
       - fitVisitBackground
     description: >
       A step that runs visit-level per-visit background estimation
   stage2-recalibrate:
     subset:
-      - skyCorr
+      - skyCorrExperimental
       - fitVisitBackground
     description: >
       A one step stage
