@@ -62,6 +62,11 @@ tasks:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     config:
       useButlerCamera: True
+      # The astrometry overrides below assume that butler visit regions have
+      # been updated after a round of processing, and as a result are *not*
+      # appropriate for nightly validation or quickLook pipelines.
+      astrometry.matcher.maxOffsetPix: 800
+      astrometry_ref_loader.pixelMargin: 800
   standardizeDiaSource:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
