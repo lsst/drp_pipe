@@ -642,6 +642,7 @@ tasks:
       doSelectVisits: true
       doWriteArtifactMasks: false
       assembleStaticSkyModel.doSelectVisits: true
+      doNImage: true
       doOnlineForMean: true
       doPreserveContainedBySource: false
       python: |
@@ -947,6 +948,10 @@ subsets:
       - makePrettyDirectWarp
       - makePrettyPsfMatchedWarp
       - assemblePrettyCoadd
+      - makeBinnedPrettyCoaddImage
+      - makeWholeTractPrettyCoaddImage
+      - makeWholeTractPrettyNImage
+      - makeBinnedPrettyNImage
 
   step4d-measure-variability-global:
     subset:
@@ -1107,6 +1112,10 @@ subsets:
     - makePrettyDirectWarp
     - makePrettyPsfMatchedWarp
     - assemblePrettyCoadd
+    - makeBinnedPrettyCoaddImage
+    - makeWholeTractPrettyCoaddImage
+    - makeWholeTractPrettyNImage
+    - makeBinnedPrettyNImage
     # 4d
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot
