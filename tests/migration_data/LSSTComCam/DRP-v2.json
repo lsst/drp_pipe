@@ -122,6 +122,7 @@
     "preliminary_visit_summary_schema": "visitSummary_schema",
     "single_visit_star": "preSourceTable_visit",
     "preliminary_visit_summary": "visitSummary",
+    "visit_geometry": "visit_geometry",
     "skyMap": "skyMap",
     "isolated_star": "isolated_star_presources",
     "isolated_star_association": "isolated_star_presource_associations",
