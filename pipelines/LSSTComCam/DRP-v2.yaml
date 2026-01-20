@@ -9,6 +9,13 @@ imports:
       - analysis-visit-source
       - step2c-recalibrate-healpix
       - skyCorr
+      - makePrettyDirectWarp
+      - makePrettyPsfMatchedWarp
+      - assemblePrettyCoadd
+      - makeBinnedPrettyCoaddImage
+      - makeWholeTractPrettyCoaddImage
+      - makeBinnedPrettyNImage
+      - makeWholeTractPrettyNImage
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
