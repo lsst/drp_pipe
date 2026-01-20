@@ -35,6 +35,10 @@ imports:
       - makePrettyDirectWarp
       - makePrettyPsfMatchedWarp
       - assemblePrettyCoadd
+      - makeBinnedPrettyCoaddImage
+      - makeWholeTractPrettyCoaddImage
+      - makeWholeTractPrettyNImage
+      - makeBinnedPrettyNImage
       # Remove Solar System ephemerides loading, which was added after FL
       - generateEphemerides
       # Remove object table generation

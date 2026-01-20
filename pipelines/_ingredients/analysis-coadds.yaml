@@ -104,6 +104,23 @@ tasks:
     config:
       connections.data: deep_coadd_bin
       connections.outputName: deep
+  makeBinnedPrettyCoaddImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: pretty_coadd
+      connections.binnedCoadd: pretty_coadd_bin
+      binFactor: 16
+      doBinInnerBBox: True
+  makeWholeTractPrettyCoaddImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: pretty_coadd_bin
+      connections.outputName: pretty
+      atools.coaddImage: WholeTractImageTool
+      atools.clippedMask: WholeTractClippedMaskTool
+      atools.coaddImagePostageStamp: WholeTractPostageStampTool
+      python: |
+        from lsst.analysis.tools.atools import *
   makeBinnedTemplateNImage:
     class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
     config:
@@ -124,6 +141,23 @@ tasks:
     config:
       connections.data: "deep_coadd_n_image_bin"
       connections.outputName: "deep"
+  makeBinnedPrettyNImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: pretty_coadd_n_image
+      connections.binnedCoadd: pretty_coadd_n_image_bin
+      coaddStorageClass: ImageU
+      binFactor: 16
+      doBinInnerBBox: true
+  makeWholeTractPrettyNImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: pretty_coadd_n_image_bin
+      connections.outputName: pretty
+      dataStorageClass: ImageU
+      atools.nImage: WholeTractNImageTool
+      python: |
+        from lsst.analysis.tools.atools import *
   plotPropertyMapSurvey:
     class: lsst.analysis.tools.tasks.SurveyWidePropertyMapAnalysisTask
   validateObjectTableCore:

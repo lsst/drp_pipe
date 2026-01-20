@@ -12,6 +12,10 @@ imports:
       - makePrettyDirectWarp
       - makePrettyPsfMatchedWarp
       - assemblePrettyCoadd
+      - makeBinnedPrettyCoaddImage
+      - makeWholeTractPrettyCoaddImage
+      - makeBinnedPrettyNImage
+      - makeWholeTractPrettyNImage
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask
