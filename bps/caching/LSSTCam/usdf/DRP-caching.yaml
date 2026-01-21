@@ -9,6 +9,9 @@
 # (with no outer indentation) to your BPS config file.  This is meant
 # to be used with the clustering definintions in
 # ${DRP_PIPE_DIR}/bps/clustering/LSSTCam
+#
+# WARNING: All other environment variables will be removed for the
+# step1detector cluster, if you include this config yaml.
 
 subDirTemplate: "{label}/{detector}"
 
@@ -31,3 +34,8 @@ cluster:
     environment:
       DAF_BUTLER_CACHE_EXPIRATION_MODE: size=1_000_000_000_000
       DAF_BUTLER_CACHE_DIRECTORY: /lscratch/${USER}/step1_cache
+      # step1detector section undoes all global environment settings for caching,
+      # so repeat relevant global setting
+      CACHING_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/config
+      # and contents of bps/daf_butler_config_path/compose.yaml
+      DAF_BUTLER_CONFIG_PATH: "{COMPRESSION_CONFIG_PATH}:{CACHING_CONFIG_PATH}:${DAF_BUTLER_CONFIG_PATH}"
