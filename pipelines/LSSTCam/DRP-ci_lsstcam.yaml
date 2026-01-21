@@ -10,6 +10,13 @@ imports:
       - fgcmBuildFromIsolatedStar
       - fgcmFitCycle
       - fgcmOutputProducts
+      - makePrettyDirectWarp
+      - makePrettyPsfMatchedWarp
+      - assemblePrettyCoadd
+      - makeBinnedPrettyCoaddImage
+      - makeWholeTractPrettyCoaddImage
+      - makeBinnedPrettyNImage
+      - makeWholeTractPrettyNImage
 tasks:
   # TODO DM-53523: This config override should be removed when the
   # correct calibrations are added to the testdata packages.
