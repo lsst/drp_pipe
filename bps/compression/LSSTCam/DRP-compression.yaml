@@ -1,0 +1,14 @@
+# Recommended configs for compression for LSSTCam DRP
+#
+# Use it by adding
+#
+#  includeConfigs:
+#    - ${DRP_PIPE_DIR}/bps/compression/LSSTCam/DRP-compression.yaml
+#
+# (with no outer indentation) to your BPS config file.
+#
+# Including this file is incompatible with including any other caching or
+# compression config yamls that set DAF_BUTLER_CONFIG_PATH (TODO DM-53875)
+
+environment:
+  DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/compression/LSSTCam/DRP-config:${DAF_BUTLER_CONFIG_PATH}
