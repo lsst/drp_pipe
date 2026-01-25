@@ -426,7 +426,7 @@ tasks:
   metadetectionShear:
     class: lsst.drp.tasks.metadetection_shear.MetadetectionShearTask
     config:
-      idGenerator.release_id: parameters.release_id
+      id_generator.release_id: parameters.release_id
   consolidateShearObject:
     class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
     config:
