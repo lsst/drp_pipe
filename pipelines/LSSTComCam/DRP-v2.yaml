@@ -16,6 +16,8 @@ imports:
       - makeWholeTractPrettyCoaddImage
       - makeBinnedPrettyNImage
       - makeWholeTractPrettyNImage
+      - metadetectionShear
+      - consolidateShearObject
 tasks:
   fgcmFitCycle:
     class: lsst.fgcmcal.fgcmFitCycle.FgcmFitCycleTask

@@ -56,6 +56,8 @@ imports:
       - consolidateObject
       - consolidateParentTable
       - splitPrimaryObject
+      - metadetectionShear
+      - consolidateShearObject
       - analyzeObjectTableCore
       - analyzeObjectParentTableCore
       - catalogMatchTract
