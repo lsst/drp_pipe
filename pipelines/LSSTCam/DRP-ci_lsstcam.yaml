@@ -37,6 +37,13 @@ tasks:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
       doApplySkyCorr: false
+  # This config override for shear_bands  may be removed if the
+  # task-default bands are available in the ci_lsstcam dataset.
+  metadetectionShear:
+    class: lsst.drp.tasks.metadetection_shear.MetadetectionShearTask
+    config:
+      python: |
+        config.metadetect.shear_bands = ["r", "i"]
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
