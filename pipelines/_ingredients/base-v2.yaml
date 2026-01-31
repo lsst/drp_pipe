@@ -423,6 +423,17 @@ tasks:
     config:
       connections.inputCatalogs: object_patch
       connections.outputCatalog: object_all
+  metadetectionShear:
+    class: lsst.drp.tasks.metadetection_shear.MetadetectionShearTask
+    config:
+      id_generator.release_id: parameters.release_id
+  consolidateShearObject:
+    class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
+    config:
+      connections.inputCatalogs: object_shear_patch
+      connections.outputCatalog: object_shear_all
+      python: |
+        del config.actions.extendedness
   splitPrimaryObject:
     class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
     config:
@@ -848,6 +859,8 @@ subsets:
       - consolidateObject
       - consolidateParentTable
       - splitPrimaryObject
+      - metadetectionShear
+      - consolidateShearObject
       - analyzeObjectTableCore
       - analyzeObjectParentTableCore
       - catalogMatchTract
@@ -1046,6 +1059,8 @@ subsets:
     - consolidateObject
     - consolidateParentTable
     - splitPrimaryObject
+    - metadetectionShear
+    - consolidateShearObject
     - analyzeObjectTableCore
     - analyzeObjectParentTableCore
     - catalogMatchTract

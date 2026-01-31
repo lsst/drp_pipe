@@ -12,4 +12,6 @@ imports:
       - consolidateSingleVisitStar
       - assembleCellCoadd
       - detectCoaddPeaks
+      - metadetectionShear
+      - consolidateShearObject
       - stage4-measure-variability
