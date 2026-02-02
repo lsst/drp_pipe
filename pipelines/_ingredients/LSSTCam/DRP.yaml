@@ -5,7 +5,11 @@ imports:
     labeledSubsetModifyMode: EDIT
     exclude:
       - analysis-visit-initial
-      - analysis-visit-recalibrated
+      # We no longer exclude all the tasks in analysis-visit-recalibrated, but
+      # following three are still not needed.
+      - analyzeRecalibratedStar
+      - makeAnalysisRecalibratedStarPhotometricRefMatch
+      - analyzeRecalibratedStarPhotometricRefMatch
       - analysis-visit-source
       - step2b-recalibrate-tracts
 parameters:
@@ -89,3 +93,12 @@ tasks:
       doUseSchema: True
       schemaFile: parameters.schemaFile
       tableName: DiaObject
+  analyzeRecalibratedStarAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      atools: None
+      atools.astromDiffMetrics: TargetRefCatDeltaMetrics
+      atools.astromDiffMetrics.applyContext: VisitContext
+      python: |
+        from lsst.analysis.tools.atools import *
+        from lsst.analysis.tools.contexts import VisitContext
