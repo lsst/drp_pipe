@@ -32,10 +32,11 @@ tasks:
     config:
       numberOfNoiseRealizations: 1
   selectTemplateCoaddVisits:
-    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
       connections.visitSummaries: visit_summary
       connections.goodVisits: template_coadd_visit_selection
+      nVisitsMin: 12
       maxPsfFwhm: 1.4
       python: |
         config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.75}
