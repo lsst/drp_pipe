@@ -63,7 +63,7 @@ tasks:
       applyAstrometricCorrections: false
   # Be a little more permissive on number of visits allowed into coadds
   selectTemplateCoaddVisits:
-    class: lsst.pipe.tasks.selectImages.BestSeeingSelectVisitsTask
+    class: lsst.pipe.tasks.selectImages.BestSeeingQuantileSelectVisitsTask
     config:
       python: |
         config.visitSummaryMinValues = {'effTimeZeroPointScale': 0.5}
