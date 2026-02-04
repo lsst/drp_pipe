@@ -9,122 +9,169 @@
 # (with no outer indentation) to your BPS config file.
 
 pipetask:
-  # 95th percentile memory usage from w_2025_41 DP2 Pilot DRP
+  # Higher of 95th percentile memory usage seen in
+  # w_2025_45 and w_2025_49 DP2 Pilot DRPs
   # Values are measured per cluster not per-task
+  analyzeDiaSourceTableTract:
+    requestMemory: 5724
   analyzeObjectTableCore:
-    requestMemory: 4655
+    requestMemory: 6117
   analyzeObjectTableSurveyCore:
-    requestMemory: 63124
+    requestMemory: 103905
   analyzeRecalibratedStarAssociation:
-    requestMemory: 31387
+    requestMemory: 60000  # from 214204. Let it retry 2x.
   analyzeRecalibratedStarObjectMatch:
-    requestMemory: 2475
+    requestMemory: 6506
   analyzeSingleVisitStarAssociation:
-    requestMemory: 37984
+    requestMemory: 60000 # from 228948. Let it retry 2x.
   analyzeSourceAssociation:
-    requestMemory: 49153
+    requestMemory: 120000 # quarter node from 317839
   assembleCellCoadd:
-    requestMemory: 7000
+    requestMemory: 5087
   assembleDeepCoadd:
-    requestMemory: 7000
+    requestMemory: 5087
   assembleTemplateCoadd:
-    requestMemory: 7000
+    requestMemory: 5087
   associateAnalysisSource:
-    requestMemory: 25270
+    requestMemory: 80769
+  associateDiaSource:
+    requestMemory: 2872
   associateIsolatedStar:
-    requestMemory: 13058
+    requestMemory: 34616
   buildTemplate:
-    requestMemory: 3104
+    requestMemory: 4449
+  calculateDiaObject:
+    requestMemory: 2874
   calibrateImage:
-    requestMemory: 4440
+    requestMemory: 4771
   catalogMatchTract:
-    requestMemory: 4538
+    requestMemory: 4774
   computeObjectEpochs:
-    requestMemory: 5104
+    requestMemory: 6581
   computeReliability:
-    requestMemory: 3637
+    requestMemory: 4449
+  consolidateDiaObject:
+    requestMemory: 3693
   consolidateDiaSource:
-    requestMemory: 2116
+    requestMemory: 18321
   consolidateHealSparsePropertyMaps:
-    requestMemory: 4587
+    requestMemory: 5194
   consolidateObject:
-    requestMemory: 8640
+    requestMemory: 10259
+  consolidateRecalibratedStar:
+    requestMemory: 2104
+  consolidateRefitPsfModelDetector:
+    requestMemory: 2127
   consolidateSingleVisitStar:
-    requestMemory: 2023
+    requestMemory: 2094
   consolidateSource:
-    requestMemory: 2414
+    requestMemory: 2868
+  consolidateSsTables:
+    requestMemory: 15428
   consolidateVisitSummary:
-    requestMemory: 2023
+    requestMemory: 2094
   deblendCoaddFootprints:
-    requestMemory: 6770
+    requestMemory: 9134
+  deconvolve:
+    requestMemory: 2835
   detectAndMeasureDiaSource:
-    requestMemory: 3582
+    requestMemory: 4449
   detectCoaddPeaks:
-    requestMemory: 9163
+    requestMemory: 5087
   fgcmOutputProducts:
-    requestMemory: 11067
+    requestMemory: 12642
   filterDiaSource:
-    requestMemory: 3637
+    requestMemory: 4449
   filterDiaSourcePostReliability:
-    requestMemory: 3637
+    requestMemory: 4449
   fitDeblendedObjectsExp:
-    requestMemory: 4235
+    requestMemory: 5603
   fitDeblendedObjectsSersic:
-    requestMemory: 4253
+    requestMemory: 5615
+  fitDeepCoaddPsfGaussians:
+    requestMemory: 2663
+  forcedPhotDiaObjectDetector:
+    requestMemory: 2432
+  forcedPhotObjectDetector:
+    requestMemory: 2459
   isr:
-    requestMemory: 4437
+    requestMemory: 4762
   makeAnalysisRecalibratedStarAssociationWholeSkyPlot:
     requestMemory: 3677
   makeAnalysisSingleVisitStarAssociationWholeSkyPlot:
-    requestMemory: 3642
+    requestMemory: 3716
+  makeAnalysisSourceAssociationMetricTable:
+    requestMemory: 2435
   makeAnalysisSourceAssociationWholeSkyPlot:
-    requestMemory: 3645
+    requestMemory: 4643
+  makeBinnedCoaddImage:
+    requestMemory: 2663
+  makeBinnedDeepNImage:
+    requestMemory: 2663
+  makeBinnedTemplateNImage:
+    requestMemory: 2663
   makeDirectWarp:
-    requestMemory: 3366
+    requestMemory: 4031
   makeHealSparsePropertyMaps:
-    requestMemory: 7089
+    requestMemory: 33794
   makePsfMatchedWarp:
-    requestMemory: 3374
+    requestMemory: 4058
+  makeVisitDetectorTable:
+    requestMemory: 2144
+  makeWholeTractDeepNImage:
+    requestMemory: 2663
+  makeWholeTractImage:
+    requestMemory: 2663
+  makeWholeTractTemplateNImage:
+    requestMemory: 2663
   measureObjectForced:
     requestMemory: 2887
   measureObjectUnforced:
-    requestMemory: 2905
+    requestMemory: 2974
+  mergeObjectDetection:
+    requestMemory: 2663
+  mergeObjectMeasurement:
+    requestMemory: 2663
   objectTableCoreWholeSkyPlot:
     requestMemory: 4498
   photometricCatalogMatch:
     requestMemory: 4546
   plotPropertyMapSurvey:
-    requestMemory: 28627
+    requestMemory: 32727
   plotPropertyMapTract:
     requestMemory: 5008
   refitPsfModelDetector:
-    requestMemory: 4643
+    requestMemory: 9277
   reprocessVisitImage:
-    requestMemory: 3495
+    requestMemory: 6368
   rewriteObject:
-    requestMemory: 5104
+    requestMemory: 6581
   skyCorr:
-    requestMemory: 15784
+    requestMemory: 16475
   splitPrimaryObject:
-    requestMemory: 21172
+    requestMemory: 25232
   splitPrimaryObjectForcedSource:
-    requestMemory: 2153
+    requestMemory: 4312
   splitPrimarySource:
-    requestMemory: 4874
+    requestMemory: 5433
+  standardizeDiaObjectForcedSource:
+    requestMemory: 5479
   standardizeDiaSource:
-    requestMemory: 3637
+    requestMemory: 4449
   standardizeObject:
-    requestMemory: 5104
+    requestMemory: 6580
   standardizeObjectForcedSource:
-    requestMemory: 2008
+    requestMemory: 4601
+  standardizeRecalibratedStar:
+    requestMemory: 2198
   standardizeSingleVisitStar:
-    requestMemory: 4441
+    requestMemory: 5094
   standardizeSource:
-    requestMemory: 3596
+    requestMemory: 6587
   subtractImages:
-    requestMemory: 3306
+    requestMemory: 4449
   updateVisitSummary:
-    requestMemory: 2528
+    requestMemory: 4562
   fgcmBuildFromIsolatedStar:
     requestMemory: 128000
   fgcmFitCycle:
@@ -132,10 +179,10 @@ pipetask:
     requestCpus: 60
     extraRunQuantumOptions: "-j 1 -n 60"
   gbdesAstrometricFit:
-    requestMemory: 84900
+    requestMemory: 88165
     requestCpus: 10
     extraRunQuantumOptions: "-j 1 -n 10 --no-raise-on-partial-outputs"
   gbdesHealpix3AstrometricFit:
-    requestMemory: 84900
+    requestMemory: 88165
     requestCpus: 10
     extraRunQuantumOptions: "-j 1 -n 10 --no-raise-on-partial-outputs"
