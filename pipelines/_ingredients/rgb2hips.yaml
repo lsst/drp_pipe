@@ -31,6 +31,7 @@ tasks:
       luminanceConfig.midtone: 0.2
       colorConfig.maxChroma: 80
       colorConfig.saturation: 0.6
+      recenterNoise: 0.3
       cieWhitePoint: (0.28, 0.28)
       gamutMethod: mapping
   generateHighOrderHips:
