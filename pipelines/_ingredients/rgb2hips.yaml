@@ -1,0 +1,61 @@
+description: |
+  Create RGB images of patch level data and transform it to hips maps.
+
+parameters:
+  base_uri: None
+  color_ordering: None
+  file_extension: png
+  abs_max: 16500
+
+tasks:
+  prettyPictureStarFixer:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureStarFixerTask
+    config:
+      connections.inputCoadd: deep_coadd_predetection
+      python: |
+        config.brightnessThresh = 0.3*parameters.abs_max
+  prettyPictureTask:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      arrayType: float
+      connections.inputCoadds: pretty_picture_coadd_fixed_stars
+      imageRemappingConfig.absMax: parameters.abs_max
+      luminanceConfig.Q: 0.7
+      doPSFDeconcovlve: False
+      exposureBrackets: None
+      localContrastConfig.doLocalContrast: False
+      luminanceConfig.stretch: 600
+      luminanceConfig.max: 100
+      luminanceConfig.highlight: 0.91
+      luminanceConfig.shadow: 0
+      luminanceConfig.midtone: 0.2
+      colorConfig.maxChroma: 80
+      colorConfig.saturation: 0.6
+      recenterNoise: 0.3
+      cieWhitePoint: (0.28, 0.28)
+      gamutMethod: mapping
+  generateHighOrderHips:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      hips_base_uri: parameters.base_uri
+      color_ordering: parameters.color_ordering
+      file_extension: parameters.file_extension
+  generateLowOrderHips:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      hips_base_uri: parameters.base_uri
+      color_ordering: parameters.color_ordering
+      file_extension: parameters.file_extension
+  writeAllSkyHipsInfo:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      hips_base_uri: parameters.base_uri
+      color_ordering: parameters.color_ordering
+      bluest_band: u
+      file_extension: parameters.file_extension
+      python: |
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst-weekly-reporocessing"
+        config.properties.obs_title_template = "LSSTCom: weekly processing"
+        config.properties.obs_description_template = (
+          "Color visualization of coadded data from LSSTComCam with a hue-preserving stretch."
+        )
