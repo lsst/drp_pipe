@@ -188,7 +188,7 @@ COMMON_V2_OUTPUTS = {
     'direct_warp',
     'direct_warp_masked_fraction',
     'object_forced_measurement',
-    'deep_coadd_input_map',
+    'deep_coadd_cell_input_map',
     'object_unforced_measurement',
     'object_detection_merged',
     'deep_coadd_n_image',
