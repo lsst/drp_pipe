@@ -234,7 +234,7 @@ tasks:
       assembleStaticSkyModel.doSelectVisits: true
       doOnlineForMean: true
       python: |
-        config.doInputMap = not {parameters.use_cell_coadds}
+        config.doInputMap = not parameters.use_cell_coadds
   makeDeepCoaddInputSummaryTract:
     class: lsst.drp.tasks.make_coadd_input_summary.MakeCoaddInputSummaryTract
     config:
