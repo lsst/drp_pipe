@@ -97,12 +97,15 @@ tasks:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:
       connections.visit_summaries: preliminary_visit_summary
+      connections.input_maps: deep_coadd_input_map
+      connections.coadd_exposures: deep_coadd_predetection
   assembleDeepCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
       # Preliminary aggressive adjustment to accomodate FL cadence
       maxFractionEpochsHigh: 0.2
       doPreserveContainedBySource: false
+      doInputMap: true
   assembleTemplateCoadd:
     # we are hijacking this task to make a secondary coadd with asteroids
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
