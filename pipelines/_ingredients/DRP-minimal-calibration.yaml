@@ -58,13 +58,17 @@ tasks:
   assembleCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
-      doInputMap: true
       doSelectVisits: true
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
       connections.selectedVisits: deepCoaddVisits
       doOnlineForMean: true
-  assembleCellCoadd: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+      python: |
+        config.doInputMap = not parameters.use_cell_coadds
+  assembleCellCoadd:
+    class: lsst.drp.tasks.assemble_cell_coadd.AssembleCellCoaddTask
+    config:
+      do_input_map: parameters.use_cell_coadds
   healSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
   consolidateHealSparsePropertyMaps: lsst.pipe.tasks.healSparseMapping.ConsolidateHealSparsePropertyMapTask
   computeObjectEpochs: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask

@@ -342,6 +342,7 @@ class PipelineTestCase(unittest.TestCase):
         config["registry", "db"] = f"sqlite:///{tmpdir}/gen3.sqlite3"
         config = Butler.makeRepo(self.root, config)
         butler = Butler.from_config(config, **kwargs)
+        self.enterContext(butler)
         DatastoreMock.apply(butler)
         return butler
 
