@@ -34,3 +34,7 @@ tasks:
     class: lsst.analysis.tools.tasks.SourceObjectTableAnalysisTask
     config:
       applyAstrometricCorrections: false
+  photometricRefCatObjectTract:
+    class: lsst.analysis.tools.tasks.refCatObjectPhotometricAnalysis.RefCatObjectPhotometricAnalysisTask
+    config:
+      connections.outputName: "object_ref_match_photom"

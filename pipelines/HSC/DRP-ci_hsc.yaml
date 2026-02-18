@@ -53,6 +53,12 @@ tasks:
       bands: ["r", "i"]
       python: |
         from lsst.analysis.tools.atools import *
+  objectTableCoreRefCatMatchPhotomWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      bands: ["r", "i"]
+      python: |
+        from lsst.analysis.tools.atools import *
   objectParentTableCoreWholeSkyPlot:
     class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
     config:
