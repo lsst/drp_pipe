@@ -13,6 +13,7 @@ imports:
       - analysis-visit-source
       - step2b-recalibrate-tracts
 parameters:
+  release_id: 5
   use_cell_coadds: true
   schemaFile: "lsstcam.yaml"
 tasks:
@@ -20,6 +21,12 @@ tasks:
     class: lsst.ip.isr.IsrTaskLSST
     config:
       ampOffset.doApplyAmpOffset: true
+  makeInitialVisitDetectorTable:
+    class: lsst.pipe.tasks.postprocess.MakeCcdVisitTableTask
+    config:
+      connections.visitSummaryRefs: preliminary_visit_summary
+      connections.outputCatalog: preliminary_visit_detector_table
+      idGenerator.release_id: 0 # See note about the same change in calibrateImage.
   updateVisitSummary:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
@@ -72,6 +79,11 @@ tasks:
       # appropriate for nightly validation or quickLook pipelines.
       astrometry.matcher.maxOffsetPix: 800
       astrometry_ref_loader.pixelMargin: 800
+      # We accidentally did not set release_id=5 before running this task in
+      # the official DP2 production.  This is acceptable because it does not
+      # produce any public data products, but we need to reset release_id=0
+      # for reproducibility.
+      id_generator.release_id: 0
   standardizeDiaSource:
     class: lsst.ap.association.TransformDiaSourceCatalogTask
     config:
