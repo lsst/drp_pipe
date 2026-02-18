@@ -229,11 +229,12 @@ tasks:
       connections.nImage: deep_coadd_n_image
       connections.inputMap: deep_coadd_input_map
       connections.templateCoadd: deep_coadd_compare_template
-      doInputMap: true
       doSelectVisits: true
       doWriteArtifactMasks: true
       assembleStaticSkyModel.doSelectVisits: true
       doOnlineForMean: true
+      python: |
+        config.doInputMap = not parameters.use_cell_coadds
   makeDeepCoaddInputSummaryTract:
     class: lsst.drp.tasks.make_coadd_input_summary.MakeCoaddInputSummaryTract
     config:
@@ -251,6 +252,8 @@ tasks:
       connections.maskedFractionWarps: direct_warp_masked_fraction
       connections.visitSummaryList: visit_summary
       connections.multipleCellCoadd: deep_coadd_cell_predetection
+      connections.inputMap: deep_coadd_input_map
+      do_input_map: parameters.use_cell_coadds
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
     config:
@@ -279,8 +282,9 @@ tasks:
     class: lsst.pipe.tasks.healSparseMapping.HealSparsePropertyMapTask
     config:
       connections.input_maps: deep_coadd_input_map
-      connections.coadd_exposures: deep_coadd_predetection
       connections.visit_summaries: visit_summary
+      python: |
+        config.connections.coadd_exposures = "deep_coadd" if {parameters.use_cell_coadds} else "deep_coadd_predetection"
   computeObjectEpochs:
     class: lsst.drp.tasks.compute_object_epochs.ComputeObjectEpochsTask
     config:
