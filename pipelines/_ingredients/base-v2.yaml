@@ -18,11 +18,14 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-source.yaml
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-dia.yaml
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/rgb2hips.yaml
 
 parameters:
   release_id: 0
   sersic_init_table: object_exp_multiprofit
   use_cell_coadds: false
+  # must be overridden on command line
+  hips_uri: "" # BONUS IF YOU CAN FIGURE OUT HOW TO APPEND THE colection name to some usdf-specific default.
 
 tasks:
   # stage1-single-visit production tasks
@@ -659,6 +662,72 @@ tasks:
       python: |
         if "SPIKE" in config.badMaskPlanes:
             config.badMaskPlanes.remove("SPIKE")
+  fixStarsPrettyCoadd:  # TO DO RENAME
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureStarFixerTask
+    config:
+      connections.inputCoadd: pretty_coadd
+      connections.outputCoadd:  pretty_coadd_fixed_stars
+      python: |
+        config.brightnessThresh = 0.3*16500
+  # Tasks that MAY require a dataQuery to limit bands
+  makeRGBPicturePrettyCoaddGRI:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      # Task default is gri
+      connections.inputCoadds: pretty_coadd_fixed_stars
+      connections.outputRGB: pretty_coadd_rgb
+  makeHighOrderHipsGRIEPO:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      hips_base_uri: parameters.hips_uri + "/epo"
+      color_ordering: gri
+      file_extension: webp
+  makeLowOrderHipsGRIEPO:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      hips_base_uri: parameters.hips_uri + "/epo"
+      color_ordering: gri
+      file_extension: webp
+  writeAllSkyHipsInfoGRIEPO:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      hips_base_uri: parameters.hips_uri + "/epo"
+      color_ordering: gri
+      bluest_band: g
+      file_extension: webp
+      config.properties.creator_did_template: "ivo://org.rubinobs/lsst-weekly-reprocessing"
+      config.properties.obs_title_template: "LSSTCam"
+      config.properties.obs_description_template: "Color visualization of coadded data from LSSTCam with a hue-preserving stretch."
+  makeSingleBandPicturedsCoaddU: # NAME ME!
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
+        ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
+        config.channelConfig = {}
+        config.channelConfig["u"] = ChannelRGBConfig(r=1, g=1, b=1)
+  makeHighOrderHipsU:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      hips_base_uri: parameters.hips_uri
+      color_ordering: u
+      file_extension: png
+  makeLowOrderHipsU:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      hips_base_uri: parameters.hips_uri
+      color_ordering: u
+      file_extension: png
+  writeAllSkyHipsInfoU:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      hips_base_uri: parameters.hips_uri
+      color_ordering: u
+      bluest_band: u
+      file_extension: png
+      config.properties.creator_did_template: "ivo://org.rubinobs/lsst-weekly-reprocessing"
+      config.properties.obs_title_template: "deep_coadd u-band LSSTCam" # TODO need mandatory title ti distinguish runs.
+      config.properties.obs_description_template: "Single-band deep_coadd from LSSTCam"
 subsets:
   step1a-single-visit-detectors:
     subset:
