@@ -16,6 +16,8 @@ imports:
       - makeWholeTractPrettyCoaddImage
       - makeBinnedPrettyNImage
       - makeWholeTractPrettyNImage
+      - step4e-measure-variability-hips
+      - step3c-coadd-hips
       - metadetectionShear
       - consolidateShearObject
 tasks:
