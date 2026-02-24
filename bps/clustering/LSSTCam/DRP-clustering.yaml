@@ -33,17 +33,17 @@ cluster:
     partitionMaxClusters: 50000
   makeWarpTract:
     # shared with NV
-    pipetasks: makeDirectWarp,makePsfMatchedWarp
+    pipetasks: makeDirectWarp,makePsfMatchedWarp,makePrettyDirectWarp,makePrettyPsfMatchedWarp
     dimensions: tract,visit
   coadd:
     # shared with NV
     pipetasks: selectDeepCoaddVisits,assembleDeepCoadd,assembleCellCoadd,detectCoaddPeaks,selectTemplateCoaddVisits,assembleTemplateCoadd
     dimensions: tract,patch,band
   make_analysis_images:
-    pipetasks: makeBinnedTemplateNImage,makeBinnedDeepNImage,makeBinnedCoaddImage
+    pipetasks: makeBinnedTemplateNImage,makeBinnedDeepNImage,makeBinnedCoaddImage,makeBinnedPrettyNImage,makeBinnedPrettyCoaddImage
     dimensions: tract,band
   make_tract_analysis_images:
-    pipetasks: makeWholeTractTemplateNImage,makeWholeTractDeepNImage,makeWholeTractImage
+    pipetasks: makeWholeTractTemplateNImage,makeWholeTractDeepNImage,makeWholeTractImage,makeWholeTractPrettyCoaddImage,makeWholeTractPrettyNImage
     dimensions: tract,band
   patch_postprocess:
     pipetasks: rewriteObject,computeObjectEpochs,standardizeObject
