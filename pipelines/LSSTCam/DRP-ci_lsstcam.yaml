@@ -17,6 +17,7 @@ imports:
       - makeWholeTractPrettyCoaddImage
       - makeBinnedPrettyNImage
       - makeWholeTractPrettyNImage
+      - step4e-measure-variability-hips
 tasks:
   # TODO DM-53523: This config override should be removed when the
   # correct calibrations are added to the testdata packages.
