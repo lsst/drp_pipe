@@ -1,0 +1,129 @@
+datastore:
+  formatters:
+    preliminary_visit_image:
+      formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+      parameters:
+        recipe: lossy16
+    visit_image:
+      formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+      parameters:
+        recipe: lossy16
+    deep_coadd:
+      formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+      parameters:
+        recipe: lossy16
+    template_coadd:
+      formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+      parameters:
+        recipe: lossy16
+  cached:
+    # Explicit location of a cache directory root that can be shared
+    # between multiple Butler instantiations. Without this the Butler
+    # will use a new temporary location each time.
+    # Instantiating a Butler from another Butler could propagate temporary
+    # location. This can be left out or null used
+    # to indicate a temporary directory.
+    root: null
+    expiry:
+      # Expiry mode and associated threshold.
+      # Options are:
+      # - null (no expiry)
+      # - disabled (no caching)
+      # - files (threshold is number of files)
+      # - datasets (threshold is number of datasets)
+      # - size (threshold is size in bytes)
+      # - age (threshold is oldest file in seconds)
+      # Default for everyone is to limit the cache size to 4 datasets.
+      mode: size
+      threshold: 40000000000
+    # Default cache value. This will be the default decision if no specific
+    # match is found in the "cacheable" section later on.
+    default: false
+
+    # For the dataset types to target for caching, we consider the
+    # pipetasks/clusters that have the largest numbers of butler put
+    # operations.
+    # For per-pipetask cache areas, caching is useful when
+    #  * the input dataset types have dataset dimensions along
+    #    the clustered dimensions,
+    #  * the input dataset types have dimensions that can be transformed
+    #    to clustered dimensions, e.g., detector -> patch
+    #  * output datasets are passed directly to a downstream pipetask
+    #    in the same cluster
+    # Caching of dataset types that only have dimensions that overlap the
+    # partition dimension of a cluster isn't needed.
+    # Use a dict over list to simplify merging logic.
+    cacheable:
+      # Disable generic storage classes
+      Exposure: false
+      ExposureF: false
+
+      # skymap
+      skyMap: true
+
+      # step1detector (isr, calibrateImage, standardizeSingleVisitStar, ...)
+      bias: true
+      dark: true
+      flat: true
+      bfk: true
+      crosstalk: true
+      post_isr_image: true
+      single_visit_star_unstandardized: true
+
+      # step2c_refitpsf (refitPsfModelDetector)
+      single_visit_star_footprints: true
+      isolated_star: true
+      isolated_star_association: true
+
+      # step2c_visits (recalibrateSingleVisitStar, standardizeRecalibratedStar)
+      # single_visit_star_footprints already added above
+      recalibrated_star_unstandardized: true
+
+      # step2c_visit_summary (consolidateRefitPsfModelDetector, updateVisitSummary)
+      refit_psf_models_detector: true
+      refit_psf_star_detector: true
+      refit_psf_models: true
+      refit_psf_star: true
+
+      # makeWarpTract (makeDirectWarp, makePsfMatchedWarp)
+      preliminary_visit_image: true
+      direct_warp: true
+      preliminary_visit_summary: true
+      visit_summary: true
+
+      # coadd (assembleDeepCoadd, assembleTemplateCoadd, detectCoaddPeaks)
+      psf_matched_warp: true
+      deep_coadd_visit_selection: true
+      template_coadd_visit_selection: true
+      deep_coadd_predetection: true
+
+      # step4a_reprocess_standardize (reprocessVisitImage, standardizeSource)
+      preliminary_visit_image_background: true
+      source_unstandardized: true
+
+      # diffim (rewarpTemplate, subtractImages, detectAndMeasureDiaSource,
+      # filterDiaSource, computeReliability, standardizeDiaSource)
+      template_coadd: true
+      visit_image: true
+      template_detector: true
+      difference_image_predetection: true
+      template_matched: true
+      difference_image: true
+      dia_source_unfiltered: true
+      dia_source_unstandardized: true
+      pretrainedModelPackage: true
+      dia_source_reliability: true
+
+      # association (associateDiaSource, calculateDiaObject)
+      preloaded_DRP_SsObjects: true
+      dia_source_detector: true
+      dia_object_pre_calc: true
+      dia_source_patch: true
+
+      # step4b_forced_phot (forcedPhotObjectDetector)
+      object_patch: true
+      object_forced_source_unstandardized: true
+
+      # step4b_forced_phot_dia (forcedPhotDiaObjectDetector)
+      dia_object_patch: true
+      dia_object_forced_source_unstandardized: true
