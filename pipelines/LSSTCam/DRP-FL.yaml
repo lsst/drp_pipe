@@ -76,6 +76,9 @@ imports:
       - objectParentTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
+      - step4e-measure-variability-hips
+      - step3c-coadd-hips
+
 # If you add any config overrides that overlap with LSSTCam/DRP.yaml,
 # please create a pipelines/_ingredients/LSSTCam/DRP.yaml they both share
 tasks:

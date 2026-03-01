@@ -1,0 +1,324 @@
+description: |
+  Default HiPS to produce during routine DRP processing.
+
+parameters:
+  base_uri: ""
+  hips_title: ""
+  abs_max: 16500
+
+tasks:
+  # Pretty Coadd GRI for EPO and Portal
+  fixStarsPrettyCoadd:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureStarFixerTask
+    config:
+      connections.inputCoadd: pretty_coadd
+      connections.outputCoadd: pretty_coadd_fixed_stars
+      python: |
+        config.brightnessThresh = 0.3*parameters.abs_max
+  makeRGBPicturePrettyCoaddGRI:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      # Task default is gri
+      connections.inputCoadds: pretty_coadd_fixed_stars
+      connections.outputRGB: pretty_coadd_gri_array
+      connections.outputRGBMask: pretty_coadd_gri_mask
+  makeHighOrderHipsEpoGRI:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      connections.input_images: pretty_coadd_gri_array
+      connections.output_hpx: pretty_coadd_gri_webp_hips8
+      color_ordering: gri
+      file_extension: webp
+      python: |
+        config.hips_base_uri = parameters.base_uri + "/epo"
+  makeLowOrderHipsEpoGRI:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      connections.input_hips: pretty_coadd_gri_webp_hips8
+      color_ordering: gri
+      file_extension: webp
+      python: |
+        config.hips_base_uri = parameters.base_uri + "/epo"
+  writeAllSkyHipsInfoEpoGRI:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      connections.input_task_label: makeLowOrderHipsEpoGRI
+      connections.input_hips: pretty_coadd_gri_webp_hips8
+      color_ordering: gri
+      bluest_band: g
+      file_extension: webp
+      python: |
+        config.hips_base_uri = parameters.base_uri + "/epo"
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
+        config.properties.obs_title_template = parameters.hips_title + " gri pretty_coadd"
+        config.properties.obs_description_template = "gri LSSTCam Pretty Coadd"
+  makeHighOrderHipsGRI:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      connections.input_images: pretty_coadd_gri_array
+      connections.output_hpx: pretty_coadd_gri_png_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: gri
+      file_extension: png
+  makeLowOrderHipsGRI:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      connections.input_hips: pretty_coadd_gri_png_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: gri
+      file_extension: png
+  writeAllSkyHipsInfoGRI:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      connections.input_task_label: makeLowOrderHipsGRI
+      connections.input_hips: pretty_coadd_gri_png_hips8
+      color_ordering: gri
+      bluest_band: g
+      file_extension: png
+      python: |
+        config.hips_base_uri = parameters.base_uri
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
+        config.properties.obs_title_template = parameters.hips_title + " gri pretty_coadd"
+        config.properties.obs_description_template = "gri LSSTCam Pretty Coadd"
+  # Single Band Deep Coadd HIPS
+  # Don't need the star fixer.
+  # u-band
+  makeSingleBandRGBCoaddU:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      connections.inputCoadds: deep_coadd
+      connections.outputRGB: deep_coadd_u_array
+      connections.outputRGBMask: deep_coadd_u_mask
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
+        ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
+        config.channelConfig = {}
+        config.channelConfig["u"] = ChannelRGBConfig(r=1, g=1, b=1)
+  makeHighOrderHipsU:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      connections.input_images: deep_coadd_u_array
+      connections.output_hpx: deep_coadd_u_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: u
+      file_extension: png
+  makeLowOrderHipsU:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      connections.input_hips: deep_coadd_u_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: u
+      file_extension: png
+  writeAllSkyHipsInfoU:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      connections.input_task_label: makeLowOrderHipsU
+      connections.input_hips: deep_coadd_u_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: u
+      bluest_band: u
+      file_extension: png
+      python: |
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
+        config.properties.obs_title_template = parameters.hips_title + " deep_coadd u LSSTCam"
+        config.properties.obs_description_template = "u-band deep_coadd LSSTCam"
+  # g-band
+  makeSingleBandRGBCoaddG:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      connections.inputCoadds: deep_coadd
+      connections.outputRGB: deep_coadd_g_array
+      connections.outputRGBMask: deep_coadd_g_mask
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
+        ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
+        config.channelConfig = {}
+        config.channelConfig["g"] = ChannelRGBConfig(r=1, g=1, b=1)
+  makeHighOrderHipsG:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      connections.input_images: deep_coadd_g_array
+      connections.output_hpx: deep_coadd_g_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: g
+      file_extension: png
+  makeLowOrderHipsG:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      connections.input_hips: deep_coadd_g_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: g
+      file_extension: png
+  writeAllSkyHipsInfoG:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      connections.input_task_label: makeLowOrderHipsG
+      connections.input_hips: deep_coadd_g_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: g
+      bluest_band: g
+      file_extension: png
+      python: |
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
+        config.properties.obs_title_template = parameters.hips_title + " deep_coadd g LSSTCam"
+        config.properties.obs_description_template = "g-band deep_coadd LSSTCam"
+  # r-band
+  makeSingleBandRGBCoaddR:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      connections.inputCoadds: deep_coadd
+      connections.outputRGB: deep_coadd_r_array
+      connections.outputRGBMask: deep_coadd_r_mask
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
+        ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
+        config.channelConfig = {}
+        config.channelConfig["r"] = ChannelRGBConfig(r=1, g=1, b=1)
+  makeHighOrderHipsR:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      connections.input_images: deep_coadd_r_array
+      connections.output_hpx: deep_coadd_r_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: r
+      file_extension: png
+  makeLowOrderHipsR:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      connections.input_hips: deep_coadd_r_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: r
+      file_extension: png
+  writeAllSkyHipsInfoR:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      connections.input_task_label: makeLowOrderHipsR
+      connections.input_hips: deep_coadd_r_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: r
+      bluest_band: r
+      file_extension: png
+      python: |
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
+        config.properties.obs_title_template = parameters.hips_title + " deep_coadd r LSSTCam"
+        config.properties.obs_description_template = "r-band deep_coadd LSSTCam"
+  # i-band
+  makeSingleBandRGBCoaddI:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      connections.inputCoadds: deep_coadd
+      connections.outputRGB: deep_coadd_i_array
+      connections.outputRGBMask: deep_coadd_i_mask
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
+        ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
+        config.channelConfig = {}
+        config.channelConfig["i"] = ChannelRGBConfig(r=1, g=1, b=1)
+  makeHighOrderHipsI:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      connections.input_images: deep_coadd_i_array
+      connections.output_hpx: deep_coadd_i_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: i
+      file_extension: png
+  makeLowOrderHipsI:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      connections.input_hips: deep_coadd_i_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: i
+      file_extension: png
+  writeAllSkyHipsInfoI:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      connections.input_task_label: makeLowOrderHipsI
+      connections.input_hips: deep_coadd_i_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: i
+      bluest_band: i
+      file_extension: png
+      python: |
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
+        config.properties.obs_title_template = parameters.hips_title + " deep_coadd i LSSTCam"
+        config.properties.obs_description_template = "i-band deep_coadd LSSTCam"
+  # z-band
+  makeSingleBandRGBCoaddZ:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      connections.inputCoadds: deep_coadd
+      connections.outputRGB: deep_coadd_z_array
+      connections.outputRGBMask: deep_coadd_z_mask
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
+        ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
+        config.channelConfig = {}
+        config.channelConfig["z"] = ChannelRGBConfig(r=1, g=1, b=1)
+  makeHighOrderHipsZ:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      connections.input_images: deep_coadd_z_array
+      connections.output_hpx: deep_coadd_z_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: z
+      file_extension: png
+  makeLowOrderHipsZ:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      connections.input_hips: deep_coadd_z_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: z
+      file_extension: png
+  writeAllSkyHipsInfoZ:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      connections.input_task_label: makeLowOrderHipsZ
+      connections.input_hips: deep_coadd_z_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: z
+      bluest_band: z
+      file_extension: png
+      python: |
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
+        config.properties.obs_title_template = parameters.hips_title + " deep_coadd z LSSTCam"
+        config.properties.obs_description_template = "z-band deep_coadd LSSTCam"
+  # y-band
+  makeSingleBandRGBCoaddY:
+    class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
+    config:
+      connections.inputCoadds: deep_coadd
+      connections.outputRGB: deep_coadd_y_array
+      connections.outputRGBMask: deep_coadd_y_mask
+      python: |
+        from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
+        ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
+        config.channelConfig = {}
+        config.channelConfig["y"] = ChannelRGBConfig(r=1, g=1, b=1)
+  makeHighOrderHipsY:
+    class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
+    config:
+      connections.input_images: deep_coadd_y_array
+      connections.output_hpx: deep_coadd_y_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: y
+      file_extension: png
+  makeLowOrderHipsY:
+    class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
+    config:
+      connections.input_hips: deep_coadd_y_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: y
+      file_extension: png
+  writeAllSkyHipsInfoY:
+    class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
+    config:
+      connections.input_task_label: makeLowOrderHipsY
+      connections.input_hips: deep_coadd_y_hips8
+      hips_base_uri: parameters.base_uri
+      color_ordering: y
+      bluest_band: y
+      file_extension: png
+      python: |
+        config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
+        config.properties.obs_title_template = parameters.hips_title + " deep_coadd y LSSTCam"
+        config.properties.obs_description_template = "y-band deep_coadd LSSTCam"
