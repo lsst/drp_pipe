@@ -4,6 +4,7 @@ description: |
 parameters:
   base_uri: ""
   hips_title: ""
+  abs_max: 16500
 
 tasks:
   # Pretty Coadd GRI for EPO and Portal
@@ -11,21 +12,21 @@ tasks:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureStarFixerTask
     config:
       connections.inputCoadd: pretty_coadd
-      connections.outputCoadd:  pretty_coadd_fixed_stars
+      connections.outputCoadd: pretty_coadd_fixed_stars
       python: |
-        config.brightnessThresh = 0.3*16500
+        config.brightnessThresh = 0.3*parameters.abs_max
   makeRGBPicturePrettyCoaddGRI:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
       # Task default is gri
       connections.inputCoadds: pretty_coadd_fixed_stars
-      connections.outputRGB: pretty_coadd_fixed_stars_gri
-      connections.outputRGBMask: pretty_coadd_fixed_stars_gri_mask
+      connections.outputRGB: pretty_coadd_gri
+      connections.outputRGBMask: pretty_coadd_gri_mask
   makeHighOrderHipsEpoGRI:
     class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
     config:
-      connections.input_images: pretty_coadd_fixed_stars_gri
-      connections.output_hpx: pretty_coadd_fixed_stars_webp_gri_hips8
+      connections.input_images: pretty_coadd_gri
+      connections.output_hpx: pretty_coadd_gri_webp_hips8
       color_ordering: gri
       file_extension: webp
       python: |
@@ -33,7 +34,7 @@ tasks:
   makeLowOrderHipsEpoGRI:
     class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
     config:
-      connections.input_hips: pretty_coadd_fixed_stars_webp_gri_hips8
+      connections.input_hips: pretty_coadd_gri_webp_hips8
       color_ordering: gri
       file_extension: webp
       python: |
@@ -42,27 +43,27 @@ tasks:
     class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
     config:
       connections.input_task_label: makeLowOrderHipsEpoGRI
-      connections.input_hips: pretty_coadd_fixed_stars_webp_gri_hips8
+      connections.input_hips: pretty_coadd_gri_webp_hips8
       color_ordering: gri
       bluest_band: g
       file_extension: webp
       python: |
         config.hips_base_uri = parameters.base_uri + "/epo"
         config.properties.creator_did_template = "ivo://org.rubinobs/lsst"
-        config.properties.obs_title_template = parameters.hips_title + " gri pretty_coadd" # Need mandatory title to distinguish runs.
+        config.properties.obs_title_template = parameters.hips_title + " gri pretty_coadd"
         config.properties.obs_description_template = "gri LSSTCam Pretty Coadd"
   makeHighOrderHipsGRI:
     class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
     config:
-      connections.input_images: pretty_coadd_fixed_stars_gri
-      connections.output_hpx: pretty_coadd_fixed_stars_png_gri_hips8
+      connections.input_images: pretty_coadd_gri
+      connections.output_hpx: pretty_coadd_gri_png_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: gri
       file_extension: png
   makeLowOrderHipsGRI:
     class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
     config:
-      connections.input_hips: pretty_coadd_fixed_stars_png_gri_hips8
+      connections.input_hips: pretty_coadd_gri_png_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: gri
       file_extension: png
@@ -70,7 +71,7 @@ tasks:
     class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
     config:
       connections.input_task_label: makeLowOrderHipsGRI
-      connections.input_hips: pretty_coadd_fixed_stars_png_gri_hips8
+      connections.input_hips: pretty_coadd_gri_png_hips8
       color_ordering: gri
       bluest_band: g
       file_extension: png
