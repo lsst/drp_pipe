@@ -87,8 +87,8 @@ tasks:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
       connections.inputCoadds: deep_coadd
-      connections.outputRGB: pretty_deep_coadd_u
-      connections.outputRGBMask: pretty_deep_coadd_u_mask
+      connections.outputRGB: deep_coadd_u
+      connections.outputRGBMask: deep_coadd_u_mask
       python: |
         from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
         ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
@@ -97,15 +97,15 @@ tasks:
   makeHighOrderHipsU:
     class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
     config:
-      connections.input_images: pretty_deep_coadd_u
-      connections.output_hpx: pretty_deep_coadd_u_hips8
+      connections.input_images: deep_coadd_u
+      connections.output_hpx: deep_coadd_u_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: u
       file_extension: png
   makeLowOrderHipsU:
     class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
     config:
-      connections.input_hips: pretty_deep_coadd_u_hips8
+      connections.input_hips: deep_coadd_u_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: u
       file_extension: png
@@ -113,7 +113,7 @@ tasks:
     class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
     config:
       connections.input_task_label: makeLowOrderHipsU
-      connections.input_hips: pretty_deep_coadd_u_hips8
+      connections.input_hips: deep_coadd_u_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: u
       bluest_band: u
@@ -127,8 +127,8 @@ tasks:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
       connections.inputCoadds: deep_coadd
-      connections.outputRGB: pretty_deep_coadd_g
-      connections.outputRGBMask: pretty_deep_coadd_g_mask
+      connections.outputRGB: deep_coadd_g
+      connections.outputRGBMask: deep_coadd_g_mask
       python: |
         from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
         ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
@@ -137,15 +137,15 @@ tasks:
   makeHighOrderHipsG:
     class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
     config:
-      connections.input_images: pretty_deep_coadd_g
-      connections.output_hpx: pretty_deep_coadd_g_hips8
+      connections.input_images: deep_coadd_g
+      connections.output_hpx: deep_coadd_g_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: g
       file_extension: png
   makeLowOrderHipsG:
     class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
     config:
-      connections.input_hips: pretty_deep_coadd_g_hips8
+      connections.input_hips: deep_coadd_g_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: g
       file_extension: png
@@ -153,7 +153,7 @@ tasks:
     class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
     config:
       connections.input_task_label: makeLowOrderHipsG
-      connections.input_hips: pretty_deep_coadd_g_hips8
+      connections.input_hips: deep_coadd_g_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: g
       bluest_band: g
@@ -167,8 +167,8 @@ tasks:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
       connections.inputCoadds: deep_coadd
-      connections.outputRGB: pretty_deep_coadd_r
-      connections.outputRGBMask: pretty_deep_coadd_r_mask
+      connections.outputRGB: deep_coadd_r
+      connections.outputRGBMask: deep_coadd_r_mask
       python: |
         from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
         ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
@@ -177,15 +177,15 @@ tasks:
   makeHighOrderHipsR:
     class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
     config:
-      connections.input_images: pretty_deep_coadd_r
-      connections.output_hpx: pretty_deep_coadd_r_hips8
+      connections.input_images: deep_coadd_r
+      connections.output_hpx: deep_coadd_r_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: r
       file_extension: png
   makeLowOrderHipsR:
     class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
     config:
-      connections.input_hips: pretty_deep_coadd_r_hips8
+      connections.input_hips: deep_coadd_r_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: r
       file_extension: png
@@ -193,7 +193,7 @@ tasks:
     class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
     config:
       connections.input_task_label: makeLowOrderHipsR
-      connections.input_hips: pretty_deep_coadd_r_hips8
+      connections.input_hips: deep_coadd_r_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: r
       bluest_band: r
@@ -207,8 +207,8 @@ tasks:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
       connections.inputCoadds: deep_coadd
-      connections.outputRGB: pretty_deep_coadd_i
-      connections.outputRGBMask: pretty_deep_coadd_i_mask
+      connections.outputRGB: deep_coadd_i
+      connections.outputRGBMask: deep_coadd_i_mask
       python: |
         from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
         ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
@@ -217,15 +217,15 @@ tasks:
   makeHighOrderHipsI:
     class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
     config:
-      connections.input_images: pretty_deep_coadd_i
-      connections.output_hpx: pretty_deep_coadd_i_hips8
+      connections.input_images: deep_coadd_i
+      connections.output_hpx: deep_coadd_i_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: i
       file_extension: png
   makeLowOrderHipsI:
     class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
     config:
-      connections.input_hips: pretty_deep_coadd_i_hips8
+      connections.input_hips: deep_coadd_i_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: i
       file_extension: png
@@ -233,7 +233,7 @@ tasks:
     class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
     config:
       connections.input_task_label: makeLowOrderHipsI
-      connections.input_hips: pretty_deep_coadd_i_hips8
+      connections.input_hips: deep_coadd_i_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: i
       bluest_band: i
@@ -247,8 +247,8 @@ tasks:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
       connections.inputCoadds: deep_coadd
-      connections.outputRGB: pretty_deep_coadd_z
-      connections.outputRGBMask: pretty_deep_coadd_z_mask
+      connections.outputRGB: deep_coadd_z
+      connections.outputRGBMask: deep_coadd_z_mask
       python: |
         from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
         ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
@@ -257,15 +257,15 @@ tasks:
   makeHighOrderHipsZ:
     class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
     config:
-      connections.input_images: pretty_deep_coadd_z
-      connections.output_hpx: pretty_deep_coadd_z_hips8
+      connections.input_images: deep_coadd_z
+      connections.output_hpx: deep_coadd_z_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: z
       file_extension: png
   makeLowOrderHipsZ:
     class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
     config:
-      connections.input_hips: pretty_deep_coadd_z_hips8
+      connections.input_hips: deep_coadd_z_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: z
       file_extension: png
@@ -273,7 +273,7 @@ tasks:
     class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
     config:
       connections.input_task_label: makeLowOrderHipsZ
-      connections.input_hips: pretty_deep_coadd_z_hips8
+      connections.input_hips: deep_coadd_z_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: z
       bluest_band: z
@@ -287,8 +287,8 @@ tasks:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
       connections.inputCoadds: deep_coadd
-      connections.outputRGB: pretty_deep_coadd_y
-      connections.outputRGBMask: pretty_deep_coadd_y_mask
+      connections.outputRGB: deep_coadd_y
+      connections.outputRGBMask: deep_coadd_y_mask
       python: |
         from lsst.pipe.tasks.prettyPictureMaker import PrettyPictureTask
         ChannelRGBConfig = PrettyPictureTask.ConfigClass.channelConfig.itemtype
@@ -297,15 +297,15 @@ tasks:
   makeHighOrderHipsY:
     class: lsst.pipe.tasks.rgb2hips.HighOrderHipsTask
     config:
-      connections.input_images: pretty_deep_coadd_y
-      connections.output_hpx: pretty_deep_coadd_y_hips8
+      connections.input_images: deep_coadd_y
+      connections.output_hpx: deep_coadd_y_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: y
       file_extension: png
   makeLowOrderHipsY:
     class: lsst.pipe.tasks.rgb2hips.LowOrderHipsTask
     config:
-      connections.input_hips: pretty_deep_coadd_y_hips8
+      connections.input_hips: deep_coadd_y_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: y
       file_extension: png
@@ -313,7 +313,7 @@ tasks:
     class: lsst.pipe.tasks.rgb2hips.AllSkyHipsTask
     config:
       connections.input_task_label: makeLowOrderHipsY
-      connections.input_hips: pretty_deep_coadd_y_hips8
+      connections.input_hips: deep_coadd_y_hips8
       hips_base_uri: parameters.base_uri
       color_ordering: y
       bluest_band: y
