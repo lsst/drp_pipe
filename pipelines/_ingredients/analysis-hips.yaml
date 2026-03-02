@@ -19,6 +19,7 @@ tasks:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
       # Task default is gri
+      file: $DRP_PIPE_DIR/config/prettyPicture.py
       connections.inputCoadds: pretty_coadd_fixed_stars
       connections.outputRGB: pretty_coadd_gri_array
       connections.outputRGBMask: pretty_coadd_gri_mask
@@ -86,6 +87,7 @@ tasks:
   makeSingleBandRGBCoaddU:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
+      file: $DRP_PIPE_DIR/config/prettyPicture.py
       connections.inputCoadds: deep_coadd
       connections.outputRGB: deep_coadd_u_array
       connections.outputRGBMask: deep_coadd_u_mask
@@ -126,6 +128,7 @@ tasks:
   makeSingleBandRGBCoaddG:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
+      file: $DRP_PIPE_DIR/config/prettyPicture.py
       connections.inputCoadds: deep_coadd
       connections.outputRGB: deep_coadd_g_array
       connections.outputRGBMask: deep_coadd_g_mask
@@ -166,6 +169,7 @@ tasks:
   makeSingleBandRGBCoaddR:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
+      file: $DRP_PIPE_DIR/config/prettyPicture.py
       connections.inputCoadds: deep_coadd
       connections.outputRGB: deep_coadd_r_array
       connections.outputRGBMask: deep_coadd_r_mask
@@ -206,6 +210,7 @@ tasks:
   makeSingleBandRGBCoaddI:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
+      file: $DRP_PIPE_DIR/config/prettyPicture.py
       connections.inputCoadds: deep_coadd
       connections.outputRGB: deep_coadd_i_array
       connections.outputRGBMask: deep_coadd_i_mask
@@ -246,6 +251,7 @@ tasks:
   makeSingleBandRGBCoaddZ:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
+      file: $DRP_PIPE_DIR/config/prettyPicture.py
       connections.inputCoadds: deep_coadd
       connections.outputRGB: deep_coadd_z_array
       connections.outputRGBMask: deep_coadd_z_mask
@@ -286,6 +292,7 @@ tasks:
   makeSingleBandRGBCoaddY:
     class: lsst.pipe.tasks.prettyPictureMaker.PrettyPictureTask
     config:
+      file: $DRP_PIPE_DIR/config/prettyPicture.py
       connections.inputCoadds: deep_coadd
       connections.outputRGB: deep_coadd_y_array
       connections.outputRGBMask: deep_coadd_y_mask
