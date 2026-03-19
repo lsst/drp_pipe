@@ -47,6 +47,7 @@ tasks:
       useButlerCamera: true
       do_adaptive_threshold_detection: true
       do_remeasure_star_background: false
+      doMaskDiffractionSpikes: false
       python: |
         config.star_measurement.plugins.names.add("base_FPPosition")
         config.star_measurement.plugins.names.add("ext_shapeHSM_HigherOrderMomentsSource")
