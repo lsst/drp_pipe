@@ -18,6 +18,7 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-source.yaml
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-dia.yaml
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-hips.yaml
 
 parameters:
   release_id: 0
@@ -915,6 +916,37 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
+  step3c-coadd-hips:
+    subset:
+      - makeSingleBandRGBCoaddU
+      - makeHighOrderHipsU
+      - makeLowOrderHipsU
+      - writeAllSkyHipsInfoU
+      - makeSingleBandRGBCoaddG
+      - makeHighOrderHipsG
+      - makeLowOrderHipsG
+      - writeAllSkyHipsInfoG
+      - makeSingleBandRGBCoaddR
+      - makeHighOrderHipsR
+      - makeLowOrderHipsR
+      - writeAllSkyHipsInfoR
+      - makeSingleBandRGBCoaddI
+      - makeHighOrderHipsI
+      - makeLowOrderHipsI
+      - writeAllSkyHipsInfoI
+      - makeSingleBandRGBCoaddZ
+      - makeHighOrderHipsZ
+      - makeLowOrderHipsZ
+      - writeAllSkyHipsInfoZ
+      - makeSingleBandRGBCoaddY
+      - makeHighOrderHipsY
+      - makeLowOrderHipsY
+      - writeAllSkyHipsInfoY
+    description: |
+      A step to generate final data product
+      single band HiPS maps for data release productions
+      that may be run after deep_coadds are available.
+
   step4a-measure-variability-visits:
     subset:
       - reprocessVisitImage
@@ -975,6 +1007,22 @@ subsets:
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
       - consolidateSsTables
+
+  step4e-measure-variability-hips:
+  # TODO DM-53870 merge this step with step3 hips.
+    subset:
+      - fixStarsPrettyCoadd
+      - makeRGBPicturePrettyCoaddGRI
+      - makeHighOrderHipsEpoGRI
+      - makeLowOrderHipsEpoGRI
+      - writeAllSkyHipsInfoEpoGRI
+      - makeHighOrderHipsGRI
+      - makeLowOrderHipsGRI
+      - writeAllSkyHipsInfoGRI
+    description: |
+      A step to generate final data product
+      multiband HiPS maps for data release productions
+      that may be run after pretty_coadds are available.
 
   # Subsets below are the checkpoints for humans, AKA stages.  These
   # unfortunately can't be declared in terms of other subsets yet; we have to
@@ -1092,6 +1140,32 @@ subsets:
     - plotPropertyMapSurvey
     - makeDeepCoaddInputSummary
     - makeTemplateCoaddInputSummary
+    # 3c
+    - makeSingleBandRGBCoaddU
+    - makeHighOrderHipsU
+    - makeLowOrderHipsU
+    - writeAllSkyHipsInfoU
+    - makeSingleBandRGBCoaddG
+    - makeHighOrderHipsG
+    - makeLowOrderHipsG
+    - writeAllSkyHipsInfoG
+    - makeSingleBandRGBCoaddR
+    - makeHighOrderHipsR
+    - makeLowOrderHipsR
+    - writeAllSkyHipsInfoR
+    - makeSingleBandRGBCoaddI
+    - makeHighOrderHipsI
+    - makeLowOrderHipsI
+    - writeAllSkyHipsInfoI
+    - makeSingleBandRGBCoaddZ
+    - makeHighOrderHipsZ
+    - makeLowOrderHipsZ
+    - writeAllSkyHipsInfoZ
+    - makeSingleBandRGBCoaddY
+    - makeHighOrderHipsY
+    - makeLowOrderHipsY
+    - writeAllSkyHipsInfoY
+
   stage4-measure-variability:
     # 4a:
     - reprocessVisitImage
@@ -1139,6 +1213,15 @@ subsets:
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot
     - consolidateSsTables
+    # 4e
+    - fixStarsPrettyCoadd
+    - makeRGBPicturePrettyCoaddGRI
+    - makeHighOrderHipsEpoGRI
+    - makeLowOrderHipsEpoGRI
+    - writeAllSkyHipsInfoEpoGRI
+    - makeHighOrderHipsGRI
+    - makeLowOrderHipsGRI
+    - writeAllSkyHipsInfoGRI
 
 steps:
   - label: step1a-single-visit-detectors
@@ -1165,6 +1248,8 @@ steps:
     dimensions: ["tract"]
   - label: step3b-coadd-global
     dimensions: []
+  - label: step3c-coadd-hips
+    dimensions: []
   - label: step4a-measure-variability-visits
     dimensions: ["visit"]
   - label: step4b-generate-ephemerides-global
@@ -1172,6 +1257,8 @@ steps:
   - label: step4c-measure-variability-tracts
     dimensions: ["tract"]
   - label: step4d-measure-variability-global
+    dimensions: []
+  - label: step4e-measure-variability-hips
     dimensions: []
 
 contracts:
