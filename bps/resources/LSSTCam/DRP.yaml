@@ -67,7 +67,7 @@ pipetask:
   consolidateSource:
     requestMemory: 2868
   consolidateSsTables:
-    requestMemory: 15428
+    requestMemory: 480000
   consolidateVisitSummary:
     requestMemory: 2094
   deblendCoaddFootprints:
