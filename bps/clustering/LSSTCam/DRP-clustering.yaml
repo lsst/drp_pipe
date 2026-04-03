@@ -77,3 +77,23 @@ cluster:
     dimensions: visit
     partitionDimensions: detector
     partitionMaxClusters: 50000
+  deconvolve_tract_band:
+    pipetasks: deconvolve
+    dimensions: tract,band
+    partitionDimensions: patch
+    partitionMaxClusters: 25000
+  measureObjectUnforced_tract_band:
+    pipetasks: measureObjectUnforced
+    dimensions: tract,band
+    partitionDimensions: patch
+    partitionMaxClusters: 25000
+  fitDeepCoaddPsfGaussians_tract_band:
+    pipetasks: fitDeepCoaddPsfGaussians
+    dimensions: tract,band
+    partitionDimensions: patch
+    partitionMaxClusters: 25000
+  measureObjectForced_tract_band:
+    pipetasks: measureObjectForced
+    dimensions: tract,band
+    partitionDimensions: patch
+    partitionMaxClusters: 25000
