@@ -19,3 +19,8 @@ formatters:
     formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
     parameters:
       recipe: lossy16
+  # TODO DM-54569: Remove when difference_image is no longer a final product.
+  difference_image:
+    formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
