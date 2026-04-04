@@ -1,3 +1,8 @@
+description: |
+    A specialized version of the pipeline to make images and hips
+    maps that runs on the r, g, r bands.
+
+
 imports:
   - $DRP_PIPE_DIR/pipelines/_ingredients/rgb2hips.yaml
 
