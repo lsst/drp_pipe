@@ -115,3 +115,11 @@ tasks:
       python: |
         from lsst.analysis.tools.atools import *
         from lsst.analysis.tools.contexts import VisitContext
+  makePrettyDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+    config:
+      select.excludeDetectors: [
+        0, 1, 2, 3, 4, 9, 10, 11, 18, 19, 20, 22, 23, 27, 28, 30, 31, 33, 64, 65, 67, 68, 71, 72, 75, 78,
+        110, 113, 116, 117, 120, 121, 123, 124, 155, 157, 158, 160, 161, 165, 166, 168, 169, 170, 177, 178,
+        179, 184, 185, 186, 187, 188
+      ]
