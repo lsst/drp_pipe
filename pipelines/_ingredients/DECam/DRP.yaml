@@ -34,6 +34,8 @@ tasks:
     config:
       connections.crosstalkSources: overscanRaw
       doCrosstalk: true
+      doAmpOffset: true
+      ampOffset.doApplyAmpOffset: true
   calibrateImage:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     # TODO: these should live in obs_decam, probably!
