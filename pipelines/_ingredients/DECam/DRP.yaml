@@ -44,9 +44,10 @@ tasks:
     class: lsst.drp.tasks.update_visit_summary.UpdateVisitSummaryTask
     config:
       photo_calib_provider: "tract"
-      background_provider: "input_summary"
+      background_provider: "replacement"
       connections.photoCalibName: "jointcal"
       connections.skyWcsName: "jointcal"
+      connections.background_overrides: "skyCorr"
   reprocessVisitImage:
     class: lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask
     config:
@@ -58,6 +59,7 @@ tasks:
       warper.warpingKernelName: lanczos5
       coaddPsf.warpingKernelName: lanczos5
       doSelectPreWarp: true
+      connections.background_apply_list: "skyCorr"
       python: |
         from lsst.pipe.tasks.selectImages import PsfWcsSelectImagesTask
         config.select.retarget(PsfWcsSelectImagesTask)
@@ -152,6 +154,7 @@ subsets:
     subset:
       - consolidatePreSourceTable
       - consolidateVisitSummary
+      - skyCorr
       - isolatedStarAssociation
     description: |
       Global tasks: This is a mix of visit-level and tract-level tasks that
