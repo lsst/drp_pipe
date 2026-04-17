@@ -413,6 +413,8 @@
     "object_coaddInputCount_SkyPlot": "objectTableCore_coaddInputCount_SkyPlot",
     "object_e1Diff_ScatterPlotWithTwoHists": "objectTableCore_e1Diff_ScatterPlotWithTwoHists",
     "object_e2Diff_ScatterPlotWithTwoHists": "objectTableCore_e2Diff_ScatterPlotWithTwoHists",
+    "object_exponentialSizeVsExponentialMag_ScatterPlotWithTwoHists": "objectTableCore_exponentialSizeVsExponentialMag_ScatterPlotWithTwoHists",
+    "object_exponentialSizeVsSersicMag_ScatterPlotWithTwoHists": "objectTableCore_exponentialSizeVsSersicMag_ScatterPlotWithTwoHists",
     "object_metrics": "objectTableCore_metrics",
     "object_psfCModelScatter_ScatterPlotWithTwoHists": "objectTableCore_psfCModelScatter_ScatterPlotWithTwoHists",
     "object_sersicIndexVsSersicMag_ScatterPlotWithTwoHists": "objectTableCore_sersicIndexVsSersicMag_ScatterPlotWithTwoHists",
