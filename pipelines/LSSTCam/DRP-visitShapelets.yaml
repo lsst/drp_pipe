@@ -1,0 +1,10 @@
+description: LSSTCam specialization of ComputePsfStarShapeletsTask
+instrument: lsst.obs.lsst.LsstCam
+
+tasks:
+  computePsfStarShapelets:
+    class: lsst.pipe.tasks.computePsfStarShapelets.ComputePsfStarShapeletsTask
+    config:
+      shapelet_order: 6
+  consolidatePsfStarShapelets:
+    class: lsst.pipe.tasks.computePsfStarShapelets.ConsolidatePsfStarShapeletsTask
