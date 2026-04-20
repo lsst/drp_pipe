@@ -44,3 +44,8 @@ tasks:
     config:
       python: |
         config.bands=['N540', 'N708']
+  consolidateObjectTable:
+    class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
+    config:
+      python: |
+        config.bands=['N540', 'N708']
