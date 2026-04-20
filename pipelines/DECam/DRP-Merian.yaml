@@ -48,4 +48,5 @@ tasks:
     class: lsst.pipe.tasks.postprocess.ConsolidateObjectTableTask
     config:
       python: |
-        config.bands=['N540', 'N708']
+        config.actions.extendedness.bands = ['N540', 'N708']
+        config.actions.extendedness.bands_combined = {}
