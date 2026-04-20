@@ -916,29 +916,36 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
-  step3c-coadd-hips:
+  step3c-coadd-gray-images:
     subset:
       - makeSingleBandRGBCoaddU
+      - makeSingleBandRGBCoaddG
+      - makeSingleBandRGBCoaddR
+      - makeSingleBandRGBCoaddI
+      - makeSingleBandRGBCoaddZ
+      - makeSingleBandRGBCoaddY
+    description: |
+      A step to generate gray scale stretched images for data release
+      productions that may be run after deep_coadds are available.
+
+
+  step3d-coadd-hips:
+    subset:
       - makeHighOrderHipsU
       - makeLowOrderHipsU
       - writeAllSkyHipsInfoU
-      - makeSingleBandRGBCoaddG
       - makeHighOrderHipsG
       - makeLowOrderHipsG
       - writeAllSkyHipsInfoG
-      - makeSingleBandRGBCoaddR
       - makeHighOrderHipsR
       - makeLowOrderHipsR
       - writeAllSkyHipsInfoR
-      - makeSingleBandRGBCoaddI
       - makeHighOrderHipsI
       - makeLowOrderHipsI
       - writeAllSkyHipsInfoI
-      - makeSingleBandRGBCoaddZ
       - makeHighOrderHipsZ
       - makeLowOrderHipsZ
       - writeAllSkyHipsInfoZ
-      - makeSingleBandRGBCoaddY
       - makeHighOrderHipsY
       - makeLowOrderHipsY
       - writeAllSkyHipsInfoY
@@ -1008,12 +1015,19 @@ subsets:
       - makeAnalysisSourceAssociationWholeSkyPlot
       - consolidateSsTables
 
-  step4e-measure-variability-hips:
+  step4e-measure-variability-rgb:
   # TODO DM-53870 merge this step with step3 hips.
     subset:
       - fixBackgroundPrettyCoadd
       - fixStarsPrettyCoadd
       - makeRGBPicturePrettyCoaddGRI
+    description: |
+      A step to run cosmetic fixes on backgrounds and stellar cores, and then
+      make color images from those fixed inputs.
+
+  step4f-make-hips-from-rgb:
+  # TODO DM-53870 merge this step with step3 hips.
+    subset:
       - makeHighOrderHipsEpoGRI
       - makeLowOrderHipsEpoGRI
       - writeAllSkyHipsInfoEpoGRI
@@ -1143,26 +1157,27 @@ subsets:
     - makeTemplateCoaddInputSummary
     # 3c
     - makeSingleBandRGBCoaddU
+    - makeSingleBandRGBCoaddG
+    - makeSingleBandRGBCoaddR
+    - makeSingleBandRGBCoaddI
+    - makeSingleBandRGBCoaddZ
+    - makeSingleBandRGBCoaddY
+    # 3d
     - makeHighOrderHipsU
     - makeLowOrderHipsU
     - writeAllSkyHipsInfoU
-    - makeSingleBandRGBCoaddG
     - makeHighOrderHipsG
     - makeLowOrderHipsG
     - writeAllSkyHipsInfoG
-    - makeSingleBandRGBCoaddR
     - makeHighOrderHipsR
     - makeLowOrderHipsR
     - writeAllSkyHipsInfoR
-    - makeSingleBandRGBCoaddI
     - makeHighOrderHipsI
     - makeLowOrderHipsI
     - writeAllSkyHipsInfoI
-    - makeSingleBandRGBCoaddZ
     - makeHighOrderHipsZ
     - makeLowOrderHipsZ
     - writeAllSkyHipsInfoZ
-    - makeSingleBandRGBCoaddY
     - makeHighOrderHipsY
     - makeLowOrderHipsY
     - writeAllSkyHipsInfoY
@@ -1218,6 +1233,7 @@ subsets:
     - fixBackgroundPrettyCoadd
     - fixStarsPrettyCoadd
     - makeRGBPicturePrettyCoaddGRI
+    # 4f
     - makeHighOrderHipsEpoGRI
     - makeLowOrderHipsEpoGRI
     - writeAllSkyHipsInfoEpoGRI
@@ -1250,7 +1266,9 @@ steps:
     dimensions: ["tract"]
   - label: step3b-coadd-global
     dimensions: []
-  - label: step3c-coadd-hips
+  - label: step3c-coadd-gray-images
+    dimensions: []
+  - label: step3d-coadd-hips
     dimensions: []
   - label: step4a-measure-variability-visits
     dimensions: ["visit"]
@@ -1260,7 +1278,9 @@ steps:
     dimensions: ["tract"]
   - label: step4d-measure-variability-global
     dimensions: []
-  - label: step4e-measure-variability-hips
+  - label: step4e-measure-variability-rgb
+    dimensions: []
+  - label: step4f-make-hips-from-rgb
     dimensions: []
 
 contracts:
