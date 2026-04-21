@@ -381,6 +381,7 @@ class PipelineTestCase(unittest.TestCase):
                 "linearizer",
                 "overscanRaw",
                 "ps1_pv3_3pi_20170110",
+                "sky",
             },
             expected_outputs=COMMON_OUTPUTS
             | {
