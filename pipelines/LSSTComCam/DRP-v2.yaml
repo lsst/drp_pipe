@@ -16,6 +16,10 @@ imports:
       - makeWholeTractPrettyCoaddImage
       - makeBinnedPrettyNImage
       - makeWholeTractPrettyNImage
+      - step3c-coadd-gray-images
+      - step3d-coadd-hips
+      - step4e-measure-variability-rgb
+      - step4f-make-hips-from-rgb
       - metadetectionShear
       - consolidateShearObject
 tasks:

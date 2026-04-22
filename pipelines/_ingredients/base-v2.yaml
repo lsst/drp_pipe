@@ -18,6 +18,7 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-source.yaml
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-dia.yaml
   - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-hips.yaml
 
 parameters:
   release_id: 0
@@ -915,6 +916,44 @@ subsets:
 
       A skymap constraint is generally redundant but recommended.
 
+  step3c-coadd-gray-images:
+    subset:
+      - makeSingleBandRGBCoaddU
+      - makeSingleBandRGBCoaddG
+      - makeSingleBandRGBCoaddR
+      - makeSingleBandRGBCoaddI
+      - makeSingleBandRGBCoaddZ
+      - makeSingleBandRGBCoaddY
+    description: |
+      A step to generate gray scale stretched images for data release
+      productions that may be run after deep_coadds are available.
+
+
+  step3d-coadd-hips:
+    subset:
+      - makeHighOrderHipsU
+      - makeLowOrderHipsU
+      - writeAllSkyHipsInfoU
+      - makeHighOrderHipsG
+      - makeLowOrderHipsG
+      - writeAllSkyHipsInfoG
+      - makeHighOrderHipsR
+      - makeLowOrderHipsR
+      - writeAllSkyHipsInfoR
+      - makeHighOrderHipsI
+      - makeLowOrderHipsI
+      - writeAllSkyHipsInfoI
+      - makeHighOrderHipsZ
+      - makeLowOrderHipsZ
+      - writeAllSkyHipsInfoZ
+      - makeHighOrderHipsY
+      - makeLowOrderHipsY
+      - writeAllSkyHipsInfoY
+    description: |
+      A step to generate final data product
+      single band HiPS maps for data release productions
+      that may be run after deep_coadds are available.
+
   step4a-measure-variability-visits:
     subset:
       - reprocessVisitImage
@@ -975,6 +1014,30 @@ subsets:
       - makeAnalysisSourceAssociationMetricTable
       - makeAnalysisSourceAssociationWholeSkyPlot
       - consolidateSsTables
+
+  step4e-measure-variability-rgb:
+  # TODO DM-53870 merge this step with step3 hips.
+    subset:
+      - fixBackgroundPrettyCoadd
+      - fixStarsPrettyCoadd
+      - makeRGBPicturePrettyCoaddGRI
+    description: |
+      A step to run cosmetic fixes on backgrounds and stellar cores, and then
+      make color images from those fixed inputs.
+
+  step4f-make-hips-from-rgb:
+  # TODO DM-53870 merge this step with step3 hips.
+    subset:
+      - makeHighOrderHipsEpoGRI
+      - makeLowOrderHipsEpoGRI
+      - writeAllSkyHipsInfoEpoGRI
+      - makeHighOrderHipsGRI
+      - makeLowOrderHipsGRI
+      - writeAllSkyHipsInfoGRI
+    description: |
+      A step to generate final data product
+      multiband HiPS maps for data release productions
+      that may be run after pretty_coadds are available.
 
   # Subsets below are the checkpoints for humans, AKA stages.  These
   # unfortunately can't be declared in terms of other subsets yet; we have to
@@ -1092,6 +1155,33 @@ subsets:
     - plotPropertyMapSurvey
     - makeDeepCoaddInputSummary
     - makeTemplateCoaddInputSummary
+    # 3c
+    - makeSingleBandRGBCoaddU
+    - makeSingleBandRGBCoaddG
+    - makeSingleBandRGBCoaddR
+    - makeSingleBandRGBCoaddI
+    - makeSingleBandRGBCoaddZ
+    - makeSingleBandRGBCoaddY
+    # 3d
+    - makeHighOrderHipsU
+    - makeLowOrderHipsU
+    - writeAllSkyHipsInfoU
+    - makeHighOrderHipsG
+    - makeLowOrderHipsG
+    - writeAllSkyHipsInfoG
+    - makeHighOrderHipsR
+    - makeLowOrderHipsR
+    - writeAllSkyHipsInfoR
+    - makeHighOrderHipsI
+    - makeLowOrderHipsI
+    - writeAllSkyHipsInfoI
+    - makeHighOrderHipsZ
+    - makeLowOrderHipsZ
+    - writeAllSkyHipsInfoZ
+    - makeHighOrderHipsY
+    - makeLowOrderHipsY
+    - writeAllSkyHipsInfoY
+
   stage4-measure-variability:
     # 4a:
     - reprocessVisitImage
@@ -1139,6 +1229,17 @@ subsets:
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot
     - consolidateSsTables
+    # 4e
+    - fixBackgroundPrettyCoadd
+    - fixStarsPrettyCoadd
+    - makeRGBPicturePrettyCoaddGRI
+    # 4f
+    - makeHighOrderHipsEpoGRI
+    - makeLowOrderHipsEpoGRI
+    - writeAllSkyHipsInfoEpoGRI
+    - makeHighOrderHipsGRI
+    - makeLowOrderHipsGRI
+    - writeAllSkyHipsInfoGRI
 
 steps:
   - label: step1a-single-visit-detectors
@@ -1165,6 +1266,10 @@ steps:
     dimensions: ["tract"]
   - label: step3b-coadd-global
     dimensions: []
+  - label: step3c-coadd-gray-images
+    dimensions: []
+  - label: step3d-coadd-hips
+    dimensions: []
   - label: step4a-measure-variability-visits
     dimensions: ["visit"]
   - label: step4b-generate-ephemerides-global
@@ -1172,6 +1277,10 @@ steps:
   - label: step4c-measure-variability-tracts
     dimensions: ["tract"]
   - label: step4d-measure-variability-global
+    dimensions: []
+  - label: step4e-measure-variability-rgb
+    dimensions: []
+  - label: step4f-make-hips-from-rgb
     dimensions: []
 
 contracts:

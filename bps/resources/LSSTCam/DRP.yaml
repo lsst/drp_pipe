@@ -186,3 +186,21 @@ pipetask:
     requestMemory: 88165
     requestCpus: 10
     extraRunQuantumOptions: "-j 1 -n 10 --no-raise-on-partial-outputs"
+  fixBackgroundPrettyCoadd:
+    requestMemory: 8000
+  fixStarsPrettyCoadd:
+    requestMemory: 8000
+  makeRGBPicturePrettyCoaddGRI:
+    requestMemory: 8000
+  makeSingleBandRGBCoaddU:
+    requestMemory: 8000
+  makeSingleBandRGBCoaddG:
+    requestMemory: 8000
+  makeSingleBandRGBCoaddR:
+    requestMemory: 8000
+  makeSingleBandRGBCoaddI:
+    requestMemory: 8000
+  makeSingleBandRGBCoaddZ:
+    requestMemory: 8000
+  makeSingleBandRGBCoaddY:
+    requestMemory: 8000
