@@ -18,7 +18,7 @@ imports:
       - makeBinnedPrettyNImage
       - makeWholeTractPrettyNImage
       - step4e-measure-variability-rgb
-      - step4f-measure-variability-hips
+      - step4f-make-hips-from-rgb
 tasks:
   # TODO DM-53523: This config override should be removed when the
   # correct calibrations are added to the testdata packages.
