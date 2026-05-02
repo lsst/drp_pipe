@@ -111,3 +111,11 @@ tasks:
         110, 113, 116, 117, 120, 121, 123, 124, 155, 157, 158, 160, 161, 165, 166, 168, 169, 170, 177, 178,
         179, 184, 185, 186, 187, 188
       ]
+  consolidateSsTables:
+    class: lsst.pipe.tasks.consolidateSsTables.ConsolidateSsTablesTask
+    config:
+      connections.inputCatalogs: ss_source_associated
+      connections.ssSourceTable: ss_source
+      connections.ssObjectTable: ss_object
+      fixedG12: 0.5
+      magSigmaFloor: 0.01
