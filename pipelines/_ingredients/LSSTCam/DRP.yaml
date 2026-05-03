@@ -117,5 +117,6 @@ tasks:
       connections.inputCatalogs: ss_source_associated
       connections.ssSourceTable: ss_source
       connections.ssObjectTable: ss_object
-      fixedG12: 0.5
-      magSigmaFloor: 0.01
+      hg12FixedG12: 0.5
+      hg12MagSigmaFloor: 0.05
+      hg12NSigmaClip: 10
