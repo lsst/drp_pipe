@@ -881,6 +881,7 @@ subsets:
       - plotPropertyMapTract
       - makeBinnedDeepCoaddImage
       - makeWholeTractDeepCoaddImage
+      - aggregateDeepCoaddMaskFractions
       - makeBinnedDeepCoaddNImage
       - makeWholeTractDeepCoaddNImage
       - makeBinnedTemplateCoaddImage
@@ -911,6 +912,10 @@ subsets:
       - objectParentTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
+      - makeAggregatedDeepCoaddMaskFractionsTable
+      - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
       - plotPropertyMapSurvey
       - makeDeepCoaddInputSummary
       - makeTemplateCoaddInputSummary
@@ -1015,6 +1020,7 @@ subsets:
       - assemblePrettyCoadd
       - makeBinnedPrettyCoaddImage
       - makeWholeTractPrettyCoaddImage
+      - aggregatePrettyCoaddMaskFractions
       - makeBinnedPrettyCoaddNImage
       - makeWholeTractPrettyCoaddNImage
 
@@ -1146,10 +1152,12 @@ subsets:
     - plotPropertyMapTract
     - makeBinnedDeepCoaddImage
     - makeWholeTractDeepCoaddImage
+    - aggregateDeepCoaddMaskFractions
     - makeBinnedDeepCoaddNImage
     - makeWholeTractDeepCoaddNImage
     - makeBinnedTemplateCoaddImage
     - makeWholeTractTemplateCoaddImage
+    - aggregateTemplateCoaddMaskFractions
     - makeBinnedTemplateCoaddNImage
     - makeWholeTractTemplateCoaddNImage
     - validateObjectTableCore
@@ -1163,6 +1171,10 @@ subsets:
     - objectParentTableCoreWholeSkyPlot
     - makeMetricTableObjectTableCoreRefCatMatch
     - objectTableCoreRefCatMatchWholeSkyPlot
+    - makeAggregatedDeepCoaddMaskFractionsTable
+    - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+    - makeAggregatedTemplateCoaddMaskFractionsTable
+    - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
     - plotPropertyMapSurvey
     - makeDeepCoaddInputSummary
     - makeTemplateCoaddInputSummary
@@ -1234,6 +1246,7 @@ subsets:
     - assemblePrettyCoadd
     - makeBinnedPrettyCoaddImage
     - makeWholeTractPrettyCoaddImage
+    - aggregatePrettyCoaddMaskFractions
     - makeBinnedPrettyCoaddNImage
     - makeWholeTractPrettyCoaddNImage
     # 4d

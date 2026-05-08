@@ -14,9 +14,15 @@ imports:
       - makePrettyPsfMatchedWarp
       - assemblePrettyCoadd
       - makeBinnedPrettyCoaddImage
+      - aggregatePrettyCoaddMaskFractions
+      - makeAggregatedPrettyCoaddMaskFractionsTable
+      - aggregatedPrettyCoaddMaskFractionsWholeSkyPlot
       - makeWholeTractPrettyCoaddImage
-      - makeBinnedPrettyNImage
-      - makeWholeTractPrettyNImage
+      - makeBinnedPrettyCoaddNImage
+      - makeWholeTractPrettyCoaddNImage
+      - aggregateTemplateCoaddMaskFractions
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
       - step4e-measure-variability-rgb
       - step4f-make-hips-from-rgb
 tasks:

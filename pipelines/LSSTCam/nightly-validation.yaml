@@ -60,10 +60,16 @@ imports:
       - analyzeObjectTableSurveyCore
       - makeBinnedDeepCoaddImage
       - makeWholeTractDeepCoaddImage
+      - aggregateDeepCoaddMaskFractions
+      - makeAggregatedDeepCoaddMaskFractionsTable
+      - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
       - makeBinnedDeepCoaddNImage
       - makeWholeTractDeepCoaddNImage
       - makeBinnedTemplateCoaddImage
       - makeWholeTractTemplateCoaddImage
+      - aggregateTemplateCoaddMaskFractions
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
       - makeBinnedTemplateCoaddNImage
       - makeWholeTractTemplateCoaddNImage
       - makeMetricTableObjectTableCore
