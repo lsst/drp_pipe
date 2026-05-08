@@ -879,6 +879,9 @@ subsets:
       - makeWholeTractDeepCoaddImage
       - makeBinnedDeepCoaddNImage
       - makeWholeTractDeepCoaddNImage
+      - makeBinnedTemplateCoaddImage
+      - makeWholeTractTemplateCoaddImage
+      - aggregateTemplateCoaddMaskFractions
       - makeBinnedTemplateCoaddNImage
       - makeWholeTractTemplateCoaddNImage
       - validateObjectTableCore
@@ -1141,6 +1144,8 @@ subsets:
     - makeWholeTractDeepCoaddImage
     - makeBinnedDeepCoaddNImage
     - makeWholeTractDeepCoaddNImage
+    - makeBinnedTemplateCoaddImage
+    - makeWholeTractTemplateCoaddImage
     - makeBinnedTemplateCoaddNImage
     - makeWholeTractTemplateCoaddNImage
     - validateObjectTableCore

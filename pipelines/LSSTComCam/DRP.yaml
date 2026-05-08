@@ -132,6 +132,8 @@ subsets:
       - makeWholeTractDeepCoaddImage
       - makeBinnedDeepCoaddNImage
       - makeWholeTractDeepCoaddNImage
+      - makeBinnedTemplateCoaddImage
+      - makeWholeTractTemplateCoaddImage
       - makeBinnedTemplateCoaddNImage
       - makeWholeTractTemplateCoaddNImage
       - refCatObjectTract

@@ -62,6 +62,8 @@ imports:
       - makeWholeTractDeepCoaddImage
       - makeBinnedDeepCoaddNImage
       - makeWholeTractDeepCoaddNImage
+      - makeBinnedTemplateCoaddImage
+      - makeWholeTractTemplateCoaddImage
       - makeBinnedTemplateCoaddNImage
       - makeWholeTractTemplateCoaddNImage
       - makeMetricTableObjectTableCore
