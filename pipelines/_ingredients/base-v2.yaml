@@ -875,12 +875,12 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
-      - makeBinnedCoaddImage
-      - makeWholeTractImage
-      - makeBinnedTemplateNImage
-      - makeWholeTractTemplateNImage
-      - makeBinnedDeepNImage
-      - makeWholeTractDeepNImage
+      - makeBinnedDeepCoaddImage
+      - makeWholeTractDeepCoaddImage
+      - makeBinnedDeepCoaddNImage
+      - makeWholeTractDeepCoaddNImage
+      - makeBinnedTemplateCoaddNImage
+      - makeWholeTractTemplateCoaddNImage
       - validateObjectTableCore
       - computeObjectEpochs
     description: |
@@ -1001,15 +1001,15 @@ subsets:
       - associateAnalysisSource
       - analyzeSourceAssociation
       - analyzeDiaSourceTableTract
-      # TODO DM-53870 move makePrettyDirectWarp..makeBinnedPrettyNImage
+      # TODO DM-53870 move makePrettyDirectWarp..makeBinnedPrettyCoaddNImage
       # to stage3-coadd
       - makePrettyDirectWarp
       - makePrettyPsfMatchedWarp
       - assemblePrettyCoadd
       - makeBinnedPrettyCoaddImage
       - makeWholeTractPrettyCoaddImage
-      - makeWholeTractPrettyNImage
-      - makeBinnedPrettyNImage
+      - makeBinnedPrettyCoaddNImage
+      - makeWholeTractPrettyCoaddNImage
 
   step4d-measure-variability-global:
     subset:
@@ -1137,12 +1137,12 @@ subsets:
     - photometricCatalogMatch
     - photometricRefCatObjectTract
     - plotPropertyMapTract
-    - makeBinnedCoaddImage
-    - makeWholeTractImage
-    - makeBinnedTemplateNImage
-    - makeWholeTractTemplateNImage
-    - makeBinnedDeepNImage
-    - makeWholeTractDeepNImage
+    - makeBinnedDeepCoaddImage
+    - makeWholeTractDeepCoaddImage
+    - makeBinnedDeepCoaddNImage
+    - makeWholeTractDeepCoaddNImage
+    - makeBinnedTemplateCoaddNImage
+    - makeWholeTractTemplateCoaddNImage
     - validateObjectTableCore
     - computeObjectEpochs
     # 3b
@@ -1225,8 +1225,8 @@ subsets:
     - assemblePrettyCoadd
     - makeBinnedPrettyCoaddImage
     - makeWholeTractPrettyCoaddImage
-    - makeWholeTractPrettyNImage
-    - makeBinnedPrettyNImage
+    - makeBinnedPrettyCoaddNImage
+    - makeWholeTractPrettyCoaddNImage
     # 4d
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot

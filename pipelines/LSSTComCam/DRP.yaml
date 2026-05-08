@@ -128,12 +128,12 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
-      - makeBinnedCoaddImage
-      - makeWholeTractImage
-      - makeBinnedDeepNImage
-      - makeWholeTractDeepNImage
-      - makeBinnedTemplateNImage
-      - makeWholeTractTemplateNImage
+      - makeBinnedDeepCoaddImage
+      - makeWholeTractDeepCoaddImage
+      - makeBinnedDeepCoaddNImage
+      - makeWholeTractDeepCoaddNImage
+      - makeBinnedTemplateCoaddNImage
+      - makeWholeTractTemplateCoaddNImage
       - refCatObjectTract
       - validateObjectTableCore
       - fitStellarMotion

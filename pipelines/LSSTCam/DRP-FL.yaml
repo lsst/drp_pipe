@@ -37,8 +37,8 @@ imports:
       - assemblePrettyCoadd
       - makeBinnedPrettyCoaddImage
       - makeWholeTractPrettyCoaddImage
-      - makeWholeTractPrettyNImage
-      - makeBinnedPrettyNImage
+      - makeBinnedPrettyCoaddNImage
+      - makeWholeTractPrettyCoaddNImage
       # Remove Solar System ephemerides loading, which was added after FL
       - generateEphemerides
       # Remove object table generation
@@ -65,8 +65,8 @@ imports:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
-      - makeBinnedCoaddImage
-      - makeWholeTractImage
+      - makeBinnedDeepCoaddImage
+      - makeWholeTractDeepCoaddImage
       - validateObjectTableCore
       - computeObjectEpochs
       - analyzeObjectTableSurveyCore
