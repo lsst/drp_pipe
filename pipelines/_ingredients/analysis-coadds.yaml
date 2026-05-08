@@ -94,16 +94,26 @@ tasks:
       connections.outputName: "object_ref_match_photom"
   plotPropertyMapTract:
     class: lsst.analysis.tools.tasks.PerTractPropertyMapAnalysisTask
-  makeBinnedCoaddImage:
+  makeBinnedDeepCoaddImage:
     class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
     config:
       connections.coadd: deep_coadd
       connections.binnedCoadd: deep_coadd_bin
-  makeWholeTractImage:
+  makeWholeTractDeepCoaddImage:
     class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
     config:
       connections.data: deep_coadd_bin
       connections.outputName: deep
+  makeBinnedDeepCoaddNImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: "deep_coadd_n_image"
+      connections.binnedCoadd: "deep_coadd_n_image_bin"
+  makeWholeTractDeepCoaddNImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: "deep_coadd_n_image_bin"
+      connections.outputName: "deep"
   makeBinnedPrettyCoaddImage:
     class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
     config:
@@ -121,39 +131,53 @@ tasks:
       atools.coaddImagePostageStamp: WholeTractPostageStampTool
       python: |
         from lsst.analysis.tools.atools import *
-  makeBinnedTemplateNImage:
+  makeBinnedPrettyCoaddNImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: "pretty_coadd_n_image"
+      connections.binnedCoadd: "pretty_coadd_n_image_bin"
+      coaddStorageClass: ImageU
+      binFactor: 16
+      doBinInnerBBox: true
+  makeWholeTractPrettyCoaddNImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: "pretty_coadd_n_image_bin"
+      connections.outputName: "pretty"
+      dataStorageClass: ImageU
+      atools.nImage: WholeTractNImageTool
+      python: |
+        from lsst.analysis.tools.atools import *
+  makeBinnedTemplateCoaddImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: template_coadd
+      connections.binnedCoadd: template_coadd_bin
+      binFactor: 16
+      doBinInnerBBox: True
+  makeWholeTractTemplateCoaddImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: template_coadd_bin
+      connections.outputName: template
+      atools.coaddImage: WholeTractImageTool
+      atools.clippedMask: WholeTractClippedMaskTool
+      atools.coaddImagePostageStamp: WholeTractPostageStampTool
+      python: |
+        from lsst.analysis.tools.atools import *
+  makeBinnedTemplateCoaddNImage:
     class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
     config:
       connections.coadd: "template_coadd_n_image"
       connections.binnedCoadd: "template_coadd_n_image_bin"
-  makeWholeTractTemplateNImage:
+      coaddStorageClass: ImageU
+      binFactor: 16
+      doBinInnerBBox: true
+  makeWholeTractTemplateCoaddNImage:
     class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
     config:
       connections.data: "template_coadd_n_image_bin"
       connections.outputName: "template"
-  makeBinnedDeepNImage:
-    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
-    config:
-      connections.coadd: "deep_coadd_n_image"
-      connections.binnedCoadd: "deep_coadd_n_image_bin"
-  makeWholeTractDeepNImage:
-    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
-    config:
-      connections.data: "deep_coadd_n_image_bin"
-      connections.outputName: "deep"
-  makeBinnedPrettyNImage:
-    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
-    config:
-      connections.coadd: pretty_coadd_n_image
-      connections.binnedCoadd: pretty_coadd_n_image_bin
-      coaddStorageClass: ImageU
-      binFactor: 16
-      doBinInnerBBox: true
-  makeWholeTractPrettyNImage:
-    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
-    config:
-      connections.data: pretty_coadd_n_image_bin
-      connections.outputName: pretty
       dataStorageClass: ImageU
       atools.nImage: WholeTractNImageTool
       python: |
