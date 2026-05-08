@@ -14,6 +14,7 @@ imports:
       - assemblePrettyCoadd
       - makeBinnedPrettyCoaddImage
       - makeWholeTractPrettyCoaddImage
+      - aggregatePrettyCoaddMaskFractions
       - makeBinnedPrettyCoaddNImage
       - makeWholeTractPrettyCoaddNImage
       - step3c-coadd-gray-images

@@ -36,6 +36,9 @@ imports:
       - makePrettyPsfMatchedWarp
       - assemblePrettyCoadd
       - makeBinnedPrettyCoaddImage
+      - aggregatePrettyCoaddMaskFractions
+      - makeAggregatedPrettyCoaddMaskFractionsTable
+      - aggregatedPrettyCoaddMaskFractionsWholeSkyPlot
       - makeWholeTractPrettyCoaddImage
       - makeBinnedPrettyCoaddNImage
       - makeWholeTractPrettyCoaddNImage
@@ -67,6 +70,12 @@ imports:
       - plotPropertyMapTract
       - makeBinnedDeepCoaddImage
       - makeWholeTractDeepCoaddImage
+      - aggregateDeepCoaddMaskFractions
+      - makeAggregatedDeepCoaddMaskFractionsTable
+      - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+      - aggregateTemplateCoaddMaskFractions
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
       - validateObjectTableCore
       - computeObjectEpochs
       - analyzeObjectTableSurveyCore
