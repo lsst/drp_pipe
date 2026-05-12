@@ -5,6 +5,7 @@ parameters:
   base_uri: ""
   hips_title: ""
   abs_max: 75500
+  rgb_lum_floor: 0.00006
 
 tasks:
   # Pretty Coadd GRI for EPO and Portal
