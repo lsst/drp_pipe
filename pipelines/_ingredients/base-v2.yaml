@@ -102,11 +102,13 @@ tasks:
   gbdesHealpix3AstrometricFit:
     class: lsst.drp.tasks.gbdesAstrometricFit.GbdesAstrometricFitTask
     config:
-      connections.inputCatalogRefs: single_visit_star
+      connections.isolatedStarSources: isolated_star
+      connections.isolatedStarCatalogs: isolated_star_association
       connections.inputVisitSummaries: preliminary_visit_summary
       healpix: 3
       connections.outputName: gbdesHealpix3AstrometricFit
       fitProperMotion: true
+      useIsolatedStars: true
   gaussianProcessesTurbulenceFit:
     class: lsst.drp.tasks.fit_turbulence.GaussianProcessesTurbulenceFitTask
   refitPsfModelDetector:
