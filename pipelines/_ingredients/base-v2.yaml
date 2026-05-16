@@ -875,12 +875,16 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
-      - makeBinnedCoaddImage
-      - makeWholeTractImage
-      - makeBinnedTemplateNImage
-      - makeWholeTractTemplateNImage
-      - makeBinnedDeepNImage
-      - makeWholeTractDeepNImage
+      - makeBinnedDeepCoaddImage
+      - makeWholeTractDeepCoaddImage
+      - aggregateDeepCoaddMaskFractions
+      - makeBinnedDeepCoaddNImage
+      - makeWholeTractDeepCoaddNImage
+      - makeBinnedTemplateCoaddImage
+      - makeWholeTractTemplateCoaddImage
+      - aggregateTemplateCoaddMaskFractions
+      - makeBinnedTemplateCoaddNImage
+      - makeWholeTractTemplateCoaddNImage
       - validateObjectTableCore
       - computeObjectEpochs
     description: |
@@ -904,6 +908,10 @@ subsets:
       - objectParentTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
+      - makeAggregatedDeepCoaddMaskFractionsTable
+      - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
       - plotPropertyMapSurvey
       - makeDeepCoaddInputSummary
       - makeTemplateCoaddInputSummary
@@ -1001,15 +1009,16 @@ subsets:
       - associateAnalysisSource
       - analyzeSourceAssociation
       - analyzeDiaSourceTableTract
-      # TODO DM-53870 move makePrettyDirectWarp..makeBinnedPrettyNImage
+      # TODO DM-53870 move makePrettyDirectWarp..makeBinnedPrettyCoaddNImage
       # to stage3-coadd
       - makePrettyDirectWarp
       - makePrettyPsfMatchedWarp
       - assemblePrettyCoadd
       - makeBinnedPrettyCoaddImage
       - makeWholeTractPrettyCoaddImage
-      - makeWholeTractPrettyNImage
-      - makeBinnedPrettyNImage
+      - aggregatePrettyCoaddMaskFractions
+      - makeBinnedPrettyCoaddNImage
+      - makeWholeTractPrettyCoaddNImage
 
   step4d-measure-variability-global:
     subset:
@@ -1137,12 +1146,16 @@ subsets:
     - photometricCatalogMatch
     - photometricRefCatObjectTract
     - plotPropertyMapTract
-    - makeBinnedCoaddImage
-    - makeWholeTractImage
-    - makeBinnedTemplateNImage
-    - makeWholeTractTemplateNImage
-    - makeBinnedDeepNImage
-    - makeWholeTractDeepNImage
+    - makeBinnedDeepCoaddImage
+    - makeWholeTractDeepCoaddImage
+    - aggregateDeepCoaddMaskFractions
+    - makeBinnedDeepCoaddNImage
+    - makeWholeTractDeepCoaddNImage
+    - makeBinnedTemplateCoaddImage
+    - makeWholeTractTemplateCoaddImage
+    - aggregateTemplateCoaddMaskFractions
+    - makeBinnedTemplateCoaddNImage
+    - makeWholeTractTemplateCoaddNImage
     - validateObjectTableCore
     - computeObjectEpochs
     # 3b
@@ -1154,6 +1167,10 @@ subsets:
     - objectParentTableCoreWholeSkyPlot
     - makeMetricTableObjectTableCoreRefCatMatch
     - objectTableCoreRefCatMatchWholeSkyPlot
+    - makeAggregatedDeepCoaddMaskFractionsTable
+    - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+    - makeAggregatedTemplateCoaddMaskFractionsTable
+    - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
     - plotPropertyMapSurvey
     - makeDeepCoaddInputSummary
     - makeTemplateCoaddInputSummary
@@ -1225,8 +1242,9 @@ subsets:
     - assemblePrettyCoadd
     - makeBinnedPrettyCoaddImage
     - makeWholeTractPrettyCoaddImage
-    - makeWholeTractPrettyNImage
-    - makeBinnedPrettyNImage
+    - aggregatePrettyCoaddMaskFractions
+    - makeBinnedPrettyCoaddNImage
+    - makeWholeTractPrettyCoaddNImage
     # 4d
     - makeAnalysisSourceAssociationMetricTable
     - makeAnalysisSourceAssociationWholeSkyPlot

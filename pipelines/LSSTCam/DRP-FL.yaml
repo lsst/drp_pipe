@@ -36,9 +36,12 @@ imports:
       - makePrettyPsfMatchedWarp
       - assemblePrettyCoadd
       - makeBinnedPrettyCoaddImage
+      - aggregatePrettyCoaddMaskFractions
+      - makeAggregatedPrettyCoaddMaskFractionsTable
+      - aggregatedPrettyCoaddMaskFractionsWholeSkyPlot
       - makeWholeTractPrettyCoaddImage
-      - makeWholeTractPrettyNImage
-      - makeBinnedPrettyNImage
+      - makeBinnedPrettyCoaddNImage
+      - makeWholeTractPrettyCoaddNImage
       # Remove Solar System ephemerides loading, which was added after FL
       - generateEphemerides
       # Remove object table generation
@@ -65,8 +68,14 @@ imports:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
-      - makeBinnedCoaddImage
-      - makeWholeTractImage
+      - makeBinnedDeepCoaddImage
+      - makeWholeTractDeepCoaddImage
+      - aggregateDeepCoaddMaskFractions
+      - makeAggregatedDeepCoaddMaskFractionsTable
+      - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+      - aggregateTemplateCoaddMaskFractions
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
       - validateObjectTableCore
       - computeObjectEpochs
       - analyzeObjectTableSurveyCore

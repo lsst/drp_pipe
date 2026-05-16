@@ -12,6 +12,10 @@ imports:
       - objectParentTableCoreWholeSkyPlot
       - makeMetricTableObjectTableCoreRefCatMatch
       - objectTableCoreRefCatMatchWholeSkyPlot
+      - makeAggregatedDeepCoaddMaskFractionsTable
+      - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
   - location: $ANALYSIS_TOOLS_DIR/pipelines/surveyQualityCore.yaml
 tasks:
   analyzeObjectTableCore:
@@ -94,16 +98,47 @@ tasks:
       connections.outputName: "object_ref_match_photom"
   plotPropertyMapTract:
     class: lsst.analysis.tools.tasks.PerTractPropertyMapAnalysisTask
-  makeBinnedCoaddImage:
+  makeBinnedDeepCoaddImage:
     class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
     config:
       connections.coadd: deep_coadd
       connections.binnedCoadd: deep_coadd_bin
-  makeWholeTractImage:
+  makeWholeTractDeepCoaddImage:
     class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
     config:
       connections.data: deep_coadd_bin
       connections.outputName: deep
+  aggregateDeepCoaddMaskFractions:
+    class: lsst.analysis.tools.tasks.WholeTractMaskFractionAnalysisTask
+    config:
+      connections.data: deep_coadd_bin
+      connections.outputName: deep_coadd_tract_mask_fraction
+      file: $ANALYSIS_TOOLS_DIR/config/wholeTractMaskFractionMetrics.py
+  makeAggregatedDeepCoaddMaskFractionsTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "deep_coadd_tract_mask_fraction_metrics"
+      connections.outputTableName: "deep_coadd_tract_mask_fraction_metricsTable"
+      inputDataDimensions: ["skymap", "tract", "band"]
+      outputTableDimensions: ["skymap", "band"]
+  aggregatedDeepCoaddMaskFractionsWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.data: "deep_coadd_tract_mask_fraction_metricsTable"
+      connections.outputName: "deep_coadd"
+      inputDimensions: ["skymap", "band"]
+      outputDimensions: ["skymap", "band"]
+      file: $ANALYSIS_TOOLS_DIR/config/aggregatedMaskFractionsWholeSkyPlot.py
+  makeBinnedDeepCoaddNImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: "deep_coadd_n_image"
+      connections.binnedCoadd: "deep_coadd_n_image_bin"
+  makeWholeTractDeepCoaddNImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: "deep_coadd_n_image_bin"
+      connections.outputName: "deep"
   makeBinnedPrettyCoaddImage:
     class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
     config:
@@ -121,39 +156,80 @@ tasks:
       atools.coaddImagePostageStamp: WholeTractPostageStampTool
       python: |
         from lsst.analysis.tools.atools import *
-  makeBinnedTemplateNImage:
+  aggregatePrettyCoaddMaskFractions:
+    class: lsst.analysis.tools.tasks.WholeTractMaskFractionAnalysisTask
+    config:
+      connections.data: pretty_coadd_bin
+      connections.outputName: pretty_coadd_tract_mask_fraction
+      file: $ANALYSIS_TOOLS_DIR/config/wholeTractMaskFractionMetrics.py
+  makeBinnedPrettyCoaddNImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: "pretty_coadd_n_image"
+      connections.binnedCoadd: "pretty_coadd_n_image_bin"
+      coaddStorageClass: ImageU
+      binFactor: 16
+      doBinInnerBBox: true
+  makeWholeTractPrettyCoaddNImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: "pretty_coadd_n_image_bin"
+      connections.outputName: "pretty"
+      dataStorageClass: ImageU
+      atools.nImage: WholeTractNImageTool
+      python: |
+        from lsst.analysis.tools.atools import *
+  makeBinnedTemplateCoaddImage:
+    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
+    config:
+      connections.coadd: template_coadd
+      connections.binnedCoadd: template_coadd_bin
+      binFactor: 16
+      doBinInnerBBox: True
+  makeWholeTractTemplateCoaddImage:
+    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
+    config:
+      connections.data: template_coadd_bin
+      connections.outputName: template
+      atools.coaddImage: WholeTractImageTool
+      atools.clippedMask: WholeTractClippedMaskTool
+      atools.coaddImagePostageStamp: WholeTractPostageStampTool
+      python: |
+        from lsst.analysis.tools.atools import *
+  aggregateTemplateCoaddMaskFractions:
+    class: lsst.analysis.tools.tasks.WholeTractMaskFractionAnalysisTask
+    config:
+      connections.data: template_coadd_bin
+      connections.outputName: template_coadd_tract_mask_fraction
+      file: $ANALYSIS_TOOLS_DIR/config/wholeTractMaskFractionMetrics.py
+  makeAggregatedTemplateCoaddMaskFractionsTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "template_coadd_tract_mask_fraction_metrics"
+      connections.outputTableName: "template_coadd_tract_mask_fraction_metricsTable"
+      inputDataDimensions: ["skymap", "tract", "band"]
+      outputTableDimensions: ["skymap", "band"]
+  aggregatedTemplateCoaddMaskFractionsWholeSkyPlot:
+    class: lsst.analysis.tools.tasks.WholeSkyAnalysisTask
+    config:
+      connections.data: "template_coadd_tract_mask_fraction_metricsTable"
+      connections.outputName: "template_coadd"
+      inputDimensions: ["skymap", "band"]
+      outputDimensions: ["skymap", "band"]
+      file: $ANALYSIS_TOOLS_DIR/config/aggregatedMaskFractionsWholeSkyPlot.py
+  makeBinnedTemplateCoaddNImage:
     class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
     config:
       connections.coadd: "template_coadd_n_image"
       connections.binnedCoadd: "template_coadd_n_image_bin"
-  makeWholeTractTemplateNImage:
+      coaddStorageClass: ImageU
+      binFactor: 16
+      doBinInnerBBox: true
+  makeWholeTractTemplateCoaddNImage:
     class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
     config:
       connections.data: "template_coadd_n_image_bin"
       connections.outputName: "template"
-  makeBinnedDeepNImage:
-    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
-    config:
-      connections.coadd: "deep_coadd_n_image"
-      connections.binnedCoadd: "deep_coadd_n_image_bin"
-  makeWholeTractDeepNImage:
-    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
-    config:
-      connections.data: "deep_coadd_n_image_bin"
-      connections.outputName: "deep"
-  makeBinnedPrettyNImage:
-    class: lsst.analysis.tools.tasks.MakeBinnedCoaddTask
-    config:
-      connections.coadd: pretty_coadd_n_image
-      connections.binnedCoadd: pretty_coadd_n_image_bin
-      coaddStorageClass: ImageU
-      binFactor: 16
-      doBinInnerBBox: true
-  makeWholeTractPrettyNImage:
-    class: lsst.analysis.tools.tasks.WholeTractImageAnalysisTask
-    config:
-      connections.data: pretty_coadd_n_image_bin
-      connections.outputName: pretty
       dataStorageClass: ImageU
       atools.nImage: WholeTractNImageTool
       python: |

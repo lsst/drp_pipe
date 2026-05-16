@@ -104,11 +104,11 @@ pipetask:
     requestMemory: 2435
   makeAnalysisSourceAssociationWholeSkyPlot:
     requestMemory: 4643
-  makeBinnedCoaddImage:
+  makeBinnedDeepCoaddImage:
     requestMemory: 2663
-  makeBinnedDeepNImage:
+  makeBinnedDeepCoaddNImage:
     requestMemory: 2663
-  makeBinnedTemplateNImage:
+  makeBinnedTemplateCoaddNImage:
     requestMemory: 2663
   makeDirectWarp:
     requestMemory: 4031
@@ -118,11 +118,11 @@ pipetask:
     requestMemory: 4058
   makeVisitDetectorTable:
     requestMemory: 2144
-  makeWholeTractDeepNImage:
+  makeWholeTractDeepCoaddNImage:
     requestMemory: 2663
-  makeWholeTractImage:
+  makeWholeTractDeepCoaddImage:
     requestMemory: 2663
-  makeWholeTractTemplateNImage:
+  makeWholeTractTemplateCoaddNImage:
     requestMemory: 2663
   measureObjectForced:
     requestMemory: 2887

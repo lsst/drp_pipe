@@ -40,10 +40,10 @@ cluster:
     pipetasks: selectDeepCoaddVisits,assembleDeepCoadd,assembleCellCoadd,detectCoaddPeaks,selectTemplateCoaddVisits,assembleTemplateCoadd
     dimensions: tract,patch,band
   make_analysis_images:
-    pipetasks: makeBinnedTemplateNImage,makeBinnedDeepNImage,makeBinnedCoaddImage,makeBinnedPrettyNImage,makeBinnedPrettyCoaddImage
+    pipetasks: makeBinnedTemplateCoaddNImage,makeBinnedDeepCoaddNImage,makeBinnedDeepCoaddImage,makeBinnedPrettyNImage,makeBinnedPrettyCoaddImage
     dimensions: tract,band
   make_tract_analysis_images:
-    pipetasks: makeWholeTractTemplateNImage,makeWholeTractDeepNImage,makeWholeTractImage,makeWholeTractPrettyCoaddImage,makeWholeTractPrettyNImage
+    pipetasks: makeWholeTractTemplateCoaddNImage,makeWholeTractDeepCoaddNImage,makeWholeTractDeepCoaddImage,makeWholeTractPrettyCoaddImage,makeWholeTractPrettyNImage
     dimensions: tract,band
   patch_postprocess:
     pipetasks: rewriteObject,computeObjectEpochs,standardizeObject
