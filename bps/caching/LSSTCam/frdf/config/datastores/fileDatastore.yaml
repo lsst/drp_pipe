@@ -69,35 +69,40 @@ datastore:
       crosstalk: true
       post_isr_image: true
       single_visit_star_unstandardized: true
-
-      # step2c_refitpsf (refitPsfModelDetector)
+      camera: true
+      astrometry_camera: true
+      # step2d_refitpsf (refitPsfModelDetector)
       single_visit_star_footprints: true
       isolated_star: true
       isolated_star_association: true
+      single_visit_star_schema: true
 
-      # step2c_visits (recalibrateSingleVisitStar, standardizeRecalibratedStar)
+      # step2d_visits (recalibrateSingleVisitStar, standardizeRecalibratedStar)
       # single_visit_star_footprints already added above
       recalibrated_star_unstandardized: true
 
-      # step2c_visit_summary (consolidateRefitPsfModelDetector, updateVisitSummary)
+      # step2d_visit_summary (consolidateRefitPsfModelDetector, updateVisitSummary)
       refit_psf_models_detector: true
       refit_psf_star_detector: true
       refit_psf_models: true
       refit_psf_star: true
 
-      # makeWarpTract (makeDirectWarp, makePsfMatchedWarp)
+      # makeWarpTract (makeDirectWarp, makePsfMatchedWarp,makePrettyDirectWarp,makePrettyPsfMatchedWarp)
       preliminary_visit_image: true
       direct_warp: true
+      pretty_direct_warp: true
       preliminary_visit_summary: true
       visit_summary: true
 
-      # coadd (assembleDeepCoadd, assembleTemplateCoadd, detectCoaddPeaks)
+      # coadd (assembleDeepCoadd, assembleTemplateCoadd, detectCoaddPeaks, assemblePrettyCoadd)
       psf_matched_warp: true
+      pretty_psf_matched_warp: true
       deep_coadd_visit_selection: true
       template_coadd_visit_selection: true
       deep_coadd_predetection: true
 
       # step4a_reprocess_standardize (reprocessVisitImage, standardizeSource)
+      preliminary_visit_mask: true
       preliminary_visit_image_background: true
       source_unstandardized: true
 
@@ -113,6 +118,7 @@ datastore:
       dia_source_unstandardized: true
       pretrainedModelPackage: true
       dia_source_reliability: true
+      difference_kernel_sources: true
 
       # association (associateDiaSource, calculateDiaObject)
       preloaded_DRP_SsObjects: true
@@ -120,10 +126,10 @@ datastore:
       dia_object_pre_calc: true
       dia_source_patch: true
 
-      # step4b_forced_phot (forcedPhotObjectDetector)
+      # step4c_forced_phot (forcedPhotObjectDetector)
       object_patch: true
       object_forced_source_unstandardized: true
 
-      # step4b_forced_phot_dia (forcedPhotDiaObjectDetector)
+      # step4c_forced_phot_dia (forcedPhotDiaObjectDetector)
       dia_object_patch: true
       dia_object_forced_source_unstandardized: true
