@@ -640,6 +640,10 @@ tasks:
       connections.masked_fraction_warp: pretty_direct_warp_masked_fraction
       idGenerator.release_id: parameters.release_id
       doApplySkyCorr: true
+      # TODO DM-53870: Remove these overrides if using preliminary_visit_image
+      useVisitSummaryPsf: false
+      useVisitSummaryWcs: false
+      useVisitSummaryPhotoCalib: false
   makePrettyPsfMatchedWarp:
     class: lsst.drp.tasks.make_psf_matched_warp.MakePsfMatchedWarpTask
     config:
