@@ -1,0 +1,50 @@
+description: >
+  A pipeline to rewrite public image data products into `lsst.images` formats,
+  and run downstream tasks to test the conversion.
+instrument: lsst.obs.lsst.LsstCam
+imports:
+  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
+    include:
+      # We include some tasks downstream of visit_image and difference_image,
+      # for testing, but not detectAndMeasureDiaSource, since that would
+      # write a new difference_image.
+      - buildTemplate
+      - subtractImages
+      - forcedPhotObjectDetector
+      - makePrettyDirectWarp
+      - filterDiaSource
+      - standardizeDiaSource
+      - computeReliability
+      - filterDiaSourcePostReliability
+      - forcedPhotDiaObjectDetector
+
+tasks:
+  rewriteVisitImage:
+    class: lsst.pipe.tasks.rewrite_images.RewriteVisitImageTask
+  rewriteDifferenceImage:
+    class: lsst.pipe.tasks.rewrite_images.RewriteDifferenceImageTask
+  buildTemplate:
+    class: lsst.ip.diffim.getTemplate.GetTemplateTask
+    config:
+      connections.wcs: visit_image.projection
+  makePrettyDirectWarp:
+    class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
+  filterDiaSource:
+    class: lsst.ap.association.FilterDiaSourceCatalogTask
+    config:
+      connections.diffImVisitInfo: difference_image.obs_info
+subsets:
+  do_stage4_rewrite:
+    - rewriteVisitImage
+    - rewriteDifferenceImage
+  test_stage4_rewrite:
+    - buildTemplate
+    - subtractImages
+    - forcedPhotObjectDetector
+    - makePrettyDirectWarp
+    - filterDiaSource
+    - computeReliability
+    - filterDiaSourcePostReliability
+    - standardizeDiaSource
+    - forcedPhotObjectDetector
+    - forcedPhotDiaObjectDetector
