@@ -16,11 +16,12 @@ tasks:
     config:
       connections.coaddName: parameters.coaddName
       connections.matchDiaSources: "fakes_{coaddName}Diff_matchDiaSrc"
-      connections.injectedCat: fakes_visit_image_catalog
+      connections.injectionCat: fakes_visit_image_catalog
       connections.diffIm: difference_image
       connections.diaSources: dia_source_unfiltered
       matchDistanceArcseconds: 0.5
       trimBuffer: 50
+      #TODO: after we merge DM-50420 we need to refix the DRP pipelines for template injection
   injectedMatchAssocDiaSrc:
     class: lsst.pipe.tasks.matchDiffimSourceInjected.MatchInjectedToAssocDiaSourceTask
     config:
