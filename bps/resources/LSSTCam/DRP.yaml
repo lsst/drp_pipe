@@ -7,200 +7,101 @@
 #     - ${DRP_PIPE_DIR}/bps/resources/LSSTCam/DRP.yaml
 #
 # (with no outer indentation) to your BPS config file.
-
 pipetask:
-  # Higher of 95th percentile memory usage seen in
-  # w_2025_45 and w_2025_49 DP2 Pilot DRPs
-  # Values are measured per cluster not per-task
-  analyzeDiaSourceTableTract:
-    requestMemory: 5724
-  analyzeObjectTableCore:
-    requestMemory: 6117
-  analyzeObjectTableSurveyCore:
-    requestMemory: 103905
-  analyzeRecalibratedStarAssociation:
-    requestMemory: 60000  # from 214204. Let it retry 2x.
-  analyzeRecalibratedStarObjectMatch:
-    requestMemory: 6506
-  analyzeSingleVisitStarAssociation:
-    requestMemory: 60000 # from 228948. Let it retry 2x.
-  analyzeSourceAssociation:
-    requestMemory: 120000 # quarter node from 317839
-  assembleCellCoadd:
-    requestMemory: 5087
-  assembleDeepCoadd:
-    requestMemory: 5087
-  assembleTemplateCoadd:
-    requestMemory: 5087
-  associateAnalysisSource:
-    requestMemory: 80769
-  associateDiaSource:
-    requestMemory: 2872
+##### STEP 1 ###### 
   associateIsolatedStar:
-    requestMemory: 34616
-  buildTemplate:
-    requestMemory: 4449
-  calculateDiaObject:
-    requestMemory: 2874
-  calibrateImage:
-    requestMemory: 4771
-  catalogMatchTract:
-    requestMemory: 4774
-  computeObjectEpochs:
-    requestMemory: 6581
-  computeReliability:
-    requestMemory: 4449
-  consolidateDiaObject:
-    requestMemory: 3693
-  consolidateDiaSource:
-    requestMemory: 18321
-  consolidateHealSparsePropertyMaps:
-    requestMemory: 5194
-  consolidateObject:
-    requestMemory: 10259
-  consolidateRecalibratedStar:
-    requestMemory: 2104
-  consolidateRefitPsfModelDetector:
-    requestMemory: 2127
-  consolidateSingleVisitStar:
-    requestMemory: 2094
-  consolidateSource:
-    requestMemory: 2868
-  consolidateSsTables:
-    requestMemory: 480000
-  consolidateVisitSummary:
-    requestMemory: 2094
-  deblendCoaddFootprints:
-    requestMemory: 9134
-  deconvolve:
-    requestMemory: 2835
-  detectAndMeasureDiaSource:
-    requestMemory: 4449
-  detectCoaddPeaks:
-    requestMemory: 5087
-  fgcmOutputProducts:
-    requestMemory: 12642
-  filterDiaSource:
-    requestMemory: 4449
-  filterDiaSourcePostReliability:
-    requestMemory: 4449
-  fitDeblendedObjectsExp:
-    requestMemory: 5603
-  fitDeblendedObjectsSersic:
-    requestMemory: 5615
-  fitDeepCoaddPsfGaussians:
-    requestMemory: 2663
-  forcedPhotDiaObjectDetector:
-    requestMemory: 2432
-  forcedPhotObjectDetector:
-    requestMemory: 2459
-  isr:
-    requestMemory: 4762
-  makeAnalysisRecalibratedStarAssociationWholeSkyPlot:
-    requestMemory: 3677
-  makeAnalysisSingleVisitStarAssociationWholeSkyPlot:
-    requestMemory: 3716
-  makeAnalysisSourceAssociationMetricTable:
-    requestMemory: 2435
-  makeAnalysisSourceAssociationWholeSkyPlot:
-    requestMemory: 4643
-  makeBinnedCoaddImage:
-    requestMemory: 2663
-  makeBinnedDeepNImage:
-    requestMemory: 2663
-  makeBinnedTemplateNImage:
-    requestMemory: 2663
-  makeDirectWarp:
-    requestMemory: 4031
-  makeHealSparsePropertyMaps:
-    requestMemory: 33794
-  makePsfMatchedWarp:
-    requestMemory: 4058
-  makeVisitDetectorTable:
-    requestMemory: 2144
-  makeWholeTractDeepNImage:
-    requestMemory: 2663
-  makeWholeTractImage:
-    requestMemory: 2663
-  makeWholeTractTemplateNImage:
-    requestMemory: 2663
-  measureObjectForced:
-    requestMemory: 2887
-  measureObjectUnforced:
-    requestMemory: 2974
-  mergeObjectDetection:
-    requestMemory: 2663
-  mergeObjectMeasurement:
-    requestMemory: 2663
-  objectTableCoreWholeSkyPlot:
-    requestMemory: 4498
-  photometricCatalogMatch:
-    requestMemory: 4546
-  plotPropertyMapSurvey:
-    requestMemory: 32727
-  plotPropertyMapTract:
-    requestMemory: 5008
-  refitPsfModelDetector:
-    requestMemory: 9277
-  reprocessVisitImage:
-    requestMemory: 6368
-  rewriteObject:
-    requestMemory: 6581
-  skyCorr:
-    requestMemory: 16475
-  splitPrimaryObject:
-    requestMemory: 25232
-  splitPrimaryObjectForcedSource:
-    requestMemory: 4312
-  splitPrimarySource:
-    requestMemory: 5433
-  standardizeDiaObjectForcedSource:
-    requestMemory: 5479
-  standardizeDiaSource:
-    requestMemory: 4449
-  standardizeObject:
-    requestMemory: 6580
-  standardizeObjectForcedSource:
-    requestMemory: 4601
-  standardizeRecalibratedStar:
-    requestMemory: 2198
-  standardizeSingleVisitStar:
-    requestMemory: 5094
-  standardizeSource:
-    requestMemory: 6587
-  subtractImages:
-    requestMemory: 4449
-  updateVisitSummary:
-    requestMemory: 4562
+    requestMemory: 6_910
+    memoryMultiplier: 19.0
+  analyzeSingleVisitStarAssociation:
+    requestMemory: 115_068
+##### STEP2 ######
   fgcmBuildFromIsolatedStar:
-    requestMemory: 128000
-  fgcmFitCycle:
-    requestMemory: 480000
-    requestCpus: 60
-    extraRunQuantumOptions: "-j 1 -n 60"
-  gbdesAstrometricFit:
-    requestMemory: 88165
-    requestCpus: 10
-    extraRunQuantumOptions: "-j 1 -n 10 --no-raise-on-partial-outputs"
+    requestMemory: 12_630
   gbdesHealpix3AstrometricFit:
-    requestMemory: 88165
+    requestMemory: 12_800
     requestCpus: 10
     extraRunQuantumOptions: "-j 1 -n 10 --no-raise-on-partial-outputs"
-  fixBackgroundPrettyCoadd:
-    requestMemory: 8000
-  fixStarsPrettyCoadd:
-    requestMemory: 8000
-  makeRGBPicturePrettyCoaddGRI:
-    requestMemory: 8000
-  makeSingleBandRGBCoaddU:
-    requestMemory: 8000
-  makeSingleBandRGBCoaddG:
-    requestMemory: 8000
-  makeSingleBandRGBCoaddR:
-    requestMemory: 8000
-  makeSingleBandRGBCoaddI:
-    requestMemory: 8000
-  makeSingleBandRGBCoaddZ:
-    requestMemory: 8000
-  makeSingleBandRGBCoaddY:
-    requestMemory: 8000
+    memoryMultiplier: 8
+  fitStellarMotion:
+    memoryMultiplier: 2.5
+  fgcmFitCycle: 
+    requestMemory: 40_000
+# step2d-recalibrate-visits
+  gaussianProcessesTurbulenceFit:
+    requestMemory: 7_500
+    memoryMultiplier: 4.0
+  refitPsfModelDetector:
+    requestMemory: 4_950
+    memoryMultiplier: 3.0
+  fgcmOutputProducts:
+    requestMemory: 9_500
+# step2e-recalibrate-tracts
+  analyzeRecalibratedStarAssociation:
+    requestMemory: 21_950
+    memoryMultiplier: 13.0
+  ##### STEP 3 ########
+  makeHealSparsePropertyMaps:
+    requestMemory: 16_803
+    memoryMultiplier: 5.0
+  plotPropertyMapSurvey:
+    requestMemory: 5_500
+  makePsfMatchedWarp:
+    requestMemory: 4_100
+# step3a-coadd-tracts
+  deblendCoaddFootprints:
+    requestMemory: 7_185
+  makeDeepCoaddInputSummaryTract:
+    requestMemory: 11_910
+    memoryMultiplier: 6.0
+  assembleCellCoadd: 
+    requestMemory: 5_300
+  makeTemplateCoaddInputSummaryTract:
+    requestMemory: 4_335
+    memoryMultiplier: 4.2
+  plotPropertyMapTract:
+    requestMemory: 5_700
+  detectCoaddPeaks:
+    requestMemory: 5_800
+  fitDeblendedObjectsExp:
+    requestMemory: 4_900
+  standardizeObject:
+    requestMemory: 4_700
+  rewriteObject:
+    requestMemory: 4_700
+  computeObjectEpochs:
+    requestMemory: 4_700
+  analyzeObjectTableSurveyCore:
+    requestMemory: 2_330
+    memoryMultiplier: 5.0
+  analyzeObjectTableCore:
+    requestMemory: 4_080
+  consolidateObject:
+    requestMemory: 5_820
+  fitDeblendedObjectsSersic:
+    requestMemory: 4_930
+  splitPrimaryObject:
+    requestMemory: 14_810
+  #### STEP4 ######
+  generateEphemerides:
+    requestMemory: 16_000
+  standardizeDiaSource:
+    requestMemory: 4_410
+  computeReliability:
+    requestMemory: 4_410
+  associateAnalysisSource:
+    requestMemory: 16_475
+  filterDiaSource: 
+    requestMemory: 4_410
+  consolidateSsTables:
+    requestMemory: 16_200
+  analyzeSourceAssociation:
+    requestMemory: 59_100
+  filterDiaSourcePostReliability:
+    requestMemory: 4_410
+  subtractImages:
+    requestMemory: 4_300
+  skyCorr:
+    requestMemory: 17_700
+  detectAndMeasureDiaSource:
+    requestMemory: 4_410
+
