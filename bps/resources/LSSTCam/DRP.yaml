@@ -8,13 +8,13 @@
 #
 # (with no outer indentation) to your BPS config file.
 pipetask:
-##### STEP 1 ###### 
+  ##### STEP 1 ######
   associateIsolatedStar:
     requestMemory: 6_910
     memoryMultiplier: 19.0
   analyzeSingleVisitStarAssociation:
     requestMemory: 115_068
-##### STEP2 ######
+  ##### STEP2 ######
   fgcmBuildFromIsolatedStar:
     requestMemory: 12_630
   gbdesHealpix3AstrometricFit:
@@ -24,9 +24,9 @@ pipetask:
     memoryMultiplier: 8
   fitStellarMotion:
     memoryMultiplier: 2.5
-  fgcmFitCycle: 
+  fgcmFitCycle:
     requestMemory: 40_000
-# step2d-recalibrate-visits
+  # step2d-recalibrate-visits
   gaussianProcessesTurbulenceFit:
     requestMemory: 7_500
     memoryMultiplier: 4.0
@@ -35,7 +35,7 @@ pipetask:
     memoryMultiplier: 3.0
   fgcmOutputProducts:
     requestMemory: 9_500
-# step2e-recalibrate-tracts
+  # step2e-recalibrate-tracts
   analyzeRecalibratedStarAssociation:
     requestMemory: 21_950
     memoryMultiplier: 13.0
@@ -47,13 +47,13 @@ pipetask:
     requestMemory: 5_500
   makePsfMatchedWarp:
     requestMemory: 4_100
-# step3a-coadd-tracts
+  # step3a-coadd-tracts
   deblendCoaddFootprints:
     requestMemory: 7_185
   makeDeepCoaddInputSummaryTract:
     requestMemory: 11_910
     memoryMultiplier: 6.0
-  assembleCellCoadd: 
+  assembleCellCoadd:
     requestMemory: 5_300
   makeTemplateCoaddInputSummaryTract:
     requestMemory: 4_335
@@ -90,7 +90,7 @@ pipetask:
     requestMemory: 4_410
   associateAnalysisSource:
     requestMemory: 16_475
-  filterDiaSource: 
+  filterDiaSource:
     requestMemory: 4_410
   consolidateSsTables:
     requestMemory: 16_200
@@ -104,4 +104,3 @@ pipetask:
     requestMemory: 17_700
   detectAndMeasureDiaSource:
     requestMemory: 4_410
-
