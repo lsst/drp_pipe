@@ -3,19 +3,19 @@ formatters:
     formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
     parameters:
       recipe: lossy16
-  visit_image:
+  legacy_visit_image:
     formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
     parameters:
       recipe: lossy16
-  future_visit_image:
+  visit_image:
     formatter: lsst.images.formatters.GenericFormatter
     parameters:
       recipe: lossy16
-  deep_coadd:
+  legacy_deep_coadd:
     formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
     parameters:
       recipe: lossy16
-  future_deep_coadd:
+  deep_coadd:
     formatter: lsst.images.formatters.GenericFormatter
     parameters:
       recipe: lossy16
@@ -28,11 +28,11 @@ formatters:
     parameters:
       recipe: lossy16
   # TODO DM-54569: Remove when difference_image is no longer a final product.
-  difference_image:
+  legacy_difference_image:
     formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
     parameters:
       recipe: lossy16
-  future_difference_image:
+  difference_image:
     formatter: lsst.images.formatters.GenericFormatter
     parameters:
       recipe: lossy16

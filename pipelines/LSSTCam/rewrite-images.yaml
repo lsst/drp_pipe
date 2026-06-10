@@ -23,6 +23,8 @@ tasks:
     class: lsst.pipe.tasks.rewrite_images.RewriteVisitImageTask
   rewriteDifferenceImage:
     class: lsst.pipe.tasks.rewrite_images.RewriteDifferenceImageTask
+  rewriteCellCoadd:
+    class: lsst.pipe.tasks.rewrite_images.RewriteCellCoaddTask
   buildTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
@@ -34,6 +36,8 @@ tasks:
     config:
       connections.diffImVisitInfo: difference_image.obs_info
 subsets:
+  do_coadd_rewrite:
+    - rewriteCellCoadd
   do_stage4_rewrite:
     - rewriteVisitImage
     - rewriteDifferenceImage
