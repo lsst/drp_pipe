@@ -5,6 +5,7 @@ imports:
   - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
 parameters:
   use_cell_coadds: true
+  exclude_aggregate_mask_planes: ["NOT_DEBLENDED"]
 tasks:
   deblend:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask

@@ -128,12 +128,18 @@ subsets:
       - photometricCatalogMatch
       - photometricRefCatObjectTract
       - plotPropertyMapTract
-      - makeBinnedCoaddImage
-      - makeWholeTractImage
-      - makeBinnedDeepNImage
-      - makeWholeTractDeepNImage
-      - makeBinnedTemplateNImage
-      - makeWholeTractTemplateNImage
+      - makeBinnedDeepCoaddImage
+      - makeWholeTractDeepCoaddImage
+      - aggregateDeepCoaddMaskFractions
+      - makeBinnedDeepCoaddNImage
+      - makeWholeTractDeepCoaddNImage
+      - makeBinnedTemplateCoaddImage
+      - makeWholeTractTemplateCoaddImage
+      - aggregateTemplateCoaddMaskFractions
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
+      - makeBinnedTemplateCoaddNImage
+      - makeWholeTractTemplateCoaddNImage
       - refCatObjectTract
       - validateObjectTableCore
       - fitStellarMotion
@@ -203,6 +209,10 @@ subsets:
       - matchedVisitCoreWholeSkyPlot
       - objectTableCoreWholeSkyPlot
       - objectParentTableCoreWholeSkyPlot
+      - makeAggregatedDeepCoaddMaskFractionsTable
+      - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
       - consolidateSsTables
     description: |
       Tasks that should be run as the final step that require global inputs,

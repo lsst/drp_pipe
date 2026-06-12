@@ -58,12 +58,20 @@ imports:
       - validateObjectTableCore
       - computeObjectEpochs
       - analyzeObjectTableSurveyCore
-      - makeBinnedCoaddImage
-      - makeWholeTractImage
-      - makeBinnedTemplateNImage
-      - makeWholeTractTemplateNImage
-      - makeBinnedDeepNImage
-      - makeWholeTractDeepNImage
+      - makeBinnedDeepCoaddImage
+      - makeWholeTractDeepCoaddImage
+      - aggregateDeepCoaddMaskFractions
+      - makeAggregatedDeepCoaddMaskFractionsTable
+      - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
+      - makeBinnedDeepCoaddNImage
+      - makeWholeTractDeepCoaddNImage
+      - makeBinnedTemplateCoaddImage
+      - makeWholeTractTemplateCoaddImage
+      - aggregateTemplateCoaddMaskFractions
+      - makeAggregatedTemplateCoaddMaskFractionsTable
+      - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
+      - makeBinnedTemplateCoaddNImage
+      - makeWholeTractTemplateCoaddNImage
       - makeMetricTableObjectTableCore
       - objectTableCoreWholeSkyPlot
       - makeMetricTableObjectParentTableCore
