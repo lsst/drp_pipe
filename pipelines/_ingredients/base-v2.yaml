@@ -56,6 +56,24 @@ tasks:
     config:
       connections.inputCatalogs: single_visit_star_detector
       connections.outputCatalog: single_visit_star
+  standardizePromptSource:
+    class: lsst.pipe.tasks.postprocess.TransformSourceTableTask
+    config:
+      connections.inputCatalog: single_visit_star_reprocessed_unstandardized
+      connections.outputCatalog: prompt_source_detector
+      functorFile: $PIPE_TASKS_DIR/schemas/prompt_source.yaml
+  consolidatePromptSource:
+    class: lsst.pipe.tasks.postprocess.ConsolidateSourceTableTask
+    config:
+      connections.inputCatalogs: prompt_source_detector
+      connections.outputCatalog: prompt_source_all
+  splitPromptSource:
+    class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
+    config:
+      dimensions: ["visit"]
+      connections.full: prompt_source_all
+      connections.primary: prompt_source
+      connections.nonprimary: prompt_source_nonprimary
   consolidateVisitSummary:
     class: lsst.pipe.tasks.postprocess.ConsolidateVisitSummaryTask
     config:
