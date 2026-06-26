@@ -9,6 +9,10 @@ description: |
   with matching only to external reference catalogs.
 imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+    include:
+      - aggregateCalibrateImageMetadata
+      - makeMetricTableAggregateCalibrateImageMetadata
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityExtended.yaml
     include: analyzeCalibrateImageMetadata
   - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
 tasks:
