@@ -11,6 +11,9 @@ imports:
   - resource://lsst.analysis.tools/resources/pipelines/matchedVisitQualityCore.yaml
   - resource://lsst.analysis.tools/resources/pipelines/visitQualityCore.yaml
   - resource://lsst.analysis.tools/resources/pipelines/wholeSkyCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/visitQualityExtended.yaml
+    include:
+      - analyzeCalibrateImageMetadata
 parameters:
   objectTableCoreWholeSkyPlotKeys: [
     "wPerpPSF_wPerp_psfFlux_median",
