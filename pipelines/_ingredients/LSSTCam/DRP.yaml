@@ -5,6 +5,8 @@ imports:
     labeledSubsetModifyMode: EDIT
     exclude:
       - analysis-detector-initial
+      # TODO: Remove analysis-visit-initial from exclude list during DM-55321
+      - analysis-visit-initial
       # We no longer exclude all the tasks in analysis-visit-recalibrated, but
       # following three are still not needed.
       - analyzeRecalibratedStar
