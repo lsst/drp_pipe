@@ -9,6 +9,10 @@ description: |
   with matching only to external reference catalogs.
 imports:
   - location: resource://lsst.analysis.tools/resources/pipelines/visitQualityCore.yaml
+    include:
+      - aggregateCalibrateImageMetadata
+      - makeMetricTableAggregateCalibrateImageMetadata
+  - location: resource://lsst.analysis.tools/resources/pipelines/visitQualityExtended.yaml
     include: analyzeCalibrateImageMetadata
   - location: resource://lsst.analysis.tools/resources/pipelines/exposureQualityCore.yaml
 tasks:
