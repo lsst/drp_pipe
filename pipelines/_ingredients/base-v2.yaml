@@ -176,15 +176,15 @@ tasks:
     config:
       maskObjects.detection.isotropicGrow: false
       maskObjects.detection.thresholdType: stdev
-      bgModel1.xSize: 81.92  # 8192 pixels
+      bgModel1.xSize: 81.92 # 8192 pixels
       bgModel1.ySize: 81.92
-      bgModel1.pixelSize: 0.01  # mm per pixel
+      bgModel1.pixelSize: 0.01 # mm per pixel
       bgModel1.doSmooth: false
       doSky: true
       doBgModel2: true
-      bgModel2.xSize: 40.96  # 4096 pixels
+      bgModel2.xSize: 40.96 # 4096 pixels
       bgModel2.ySize: 40.96
-      bgModel2.pixelSize: 0.01  # mm per pixel
+      bgModel2.pixelSize: 0.01 # mm per pixel
       bgModel2.doSmooth: true
       bgModel2.smoothScale: 1.0
       connections.calExps: preliminary_visit_image
@@ -702,6 +702,7 @@ subsets:
       - consolidateSingleVisitStar
       - consolidateVisitSummary
       - aggregateCalibrateImageMetadata
+      - aggregateVisitSummary
       - analyzeSingleVisitStar
       - makeAnalysisSingleVisitStarAstrometricRefMatch
       - analyzeSingleVisitStarAstrometricRefMatch
@@ -740,6 +741,7 @@ subsets:
       - makeInitialVisitDetectorTable
       - makeInitialVisitTable
       - makeMetricTableAggregateCalibrateImageMetadata
+      - makeMetricTableAggregateVisitSummary
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
     description: |
@@ -953,7 +955,6 @@ subsets:
       A step to generate gray scale stretched images for data release
       productions that may be run after deep_coadds are available.
 
-
   step3d-coadd-hips:
     subset:
       - makeHighOrderHipsU
@@ -1042,7 +1043,7 @@ subsets:
       - consolidateSsTables
 
   step4e-measure-variability-rgb:
-  # TODO DM-53870 merge this step with step3 hips.
+    # TODO DM-53870 merge this step with step3 hips.
     subset:
       - fixBackgroundPrettyCoadd
       - fixStarsPrettyCoadd
@@ -1052,7 +1053,7 @@ subsets:
       make color images from those fixed inputs.
 
   step4f-make-hips-from-rgb:
-  # TODO DM-53870 merge this step with step3 hips.
+    # TODO DM-53870 merge this step with step3 hips.
     subset:
       - makeHighOrderHipsEpoGRI
       - makeLowOrderHipsEpoGRI
@@ -1086,6 +1087,7 @@ subsets:
     - makeAnalysisSingleVisitStarAstrometricRefMatch
     - analyzeSingleVisitStarAstrometricRefMatch
     - aggregateCalibrateImageMetadata
+    - aggregateVisitSummary
     - makeAnalysisSingleVisitStarPhotometricRefMatch
     - analyzeSingleVisitStarPhotometricRefMatch
     # 1c
@@ -1095,6 +1097,7 @@ subsets:
     - makeInitialVisitDetectorTable
     - makeInitialVisitTable
     - makeMetricTableAggregateCalibrateImageMetadata
+    - makeMetricTableAggregateVisitSummary
     - makeAnalysisSingleVisitStarAssociationMetricTable
     - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
   stage2-recalibrate:
