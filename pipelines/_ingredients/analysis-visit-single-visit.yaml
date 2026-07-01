@@ -12,6 +12,8 @@ imports:
     include:
       - aggregateCalibrateImageMetadata
       - makeMetricTableAggregateCalibrateImageMetadata
+      - aggregateVisitSummary
+      - makeMetricTableAggregateVisitSummary
   - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityExtended.yaml
     include: analyzeCalibrateImageMetadata
   - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
@@ -65,6 +67,16 @@ tasks:
       connections.data: "{targetCatalog}_ref_match_photom"
       # Can't use {targetCatalog} in outputName because it is a template.
       connections.outputName: "single_visit_star_ref_match_photom"
+  aggregateVisitSummary:
+    class: lsst.analysis.tools.tasks.ExposureCatalogAnalysisTask
+    config:
+      connections.inputName: preliminary_visit_summary
+      connections.outputName: preliminary_visit_summary_aggregate
+  makeMetricTableAggregateVisitSummary:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: preliminary_visit_summary_aggregate_metrics
+      connections.outputTableName: preliminary_visit_summary_aggregate_metricsTable
 
 subsets:
   analysis-detector-initial:
@@ -83,6 +95,8 @@ subsets:
       - analyzeSingleVisitStar
       - aggregateCalibrateImageMetadata
       - makeMetricTableAggregateCalibrateImageMetadata
+      - aggregateVisitSummary
+      - makeMetricTableAggregateVisitSummary
       - makeAnalysisSingleVisitStarAstrometricRefMatch
       - analyzeSingleVisitStarAstrometricRefMatch
       - makeAnalysisSingleVisitStarPhotometricRefMatch
