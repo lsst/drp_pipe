@@ -73,6 +73,8 @@ tasks:
     config:
       columns_ref_copy: ["is_pointsource"]
       columns_target_coord_err: ["coord_raErr", "coord_decErr"]
+      columns_target_select_false: ["merge_peak_sky"]
+      columns_target_select_true: ["detect_isPrimary"]
       # Convert ref ra/dec to x/y but do not measure distances from x/y
       coord_format.return_converted_coords: false
       include_unmatched: true
