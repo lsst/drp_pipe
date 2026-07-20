@@ -24,6 +24,7 @@ parameters:
   release_id: 0
   sersic_init_table: object_exp_multiprofit
   use_cell_coadds: false
+  image_type: legacy
 
 tasks:
   # stage1-single-visit production tasks
@@ -255,6 +256,7 @@ tasks:
       connections.visitSummaryList: visit_summary
       connections.multipleCellCoadd: deep_coadd_cell_predetection
       connections.inputMap: deep_coadd_input_map
+      output_image_type: parameters.image_type
       do_input_map: parameters.use_cell_coadds
   assembleTemplateCoadd:
     class: lsst.drp.tasks.assemble_coadd.CompareWarpAssembleCoaddTask
@@ -304,6 +306,7 @@ tasks:
       connections.outputExposure: deep_coadd
       idGenerator.release_id: parameters.release_id
       useCellCoadds: parameters.use_cell_coadds
+      imageType: parameters.image_type
   mergeObjectDetection:
     class: lsst.pipe.tasks.mergeDetections.MergeDetectionsTask
     config:
@@ -322,6 +325,7 @@ tasks:
       connections.deconvolved: deconvolved_deep_coadd
       connections.background: deep_coadd_background
       useCellCoadds: parameters.use_cell_coadds
+      imageType: parameters.image_type
   deblendCoaddFootprints:
     class: lsst.pipe.tasks.deblendCoaddSourcesPipeline.DeblendCoaddSourcesMultiTask
     config:
@@ -336,6 +340,7 @@ tasks:
       connections.scarletModelData: object_scarlet_models
       idGenerator.release_id: parameters.release_id
       useCellCoadds: parameters.use_cell_coadds
+      imageType: parameters.image_type
   measureObjectUnforced:
     class: lsst.pipe.tasks.multiBand.MeasureMergedCoaddSourcesTask
     config:
@@ -352,6 +357,7 @@ tasks:
       connections.background: deep_coadd_background
       idGenerator.release_id: parameters.release_id
       useCellCoadds: parameters.use_cell_coadds
+      imageType: parameters.image_type
   mergeObjectMeasurement:
     class: lsst.pipe.tasks.mergeMeasurements.MergeMeasurementsTask
     config:
@@ -373,6 +379,7 @@ tasks:
       connections.measCat: object_forced_measurement
       idGenerator.release_id: parameters.release_id
       useCellCoadds: parameters.use_cell_coadds
+      imageType: parameters.image_type
   fitDeepCoaddPsfGaussians:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddPsfFitTask
     config:
@@ -383,6 +390,7 @@ tasks:
       connections.cat_output: object_psf_multiprofit
       idGenerator.release_id: parameters.release_id
       use_cell_coadds: parameters.use_cell_coadds
+      image_type: parameters.image_type
   fitDeblendedObjectsExp:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddExpFitTask
     config:
@@ -396,6 +404,7 @@ tasks:
       connections.cat_output: object_exp_multiprofit
       idGenerator.release_id: parameters.release_id
       use_cell_coadds: parameters.use_cell_coadds
+      image_type: parameters.image_type
   fitDeblendedObjectsSersic:
     class: lsst.meas.extensions.multiprofit.pipetasks_fit.MultiProFitCoaddSersicFitTask
     config:
@@ -409,6 +418,7 @@ tasks:
       connections.cat_output: object_sersic_multiprofit
       idGenerator.release_id: parameters.release_id
       use_cell_coadds: parameters.use_cell_coadds
+      image_type: parameters.image_type
   rewriteObject:
     class: lsst.pipe.tasks.postprocess.WriteObjectTableTask
     config:
