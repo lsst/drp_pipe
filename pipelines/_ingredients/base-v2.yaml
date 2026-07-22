@@ -115,7 +115,6 @@ tasks:
     class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationDetectorTask
     config:
       connections.src: single_visit_star_footprints
-      connections.src_schema: single_visit_star_schema
       connections.calexp: preliminary_visit_image
       connections.isolated_star_cats: isolated_star_association
       connections.isolated_star_sources: isolated_star
