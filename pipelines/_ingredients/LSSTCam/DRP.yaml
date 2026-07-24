@@ -12,9 +12,13 @@ imports:
       - analyzeRecalibratedStarPhotometricRefMatch
       - analysis-visit-source
       - step2b-recalibrate-tracts
+      # We drop this analysis task so we can fully reconfigure it with new
+      # mask planes below.
+      - aggregateDeepCoaddMaskPlanes
 parameters:
   use_cell_coadds: true
   schemaFile: "lsstcam.yaml"
+  exclude_aggregate_mask_planes: ["NOT_DEBLENDED"]
 tasks:
   isr:
     class: lsst.ip.isr.IsrTaskLSST
@@ -120,3 +124,11 @@ tasks:
       hg12FixedG12: 0.5
       hg12MagSigmaFloor: 0.05
       hg12NSigmaClip: 10
+  aggregateDeepCoaddMaskFractions:
+    class: lsst.analysis.tools.tasks.WholeTractMaskFractionAnalysisTask
+    config:
+      connections.data: deep_coadd_bin
+      connections.outputName: deep_coadd_tract_mask_fraction
+      file:
+        - $DRP_PIPE_DIR/config/aggregateDeepCoaddMaskFractions.py
+        - $ANALYSIS_TOOLS_DIR/config/wholeTractMaskFractionMetrics.py
