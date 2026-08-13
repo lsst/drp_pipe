@@ -708,6 +708,22 @@ class PipelineTestCase(unittest.TestCase):
         )
         tester.run(butler, self)
 
+    def test_lsstcam_drp_future(self):
+        butler = self.makeButler(writeable=True)
+        tester = PipelineStepTester(
+            os.path.join(PIPELINES_DIR, "LSSTCam", "DRP-future.yaml"),
+            [
+                "#stage1-single-visit",
+                "#stage2-recalibrate",
+                "#stage3-coadd",
+                "#stage4-measure-variability",
+            ],
+            initial_dataset_types=REFCATS,
+            expected_inputs=COMMON_INPUTS | LSSTCAM_INPUTS | {"fgcmLookUpTable"},
+            expected_outputs=(COMMON_V2_OUTPUTS | {"source"}) - {"deep_coadd_background"},
+        )
+        tester.run(butler, self)
+
     def test_lsstcam_drp_fl(self):
         butler = self.makeButler(writeable=True)
         tester = PipelineStepTester(
