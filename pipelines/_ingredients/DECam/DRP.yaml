@@ -40,6 +40,8 @@ tasks:
     class: lsst.pipe.tasks.calibrateImage.CalibrateImageTask
     # TODO: these should live in obs_decam, probably!
     config:
+      connections.astrometry_ref_cat: "gaia_dr3_20230707"
+      connections.photometry_ref_cat: "ps1_pv3_3pi_20170110"
       photometry.match.referenceSelection.magLimit.fluxField: i_flux
       photometry.match.referenceSelection.magLimit.maximum: 22.0
   updateVisitSummary:
