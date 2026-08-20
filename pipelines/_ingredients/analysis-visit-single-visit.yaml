@@ -9,6 +9,10 @@ description: |
   with matching only to external reference catalogs.
 imports:
   - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+    include:
+      - aggregateCalibrateImageMetadata
+      - makeMetricTableAggregateCalibrateImageMetadata
+  - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityExtended.yaml
     include: analyzeCalibrateImageMetadata
   - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
 tasks:
@@ -63,20 +67,28 @@ tasks:
       connections.outputName: "single_visit_star_ref_match_photom"
 
 subsets:
-  analysis-visit-initial:
+  analysis-detector-initial:
     subset:
       - analyzeAmpOffsetMetadata
-      - analyzeCalibrateImageMetadata
       - analyzeAmpInterfaceOffsetMetadata
       - analyzeInitialSummaryStats
+      - analyzeCalibrateImageMetadata
+    description: |
+      Subset containing all detector-level analysis tasks in this pipeline.
+      This subset allows detector-level analysis to be included in steps
+      in a base pipeline and then excluded (with labeledSubsetModifyMode=EDIT)
+      in downstream pipelines that do not want detector-level analysis.
+  analysis-visit-initial:
+    subset:
       - analyzeSingleVisitStar
+      - aggregateCalibrateImageMetadata
+      - makeMetricTableAggregateCalibrateImageMetadata
       - makeAnalysisSingleVisitStarAstrometricRefMatch
       - analyzeSingleVisitStarAstrometricRefMatch
       - makeAnalysisSingleVisitStarPhotometricRefMatch
       - analyzeSingleVisitStarPhotometricRefMatch
     description: |
-      Subset containing all visit-level analysis tasks that run on the final
-      sources. This subset contains all of the tasks in this pipeline, and
-      hence allows it to be included in steps in a base pipeline and then
-      excluded (with labeledSubsetModifyMode=EDIT) in downstream pipelines that
-      do not want visit-level analysis.
+      Subset containing all visit-level analysis tasks in this pipeline.
+      This subset allows visit-level analysis to be included in steps
+      in a base pipeline and then excluded (with labeledSubsetModifyMode=EDIT)
+      in downstream pipelines that do not want visit-level analysis.
