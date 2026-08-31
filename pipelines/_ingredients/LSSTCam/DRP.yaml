@@ -5,8 +5,6 @@ imports:
     labeledSubsetModifyMode: EDIT
     exclude:
       - analysis-detector-initial
-      # TODO: Remove analysis-visit-initial from exclude list during DM-55321
-      - analysis-visit-initial
       # We no longer exclude all the tasks in analysis-visit-recalibrated, but
       # following three are still not needed.
       - analyzeRecalibratedStar
@@ -109,6 +107,18 @@ tasks:
       python: |
         from lsst.analysis.tools.atools import *
         from lsst.analysis.tools.contexts import VisitContext
+  analyzeSingleVisitStar:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      doProducePlots: false
+  analyzeSingleVisitStarAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      doProducePlots: false
+  analyzeSingleVisitStarPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      doProducePlots: false
   makePrettyDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
