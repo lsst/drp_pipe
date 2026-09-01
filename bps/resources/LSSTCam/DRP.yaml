@@ -186,6 +186,8 @@ pipetask:
     requestMemory: 88165
     requestCpus: 10
     extraRunQuantumOptions: "-j 1 -n 10 --no-raise-on-partial-outputs"
+  gaussianProcessesTurbulenceFit:
+    requestMemory: 4000
   fixBackgroundPrettyCoadd:
     requestMemory: 8000
   fixStarsPrettyCoadd:
