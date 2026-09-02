@@ -4,7 +4,7 @@ imports:
   - location: $DRP_PIPE_DIR/pipelines/_ingredients/base-v2.yaml
     labeledSubsetModifyMode: EDIT
     exclude:
-      - analysis-visit-initial
+      - analysis-detector-initial
       # We no longer exclude all the tasks in analysis-visit-recalibrated, but
       # following three are still not needed.
       - analyzeRecalibratedStar
@@ -107,6 +107,18 @@ tasks:
       python: |
         from lsst.analysis.tools.atools import *
         from lsst.analysis.tools.contexts import VisitContext
+  analyzeSingleVisitStar:
+    class: lsst.analysis.tools.tasks.SourceTableVisitAnalysisTask
+    config:
+      doProducePlots: false
+  analyzeSingleVisitStarAstrometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourceAnalysis.RefCatSourceAnalysisTask
+    config:
+      doProducePlots: false
+  analyzeSingleVisitStarPhotometricRefMatch:
+    class: lsst.analysis.tools.tasks.refCatSourcePhotometricAnalysis.RefCatSourcePhotometricAnalysisTask
+    config:
+      doProducePlots: false
   makePrettyDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
     config:
