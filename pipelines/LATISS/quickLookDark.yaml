@@ -4,7 +4,7 @@ description: |
     specialized for LATISS for dark frames.
 instrument: lsst.obs.lsst.Latiss
 imports:
-  - location: $CP_VERIFY_DIR/pipelines/LATISS/verifyDark.yaml
+  - location: resource://lsst.cp.verify/resources/pipelines/LATISS/verifyDark.yaml
     include:
       - verifyDarkIsr
       - verifyDarkDet

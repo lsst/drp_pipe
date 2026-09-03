@@ -3,7 +3,7 @@ description: |
   data repositories with the old 'source' dataset type definition.
 instrument: lsst.obs.lsst.LsstComCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/LSSTComCam/DRP-v2.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/LSSTComCam/DRP-v2.yaml
 tasks:
   splitPrimarySource:
     class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
