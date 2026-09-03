@@ -9,16 +9,16 @@ description: |
   the 'pipelines' directory (or create a custom one) instead.
 
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-single-visit.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-single-visit.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-recalibrated.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-recalibrated.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-coadds.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-visit-source.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-association-source.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-dia.yaml
-  - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/analysis-hips.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-visit-single-visit.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-association-single-visit.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-visit-recalibrated.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-association-recalibrated.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-coadds.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-visit-source.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-association-source.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-dia.yaml
+  - location: resource://lsst.meas.extensions.multiprofit/resources/pipelines/multiprofit_fit_standard.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/analysis-hips.yaml
 
 parameters:
   release_id: 0

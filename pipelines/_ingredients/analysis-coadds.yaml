@@ -2,9 +2,9 @@ description: |
   Plots and metrics to assess coadd and object table quality.  This includes
   both tract-level plots and metrics and survey-level aggregations of those.
 imports:
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/wholeSkyCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/coaddQualityCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/coaddColumnValidate.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/wholeSkyCore.yaml
     include:
       - makeMetricTableObjectTableCore
       - makeMetricTableObjectParentTableCore
@@ -16,7 +16,7 @@ imports:
       - aggregatedDeepCoaddMaskFractionsWholeSkyPlot
       - makeAggregatedTemplateCoaddMaskFractionsTable
       - aggregatedTemplateCoaddMaskFractionsWholeSkyPlot
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/surveyQualityCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/surveyQualityCore.yaml
 tasks:
   analyzeObjectTableCore:
     class: lsst.analysis.tools.tasks.ObjectTableTractAnalysisTask

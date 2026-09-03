@@ -4,7 +4,7 @@ description: |
     specialized for LSSTCam for bias frames.
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $CP_VERIFY_DIR/pipelines/LSSTCam/verifyBias.yaml
+  - location: resource://lsst.cp.verify/resources/pipelines/LSSTCam/verifyBias.yaml
     include:
       - verifyBiasIsr
       - verifyBiasDet

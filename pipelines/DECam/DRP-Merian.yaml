@@ -6,7 +6,7 @@ description: |
   task isrForCrosstalkSources must be run. More information on that task can be
   found in the isrForCrosstalkSources.yaml pipeline file.
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DECam/DRP.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/DECam/DRP.yaml
     exclude:
       - isrForCrosstalkSources
 tasks:

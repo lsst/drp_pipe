@@ -4,7 +4,7 @@ description: |
     specialized for LATISS for flat frames.
 instrument: lsst.obs.lsst.Latiss
 imports:
-  - location: $CP_VERIFY_DIR/pipelines/LATISS/verifyFlat.yaml
+  - location: resource://lsst.cp.verify/resources/pipelines/LATISS/verifyFlat.yaml
     include:
       - verifyFlatIsr
       - verifyFlatDet

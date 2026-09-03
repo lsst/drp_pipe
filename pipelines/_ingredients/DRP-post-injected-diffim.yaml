@@ -8,7 +8,7 @@ description: AP Pipeline with synthetic/fake sources. Templates are inputs.
 # - afterburner is metrics and other non-essential tasks that are skipped by Prompt Processing
 
 imports:
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/apDetectorVisitFakesCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/apDetectorVisitFakesCore.yaml
 
 tasks:
   injectedMatchDiaSrc:
