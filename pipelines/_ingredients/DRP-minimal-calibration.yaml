@@ -6,7 +6,7 @@ description: |
   the 'pipelines' directory (or create a custom one) instead.
 
 imports:
-  - location: $MEAS_EXTENSIONS_MULTIPROFIT_DIR/pipelines/multiprofit_fit_standard.yaml
+  - location: resource://lsst.meas.extensions.multiprofit/resources/pipelines/multiprofit_fit_standard.yaml
 
 parameters:
   use_cell_coadds: false

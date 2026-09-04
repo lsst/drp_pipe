@@ -4,7 +4,7 @@ description: |
     specialized for LATISS for bias frames.
 instrument: lsst.obs.lsst.Latiss
 imports:
-  - location: $CP_VERIFY_DIR/pipelines/LATISS/verifyBias.yaml
+  - location: resource://lsst.cp.verify/resources/pipelines/LATISS/verifyBias.yaml
     include:
       - verifyBiasIsr
       - verifyBiasDet

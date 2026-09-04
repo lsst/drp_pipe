@@ -4,7 +4,7 @@ description: |
     specialized for LSSTCam for flat frames.
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $CP_VERIFY_DIR/pipelines/LSSTCam/verifyFlat.yaml
+  - location: resource://lsst.cp.verify/resources/pipelines/LSSTCam/verifyFlat.yaml
     include:
       - verifyFlatIsr
       - verifyFlatDet

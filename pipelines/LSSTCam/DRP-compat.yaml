@@ -4,7 +4,7 @@ description: >
   'source' dataset type definition.
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam/DRP.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/LSSTCam/DRP.yaml
 tasks:
   splitPrimarySource:
     class: lsst.pipe.tasks.split_primary.SplitPrimaryTask
