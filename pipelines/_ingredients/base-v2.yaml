@@ -844,6 +844,7 @@ subsets:
       - makeVisitTable
       - makeAnalysisRecalibratedStarAssociationMetricTable
       - makeAnalysisRecalibratedStarAssociationWholeSkyPlot
+      - makeRecalibratedStarAstrometricRefMatchMetricTable
     description: |
       A step that consolidates final visit[, detector] metadata and analysis
       into full-survey tables.
@@ -1130,6 +1131,7 @@ subsets:
     - makeVisitTable
     - makeAnalysisRecalibratedStarAssociationMetricTable
     - makeAnalysisRecalibratedStarAssociationWholeSkyPlot
+    - makeRecalibratedStarAstrometricRefMatchMetricTable
   stage3-coadd:
     # 3a
     - makeDirectWarp
