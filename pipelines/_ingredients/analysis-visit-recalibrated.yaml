@@ -28,6 +28,14 @@ tasks:
       connections.data: "{targetCatalog}_ref_match_astrom"
       # Can't use {targetCatalog} in outputName because it is a template.
       connections.outputName: "recalibrated_star_ref_match_astrom"
+  makeRecalibratedStarAstrometricRefMatchMetricTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "recalibrated_star_ref_match_astrom_metrics"
+      connections.outputTableName: "recalibrated_star_ref_match_astrom_metricsTable"
+      inputDataDimensions: ["visit"]
+      outputTableDimensions: ["instrument"]
+      dataIdFieldsToIncludeAsColumns: ["visit", "band"]
   makeAnalysisRecalibratedStarPhotometricRefMatch:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
     config:
@@ -59,6 +67,7 @@ subsets:
       - analyzeRecalibratedStar
       - makeAnalysisRecalibratedStarAstrometricRefMatch
       - analyzeRecalibratedStarAstrometricRefMatch
+      - makeRecalibratedStarAstrometricRefMatchMetricTable
       - makeAnalysisRecalibratedStarPhotometricRefMatch
       - analyzeRecalibratedStarPhotometricRefMatch
       # analyzeRecalibratedStarObjectMatch (previously sourceObjectMatch) is
