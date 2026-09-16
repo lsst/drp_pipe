@@ -1,0 +1,64 @@
+# These are the default configs for running remote HTCondor workflows
+# at RAL.
+#
+# Use it by adding
+#
+# includeConfigs:
+#   - ${DRP_PIPE_DIR}/bps/remote/RAL/HTCondor_defaults.yaml
+#
+# (with no outer indentation) to your BPS config file.
+
+bpsBatchSubmission: true
+
+preparePayloadWorkflow:
+  # This site is defined in
+  # ctrl_bps_htcondor/python/lsst/ctrl/bps/htcondor/etc/htcondor_defaults.yaml.
+  computeSite: BPS_SUBMIT
+
+site:
+  RAL:
+    nodeset: "RAL"
+    memoryLimit: 1_056_000
+    bpsUseRunTempSpace: true
+    bpsUseShared: false
+    bpsMakeCommand: false
+    fileDistributionEndpoint: "${LSST_RUN_TEMP_SPACE}/bps_dev/payload/{uniqProcName}/"
+
+computeSite: RAL
+
+# Copy the .qg file from fileDistributionEndpoint to local scratch in
+# ${LSST_GLIDEIN_DIR}:
+postEnvSetup: >-
+  export shared_qg={fileDistributionEndpoint}{uniqProcName}.qg;
+  echo shared_qg ${shared_qg};
+  base_qg=`basename ${shared_qg}`;
+  local_qg=${LSST_GLIDEIN_DIR}/${base_qg};
+  echo local_qg ${local_qg};
+  if [ -f ${local_qg} ]; then
+    echo The file exists.  No copy.;
+  else
+    echo The file does not exist.  Using gfal-copy to copy the file;
+    echo gfal-copy ${shared_qg} ${local_qg}.$$.tmp;
+    gfal-copy ${shared_qg} ${local_qg}.$$.tmp;
+    ls -lart ${LSST_GLIDEIN_DIR};
+    ln ${local_qg}.$$.tmp ${local_qg};
+  fi;
+  ls -lart ${LSST_GLIDEIN_DIR}
+
+runQuantumCommand: ${CTRL_MPEXEC_DIR}/bin/pipetask {runPreCmdOpts} run-qbb {butlerConfig}
+  ${LSST_GLIDEIN_DIR}/{uniqProcName}.qg --qgraph-node-id {qgraphNodeId} {extraRunQuantumOptions}
+
+# Turn off the qg copy for these tasks:
+buildQuantumGraph:
+  postEnvSetup: ""
+preparePayloadWorkflow:
+  postEnvSetup: ""
+
+# The following entries for pipetaskInit and finalJob use the .qg file
+# that's been copied to local scratch:
+pipetask:
+  pipetaskInit:
+    runQuantumCommand: ${CTRL_MPEXEC_DIR}/bin/pipetask {initPreCmdOpts} pre-exec-init-qbb {butlerConfig} ${LSST_GLIDEIN_DIR}/{uniqProcName}.qg {extraInitOptions}
+
+finalJob:
+  command1: ${DAF_BUTLER_DIR}/bin/butler {finalPreCmdOpts} aggregate-graph ${LSST_GLIDEIN_DIR}/{uniqProcName}.qg {butlerConfig} -j {requestCpus} --register-dataset-types {updateOutputChain} {extraAggregateOptions}
