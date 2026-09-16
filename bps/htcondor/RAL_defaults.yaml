@@ -1,0 +1,21 @@
+# These are the default configs for running remote HTCondor workflows
+# at RAL.
+#
+# Use it by adding
+#
+# includeConfigs:
+#   - ${DRP_PIPE_DIR}/bps/htcondor/RAL_defaults.yaml
+#
+# (with no outer indentation) to your BPS config file.
+#
+# Include baseline configs that apply to all remote sites.
+includeConfigs:
+  - ${DRP_PIPE_DIR}/bps/htcondor/remote_baseline.yaml
+
+# Site-specific configs.
+site:
+  RAL:
+    nodeset: "RAL"
+    memoryLimit: 1_056_000
+
+computeSite: RAL
