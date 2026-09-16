@@ -1,0 +1,37 @@
+# This is a prescription for quantum clustering modifying
+# LSSTCam/DRP-clustering.yaml to cluster warp and coadd tasks
+# together.  This is useful for caching so that outputs from the warps
+# are already in the cache when the coadd tasks run.
+#
+# Use it by adding:
+#
+#  includeConfigs:
+#    - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-warp-coadd-clustering.yaml
+#
+# (with no outer indentation) to your BPS config file.
+
+# Include the standard clustering config so that we can just add new
+# clusters and override existing ones, as needed.
+includeConfigs:
+  - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-clustering.yaml
+
+cluster:
+  step3a_select_visits:
+    pipetasks: selectDeepCoaddVisits,selectTemplateCoaddVisits
+    dimensions: band,patch
+  step3a_warp_coadd:
+    pipetasks: makeDirectWarp,makePsfMatchedWarp,assembleDeepCoadd,assembleCellCoadd,assembleTemplateCoadd,detectCoaddPeaks
+    dimensions: band,patch,tract
+  step4c_pretty_warp_coadd:
+    pipetasks: makePrettyDirectWarp,makePrettyPsfMatchedWarp,assemblePrettyCoadd,makeBinnedPrettyCoaddImage,makeBinnedPrettyCoaddNImage
+    dimensions: band,patch,tract
+
+  # Disable or modify the existing clusters in the standard config so
+  # that tasks appear in only one cluster.
+  makeWarpTract:
+    pipetasks: ""
+  coadd:
+    pipetasks: ""
+  make_analysis_images:
+    pipetasks: makeBinnedTemplateCoaddNImage,makeBinnedDeepCoaddNImage,makeBinnedDeepCoaddImage
+    dimensions: tract,band
