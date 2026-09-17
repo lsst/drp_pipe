@@ -18,5 +18,5 @@ environment:
   # Default caching config
   # Each pipetask creates its own local cache folder,
   # $TMPDIR/butler-cache-dir-*
-  DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/RAL/config:${DAF_BUTLER_CONFIG_PATH}
+  DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/config:${DAF_BUTLER_CONFIG_PATH}
   DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=2_000

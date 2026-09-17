@@ -45,8 +45,14 @@ datastore:
       bias: true
       dark: true
       flat: true
-      bfk: true
       crosstalk: true
+      camera: true
+      cti: true
+      defects: true
+      electroBfDistortionMatrix: true
+      gain_correction: true
+      linearizer: true
+      ptc: true
       post_isr_image: true
       single_visit_star_unstandardized: true
 
