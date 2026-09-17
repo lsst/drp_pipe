@@ -1,10 +1,10 @@
 # These are the default configs for running remote HTCondor workflows
-# at RAL.
+# at IN2P3.
 #
 # Use it by adding
 #
 # includeConfigs:
-#   - ${DRP_PIPE_DIR}/bps/htcondor/RAL/remote_defaults.yaml
+#   - ${DRP_PIPE_DIR}/bps/htcondor/IN2P3/remote_defaults.yaml
 #
 # (with no outer indentation) to your BPS config file.
 #
@@ -14,8 +14,8 @@ includeConfigs:
 
 # Site-specific configs.
 site:
-  RAL:
-    nodeset: "RAL"
-    memoryLimit: 1_056_000
+  IN2P3:
+    nodeset: "IN2P3"
+    memoryLimit: 1_259_000
 
-computeSite: RAL
+computeSite: IN2P3
