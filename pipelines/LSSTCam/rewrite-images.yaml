@@ -28,7 +28,7 @@ tasks:
   buildTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
-      connections.wcs: visit_image.projection
+      connections.wcs: visit_image.sky_projection
   makePrettyDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
   filterDiaSource:
