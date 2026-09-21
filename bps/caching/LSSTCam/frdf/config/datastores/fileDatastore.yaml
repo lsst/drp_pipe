@@ -35,7 +35,7 @@ datastore:
       # - age (threshold is oldest file in seconds)
       # Default for everyone is to limit the cache size to 4 datasets.
       mode: datasets
-      threshold: 1_000
+      threshold: 2_000
     # Default cache value. This will be the default decision if no specific
     # match is found in the "cacheable" section later on.
     default: false
