@@ -55,6 +55,7 @@ datastore:
       ptc: true
       post_isr_image: true
       single_visit_star_unstandardized: true
+      the_monster_20250219: true
 
       # step2c_refitpsf (refitPsfModelDetector)
       single_visit_star_footprints: true
