@@ -60,22 +60,22 @@ datastore:
 
       # skymap
       skyMap: true
-
+      
       # step1detector (isr, calibrateImage, standardizeSingleVisitStar, ...)
       bias: true
       dark: true
       flat: true
-      bfk: true
       crosstalk: true
+      camera: true
+      cti: true
+      defects: true
+      electroBfDistortionMatrix: true
+      gain_correction: true
+      linearizer: true
+      ptc: true
       post_isr_image: true
       single_visit_star_unstandardized: true
-      camera: true
-      astrometry_camera: true
-      # step2d_refitpsf (refitPsfModelDetector)
-      single_visit_star_footprints: true
-      isolated_star: true
-      isolated_star_association: true
-      single_visit_star_schema: true
+      the_monster_20250219: true
 
       # step2d_visits (recalibrateSingleVisitStar, standardizeRecalibratedStar)
       # single_visit_star_footprints already added above

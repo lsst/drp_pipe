@@ -18,4 +18,4 @@ environment:
   # $TMPDIR/butler-cache-dir-*
   DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/frdf/config:${DAF_BUTLER_CONFIG_PATH}
   DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=2_000
-  DAF_BUTLER_CACHE_DIRECTORY: /tmp
+  DAF_BUTLER_CACHE_DIRECTORY: /tmp/butler_cache
