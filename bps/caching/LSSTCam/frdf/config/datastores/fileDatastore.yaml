@@ -60,7 +60,7 @@ datastore:
 
       # skymap
       skyMap: true
-      
+
       # step1detector (isr, calibrateImage, standardizeSingleVisitStar, ...)
       bias: true
       dark: true
