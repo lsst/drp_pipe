@@ -3,7 +3,7 @@ description: |
   Complete pipeline includes step1,step2,step3,step4,step5,step6,step7
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
     labeledSubsetModifyMode: EDIT
     exclude:
       - matchObjectToTruth

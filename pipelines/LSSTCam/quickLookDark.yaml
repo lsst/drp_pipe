@@ -4,7 +4,7 @@ description: |
     specialized for LSSTCam for dark frames.
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $CP_VERIFY_DIR/pipelines/LSSTCam/verifyDark.yaml
+  - location: resource://lsst.cp.verify/resources/pipelines/LSSTCam/verifyDark.yaml
     include:
       - verifyDarkIsr
       - verifyDarkDet
