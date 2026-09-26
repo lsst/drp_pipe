@@ -131,7 +131,7 @@ tasks:
   buildTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
-      connections.bbox: pvi.bbox
+      connections.detector: pvi.detector
       connections.wcs: pvi.wcs
       connections.coaddName: goodSeeing
       connections.coaddExposures: goodSeeingCoadd

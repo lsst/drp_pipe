@@ -498,7 +498,7 @@ tasks:
   buildTemplate:
     class: lsst.ip.diffim.getTemplate.GetTemplateTask
     config:
-      connections.bbox: visit_image.bbox
+      connections.detector: visit_image.detector
       connections.wcs: visit_image.wcs
       connections.coaddExposures: template_coadd
       connections.template: template_detector
