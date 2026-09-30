@@ -22,6 +22,7 @@ tasks:
       connections.outputName: analysis_source_association
       connections.visitTable: visit_table
       applyAstrometricCorrections: true
+      maxObjects: 100000
   makeAnalysisSourceAssociationMetricTable:
     class: lsst.analysis.tools.tasks.MakeMetricTableTask
     config:
