@@ -16,6 +16,7 @@ tasks:
       # gather/scatter to stage 2.
       connections.visitTable: preliminary_visit_table
       applyAstrometricCorrections: true
+      maxObjects: 100000
   makeAnalysisRecalibratedStarAssociationMetricTable:
     class: lsst.analysis.tools.tasks.MakeMetricTableTask
     config:

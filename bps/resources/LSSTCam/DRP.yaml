@@ -19,13 +19,13 @@ pipetask:
   analyzeObjectTableSurveyCore:
     requestMemory: 103905
   analyzeRecalibratedStarAssociation:
-    requestMemory: 60000  # from 214204. Let it retry 2x.
+    requestMemory: 16000  # from 214204. Let it retry 2x.
   analyzeRecalibratedStarObjectMatch:
     requestMemory: 6506
   analyzeSingleVisitStarAssociation:
-    requestMemory: 60000 # from 228948. Let it retry 2x.
+    requestMemory: 16000 # from 228948. Let it retry 2x.
   analyzeSourceAssociation:
-    requestMemory: 120000 # quarter node from 317839
+    requestMemory: 16000 # quarter node from 317839
   assembleCellCoadd:
     requestMemory: 5087
   assembleDeepCoadd:

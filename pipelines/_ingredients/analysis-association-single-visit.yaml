@@ -10,6 +10,7 @@ tasks:
       connections.associatedSourceIds: isolated_star_association
       connections.outputName: single_visit_star_association
       applyAstrometricCorrections: false
+      maxObjects: 100000
   makeAnalysisSingleVisitStarAssociationMetricTable:
     class: lsst.analysis.tools.tasks.MakeMetricTableTask
     config:
