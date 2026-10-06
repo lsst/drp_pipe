@@ -3,6 +3,6 @@ description: >
   image storage classes in the `lsst.images` package.
 instrument: lsst.obs.lsst.LsstCam
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/LSSTCam/DRP-ci_lsstcam.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/LSSTCam/DRP-ci_lsstcam.yaml
 parameters:
   image_type: future

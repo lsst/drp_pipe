@@ -1,8 +1,8 @@
 description: DRP specialized for ci_imsim test package.
 instrument: lsst.obs.lsst.LsstCamImSim
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
-  - $ANALYSIS_TOOLS_DIR/pipelines/diaTractQualityCore.yaml
+  - resource://lsst.drp.pipe/resources/pipelines/_ingredients/LSSTCam-imSim/DRP.yaml
+  - resource://lsst.analysis.tools/resources/pipelines/diaTractQualityCore.yaml
 parameters:
   use_cell_coadds: true
   exclude_aggregate_mask_planes: ["NOT_DEBLENDED"]

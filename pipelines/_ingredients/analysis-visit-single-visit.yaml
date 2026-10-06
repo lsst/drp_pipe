@@ -8,9 +8,9 @@ description: |
   Plots and metrics to assess visit quality before joint calibration steps,
   with matching only to external reference catalogs.
 imports:
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/visitQualityCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/visitQualityCore.yaml
     include: analyzeCalibrateImageMetadata
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/exposureQualityCore.yaml
 tasks:
   analyzeAmpInterfaceOffsetMetadata:
     class: lsst.analysis.tools.tasks.DatasetMetadataAnalysisTask

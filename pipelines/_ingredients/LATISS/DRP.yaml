@@ -1,12 +1,12 @@
 description: DRP specialized for LATISS surveys
 instrument: lsst.obs.lsst.Latiss
 imports:
-  - location: $DRP_PIPE_DIR/pipelines/_ingredients/DRP-full.yaml
+  - location: resource://lsst.drp.pipe/resources/pipelines/_ingredients/DRP-full.yaml
     exclude:
       - skyCorr
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddColumnValidate.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/coaddQualityCore.yaml
-  - location: $ANALYSIS_TOOLS_DIR/pipelines/exposureQualityCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/coaddColumnValidate.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/coaddQualityCore.yaml
+  - location: resource://lsst.analysis.tools/resources/pipelines/exposureQualityCore.yaml
     exclude:
       - analyzeObjectTableCore
 

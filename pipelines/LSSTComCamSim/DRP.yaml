@@ -1,7 +1,7 @@
 description: DRP Pipeline for Simulated ComCam
 instrument: lsst.obs.lsst.LsstComCamSim
 imports:
-  - $DRP_PIPE_DIR/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
+  - resource://lsst.drp.pipe/resources/pipelines/_ingredients/LSSTComCamSim/DRP.yaml
 
 subsets:
   step1:

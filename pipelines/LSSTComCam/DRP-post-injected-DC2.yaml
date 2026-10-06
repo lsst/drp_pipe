@@ -1,6 +1,6 @@
 description: Match tract-level injected_deep_coadd_predetection_catalog datasets to injected_object datasets.
 imports:
-  - location: $SOURCE_INJECTION_DIR/pipelines/match_injected_tract_catalog.yaml
+  - location: resource://lsst.source.injection/resources/pipelines/match_injected_tract_catalog.yaml
 tasks:
   consolidate_injected_catalogs:
     class: lsst.source.injection.utils.ConsolidateInjectedCatalogsTask
