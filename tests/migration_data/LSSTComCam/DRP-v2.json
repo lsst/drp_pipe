@@ -431,6 +431,7 @@
     "object_exponentialSizeVsSersicMag_ScatterPlotWithTwoHists": "objectTableCore_exponentialSizeVsSersicMag_ScatterPlotWithTwoHists",
     "object_metrics": "objectTableCore_metrics",
     "object_psfCModelScatter_ScatterPlotWithTwoHists": "objectTableCore_psfCModelScatter_ScatterPlotWithTwoHists",
+    "object_psfSersicScatter_ScatterPlotWithTwoHists": "objectTableCore_psfSersicScatter_ScatterPlotWithTwoHists",
     "object_sersicEllipticityVsSersicMag_ScatterPlotWithTwoHists": "objectTableCore_sersicEllipticityVsSersicMag_ScatterPlotWithTwoHists",
     "object_sersicIndexVsSersicMag_ScatterPlotWithTwoHists": "objectTableCore_sersicIndexVsSersicMag_ScatterPlotWithTwoHists",
     "object_sersicSizeVsSersicMag_ScatterPlotWithTwoHists": "objectTableCore_sersicSizeVsSersicMag_ScatterPlotWithTwoHists",
