@@ -163,7 +163,16 @@ scripts.BasicSConstruct(
     "drp_pipe", disableCc=True, noCfgFile=True, defaultTargets=targetList
 )
 
-env.Depends(diffim_wfakes_LSSTCam_path, targets["version"])
-env.Depends(diffim_wfakes_LSSTComCam_path, targets["version"])
+# The pipeline definitions import each other via resource:// URIs, which
+# requires that the lsst.drp.pipe package be importable, and that in turn
+# requires the generated version.py to exist.
+for injected_pipeline in [
+    rc2_subset_injected_deepCoadd_stars,
+    RC2_injected_deepCoadd_stars,
+    LSSTComCam_diffim_injected,
+    LSSTCam_diffim_injected,
+    *LSSTComCam_injected,
+]:
+    env.Depends(injected_pipeline, targets["version"])
 env.Depends(targets["tests"], diffim_wfakes_LSSTCam_path)
 env.Depends(targets["tests"], diffim_wfakes_LSSTComCam_path)
