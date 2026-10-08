@@ -16,7 +16,6 @@ tasks:
     class: lsst.ip.isr.IsrTaskLSST
     config:
       connections.outputExposure: post_isr_image
-      doFlat: false
   verifyFlatDet:
     class: lsst.cp.verify.CpVerifyFlatTask
     config:
