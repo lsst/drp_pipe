@@ -7,12 +7,15 @@
 #   - ${DRP_PIPE_DIR}/bps/htcondor/LANCS_defaults.yaml
 #
 # (with no outer indentation) to your BPS config file.
-#
-# Include baseline configs that apply to all remote sites.
-includeConfigs:
-  - ${DRP_PIPE_DIR}/bps/htcondor/remote_baseline.yaml
 
-# Site-specific configs.
+includeConfigs:
+  # Include baseline configs that apply to all remote sites.
+  - ${DRP_PIPE_DIR}/bps/htcondor/remote_baseline.yaml
+  # Clustering and caching for LANCS.
+  - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-warp-coadd-clustering.yaml
+  - ${DRP_PIPE_DIR}/bps/caching/LSSTCam/LANCS/DRP-caching.yaml
+
+# Other site-specific configs.
 site:
   LANCS:
     nodeset: "LANCS"
