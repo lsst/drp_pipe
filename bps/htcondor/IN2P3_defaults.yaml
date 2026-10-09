@@ -7,12 +7,15 @@
 #   - ${DRP_PIPE_DIR}/bps/htcondor/IN2P3_defaults.yaml
 #
 # (with no outer indentation) to your BPS config file.
-#
-# Include baseline configs that apply to all remote sites.
-includeConfigs:
-  - ${DRP_PIPE_DIR}/bps/htcondor/remote_baseline.yaml
 
-# Site-specific configs.
+includeConfigs:
+  # Include baseline configs that apply to all remote sites.
+  - ${DRP_PIPE_DIR}/bps/htcondor/remote_baseline.yaml
+  # Clustering and caching for IN2P3.
+  - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-warp-coadd-clustering.yaml
+  - ${DRP_PIPE_DIR}/bps/caching/LSSTCam/frdf/DRP-caching.yaml
+
+# Other site-specific configs.
 site:
   IN2P3:
     nodeset: "IN2P3"
