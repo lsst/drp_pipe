@@ -1,0 +1,126 @@
+## Template BPS submit yaml for LSSTCam DRP runs with HTCondor at SLAC (USDF).
+##
+## Use it by copying this file and running:
+##
+##   bps submit submit-slac.yaml
+##
+## Lines starting with "# " are optional settings: delete the "# " to enable.
+## Lines starting with "##" are explanation and should stay commented.
+##
+## See https://pipelines.lsst.io/modules/lsst.ctrl.bps/quickstart.html and
+## https://pipelines.lsst.io/middleware/faq.html for more options.
+
+## Use clustering, compression, and memory requests for efficiency.
+includeConfigs:
+  ## TODO DM-53944: Add caching config example for S3 repos
+  ## TODO DM-56621: Replace eups:// with resource://
+  - eups://drp_pipe/bps/clustering/LSSTCam/DRP-clustering.yaml
+  - eups://drp_pipe/bps/compression/LSSTCam/DRP-compression.yaml
+  - eups://drp_pipe/bps/resources/LSSTCam/DRP.yaml
+
+## provisionResources replaces the need for manual allocateNodes.py.
+## Use only if running one bps job at a time. Default is false.
+provisionResources: true
+provisioning:
+  provisioningMaxWallTime: "02:00:00"
+
+## Specify either pipelineYaml or "qgraphFile: path/to/existing/file.qg".
+pipelineYaml: resource://lsst.drp.pipe/resources/pipelines/LSSTCam/DRP.yaml#isr,calibrateImage
+
+## Optional labels for grouping submissions. Displayed by "bps report".
+# project: dev
+# campaign: DM-XXXXX
+# computeSite: SLAC
+
+payload:
+  ## The output collection is named "u/{operator}/{payloadName}" by default.
+  ## payloadName can include slashes like all collection names.
+  payloadName: example/test
+
+  ## Override the output collection or output run names. Edits discouraged.
+  # output: "u/{operator}/{payloadName}"
+  # outputRun: "{output}/{timestamp}"
+
+  ## Repo alias or path to a butler.yaml.
+  butlerConfig: main
+
+  ## Can contain comma-separated collection lists. No spaces. No trailing slash
+  ## Ignored if output collection (specified via payloadName or output) exists.
+  inCollection: LSSTCam/defaults
+
+  ## The ">-" automatically concatenates each line with a space separating them.
+  ## The skymap constraint is only needed by tract- and patch-level tasks.
+  dataQuery: >-
+    instrument='LSSTCam'
+    AND skymap='lsst_cells_v2'
+    AND visit=2025122200367
+    AND detector IN (5, 6, 7)
+
+## Extra options for quantum graph generation, passed as command-line
+## arguments to "pipetask qgraph". Some examples to edit:
+# extraQgraphOptions: >-
+#   --dataset-query-constraint raw
+#   --data-id-table exposure_list.ecsv
+#   -c parameters:parameter_name=parameter_value
+#   -c isr:config_parameter=config_value
+#   --select-tasks '~makePrettyDirectWarp & ~makePrettyPsfMatchedWarp'
+#   --skip-existing-in {output}
+
+## ================================================
+## Optional, but always used by Campaign Management
+## ================================================
+
+## With these settings jobs take longer, but provide better reporting,
+## provenance recording, resource reporting, and a higher chance of
+## successful job completion.
+
+## Extra runtime options, passed as command-line arguments to
+## "pipetask run-qbb" (similar to "pipetask run").
+## --no-raise-on-partial-outputs will return exit code 0 on AlgorithmErrors.
+# extraRunQuantumOptions: "--no-raise-on-partial-outputs"
+
+## If using --no-raise-on-partial-outputs, need a real failure report.
+## TODO DM-56594: Replace pipetask report with butler provenance-report
+# finalJob:
+#   extraAggregateOptions: "--worker-log-dir {submitPath}/jobs/finalJob -o {submitPath}/{uniqProcName}_prov.qg"
+#   command2: >-
+#     pipetask report {butlerConfig} {fileDistributionEndPoint}{qgraphFile}
+#     --force-v2 --full-output-filename {submitPath}/{uniqProcName}_pipetask_report.json
+
+## Exit codes that are never retried. The default, [1, 2], does not retry
+## exit code 1. Setting it to [2] also retries exit code 1,
+## which is good if you see transient failures that succeed upon retry.
+# retryUnlessExit: [2]
+
+## ================================================
+## Per-Task and Clustering Overrides
+## ================================================
+
+## Override any of the resource usage or basic bps configs per-task like:
+# pipetask:
+#   isr:
+#     requestCpus: 1
+#     requestMemory: 2_048
+#     numberOfRetries: 5
+#     memoryMultiplier: 2
+
+
+## Override settings of clusters defined in the included clustering yaml
+## A task can only belong to one cluster.
+# clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
+# cluster:
+#   step1detector:
+#     partitionMaxClusters: 10000
+
+## ================================================
+## Example Advanced Options; Edits Discouraged
+## ================================================
+
+## Change the submit directory.
+# submitPath: "${PWD}/submit/{outputRun}"
+
+## Templates for BPS filenames.
+## The default uniqProcName is the output run translated to snake case.
+# qgraphFileTemplate: "{uniqProcName}.qg"
+# subDirTemplate: "{label}/{tract}/{patch}/{band}/{subfilter}/{physical_filter}/{visit}/{exposure}"
+# templateDataId: "{tract}_{patch}_{band}_{visit}_{exposure}_{detector}"
