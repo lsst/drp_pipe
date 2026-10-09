@@ -1,7 +1,6 @@
 ## Template BPS submit yaml for LSSTCam DRP runs with HTCondor at SLAC (USDF).
 ##
-## Use it by copying this file, editing at least payloadName and dataQuery,
-## and running:
+## Use it by copying this file and running:
 ##
 ##   bps submit submit-slac.yaml
 ##
@@ -14,7 +13,7 @@
 ## Use clustering, compression, and memory requests for efficiency.
 includeConfigs:
   ## TODO DM-53944: Add caching config example for S3 repos
-  ## TODO DM-XXXXX: Replace eups:// with resource://
+  ## TODO DM-56621: Replace eups:// with resource://
   - eups://drp_pipe/bps/clustering/LSSTCam/DRP-clustering.yaml
   - eups://drp_pipe/bps/compression/LSSTCam/DRP-compression.yaml
   - eups://drp_pipe/bps/resources/LSSTCam/DRP.yaml
