@@ -1,0 +1,109 @@
+# Example best practices for HTCondor BPS jobs running remotely at
+# IN2P3, LANCS, or RAL.
+#
+# See https://pipelines.lsst.io/modules/lsst.ctrl.bps/quickstart.html and
+# https://pipelines.lsst.io/middleware/faq.html for more options
+
+# Use the compression and memory requests for efficiency.
+includeConfigs:
+  - "${DRP_PIPE_DIR}/bps/compression/LSSTCam/DRP-compression.yaml"
+  - "${DRP_PIPE_DIR}/bps/resources/LSSTCam/DRP.yaml"
+
+# Uncomment one of the following three configs to run at the
+# corresponding remote site.  These already include the config files
+# for clustering and caching at those sites.
+#  - "${DRP_PIPE_DIR}/bps/htcondor/IN2P3_defaults.yaml"
+#  - "${DRP_PIPE_DIR}/bps/htcondor/LANCS_defaults.yaml"
+#  - "${DRP_PIPE_DIR}/bps/htcondor/RAL_defaults.yaml"
+
+# Remote submissions use the cvmfs distributions, so the version of the
+# LSST stack must be provided.
+lsstVersion: w_2026_41
+
+# Specify either pipelineYaml or "qgraphFile: path/to/existing/file.qg"
+pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/DRP.yaml#isr,calibrateImage"
+
+payload:
+  # output collection is named "u/{operator}/{payloadName}" by default
+  # payloadName can include slashes like all collection names.
+  # output collection name can be overriden with "output" key.
+  payloadName: example/test
+
+  # Butler aliases and paths to butler yamls can also be used in BPS yamls.
+  butlerConfig: dp2_prep
+
+  # Can contain comma-separated collection lists. No spaces.
+  # Ignored if output collection (specified via payloadName or output) exists.
+  inCollection: LSSTCam/defaults
+
+  # The ">-" automatically concatenates each line with a space separating them.
+  dataQuery: >-
+      instrument='LSSTCam'
+      AND skymap='lsst_cells_v2'
+      AND visit=2025122200367
+      AND detector IN (5, 6, 7)
+
+## Extra options for Qgraph generation passed as
+## commandline arguments to "pipetask build." Some examples to edit:
+# extraQgraphOptions: >-
+#   --dataset-query-constraint raw
+#   --data-id-table exposure_list.ecsv
+#   -c parameters:parameter_name=parameter_value
+#   -c isr:config_parameter=config_value
+#   --select-tasks '~makePrettyDirectWarp & ~makePrettyPsfMatchedWarp’
+#   --skip-existing-in {output}
+
+## ================================================
+## Optional, but always used by Campaign Management
+## ================================================
+
+## With these settings jobs have a higher chance of successful job
+## completion, at the cost of somewhat more obscure failure reporting.
+
+## Extra runtime options, passed as command-line arguments to
+## "pipetask run-qbb" (similar to "pipetask run").
+## --no-raise-on-partial-outputs will return exit code 0 on AlgorithmErrors.
+# extraRunQuantumOptions: "--no-raise-on-partial-outputs"
+
+## If using --no-raise-on-partial-outputs, we would like to have a
+## real failure report.  For submissions at SLAC, we can use "pipetask
+## report" in finalJob to generate one.  However, that requires the
+## access to the submitPath, which is lives at SLAC, not at the remote
+## site. So we skip those failure reports for remote submissions.
+
+## Exit codes that are never retried. The default, [1, 2], does not retry
+## exit code 1. Setting it to [2] also retries exit code 1,
+## which is good if you see transient failures that succeed upon retry.
+# retryUnlessExit: [2]
+
+## ================================================
+## Per-Task and Clustering Overrides
+## ================================================
+
+## Override any of the resource usage or basic bps configs per-task like:
+# pipetask:
+#   isr:
+#     requestCpus: 1
+#     requestMemory: 2_048
+#     numberOfRetries: 5
+#     memoryMultiplier: 2
+
+## Override settings of clusters defined in the included clustering yaml
+## A task can only belong to one cluster.
+# clusterAlgorithm: lsst.ctrl.bps.quantum_clustering_funcs.dimension_clustering
+# cluster:
+#   step1detector:
+#     partitionMaxClusters: 10000
+
+## ================================================
+## Example Advanced Options; Edits Discouraged
+## ================================================
+
+## Change the submit directory.
+# submitPath: "${PWD}/submit/{outputRun}"
+
+## Templates for BPS filenames.
+## The default uniqProcName is the output run translated to snake case.
+# qgraphFileTemplate: "{uniqProcName}.qg"
+# subDirTemplate: "{label}/{tract}/{patch}/{band}/{subfilter}/{physical_filter}/{visit}/{exposure}"
+# templateDataId: "{tract}_{patch}_{band}_{visit}_{exposure}_{detector}"
