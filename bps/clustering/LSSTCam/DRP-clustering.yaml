@@ -67,16 +67,12 @@ cluster:
   skyCorrCluster:
     pipetasks: skyCorr,skyCorrExperimental
     dimensions: visit
-  step4c_forced_phot:
-    pipetasks: forcedPhotObjectDetector
+  step4c_forced_phot_forced_phot_dia:
+    # These tasks both have visit_image and difference_image as inputs.
+    pipetasks: forcedPhotObjectDetector,forcedPhotDiaObjectDetector
     dimensions: visit
     partitionDimensions: detector
-    partitionMaxClusters: 50000
-  step4c_forced_phot_dia:
-    pipetasks: forcedPhotDiaObjectDetector
-    dimensions: visit
-    partitionDimensions: detector
-    partitionMaxClusters: 50000
+    partitionMaxClusters: 20000
   deconvolve_tract_band:
     pipetasks: deconvolve
     dimensions: tract,band
