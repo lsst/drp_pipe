@@ -742,6 +742,7 @@ subsets:
       - makeMetricTableAggregateCalibrateImageMetadata
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+      - makeSingleVisitStarAstrometricRefMatchMetricTable
     description: |
       A step that consolidates visit[, detector] metadata and analysis into
       full-survey tables and plots.
@@ -1098,6 +1099,7 @@ subsets:
     - makeMetricTableAggregateCalibrateImageMetadata
     - makeAnalysisSingleVisitStarAssociationMetricTable
     - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
+    - makeSingleVisitStarAstrometricRefMatchMetricTable
   stage2-recalibrate:
     # 2a
     - fgcmBuildFromIsolatedStar
