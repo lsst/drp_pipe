@@ -40,6 +40,14 @@ tasks:
       wcs_provider: input_summary
       wcs_consistency_threshold: null
       photo_calib_provider: input_summary
+  # Config override for missing fgcm: no fgcm_standard_star catalog is
+  # produced in CI, so the chromatic PSF enabled in obs_lsst for LSSTCam
+  # (DM-56234) cannot be used here.
+  refitPsfModelDetector:
+    class: lsst.pipe.tasks.finalizeCharacterization.FinalizeCharacterizationDetectorTask
+    config:
+      python: |
+        config.psf_determiner['piff'].useColor = False
   # Config overrides for missing skyCorr
   makeDirectWarp:
     class: lsst.drp.tasks.make_direct_warp.MakeDirectWarpTask
