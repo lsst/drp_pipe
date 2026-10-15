@@ -11,7 +11,7 @@ bpsBatchSubmission: true
 bpsUseRunTempSpace: true
 bpsUseShared: false
 bpsMakeCommand: false
-fileDistributionEndpoint: "${LSST_SHARED_SCRATCH_DIR}/bps_dev/payload/{uniqProcName}/"
+fileDistributionEndpoint: "${LSST_SHARED_SCRATCH_DIR}/bps/payload/{uniqProcName}/"
 
 preparePayloadWorkflow:
   # The BPS_SUBMIT site runs on the k8s access point at USDF.  It's defined in
