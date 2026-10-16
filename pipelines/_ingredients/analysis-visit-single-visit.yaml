@@ -49,6 +49,14 @@ tasks:
       connections.data: "{targetCatalog}_ref_match_astrom"
       # Can't use {targetCatalog} in outputName because it is a template.
       connections.outputName: "single_visit_star_ref_match_astrom"
+  makeSingleVisitStarAstrometricRefMatchMetricTable:
+    class: lsst.analysis.tools.tasks.MakeMetricTableTask
+    config:
+      connections.metricBundleName: "single_visit_star_ref_match_astrom_metrics"
+      connections.outputTableName: "single_visit_star_ref_match_astrom_metrics_table"
+      inputDataDimensions: ["visit"]
+      outputTableDimensions: ["instrument"]
+      dataIdFieldsToIncludeAsColumns: ["visit", "band"]
   makeAnalysisSingleVisitStarPhotometricRefMatch:
     class: lsst.analysis.tools.tasks.photometricCatalogMatch.PhotometricCatalogMatchVisitTask
     config:
@@ -85,6 +93,7 @@ subsets:
       - makeMetricTableAggregateCalibrateImageMetadata
       - makeAnalysisSingleVisitStarAstrometricRefMatch
       - analyzeSingleVisitStarAstrometricRefMatch
+      - makeSingleVisitStarAstrometricRefMatchMetricTable
       - makeAnalysisSingleVisitStarPhotometricRefMatch
       - analyzeSingleVisitStarPhotometricRefMatch
     description: |
