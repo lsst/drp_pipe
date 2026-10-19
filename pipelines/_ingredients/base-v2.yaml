@@ -702,6 +702,7 @@ subsets:
       - consolidateSingleVisitStar
       - consolidateVisitSummary
       - aggregateCalibrateImageMetadata
+      - aggregateVisitSummary
       - analyzeSingleVisitStar
       - makeAnalysisSingleVisitStarAstrometricRefMatch
       - analyzeSingleVisitStarAstrometricRefMatch
@@ -740,6 +741,7 @@ subsets:
       - makeInitialVisitDetectorTable
       - makeInitialVisitTable
       - makeMetricTableAggregateCalibrateImageMetadata
+      - makeMetricTableAggregateVisitSummary
       - makeAnalysisSingleVisitStarAssociationMetricTable
       - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
       - makeSingleVisitStarAstrometricRefMatchMetricTable
@@ -1088,6 +1090,7 @@ subsets:
     - makeAnalysisSingleVisitStarAstrometricRefMatch
     - analyzeSingleVisitStarAstrometricRefMatch
     - aggregateCalibrateImageMetadata
+    - aggregateVisitSummary
     - makeAnalysisSingleVisitStarPhotometricRefMatch
     - analyzeSingleVisitStarPhotometricRefMatch
     # 1c
@@ -1097,6 +1100,7 @@ subsets:
     - makeInitialVisitDetectorTable
     - makeInitialVisitTable
     - makeMetricTableAggregateCalibrateImageMetadata
+    - makeMetricTableAggregateVisitSummary
     - makeAnalysisSingleVisitStarAssociationMetricTable
     - makeAnalysisSingleVisitStarAssociationWholeSkyPlot
     - makeSingleVisitStarAstrometricRefMatchMetricTable
