@@ -539,9 +539,9 @@ tasks:
     class: lsst.meas.transiNet.RBTransiNetTask
     config:
       modelPackageStorageMode: butler
-      connections.science: visit_image
-      connections.template: template_detector
-      connections.difference: difference_image_predetection
+      connections.science: visit_image.image
+      connections.template: template_detector.image
+      connections.difference: difference_image_predetection.image
       connections.diaSources: dia_source_unstandardized
       connections.classifications: dia_source_reliability
   filterDiaSourcePostReliability:

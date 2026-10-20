@@ -163,10 +163,10 @@ tasks:
     class: lsst.meas.transiNet.RBTransiNetTask
     config:
       modelPackageStorageMode: butler
-      connections.science: pvi
+      connections.science: pvi.image
       connections.coaddName: goodSeeing
-      connections.template: goodSeeingDiff_templateExp
-      connections.difference: goodSeeingDiff_differenceTempExp
+      connections.template: goodSeeingDiff_templateExp.image
+      connections.difference: goodSeeingDiff_differenceTempExp.image
       connections.diaSources: goodSeeingDiff_candidateDiaSrc
       connections.classifications: goodSeeingRealBogusSources
   filterDiaSourcePostReliability:
