@@ -115,6 +115,8 @@ LSSTCAM_INPUTS = {
     "sky",
     "astrometry_camera",
     "gain_correction",
+    "shutterMotionProfileOpen",
+    "shutterMotionProfileClose",
 }
 
 # LSSTComCam common inputs, in addition to COMMON_INPUTS
