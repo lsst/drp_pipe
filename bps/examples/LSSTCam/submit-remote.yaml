@@ -18,7 +18,7 @@ includeConfigs:
 
 # Remote submissions use the cvmfs distributions, so the version of the
 # LSST stack must be provided.
-lsstVersion: w_2026_41
+lsstVersion: w_2026_44
 
 # Specify either pipelineYaml or "qgraphFile: path/to/existing/file.qg"
 pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/DRP.yaml#isr,calibrateImage"
@@ -40,8 +40,8 @@ payload:
   dataQuery: >-
       instrument='LSSTCam'
       AND skymap='lsst_cells_v2'
-      AND visit=2025122200367
-      AND detector IN (5, 6, 7)
+      AND visit=2025051500125
+      AND detector IN (93..95)
 
 ## Extra options for Qgraph generation passed as
 ## commandline arguments to "pipetask build." Some examples to edit:
