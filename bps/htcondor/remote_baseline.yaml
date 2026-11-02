@@ -38,9 +38,10 @@ postEnvSetup: >-
   fi;
   ls -lart ${LSST_LOCAL_SCRATCH_DIR}
 
-# Turn off the qg copy for these tasks:
+# Print out the runtime enviroment on the remote workers, while also
+# explicitly disabling the .qg copy for buildQuantGraph.
 buildQuantumGraph:
-  postEnvSetup: ""
+  postEnvSetup: "/usr/bin/env"
 
 # Modify the various run commands to use the .qg file in ${LSST_LOCAL_SCRATCH_DIR}:
 runQuantumCommand: ${CTRL_MPEXEC_DIR}/bin/pipetask {runPreCmdOpts} run-qbb {butlerConfig}
