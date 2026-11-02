@@ -9,27 +9,21 @@
 # (with no outer indentation) to your BPS config file.  This is meant
 # to be used with the clustering definintions in
 # ${DRP_PIPE_DIR}/bps/clustering/LSSTCam
-#
-# Including this file is incompatible with including any other caching or
-# compression config yamls that set DAF_BUTLER_CONFIG_PATH (TODO DM-53875)
-
-subDirTemplate: "{label}/{detector}"
 
 environment:
   # Default caching config
   # Each pipetask creates its own local cache folder,
   # $TMPDIR/butler-cache-dir-*
   DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/config:${DAF_BUTLER_CONFIG_PATH}
-  DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=500
+  DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=2_000
 
 cluster:
   step1detector:
+    # The default subDirTemplate doesn't include ``detector``
+    # so override it here.
+    subDirTemplate: "{label}/{visit}/{exposure}/{detector}"
     # For step1, the pipetasks for a given detector will use the same
     # calibs, so specify a single shared cache directory with 1TB
     # size.
     environment:
-      DAF_BUTLER_CACHE_EXPIRATION_MODE: size=1_000_000_000_000
       DAF_BUTLER_CACHE_DIRECTORY: /lscratch/${USER}/step1_cache
-      # TODO: step1detector section resets all global environment variables
-      # so repeat here. To be removed on DM-53875.
-      DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/config:${DAF_BUTLER_CONFIG_PATH}
