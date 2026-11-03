@@ -12,9 +12,9 @@ cluster:
   step1detector:
     # shared with NV
     pipetasks: isr,calibrateImage,analyzeAmpOffsetMetadata,analyzeAmpInterfaceOffsetMetadata,analyzeInitialSummaryStats,analyzeCalibrateImageMetadata,standardizeSingleVisitStar
-    dimensions: detector
+    dimensions: exposure
     equalDimensions: visit:exposure
-    partitionDimensions: exposure
+    partitionDimensions: detector
     partitionMaxClusters: 50000
   step1b_visits:
     pipetasks: consolidateSingleVisitStar,consolidateVisitSummary
