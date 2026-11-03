@@ -22,9 +22,6 @@ environment:
 
 cluster:
   step1detector:
-    # The default subDirTemplate doesn't include ``detector``
-    # so override it here.
-    subDirTemplate: "{label}/{visit}/{exposure}/{detector}"
     # For step1, the pipetasks for a given detector will use the same
     # calibs, so specify a single shared cache directory via
     # DAF_BUTLER_CACHE_DIRECTORY
