@@ -9,9 +9,12 @@ tasks:
     class: lsst.pipe.tasks.rewrite_images.RewriteDifferenceImageTask
   rewriteCellCoadd:
     class: lsst.pipe.tasks.rewrite_images.RewriteCellCoaddTask
+  rewriteTemplateCoadd:
+    class: lsst.pipe.tasks.rewrite_images.RewriteLazyCoaddTask
 subsets:
   do_coadd_rewrite:
     - rewriteCellCoadd
+    - rewriteTemplateCoadd
   do_stage4_rewrite:
     - rewriteVisitImage
     - rewriteDifferenceImage
