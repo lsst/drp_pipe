@@ -19,8 +19,12 @@ formatters:
     formatter: lsst.images.formatters.GenericFormatter
     parameters:
       recipe: lossy16
-  template_coadd:
+  legacy_template_coadd:
     formatter: lsst.obs.base.formatters.fitsExposure.FitsExposureFormatter
+    parameters:
+      recipe: lossy16
+  template_coadd:
+    formatter: lsst.images.formatters.GenericFormatter
     parameters:
       recipe: lossy16
   pretty_coadd:
