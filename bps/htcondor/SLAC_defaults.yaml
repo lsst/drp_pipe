@@ -1,0 +1,12 @@
+# These are default configs for running HTCondor workflows
+# at SLAC using the schedds on the sdfiana0* nodes.
+#
+# Use it by adding
+#
+# includeConfigs:
+#   - ${DRP_PIPE_DIR}/bps/htcondor/SLAC_defaults.yaml
+#
+# (with no outer indentation) to your BPS config file.
+
+includeConfigs:
+  - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-clustering.yaml
