@@ -36,7 +36,7 @@ postEnvSetup: >-
     ls -lart ${LSST_LOCAL_SCRATCH_DIR};
     ln ${local_qg}.$$.tmp ${local_qg};
   fi;
-  ls -lart ${LSST_LOCAL_SCRATCH_DIR}
+  ls -lart ${LSST_LOCAL_SCRATCH_DIR};
 
 # Print out the runtime enviroment on the remote workers, while also
 # explicitly disabling the .qg copy for buildQuantGraph.
