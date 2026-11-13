@@ -3,9 +3,11 @@
 # Use it by adding
 #
 # includeConfigs:
-#   - ${DRP_PIPE_DIR}/bps/htcondor/remote_defaults.yaml
+#   - eups://drp_pipe/bps/htcondor/remote_defaults.yaml
 #
 # (with no outer indentation) to your BPS config file.
+
+## TODO DM-56621: Replace eups:// with resource://
 
 bpsBatchSubmission: true
 bpsUseRunTempSpace: true
@@ -44,12 +46,12 @@ buildQuantumGraph:
   postEnvSetup: "/usr/bin/env"
 
 # Modify the various run commands to use the .qg file in ${LSST_LOCAL_SCRATCH_DIR}:
-runQuantumCommand: ${CTRL_MPEXEC_DIR}/bin/pipetask {runPreCmdOpts} run-qbb {butlerConfig}
+runQuantumCommand: pipetask {runPreCmdOpts} run-qbb {butlerConfig}
   ${LSST_LOCAL_SCRATCH_DIR}/{uniqProcName}.qg --qgraph-node-id {qgraphNodeId} {extraRunQuantumOptions}
 
 pipetask:
   pipetaskInit:
-    runQuantumCommand: ${CTRL_MPEXEC_DIR}/bin/pipetask {initPreCmdOpts} pre-exec-init-qbb {butlerConfig} ${LSST_LOCAL_SCRATCH_DIR}/{uniqProcName}.qg {extraInitOptions}
+    runQuantumCommand: pipetask {initPreCmdOpts} pre-exec-init-qbb {butlerConfig} ${LSST_LOCAL_SCRATCH_DIR}/{uniqProcName}.qg {extraInitOptions}
 
 finalJob:
-  command1: ${DAF_BUTLER_DIR}/bin/butler {finalPreCmdOpts} aggregate-graph ${LSST_LOCAL_SCRATCH_DIR}/{uniqProcName}.qg {butlerConfig} -j {requestCpus} --register-dataset-types {updateOutputChain} {extraAggregateOptions}
+  command1: butler {finalPreCmdOpts} aggregate-graph ${LSST_LOCAL_SCRATCH_DIR}/{uniqProcName}.qg {butlerConfig} -j {requestCpus} --register-dataset-types {updateOutputChain} {extraAggregateOptions}

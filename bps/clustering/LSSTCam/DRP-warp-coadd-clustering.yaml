@@ -6,14 +6,16 @@
 # Use it by adding:
 #
 #  includeConfigs:
-#    - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-warp-coadd-clustering.yaml
+#    - eups://drp_pipe/bps/clustering/LSSTCam/DRP-warp-coadd-clustering.yaml
 #
 # (with no outer indentation) to your BPS config file.
+
+## TODO DM-56621: Replace eups:// with resource://
 
 # Include the standard clustering config so that we can just add new
 # clusters and override existing ones, as needed.
 includeConfigs:
-  - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-clustering.yaml
+  - eups://drp_pipe/bps/clustering/LSSTCam/DRP-clustering.yaml
 
 cluster:
   step3a_select_visits:

@@ -4,16 +4,18 @@
 # Use it by adding
 #
 # includeConfigs:
-#   - ${DRP_PIPE_DIR}/bps/htcondor/LANCS_defaults.yaml
+#   - eups://drp_pipe/bps/htcondor/LANCS_defaults.yaml
 #
 # (with no outer indentation) to your BPS config file.
 
+## TODO DM-56621: Replace eups:// with resource://
+
 includeConfigs:
   # Include baseline configs that apply to all remote sites.
-  - ${DRP_PIPE_DIR}/bps/htcondor/remote_baseline.yaml
+  - eups://drp_pipe/bps/htcondor/remote_baseline.yaml
   # Clustering and caching for LANCS.
-  - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-warp-coadd-clustering.yaml
-  - ${DRP_PIPE_DIR}/bps/caching/LSSTCam/LANCS/DRP-caching.yaml
+  - eups://drp_pipe/bps/clustering/LSSTCam/DRP-warp-coadd-clustering.yaml
+  - eups://drp_pipe/bps/caching/LSSTCam/LANCS/DRP-caching.yaml
 
 # Other site-specific configs.
 site:

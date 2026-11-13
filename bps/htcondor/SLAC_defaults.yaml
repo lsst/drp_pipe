@@ -4,9 +4,11 @@
 # Use it by adding
 #
 # includeConfigs:
-#   - ${DRP_PIPE_DIR}/bps/htcondor/SLAC_defaults.yaml
+#   - eups://drp_pipe/bps/htcondor/SLAC_defaults.yaml
 #
 # (with no outer indentation) to your BPS config file.
 
+## TODO DM-56621: Replace eups:// with resource://
+
 includeConfigs:
-  - ${DRP_PIPE_DIR}/bps/clustering/LSSTCam/DRP-clustering.yaml
+  - eups://drp_pipe/bps/clustering/LSSTCam/DRP-clustering.yaml

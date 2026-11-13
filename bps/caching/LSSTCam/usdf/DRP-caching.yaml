@@ -4,17 +4,19 @@
 # Use it by adding
 #
 #  includeConfigs:
-#    - ${DRP_PIPE_DIR}/bps/caching/LSSTCam/usdf/DRP-caching.yaml
+#    - eups://drp_pipe/bps/caching/LSSTCam/usdf/DRP-caching.yaml
 #
 # (with no outer indentation) to your BPS config file.  This is meant
 # to be used with the clustering definintions in
 # ${DRP_PIPE_DIR}/bps/clustering/LSSTCam
 
+## TODO DM-56621: Replace eups:// with resource://
+
 environment:
   # Default caching config
   # Each pipetask creates its own local cache folder,
   # $TMPDIR/butler-cache-dir-*
-  DAF_BUTLER_CONFIG_PATH: ${DRP_PIPE_DIR}/bps/caching/LSSTCam/config:${DAF_BUTLER_CONFIG_PATH}
+  DAF_BUTLER_CONFIG_PATH: eups://drp_pipe/bps/caching/LSSTCam/config:${DAF_BUTLER_CONFIG_PATH}
   DAF_BUTLER_CACHE_EXPIRATION_MODE: datasets=2_000
 
 cluster:

@@ -4,24 +4,26 @@
 # See https://pipelines.lsst.io/modules/lsst.ctrl.bps/quickstart.html and
 # https://pipelines.lsst.io/middleware/faq.html for more options
 
+## TODO DM-56621: Replace eups:// with resource://
+
 # Use the compression and memory requests for efficiency.
 includeConfigs:
-  - "${DRP_PIPE_DIR}/bps/compression/LSSTCam/DRP-compression.yaml"
-  - "${DRP_PIPE_DIR}/bps/resources/LSSTCam/DRP.yaml"
+  - "eups://drp_pipe/bps/compression/LSSTCam/DRP-compression.yaml"
+  - "eups://drp_pipe/bps/resources/LSSTCam/DRP.yaml"
 
 # Uncomment one of the following three configs to run at the
 # corresponding remote site.  These already include the config files
 # for clustering and caching at those sites.
-#  - "${DRP_PIPE_DIR}/bps/htcondor/IN2P3_defaults.yaml"
-#  - "${DRP_PIPE_DIR}/bps/htcondor/LANCS_defaults.yaml"
-#  - "${DRP_PIPE_DIR}/bps/htcondor/RAL_defaults.yaml"
+#  - "eups://drp_pipe/bps/htcondor/IN2P3_defaults.yaml"
+#  - "eups://drp_pipe/bps/htcondor/LANCS_defaults.yaml"
+#  - "eups://drp_pipe/bps/htcondor/RAL_defaults.yaml"
 
 # Remote submissions use the cvmfs distributions, so the version of the
 # LSST stack must be provided.
 lsstVersion: w_2026_44
 
 # Specify either pipelineYaml or "qgraphFile: path/to/existing/file.qg"
-pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam/DRP.yaml#isr,calibrateImage"
+pipelineYaml: "eups://drp_pipe/pipelines/LSSTCam/DRP.yaml#isr,calibrateImage"
 
 payload:
   # output collection is named "u/{operator}/{payloadName}" by default
